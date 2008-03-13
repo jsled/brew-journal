@@ -1,6 +1,7 @@
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseServerError
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from genshi.template import TemplateLoader
 from genshi.core import Markup
 from brewlog.app import models
@@ -25,18 +26,50 @@ def standard_context():
     if not _std_ctx:
         _std_ctx = {'fmt': { 'date': lambda x: x.strftime('%x %X') },
                     'markup': Markup,
-                    'Markup': Markup
+                    'Markup': Markup,
                     }
     return _std_ctx
 
+class AuthForm (forms.Form):
+    username = forms.CharField(max_length=30)
+    password = forms.CharField(widget=forms.PasswordInput)
+
 def root(request):
-    return HttpResponse(render('index.html', std=standard_context()))
+    auth_form = AuthForm()
+    if request.method == 'POST':
+        auth_form = AuthForm(request.POST)
+        submit_type = request.POST['submit']
+        if submit_type == 'create':
+            # @fixme create new user
+            pass
+        elif submit_type == 'login':
+            # auth.
+            user = authenticate(username = request.POST['username'],
+                                password = request.POST['password'])
+            if not user:
+                # error: username/password incorrect
+                pass
+            elif not user.is_active:
+                # error: disabled account
+                pass
+            else:
+                login(request, user)
+                return HttpResponseRedirect('/user/%s/' % (user.username))
+        else:
+            # error
+            pass
+    return HttpResponse(render('index.html', request=request, std=standard_context(), auth_form=auth_form))
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('/')
+    
 
 def user_index(request, user_name):
     u = User.objects.get(username__exact = user_name)
     if not u: return HttpResponseNotFound('no such user [%s]' % (user_name))
     brews = models.Brew.objects.filter(brewer=u)
-    return HttpResponse(render('user/index.html', user=u, brews=brews))
+    return HttpResponse(render('user/index.html', request=request, user=u, brews=brews))
 
 # sys.stdout = codecs.getwriter('utf-8')(sys.stdout, errors='replace')
 def new_brew(request, user_name):
@@ -49,7 +82,7 @@ def new_brew(request, user_name):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/user/%s' % (u.username))
-    return HttpResponse(render('user/brew/new.html', user=u, brew_form=form, Markup=Markup))
+    return HttpResponse(render('user/brew/new.html', request=request, user=u, brew_form=form, Markup=Markup))
 
 class StepForm (forms.ModelForm):
     notes = forms.CharField(widget=forms.Textarea())
@@ -93,4 +126,4 @@ def brew(request, user_name, brew_id, step_id):
             next_step_type = models.get_likely_next_step_type(last_step_type)
             print u'got next step [%s]' % (next_step_type)
         form = StepForm(initial={'brew': brew.id, 'date': datetime.now(), 'type': next_step_type})
-    return HttpResponse(render('user/brew/index.html', std=standard_context(), user=u, brew=brew, steps=steps, step_form=form, submit_label=submit_label))
+    return HttpResponse(render('user/brew/index.html', request=request, std=standard_context(), user=u, brew=brew, steps=steps, step_form=form, submit_label=submit_label))

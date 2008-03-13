@@ -1,11 +1,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/">
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
 <head>
   <title>${user.username} | BrewLog</title>
+  <xi:include href="../_incl/head.html"/>
 </head>
 <body>
+  <xi:include href="../_incl/body-top-bar.html"/>
 <h1>${user.username} brews</h1>
-<p>You have ${len(brews)} brews!</p>
 <table width="80%" border="1" cellspacing="0" cellpadding="2">
   <thead>
     <tr>
@@ -20,7 +22,7 @@
     </tr>
   </tbody>
 </table>
-<a href="./brew/new">[create new brew]</a>
+<a py:if="request.user.is_authenticated() and request.user == user" href="./brew/new">[create new brew]</a>
 <h1>Recent Brews</h1>
 </body>
 </html>

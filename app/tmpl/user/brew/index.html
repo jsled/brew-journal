@@ -1,24 +1,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/">
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
   <head>
     <title>brew "${brew.recipe_name}" | BrewLog</title>
-    <link rel="stylesheet" href="/static/style.css"/>
+    <xi:include href="../../_incl/head.html"/>
   </head>
 <body>
-  <div align="right" width="100%" class="topbar">
-    <nobr>
-    <a py:if="user" href="/user/${user.username}">${user.username}</a>
-    <a py:if="not user" href="/">Login or Create Account</a>
-    | <a href="/about">about</a>
-    <py:if test="user">| <a href="/logout">Log Out</a></py:if>
-    </nobr>
-  </div>
-  <div class="header">
-    <img height="80" width="180" href="/no" alt="[logo]" float="left"/>
-    <a href="#">this user's brews</a>
-    | <a href="#">all upcoming brews</a>
-    | <a href="#">recent updates</a>
-  </div>
+  <xi:include href="../../_incl/body-top-bar.html"/>
   <h1>${brew.recipe_name}</h1>
   <table width="80%" border="1" cellspacing="0" cellpadding="2">
     <thead>
