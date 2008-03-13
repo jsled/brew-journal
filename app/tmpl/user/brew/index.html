@@ -24,11 +24,13 @@
       </tr>
     </tbody>
   </table>
-  <a href="/user/${user.username}/brew/${brew.id}/">[add new step]</a><br />
-  <!-- form. -->
-  <form method="post">
-    <table class="form" py:content="std.Markup(step_form.as_table())"/>
-    <input type="submit" value="${submit_label}"/>
-  </form>
+  <div py:if="request.user.is_authenticated() and request.user == user">
+    <a href="/user/${user.username}/brew/${brew.id}/">[add new step]</a><br />
+    <!-- form. -->
+    <form method="post">
+      <table class="form" py:content="std.Markup(step_form.as_table())"/>
+      <input type="submit" value="${submit_label}"/>
+    </form>
+  </div>
 </body>
 </html>

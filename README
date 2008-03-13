@@ -13,12 +13,18 @@ Todo
   - sitemesh model?
   - template-defined inclusion
 - visual design
-- unicode support/problem
-- login, user
+x unicode support/problem
+x login, user
 
 Before "release"
 ----------------
-- users, auth
+- users
+  x login/logout
+  - auth checks for actions
+    x create/edit brews
+    x create/edit brew steps
+  x create new user
+
   [- OpenID based]
 - admin security
 - logging

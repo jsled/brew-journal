@@ -12,6 +12,7 @@
   <thead>
     <tr>
       <th>Brew</th>
+      <th>Brew Date</th>
       <th>Last Update</th>
     </tr>
   </thead>
@@ -19,6 +20,7 @@
     <tr py:for="brew in brews">
       <td><a href="/user/${user.username}/brew/${brew.id}">${brew.recipe_name}</a></td>
       <td>${brew.brew_date}</td>
+      <td> </td>
     </tr>
   </tbody>
 </table>

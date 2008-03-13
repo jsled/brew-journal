@@ -3,7 +3,8 @@
      xmlns:xi="http://www.w3.org/2001/XInclude">
   <div align="right" width="100%" class="topbar">
     <nobr>
-      <a py:if="request.user.is_authenticated()" href="/user/${request.user.username}">${user.username}</a>
+      <a py:if="request.user.is_authenticated()" href="/user/${request.user.username}">${request.user.username}</a>
+      <py:if test="request.user.is_authenticated()">| <a href="/user/${request.user.username}/profile">profile</a></py:if>
       <a py:if="not request.user.is_authenticated()" href="/">Login or Create Account</a>
       | <a href="/">brewlog home</a>
       <py:if test="request.user.is_authenticated()">| <a href="/logout">Log Out</a></py:if>
