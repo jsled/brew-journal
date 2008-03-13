@@ -1,0 +1,35 @@
+BODY
+{
+  background-color: white;
+  color: black;
+  margin-left: 2em;
+  margin-top: 2em;
+}
+
+TABLE
+{
+  border: solid thin black;
+  empty-cells: show;
+}
+
+
+TABLE.form
+{
+  border: none;
+}
+
+.topbar
+{
+  background: rgb(240, 240, 240);
+  margin-top: -2em;
+  margin-left: -2em;
+  width: 100%;
+  padding-right: 2.5em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+}
+
+P
+{
+  width: 70%;
+}

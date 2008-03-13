@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/">
+<head>
+  <title>${user.username} | BrewLog</title>
+</head>
+<body>
+<h1>${user.username} brews</h1>
+<p>You have ${len(brews)} brews!</p>
+<table width="80%" border="1" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr>
+      <th>Brew</th>
+      <th>Last Update</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr py:for="brew in brews">
+      <td><a href="/user/${user.username}/brew/${brew.id}">${brew.recipe_name}</a></td>
+      <td>${brew.brew_date}</td>
+    </tr>
+  </tbody>
+</table>
+<a href="./brew/new">[create new brew]</a>
+<h1>Recent Brews</h1>
+</body>
+</html>

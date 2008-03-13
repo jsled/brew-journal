@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/">
+  <head>
+    <title>brew "${brew.recipe_name}" | BrewLog</title>
+    <link rel="stylesheet" href="/static/style.css"/>
+  </head>
+<body>
+  <div align="right" width="100%" class="topbar">
+    <nobr>
+    <a py:if="user" href="/user/${user.username}">${user.username}</a>
+    <a py:if="not user" href="/">Login or Create Account</a>
+    | <a href="/about">about</a>
+    <py:if test="user">| <a href="/logout">Log Out</a></py:if>
+    </nobr>
+  </div>
+  <div class="header">
+    <img height="80" width="180" href="/no" alt="[logo]" float="left"/>
+    <a href="#">this user's brews</a>
+    | <a href="#">all upcoming brews</a>
+    | <a href="#">recent updates</a>
+  </div>
+  <h1>${brew.recipe_name}</h1>
+  <table width="80%" border="1" cellspacing="0" cellpadding="2">
+    <thead>
+      <tr><th>date</th><th>step</th><th>volume</th><th>pre-temp</th><th>post-temp</th><th>gravity</th><th>notes</th></tr>
+    </thead>
+    <tbody>
+      <tr py:for="step in steps">
+        <td><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date(step.date)}</a></td>
+        <td>${step.type}</td>
+        <td>${step.volume}</td>
+        <td>${step.pre_temp}</td>
+        <td>${step.post_temp}</td>
+        <td>${step.gravity}</td>
+        <td>${step.notes}</td>
+      </tr>
+    </tbody>
+  </table>
+  <a href="/user/${user.username}/brew/${brew.id}/">[add new step]</a><br />
+  <!-- form. -->
+  <form method="post">
+    <table class="form" py:content="std.Markup(step_form.as_table())"/>
+    <input type="submit" value="${submit_label}"/>
+  </form>
+</body>
+</html>

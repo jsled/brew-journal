@@ -1,0 +1,14 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/">
+  <head>
+    <title>new brew</title>
+  </head>
+<body>
+  <h1> new brew </h1>
+  <!-- form. -->
+  <form method="post">
+    <table class="form" py:content="Markup(brew_form.as_table())"/>
+    <input type="submit"/>
+  </form>
+</body>
+</html>
