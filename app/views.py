@@ -41,48 +41,53 @@ class AuthForm (forms.Form):
     username = forms.CharField(max_length=30)
     password = forms.CharField(widget=forms.PasswordInput)
 
-def root(request):
-    auth_form = AuthForm()
-    user = None
-    if request.method == 'POST':
-        auth_form = AuthForm(request.POST)
-        username = request.POST['username']
-        password = request.POST['password']
-        submit_type = request.POST['submit']
-        if submit_type == 'create':
-            user = None
-            try:
-                user = User.objects.get(username__exact = username)
-            except User.DoesNotExist:
-                pass
-            if user:
-                # error; user already existss
-                return HttpResponseBadRequest('user with username [%s] already exists' % (username))
-            else:
-                user = User.objects.create_user(username, '', password)
-                if not user:
-                    # error creating user
-                    return HttpResponseServerError('unknown error creating user [%s]' % (username))
-                user = authenticate(username = username, password = password)
-                login(request, user)
-                return HttpResponseRedirect('/user/%s/profile' % (username))
+def root_post(request):
+    auth_form = AuthForm(request.POST)
+    username = request.POST['username']
+    password = request.POST['password']
+    submit_type = request.POST['submit']
+    if submit_type == 'create':
+        user = None
+        try:
+            user = User.objects.get(username__exact = username)
+        except User.DoesNotExist:
             pass
-        elif submit_type == 'login':
-            user = authenticate(username = username,
-                                password = password)
-            if not user:
-                # error: username/password incorrect
-                pass
-            elif not user.is_active:
-                # error: disabled account
-                pass
-            else:
-                login(request, user)
-                return HttpResponseRedirect('/user/%s/' % (user.username))
+        if user:
+            # error; user already existss
+            return HttpResponseBadRequest('user with username [%s] already exists' % (username))
         else:
-            # error
+            user = User.objects.create_user(username, '', password)
+            if not user:
+                # error creating user
+                return HttpResponseServerError('unknown error creating user [%s]' % (username))
+            user = authenticate(username = username, password = password)
+            login(request, user)
+            return HttpResponseRedirect('/user/%s/profile' % (username))
+        pass
+    elif submit_type == 'login':
+        user = authenticate(username = username,
+                            password = password)
+        if not user:
+            # error: username/password incorrect
             pass
-    return HttpResponse(render('index.html', request=request, std=standard_context(), auth_form=auth_form))
+        elif not user.is_active:
+            # error: disabled account
+            pass
+        else:
+            login(request, user)
+            return HttpResponseRedirect('/user/%s/' % (user.username))
+    else:
+        # error
+        pass
+
+def root(request):
+    if request.method == 'POST':
+        rtn = root_post(request)
+        if rtn:
+            return rtn
+    recent_updates = models.Step.objects.order_by('-date')[0:10]
+    auth_form = AuthForm()
+    return HttpResponse(render('index.html', request=request, std=standard_context(), auth_form=auth_form, recent_updates=recent_updates))
 
 def logout_view(request):
     logout(request)

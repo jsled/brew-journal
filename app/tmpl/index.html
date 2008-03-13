@@ -6,23 +6,29 @@
     <xi:include href="_incl/head.html"/>
   </head>
 <body>
-  <xi:include href="_incl/body-top-bar.html"/>
-  <h1>Brew Log</h1>
+<xi:include href="_incl/body-top-bar.html"/>
+<h1>Brew Log</h1>
 
-  <p>BrewLog is a web site for you to track the status and progress of your
-  home brews.  The initial focus is tracking the time, steps and details of
-  the brewing/fermentation process, but we'll eventually support recipes and
-  recipe design as well.</p>
+<p>BrewLog is a web site for you to track the status and progress of your
+home brews.  The initial focus is tracking the time, steps and details of
+the brewing/fermentation process, but we'll eventually support recipes and
+recipe design as well.</p>
 
-  <form py:if="not request.user.is_authenticated()" method="post" >
-    <table class="form" py:content="std.Markup(auth_form.as_table())"/>
-    <input type="submit" name="submit" value="login"/>
-    <input type="submit" name="submit" value="create"/>
-  </form>
+<form py:if="not request.user.is_authenticated()" method="post" >
+  <table class="form" py:content="std.Markup(auth_form.as_table())"/>
+  <input type="submit" name="submit" value="login"/>
+  <input type="submit" name="submit" value="create"/>
+</form>
   
+<div class="random-box">
+<h2>Recent Updates</h2>
+<ul>
+  <li py:for="step in recent_updates"><a href="/user/${step.brew.brewer.username}/brew/${step.brew.id}">Step ${step.type} journaled for ${step.brew.brewer.username}'s ${step.brew.recipe_name} on ${std.fmt.date.ymdhm(step.date)}</a></li>
+</ul>
+</div>
 <!--
 
-- Recent Updates
+- Recent Updates...
 - Site News
 - New Users
 - New Comments

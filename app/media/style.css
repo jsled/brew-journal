@@ -41,3 +41,16 @@ PRE.recipe
   padding: 0.5em 0.25em 0.5em 0.25em;
   width: 50%;
 }
+
+
+.random-box
+{
+  width: 45%;
+  border: solid thin black;
+}
+
+.random-box > H2
+{
+  border-bottom: solid thin black;
+  margin-top: 0em;
+}
