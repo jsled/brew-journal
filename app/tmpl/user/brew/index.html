@@ -8,10 +8,11 @@
 <body>
   <xi:include href="../../_incl/body-top-bar.html"/>
   <h1>${brew.recipe_name}</h1>
+  <span py:if="brew.brew_date">brewed on: ${std.fmt.date.ymd(brew.brew_date)}<br /></span>
   
   <h2>recipe</h2>
   <pre class="recipe">
-    ${brew.recipe}
+${brew.recipe}
   </pre>
 
   <h2>log</h2>
@@ -22,7 +23,7 @@
     </thead>
     <tbody>
       <tr py:for="step in steps">
-        <td><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date(step.date)}</a></td>
+        <td><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date.ymdhm(step.date)}</a></td>
         <td>${step.type}</td>
         <td>${step.volume}</td>
         <td>${step.temp}</td>

@@ -25,8 +25,8 @@
     </tr>
     <tr py:for="brew in brews">
       <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe_name}</a></td>
-      <td>${brew.brew_date}</td>
-      <td>${brew.last_update_date}</td>
+      <td>${std.fmt.date.ymd(brew.brew_date)}</td>
+      <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
     </tr>
   </tbody>
 </table>
@@ -45,8 +45,8 @@
     </tr>
     <tr py:for="brew in done_brews">
       <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe_name}</a></td>
-      <td>${brew.brew_date}</td>
-      <td>${brew.last_update_date}</td>
+      <td>${std.fmt.date.ymd(brew.brew_date)}</td>
+      <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
     </tr>
   </tbody>
 </table>

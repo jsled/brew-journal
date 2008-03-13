@@ -15,8 +15,9 @@ x brew status, last-update date
 - visual design
 x unicode support/problem
 x login, user
-- gravity temperature adjustment
 
+- gravity temperature adjustment
+- step += entry_date.
 - /user/${user}/brew/new
   - no need for 'brewer' field.
 
@@ -28,7 +29,6 @@ Before "release"
     x create/edit brews
     x create/edit brew steps
   x create new user
-
   [- OpenID based]
 - admin security
 - logging

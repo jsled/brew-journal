@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from genshi.template import TemplateLoader
 from genshi.core import Markup
+from brewlog import util
 from brewlog.app import models
 from django import newforms as forms
 from datetime import datetime
@@ -20,11 +21,17 @@ def render(template_name, **kwargs):
     stream = tmpl.generate(**kwargs)
     return stream.render()
 
+def safe_datetime_fmt(dt, fmt):
+    if not dt:
+        return ''
+    return dt.strftime(fmt)
+
 _std_ctx = None
 def standard_context():
     global _std_ctx
     if not _std_ctx:
-        _std_ctx = {'fmt': { 'date': lambda x: x.strftime('%x %X') },
+        _std_ctx = {'fmt': { 'date': { 'ymdhm': lambda x: safe_datetime_fmt(x, '%Y-%m-%d %H:%M'),
+                                       'ymd': lambda x: safe_datetime_fmt(x, '%Y-%m-%d') } },
                     'markup': Markup,
                     'Markup': Markup,
                     }
@@ -86,7 +93,7 @@ def user_index(request, user_name):
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     brews = models.Brew.objects.filter(brewer=uri_user, is_done=False)
     done_brews = models.Brew.objects.filter(brewer=uri_user, is_done=True)
-    return HttpResponse(render('user/index.html', request=request, user=uri_user, brews=brews, done_brews=done_brews))
+    return HttpResponse(render('user/index.html', request=request, user=uri_user, brews=brews, done_brews=done_brews, std=standard_context()))
 
 class UserProfileForm (forms.ModelForm):
     class Meta:
@@ -151,12 +158,12 @@ def brew(request, user_name, brew_id, step_id):
     form = None
     step = None
     submit_label = 'Add Step'
+    steps_changed = False
     if step_id:
         step = models.Step.objects.get(pk=step_id)
         form = StepForm(instance=step)
         submit_label = 'Update Step'
         print u'step_id [%s] = step [%s]' % (step_id, step)
-    steps_changed = False
     if request.method == 'POST':
         if not (request.user.is_authenticated() and request.user == uri_user):
             return HttpResponseForbidden()
@@ -174,10 +181,16 @@ def brew(request, user_name, brew_id, step_id):
     if steps_changed:
         brew.update_from_steps(steps)
         brew.save()
+        return HttpResponseRedirect('/user/%s/brew/%d/' % (brew.brewer.username, brew.id))
     if not form:
+        default_date = datetime.now()
         next_step_type = 'strike'
         if len(steps) > 0:
-            last_step_type = steps[len(steps)-1].type
+            last_step = steps[len(steps)-1]
+            last_step_type = last_step.type
             next_step_type = models.get_likely_next_step_type(last_step_type)
-        form = StepForm(initial={'brew': brew.id, 'date': datetime.now(), 'type': next_step_type})
+            last_date = last_step.date
+            if (datetime.now() - last_step.date).days > 2:
+                default_date = last_step.date
+        form = StepForm(initial={'brew': brew.id, 'date': default_date, 'type': next_step_type})
     return HttpResponse(render('user/brew/index.html', request=request, std=standard_context(), user=uri_user, brew=brew, steps=steps, step_form=form, submit_label=submit_label))
