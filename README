@@ -1,6 +1,8 @@
 Todo
 ----
 
+- rename: brewlog -> brew-journal
+
 - step type constraint
   - break out step options based on current state of brew instance
     - better step_type modeling.
@@ -10,6 +12,9 @@ x brew sorting on main page
   x finished vs. upcoming, date-order
 x brew status, last-update date
 - some way to edit existing brew details
+  - brew date
+  - recipe
+  - name
 - projected/upcoming brew date
 / site templating/skinning
 - visual design
@@ -33,7 +38,16 @@ Before "release"
 - admin security
 - logging
 
+Weirdness
+---------
+- when journaling after racking to secondary, is it entered as primary-ferm or secondary-ferm?
+
 Later
 -----
-- comments
+- units
+  - temp, volume
+- widget-style embedding
+  - brew overview
+  - upcoming brews
 - recipes
+- comments

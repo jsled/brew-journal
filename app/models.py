@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib import auth
 import itertools
 
-terminal_step_types = ['keg', 'bottle']
+terminal_step_types = ['aging', 'consumed']
 
 class Brew (models.Model):
     recipe_name = models.CharField(max_length=500)
@@ -66,9 +66,11 @@ step_types = [ ('strike', 'strike water'),  # volume, temp
                ('ferm2', 'secondary fermentation'),
                ('ferm-add', 'addition'),
                ('lager', 'lagering'),
-               ('condition', 'conditioning'), # terminal
-               ('keg', 'kegged'), # terminal
-               ('bottle', 'bottled'), # terminal
+               ('condition', 'conditioning'),
+               ('keg', 'kegged'),
+               ('bottle', 'bottled'),
+               ('aging', 'aging'),
+               ('consumed', 'consumed'),
                ]
 
 def get_likely_next_step_type(last_step_type):
