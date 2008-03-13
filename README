@@ -6,14 +6,19 @@ Todo
     - better step_type modeling.
 / brew doneness/state
 - brew last-update-step inclusion
-- brew sorting on main page
-  - finished vs. upcoming, date-order
+x brew sorting on main page
+  x finished vs. upcoming, date-order
 x brew status, last-update date
+- some way to edit existing brew details
 - projected/upcoming brew date
 / site templating/skinning
 - visual design
 x unicode support/problem
 x login, user
+- gravity temperature adjustment
+
+- /user/${user}/brew/new
+  - no need for 'brewer' field.
 
 Before "release"
 ----------------

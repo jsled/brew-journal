@@ -8,29 +8,39 @@
 <body>
   <xi:include href="../../_incl/body-top-bar.html"/>
   <h1>${brew.recipe_name}</h1>
+  
+  <h2>recipe</h2>
+  <pre class="recipe">
+    ${brew.recipe}
+  </pre>
+
+  <h2>log</h2>
+
   <table width="80%" border="1" cellspacing="0" cellpadding="2">
     <thead>
-      <tr><th>date</th><th>step</th><th>volume</th><th>pre-temp</th><th>post-temp</th><th>gravity</th><th>notes</th></tr>
+      <tr><th>date</th><th>step</th><th>volume</th><th>temp</th><th>gravity</th><th>notes</th></tr>
     </thead>
     <tbody>
       <tr py:for="step in steps">
         <td><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date(step.date)}</a></td>
         <td>${step.type}</td>
         <td>${step.volume}</td>
-        <td>${step.pre_temp}</td>
-        <td>${step.post_temp}</td>
+        <td>${step.temp}</td>
         <td>${step.gravity}</td>
         <td>${step.notes}</td>
       </tr>
     </tbody>
   </table>
+  <br />
   <div py:if="request.user.is_authenticated() and request.user == user">
-    <a href="/user/${user.username}/brew/${brew.id}/">[add new step]</a><br />
-    <!-- form. -->
-    <form method="post">
-      <table class="form" py:content="std.Markup(step_form.as_table())"/>
-      <input type="submit" value="${submit_label}"/>
-    </form>
+    <a href="/user/${user.username}/brew/${brew.id}/">add new log step</a>
+    <br /><br />
+    <div id="form-container">
+      <form method="post">
+        <table class="form" py:content="std.Markup(step_form.as_table())"/>
+        <input type="submit" value="${submit_label}"/>
+      </form>
+    </div>
   </div>
 </body>
 </html>

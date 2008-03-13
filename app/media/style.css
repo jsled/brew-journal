@@ -33,3 +33,11 @@ P
 {
   width: 70%;
 }
+
+
+PRE.recipe
+{
+  background-color: rgb(240,240,240);
+  padding: 0.5em 0.25em 0.5em 0.25em;
+  width: 50%;
+}

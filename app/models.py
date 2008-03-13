@@ -92,8 +92,7 @@ class Step (models.Model):
     type = models.CharField(max_length=30, choices=step_types)
     date = models.DateTimeField()
     volume = models.FloatField(null=True, blank=True)
-    pre_temp = models.IntegerField(null=True, blank=True)
-    post_temp = models.IntegerField(null=True, blank=True)
+    temp = models.IntegerField(null=True, blank=True)
     gravity = models.FloatField(null=True, blank=True)
     notes = models.CharField(max_length=500, blank=True)
 
@@ -101,7 +100,7 @@ class Step (models.Model):
         return self.__unicode__()
 
     def __unicode__(self):
-        return u'[%s:%s:%s] vol=%s, temp %s -> %s, %s, [%s]' % (self.brew.recipe_name, self.date.strftime('%x %X'), self.type, self.volume, self.pre_temp, self.post_temp, self.gravity, self.notes)
+        return u'[%s:%s:%s] vol=%s, temp=%s, gravity=%s, notes [%s]' % (self.brew.recipe_name, self.date.strftime('%x %X'), self.type, self.volume, self.temp, self.gravity, self.notes)
 
     class Meta:
         ordering = ['date']
