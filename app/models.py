@@ -33,14 +33,17 @@ class Brew (models.Model):
         if len(steps) > 0:
             last_step = steps[len(steps)-1]
             self.last_update_date = last_step.date
-            self.is_closed = (last_step.type in terminal_step_types)
+            if last_step.type in terminal_step_types:
+                self.is_done = True
+            else:
+                self.is_done = False
             if not self.brew_date:
                 # @fixme; this could be better, taking the first actually-brewing-related step, rather than just index=0.
                 self.brew_date = steps[0].date
         else:
             self.brew_date = None
             self.last_update_date = None
-            self.is_closed = False
+            self.is_done = False
 
 
 step_types = [ ('strike', 'strike water'),  # volume, temp

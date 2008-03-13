@@ -85,7 +85,8 @@ def user_index(request, user_name):
     uri_user = User.objects.get(username__exact = user_name)
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     brews = models.Brew.objects.filter(brewer=uri_user, is_done=False)
-    return HttpResponse(render('user/index.html', request=request, user=uri_user, brews=brews))
+    done_brews = models.Brew.objects.filter(brewer=uri_user, is_done=True)
+    return HttpResponse(render('user/index.html', request=request, user=uri_user, brews=brews, done_brews=done_brews))
 
 class UserProfileForm (forms.ModelForm):
     class Meta:

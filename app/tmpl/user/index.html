@@ -7,7 +7,7 @@
 </head>
 <body>
   <xi:include href="../_incl/body-top-bar.html"/>
-<h1>${user.username} brews</h1>
+<h1>${user.username} current brews</h1>
 <table width="80%" border="1" cellspacing="0" cellpadding="2">
   <thead>
     <tr>
@@ -18,13 +18,32 @@
   </thead>
   <tbody>
     <tr py:for="brew in brews">
-      <td><a href="/user/${user.username}/brew/${brew.id}">${brew.recipe_name}</a></td>
+      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe_name}</a></td>
       <td>${brew.brew_date}</td>
       <td>${brew.last_update_date}</td>
     </tr>
   </tbody>
 </table>
 <a py:if="request.user.is_authenticated() and request.user == user" href="./brew/new">[create new brew]</a>
-<h1>Recent Brews</h1>
+<h1>old brews</h1>
+<table width="80%" border="1" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr>
+      <th>Brew</th>
+      <th>Brew Date</th>
+      <th>Last Update</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr py:if="not done_brews">
+      <td colspan="3"><em>no historical brews</em></td>
+    </tr>
+    <tr py:for="brew in done_brews">
+      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe_name}</a></td>
+      <td>${brew.brew_date}</td>
+      <td>${brew.last_update_date}</td>
+    </tr>
+  </tbody>
+</table>
 </body>
 </html>
