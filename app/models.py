@@ -3,13 +3,15 @@ from django.db import models
 from django.contrib import auth
 import itertools
 
+terminal_step_types = ['keg', 'bottle']
+
 class Brew (models.Model):
     recipe_name = models.CharField(max_length=500)
     brew_date = models.DateTimeField('brew date',null=True, blank=True)
     brewer = models.ForeignKey(auth.models.User)
     recipe = models.TextField(null=True, blank=True)
-    # last_updated date <= steps[-1].date
-    # 'closed' <= steps[-1].is_terminal()
+    last_update_date = models.DateTimeField(null=True, editable=False)
+    is_done = models.BooleanField(editable=False, default=False)
 
     def __str__(self):
         return self.__unicode__()
@@ -18,6 +20,27 @@ class Brew (models.Model):
 
     class Admin:
         pass
+
+    class Meta:
+        ordering = ['brew_date', 'last_update_date']
+    
+    def update_from_steps(self, steps = None):
+        '''
+        Based on the type and timestamp of the latest step of `steps`, update the state of the Brew.
+        It's the caller's responsibility to save the updated object.
+        '''
+        steps = steps or []
+        if len(steps) > 0:
+            last_step = steps[len(steps)-1]
+            self.last_update_date = last_step.date
+            self.is_closed = (last_step.type in terminal_step_types)
+            if not self.brew_date:
+                # @fixme; this could be better, taking the first actually-brewing-related step, rather than just index=0.
+                self.brew_date = steps[0].date
+        else:
+            self.brew_date = None
+            self.last_update_date = None
+            self.is_closed = False
 
 
 step_types = [ ('strike', 'strike water'),  # volume, temp
@@ -76,6 +99,9 @@ class Step (models.Model):
 
     def __unicode__(self):
         return u'[%s:%s:%s] vol=%s, temp %s -> %s, %s, [%s]' % (self.brew.recipe_name, self.date.strftime('%x %X'), self.type, self.volume, self.pre_temp, self.post_temp, self.gravity, self.notes)
+
+    class Meta:
+        ordering = ['date']
 
     class Admin:
         pass

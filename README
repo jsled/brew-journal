@@ -4,14 +4,13 @@ Todo
 - step type constraint
   - break out step options based on current state of brew instance
     - better step_type modeling.
-- brew doneness/state
+/ brew doneness/state
+- brew last-update-step inclusion
 - brew sorting on main page
   - finished vs. upcoming, date-order
-- brew status, last-update date
+x brew status, last-update date
 - projected/upcoming brew date
-- site templating/skinning
-  - sitemesh model?
-  - template-defined inclusion
+/ site templating/skinning
 - visual design
 x unicode support/problem
 x login, user
@@ -20,7 +19,7 @@ Before "release"
 ----------------
 - users
   x login/logout
-  - auth checks for actions
+  x auth checks for actions
     x create/edit brews
     x create/edit brew steps
   x create new user

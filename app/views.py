@@ -82,10 +82,10 @@ def logout_view(request):
     return HttpResponseRedirect('/')
 
 def user_index(request, user_name):
-    u = User.objects.get(username__exact = user_name)
-    if not u: return HttpResponseNotFound('no such user [%s]' % (user_name))
-    brews = models.Brew.objects.filter(brewer=u)
-    return HttpResponse(render('user/index.html', request=request, user=u, brews=brews))
+    uri_user = User.objects.get(username__exact = user_name)
+    if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+    brews = models.Brew.objects.filter(brewer=uri_user, is_done=False)
+    return HttpResponse(render('user/index.html', request=request, user=uri_user, brews=brews))
 
 class UserProfileForm (forms.ModelForm):
     class Meta:
@@ -131,7 +131,7 @@ def new_brew(request, user_name):
     return HttpResponse(render('user/brew/new.html', request=request, user=uri_user, brew_form=form, Markup=Markup))
 
 class StepForm (forms.ModelForm):
-    notes = forms.CharField(widget=forms.Textarea())
+    notes = forms.CharField(widget=forms.Textarea(), required=False)
     brew = forms.IntegerField(widget=forms.HiddenInput)
     class Meta:
         model = models.Step
@@ -155,18 +155,24 @@ def brew(request, user_name, brew_id, step_id):
         form = StepForm(instance=step)
         submit_label = 'Update Step'
         print u'step_id [%s] = step [%s]' % (step_id, step)
+    steps_changed = False
     if request.method == 'POST':
         if not (request.user.is_authenticated() and request.user == uri_user):
             return HttpResponseForbidden()
         form = StepForm(request.POST, instance=step)
         if form.is_valid():
-            form.save()
-        # @fixme: update the brew last_updated and state based on new step data.
+            step = form.save(commit=False)
+            step.brew = brew
+            step.save()
+            steps_changed = True
     steps = []
     try:
         steps = models.Step.objects.filter(brew__id = brew.id)
     except models.Step.DoesNotExist:
         pass
+    if steps_changed:
+        brew.update_from_steps(steps)
+        brew.save()
     if not form:
         next_step_type = 'strike'
         if len(steps) > 0:
