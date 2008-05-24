@@ -1,0 +1,6 @@
+[
+{"model": "app.Hop", "pk": 1, "fields": {"name": "Tettanger", "aau_low": "3.6", "aau_high": "3.6"}},
+ {"model": "app.Hop", "pk": 2, "fields": {"name": "Cascade", "aau_low": "5.5", "aau_high": "5.5"}},
+ {"model": "app.Hop", "pk": 3, "fields": {"name": "Cascade", "aau_low": "6.7", "aau_high": "6.7"}},
+ {"model": "app.Hop", "pk": 4, "fields": {"name": "Northern Brewer", "aau_low": "6.7", "aau_high": "6.7"}}
+]

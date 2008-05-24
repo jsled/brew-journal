@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+<head>
+  <title>Recipe | Brew Journal</title>
+  <xi:include href="../../_incl/head.html"/>
+</head>
+<body>
+<xi:include href="../../_incl/body-top-bar.html"/>
+
+<h1>recipes</h1>
+
+<a href="/recipe/new/">create new recipe</a><br/>
+
+<h2>authored</h2>
+<table width="90%">
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>style (type)</th>
+      <th>date</th>
+      <th>actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr py:if="not authored_recipes">
+      <td colspan="4"><em>no recipes authored</em>
+      <py:if test="request.user.is_authenticated() and request.user == uri_user">
+        <a href="/recipes/new">create recipe &rarr;</a>
+      </py:if>
+      </td>
+    </tr>
+    <tr py:for="recipe in authored_recipes">
+      <td><a href="/recipe/${recipe.id}/">${recipe.name}</a></td>
+      <td>${recipe.style.name} (${recipe.type})</td>
+      <td>${std.fmt.date.ymd(recipe.insert_date)}</td>
+      <td><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">clone &rarr;</a>
+      &nbsp;<a href="/user/${uri_user.username}/brew/new/?recipe=${recipe.id}">brew &rarr;</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>recently starred</h2>
+<table width="90%">
+  <thead>
+    <tr>
+      <th>when</th>
+      <th>author</th>
+      <th>name</th>
+      <th>style</th>
+      <th>action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr py:if="not starred_recipes">
+      <td colspan="5"><em>no starred recipes, yet.</em></td>
+    </tr>
+    <tr py:for="starred in starred_recipes">
+      <td>${std.fmt.date.ymdhm(starred.when)}</td>
+      <td>${starred.recipe.author}</td>
+      <td>${starred.recipe.name}</td>
+      <td>${starred.recipe.style.name}</td>
+      <td><a href="/user/${uri_user.username}/recipe/new/?clone_from_recipe_id=${starred.recipe.id}">clone &rarr;</a>
+          &nbsp;<a href="/user/${uri_user.username}/brew/new/?recipe=${starred.recipe.id}">brew &rarr;</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

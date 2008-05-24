@@ -1,42 +1,149 @@
 Todo
 ----
 
-- rename: brewlog -> brew-journal
+- data
+  x grain
+  - hops
+  - yeasts
+  - adjuncts
 
-- step type constraint
-  - break out step options based on current state of brew instance
-    - better step_type modeling.
-/ brew doneness/state
-- brew last-update-step inclusion
+- model cleanups
+  - Brew
+    - add brew name?
+    x remove recipe_name
+    x recipe(_text) -> notes
+    x recipe_id -> recipe
+
+  - RecipeGrain 
+    x fractional amounts
+
+  - RecipeHop
+    x fractional amounts
+
+  - Hops
+    - type: bittering? flavor? aroma?
+    - class: german, american, british
+    - notes: "floral, citrusy, &c."
+
+- auth
+  - generic 'auth-user-must-match-object-owner'
+  - general 'edit-controls-for-authorized-editor'
+  - superuser support all around
+
+- visual design
+  - logo/identity
+    - typeface-based
+    - beer mug ring/stain
+    - graph paper = journal
+  - how wide are tables normally?  90%?  80%?
+
+x move recipes to /recipe/{id}/
+
+- brew/recipe integration
+  x model Brew -> Recipe
+  x create Brew from Recipe
+
+- "current brews" action column should be state-specific
+  - tied into state_types modeling rework?
+
+- /user/jsled/brew/42
+  x Hide 'add step' form until requested
+
+- turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
+
+- TwoLevelSelectWidget
+  - cleanup
+  - use for
+    x grains
+    - hops
+    - yeast
+
+- step addition
+  - de-emphasise unrelated entry fields in any given step-type.
+
+- /user/jsled/brew/new should re-use {POST /user/jsled/brew/} code, a-la /user/jsled/recipe/new
+
+- choices-constrained field UI view ("gl" -> "gallon(s)")
+
+- logging
+  - per request/timing
+  - general system
+  - auth-related
+
+- transitions
+  - starring recipes
+  x recipe ->clone
+  x recipe ->brew
+
+- recipe computation
+  - OG/FG
+  - IBU
+  - a/w, a/v (at ?? attenuation, based on yeast)
+  - SRM
+
+- brew computations
+  - extract efficiency
+    - "mumble?" vs. "brewhouse" efficiency
+    - efficiency tracker.
+  - timing
+    - brew day
+    - fermentation
+
+- paginated views
+  - historical brews
+  - all authored recipes
+
+/ step type constraint
+  x break out step options based on current state of brew instance
+  - better step_type modeling dervied to options,constraints,labels,&c.
+
+- recipe
+  - browsing
+  - searching
+
+- refactor rendering
+  - starred-recipe table on /user/jsled/ and /user/jsled/recipe/
+
+- deletion
+  - recipe
+  - brew
+
+- profile additions
+  - other web url
+  - default units (english/metric)
+
+----------
+
+Done
+----
+
+x rename: brewlog -> brew-journal
+x brew doneness/state
+x brew last-update-step inclusion
 x brew sorting on main page
   x finished vs. upcoming, date-order
 x brew status, last-update date
-- some way to edit existing brew details
-  - brew date
-  - recipe
-  - name
-- projected/upcoming brew date
-/ site templating/skinning
-- visual design
+x some way to edit existing brew details
+x projected/upcoming brew date
+x site templating/skinning
 x unicode support/problem
 x login, user
-
-- gravity temperature adjustment
-- step += entry_date.
-- /user/${user}/brew/new
-  - no need for 'brewer' field.
-
-Before "release"
-----------------
-- users
+x users
   x login/logout
   x auth checks for actions
     x create/edit brews
     x create/edit brew steps
   x create new user
-  [- OpenID based]
-- admin security
-- logging
+x admin security
+x gravity temperature adjustment
+  x related to units work
+  x should always store at 60°, but record record temp, too.
+x /user/${user}/brew/new
+  x no need for 'brewer' field.
+
+Bugs
+----
+x Recipe* amounts can't be sub-integer, which makes it hard to have "0.5 oz" of hops. :(
 
 Weirdness
 ---------
@@ -44,10 +151,36 @@ Weirdness
 
 Later
 -----
-- units
-  - temp, volume
+- shopping list
+  - http://beeradvocate.com/forum/read/1102362#1102497
+
+- alerts
+  - keg now.
+  - have you racked this week?
+
+- comments
+  - OpenID support
+
 - widget-style embedding
   - brew overview
   - upcoming brews
-- recipes
-- comments
+
+- recipe
+  - browser
+  - clone from other URL
+  - star from other URL
+
+- import/export
+
+- add 'equipment'/'rig'
+
+- use the following style of the Google Reader "note this URL" bookmarklet for on-the-web recipe induction:
+    javascript:
+    var b=document.body;
+    var GR________bookmarklet_domain='http://www.google.com';
+    if(b&&!document.xmlVersion){
+    void(z=document.createElement('script'));
+    void(z.src='http://www.google.com/reader/ui/link-bookmarklet.js');
+    void(b.appendChild(z));
+    }
+    else{}

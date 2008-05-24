@@ -2,26 +2,46 @@
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
   <head>
-    <title>brew "${brew.recipe_name}" | BrewLog</title>
+    <title>brew of "${brew.recipe.name}" | Brew Journal</title>
     <xi:include href="../../_incl/head.html"/>
   </head>
 <body>
   <xi:include href="../../_incl/body-top-bar.html"/>
-  <h1>${brew.recipe_name}</h1>
-  <span py:if="brew.brew_date">brewed on: ${std.fmt.date.ymd(brew.brew_date)}<br /></span>
-  
-  <h2>recipe</h2>
-  <pre class="recipe">
-${brew.recipe}
-  </pre>
+  <h1>Brew of ${brew.recipe.name}</h1>
+  <div id="edit-details">
+    <span py:if="brew.brew_date">brewed on ${std.fmt.date.ymd(brew.brew_date)} by ${brew.brewer.username}<br /></span>
+    <span py:if="brew.recipe">from recipe <a href="/recipe/${brew.recipe.id}">${brew.recipe.name}</a>.</span>
+    <h2>notes</h2>
+    <div class="notes" py:if="brew.notes and len(brew.notes) > 0"><pre class="notes">${brew.notes}</pre></div>
+    <div py:if="not brew.notes or len(brew.notes) == 0"><em>(none)</em></div>
+  </div>
+  <div id="edit-details-alt" style="display:none">
+    <h2>edit</h2>
+    <form method="post" action="/user/${brew.brewer.username}/brew/${brew.id}/edit/">
+      <table class="form" py:content="std.Markup(brew_form.as_table())"/>
+      <input type="submit" />
+    </form>
+  </div>
+  <br />
+  <a href="#" onClick="toggle_visibility('edit-details'); return 0;">edit brew details &uarr;</a>
 
   <h2>log</h2>
 
-  <table width="80%" border="1" cellspacing="0" cellpadding="2">
+  <table width="95%">
     <thead>
-      <tr><th>date</th><th>step</th><th>volume</th><th>temp</th><th>gravity</th><th>notes</th></tr>
+      <tr>
+        <th>date</th>
+        <th>step</th>
+        <th>volume</th>
+        <th>temp</th>
+        <th>gravity (corrected)</th>
+        <th>notes</th>
+      </tr>
     </thead>
     <tbody>
+      <tr py:if="not steps">
+        <td colspan="1000"><em>no steps recorded, yet.</em></td>
+      </tr>
       <tr py:for="step in steps">
         <td><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date.ymdhm(step.date)}</a></td>
         <td>${step.type}</td>
@@ -34,13 +54,16 @@ ${brew.recipe}
   </table>
   <br />
   <div py:if="request.user.is_authenticated() and request.user == user">
-    <a href="/user/${user.username}/brew/${brew.id}/">add new log step</a>
-    <br /><br />
-    <div id="form-container">
-      <form method="post">
-        <table class="form" py:content="std.Markup(step_form.as_table())"/>
-        <input type="submit" value="${submit_label}"/>
-      </form>
+    <!-- fixme 'edit' vs. 'add' mode. -->
+    <a href="#" onClick="toggle_visibility('add-step'); return 0;">add new log step &darr;</a>
+    <div id="add-step"><!-- firefox bug --></div>
+    <div id="add-step-alt" style="display:none">
+        <div id="form-container">
+            <form method="post">
+                <table class="form" py:content="std.Markup(step_form.as_table())"/>
+                <input type="submit" value="${submit_label}"/>
+            </form>
+        </div>
     </div>
   </div>
 </body>

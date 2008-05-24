@@ -2,7 +2,7 @@
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
 <head>
-  <title>${user.username} | BrewLog</title>
+  <title>${user.username} | Brew Journal</title>
   <xi:include href="../_incl/head.html"/>
 </head>
 <body>
@@ -11,12 +11,14 @@
 
 <a py:if="request.user.is_authenticated() and request.user == user" href="/user/${user.username}/brew/new">create new brew</a><br /><br />
 
-<table width="80%" border="1" cellspacing="0" cellpadding="2">
+<table width="80%">
   <thead>
     <tr>
-      <th>Brew</th>
-      <th>Brew Date</th>
-      <th>Last Update</th>
+      <th>brew</th>
+      <th>brew date</th>
+      <th>last update</th>
+      <th>state</th>
+      <th>action</th>
     </tr>
   </thead>
   <tbody>
@@ -24,19 +26,49 @@
       <td colspan="3"><em>no active brews<!-- if (requester_is_this_user) { "create one" } --></em></td>
     </tr>
     <tr py:for="brew in brews">
-      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe_name}</a></td>
+      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe.name}</a></td>
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
       <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
+      <td>${brew.last_state}</td>
+      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=foo">update &rarr;</a></td>
     </tr>
   </tbody>
 </table>
-<h1>old brews</h1>
-<table width="80%" border="1" cellspacing="0" cellpadding="2">
+
+<h1>starred recipes</h1>
+<table width="80%">
   <thead>
     <tr>
-      <th>Brew</th>
-      <th>Brew Date</th>
-      <th>Last Update</th>
+      <th>when</th>
+      <th>author</th>
+      <th>name</th>
+      <th>style</th>
+      <th>action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr py:if="not starred_recipes">
+      <td colspan="5"><em>no starred recipes, yet.</em></td>
+    </tr>
+    <tr py:for="starred in starred_recipes">
+      <td>${std.fmt.date.ymdhm(starred.when)}</td>
+      <td>${starred.recipe.author}</td>
+      <td>${starred.recipe.name}</td>
+      <td>${starred.recipe.style.name}</td>
+      <td><a href="/user/${uri_user.username}/recipe/new/?clone_from=${starred.recipe.id}">clone &rarr;</a>
+          &nbsp;<a href="/user/${uri_user.username}/brew/new/?recipe=${starred.recipe.id}">brew &rarr;</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h1>old brews</h1>
+<table width="80%">
+  <thead>
+    <tr>
+      <th>brew</th>
+      <th>brew date</th>
+      <th>last update</th>
     </tr>
   </thead>
   <tbody>
@@ -44,7 +76,7 @@
       <td colspan="3"><em>no historical brews</em></td>
     </tr>
     <tr py:for="brew in done_brews">
-      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe_name}</a></td>
+      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe.name}</a></td>
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
       <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
     </tr>
