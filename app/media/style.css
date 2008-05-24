@@ -9,8 +9,16 @@ BODY
 TABLE
 {
   empty-cells: show;
-  border-collapse: true;
+  border-collapse: collapse;
   border-top: solid thin black;
+  border-bottom: solid thin black;
+}
+
+TD {
+  padding: 0;
+}
+
+THEAD {
   border-bottom: solid thin black;
 }
 
@@ -20,8 +28,9 @@ TBODY
   padding: 0;
 }
 
-TABLE TH {
+TH {
   background-color: rgb(220, 220, 220);
+  text-align: left;
 }
 
 A, A.visited {

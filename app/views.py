@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from genshi.template import TemplateLoader
 from genshi.core import Markup
-from brewlog import util
-from brewlog.app import models, widgets
+from brewjournal import util
+from brewjournal.app import models, widgets
 from django import newforms as forms
 from datetime import datetime
 
