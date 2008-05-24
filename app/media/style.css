@@ -10,6 +10,14 @@ TABLE
 {
   empty-cells: show;
   border-collapse: true;
+  border-top: solid thin black;
+  border-bottom: solid thin black;
+}
+
+TBODY
+{
+  border-top: solid thin black;
+  padding: 0;
 }
 
 TABLE TH {
