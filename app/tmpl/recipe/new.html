@@ -1,0 +1,116 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+<head>
+  <title>Recipe | Brew Journal</title>
+  <xi:include href="../../_incl/head.html"/>
+</head>
+<body>
+<xi:include href="../../_incl/body-top-bar.html"/>
+
+<h1>new recipe</h1>
+
+<form method="post">
+  <!-- editable form. -->
+  <table class="form" width="70%" py:content="std.Markup(form.as_table())"/>
+  <input type="submit" name="submit" value="create"/>
+</form>
+
+<h2>grains</h2>
+<form method="post" action="./grain/" id="grain_form">
+  <input type="hidden" name="delete_id" value="-1"/>
+<table width="70%">
+  <tr>
+    <th>grain</th>
+    <th>amount</th>
+    <th>&mdash;</th>
+  </tr>
+  <tr py:for="grain in grains">
+    <td>${grain.grain.name}</td>
+    <td>${grain.amount_value} ${grain.amount_units}</td>
+    <td><input type="submit" name="submit" value="del" onClick="$('#grain_form').find('[name=delete_id]').val(${grain.id}); $$('#grain_form').get()[0].submit(); return false;"/></td>
+  </tr>
+  <tr>
+    <td>${std.Markup(grain_form['grain'])}</td>
+    <td>${std.Markup(grain_form['amount_value'])} ${std.Markup(grain_form['amount_units'])}</td>
+    <td><input type="submit" name="submit" value="add"/></td>
+  </tr>
+</table>
+</form>
+
+<h2>hops</h2>
+
+<form method="post" action="./hop/">
+<table width="70%">
+  <tr>
+    <th>hop</th>
+    <th>amount</th>
+    <th>boil time</th>
+    <th>&mdash;</th>
+  </tr>
+  <tr py:for="hop in hops" class="deletable">
+    <td>${hop.hop.name}</td>
+    <td>${hop.amount_value} ${hop.amount_units}</td>
+    <td>${hop.boil_time} minutes</td>
+    <td><input type="submit" name="submit" value="del"/></td>
+  </tr>
+  <tr>
+    <td>${std.Markup(hop_form['hop'])}</td>
+    <td>${std.Markup(hop_form['amount_value'])} ${std.Markup(hop_form['amount_units'])}</td>
+    <td>${std.Markup(hop_form['boil_time'])} minutes</td>
+    <td><input type="submit" name="submit" value="add"/></td>
+  </tr>
+</table>
+</form>
+
+<h2>adjuncts</h2>
+
+<form method="post" action="./adjunct">
+<table width="70%">
+  <tr>
+    <th>adjunct</th>
+    <th>amount</th>
+    <th>boil time</th>
+    <th>notes</th>
+    <th>&mdash;</th>
+  </tr>
+  <tr py:for="adjunct in adjuncts" class="deletable">
+    <td>${adjunct.adjunct.name}</td>
+    <td>${adjunct.amount_value} ${adjunct.amount_units}</td>
+    <td>${adjunct.boil_time} minutes</td>
+    <td>${adjunct.notes}</td>
+    <td><input type="submit" name="submit" value="del"/></td>
+  </tr>
+  <tr>
+    <td>${std.Markup(adj_form['adjunct'])}</td>
+    <td>${std.Markup(adj_form['amount_value'])} ${std.Markup(adj_form['amount_units'])}</td>
+    <td>${std.Markup(adj_form['boil_time'])} minutes</td>
+    <td>${std.Markup(adj_form['notes'])}</td>
+    <td><input type="submit" name="submit" value="add" /></td>
+  </tr>
+</table>
+</form>
+
+<h2>yeast</h2>
+<form method="post" value="./yeast/">
+<table width="70%">
+  <tr>
+    <th>yeast</th>
+    <th>is ideal</th>
+    <th>&mdash;</th>
+  </tr>
+  <tr py:for="yeast in yeasts" class="deletable">
+    <td>${yeast.yeast.manufacturer} ${yeast.yeast.ident}</td>
+    <td>${yeast.ideal}</td>
+    <td><input type="submit" name="submit" value="del"/></td>
+  </tr>
+  <tr>
+    <td>${std.Markup(yeast_form['yeast'])}</td>
+    <td>${std.Markup(yeast_form['is_ideal'])}</td>
+    <td><input type="submit" name="submit" value="add"/></td>
+  </tr>
+</table>
+</form>
+
+</body>
+</html>
