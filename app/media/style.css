@@ -8,10 +8,17 @@ BODY
 
 TABLE
 {
-  border: solid thin black;
   empty-cells: show;
+  border-collapse: true;
 }
 
+TABLE TH {
+  background-color: rgb(220, 220, 220);
+}
+
+A, A.visited {
+  color: green;
+}
 
 TABLE.form
 {
