@@ -8,22 +8,25 @@
 <body>
   <xi:include href="../../_incl/body-top-bar.html"/>
   <h1>Brew of ${brew.recipe.name}</h1>
-  <div id="edit-details">
-    <span py:if="brew.brew_date">brewed on ${std.fmt.date.ymd(brew.brew_date)} by ${brew.brewer.username}<br /></span>
-    <span py:if="brew.recipe">from recipe <a href="/recipe/${brew.recipe.id}">${brew.recipe.name}</a>.</span>
-    <h2>notes</h2>
-    <div class="notes" py:if="brew.notes and len(brew.notes) > 0"><pre class="notes">${brew.notes}</pre></div>
-    <div py:if="not brew.notes or len(brew.notes) == 0"><em>(none)</em></div>
-  </div>
-  <div py:if="std.auth_user_is_user(request, user)" id="edit-details-alt" style="display:none">
-    <h2>edit</h2>
-    <form method="post" action="/user/${brew.brewer.username}/brew/${brew.id}/edit/">
-      <table class="form" py:content="std.Markup(brew_form.as_table())"/>
-      <input type="submit" />
-    </form>
+  <div id="details">
+      <div>
+          <span py:if="brew.brew_date">brewed on ${std.fmt.date.ymd(brew.brew_date)} by ${brew.brewer.username}<br /></span>
+          <span py:if="brew.recipe">from recipe <a href="/recipe/${brew.recipe.id}">${brew.recipe.name}</a>.</span>
+          <h2>notes</h2>
+          <div class="notes" py:if="brew.notes and len(brew.notes) > 0"><pre class="notes">${brew.notes}</pre></div>
+          <div py:if="not brew.notes or len(brew.notes) == 0"><em>(none)</em></div>
+      </div>
+      <div py:if="std.auth_user_is_user(request, user)" style="display:none">
+          <h2>edit</h2>
+          <form method="post" id="details-form" action="/user/${brew.brewer.username}/brew/${brew.id}/edit/">
+              <table class="form" py:content="std.Markup(brew_form.as_table())"/>
+              <input type="submit" value="update"/>
+              <button onClick="$('#details').children().slideToggle(); $('#details-form').get()[0].reset(); return false;">cancel</button>
+          </form>
+      </div>
   </div>
   <br />
-  <a py:if="std.auth_user_is_user(request, user)" href="#" onClick="toggle_visibility('edit-details'); return 0;">edit brew details &uarr;</a>
+  <a py:if="std.auth_user_is_user(request, user)" href="#" onClick="$('#details').children().slideToggle(); return false;">edit brew details &uarr;</a>
 
   <h2>log</h2>
 
@@ -53,17 +56,15 @@
     </tbody>
   </table>
   <br />
-  <div py:if="std.auth_user_is_user(request, user)">
-    <!-- fixme 'edit' vs. 'add' mode. -->
-    <a href="#" onClick="toggle_visibility('add-step'); return 0;">add new log step &darr;</a>
-    <div id="add-step"><!-- firefox bug --></div>
-    <div id="add-step-alt" style="display:none">
-        <div id="form-container">
-            <form method="post">
-                <table class="form" py:content="std.Markup(step_form.as_table())"/>
-                <input type="submit" value="${submit_label}"/>
-            </form>
-        </div>
+  <div py:if="std.auth_user_is_user(request, user)" id="add-step">
+    <a href="#" onClick="$('#add-step').children().slideToggle(); return false;">add new log step &darr;</a>
+    <div><!-- empty --></div>
+    <div style="display:none">
+        <form method="post" id="add-step-form">
+            <table class="form" py:content="std.Markup(step_form.as_table())"/>
+            <input type="submit" value="${submit_label}"/>
+            <button onClick="$('#add-step').children().slideToggle(); $('#add-step-form').get()[0].reset(); return false;">Cancel</button>
+        </form>
     </div>
   </div>
 </body>
