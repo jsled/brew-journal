@@ -27,6 +27,9 @@ def safe_datetime_fmt(dt, fmt):
         return ''
     return dt.strftime(fmt)
 
+def auth_user_is_user(request, user):
+    return (request.user.is_authenticated() and request.user == user)
+
 _std_ctx = None
 def standard_context():
     global _std_ctx
@@ -35,6 +38,7 @@ def standard_context():
                                        'ymd': lambda x: safe_datetime_fmt(x, '%Y-%m-%d') } },
                     'markup': Markup,
                     'Markup': Markup,
+                    'auth_user_is_user': auth_user_is_user,
                     }
     return _std_ctx
 
@@ -379,7 +383,7 @@ def recipe_new(request):
                 component.save()
         return HttpResponseRedirect('/recipe/%d/' % (to_clone.id))
     return HttpResponse(render('recipe/new.html', request=request, std=standard_context(),
-                               form=RecipeForm(), is_new=True))
+                               recipe_form=RecipeForm(), is_new=True))
 
 def recipe(request, recipe_id):
     # uri_user = User.objects.get(username__exact = user_name)

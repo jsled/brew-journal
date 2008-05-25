@@ -15,7 +15,7 @@
     <div class="notes" py:if="brew.notes and len(brew.notes) > 0"><pre class="notes">${brew.notes}</pre></div>
     <div py:if="not brew.notes or len(brew.notes) == 0"><em>(none)</em></div>
   </div>
-  <div id="edit-details-alt" style="display:none">
+  <div py:if="std.auth_user_is_user(request, user)" id="edit-details-alt" style="display:none">
     <h2>edit</h2>
     <form method="post" action="/user/${brew.brewer.username}/brew/${brew.id}/edit/">
       <table class="form" py:content="std.Markup(brew_form.as_table())"/>
@@ -23,7 +23,7 @@
     </form>
   </div>
   <br />
-  <a href="#" onClick="toggle_visibility('edit-details'); return 0;">edit brew details &uarr;</a>
+  <a py:if="std.auth_user_is_user(request, user)" href="#" onClick="toggle_visibility('edit-details'); return 0;">edit brew details &uarr;</a>
 
   <h2>log</h2>
 
@@ -53,7 +53,7 @@
     </tbody>
   </table>
   <br />
-  <div py:if="request.user.is_authenticated() and request.user == user">
+  <div py:if="std.auth_user_is_user(request, user)">
     <!-- fixme 'edit' vs. 'add' mode. -->
     <a href="#" onClick="toggle_visibility('add-step'); return 0;">add new log step &darr;</a>
     <div id="add-step"><!-- firefox bug --></div>

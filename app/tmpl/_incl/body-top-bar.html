@@ -18,11 +18,12 @@
       </div>
       <div width="100%">
         <img src="/static/logo_200_100.png" width="200" height="100"/>
-        <a href="/">home</a>
         <div py:strip="True" py:if="request.user.is_authenticated()">
-            | <a href="/user/${request.user.username}">my journal</a>
+            <a href="/user/${request.user.username}">my journal</a>
             | <a href="/user/${request.user.username}/recipe/">my recipes</a>
+            |
         </div>
+        <a href="/">brew-journal</a>
       </div>
   </div>
 </div>

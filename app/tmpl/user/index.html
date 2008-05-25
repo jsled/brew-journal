@@ -9,8 +9,6 @@
   <xi:include href="../_incl/body-top-bar.html"/>
 <h1>${user.username} current brews</h1>
 
-<a py:if="request.user.is_authenticated() and request.user == user" href="/user/${user.username}/brew/new">create new brew</a><br /><br />
-
 <table width="80%">
   <thead>
     <tr>
@@ -18,22 +16,24 @@
       <th>brew date</th>
       <th>last update</th>
       <th>state</th>
-      <th>action</th>
+      <th py:if="std.auth_user_is_user(request, user)">action</th>
     </tr>
   </thead>
   <tbody>
     <tr py:if="not done_brews">
-      <td colspan="3"><em>no active brews<!-- if (requester_is_this_user) { "create one" } --></em></td>
+      <td colspan="3"><em>no active brews</em></td>
     </tr>
     <tr py:for="brew in brews">
       <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe.name}</a></td>
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
       <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
       <td>${brew.last_state}</td>
-      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=foo">update &rarr;</a></td>
+      <td py:if="std.auth_user_is_user(request, user)"><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=foo">update &rarr;</a></td>
     </tr>
   </tbody>
 </table>
+
+<a py:if="std.auth_user_is_user(request, user)" href="/user/${user.username}/brew/new">create new brew</a><br /><br />
 
 <h1>starred recipes</h1>
 <table width="80%">

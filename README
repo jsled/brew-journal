@@ -26,8 +26,8 @@ Todo
     - notes: "floral, citrusy, &c."
 
 - auth
-  - generic 'auth-user-must-match-object-owner'
-  - general 'edit-controls-for-authorized-editor'
+  / general 'edit-controls-for-authorized-editor'
+  - generic 'auth-user-must-match-object-owner' during edit
   - superuser support all around
 
 - visual design
@@ -50,6 +50,11 @@ x move recipes to /recipe/{id}/
   x Hide 'add step' form until requested
 
 - turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
+
+- /recipe/{id}
+  - add "clone", "brew" options
+  - show all brew instances of recipe
+    - author user,  viewing user, all users
 
 - TwoLevelSelectWidget
   - cleanup
