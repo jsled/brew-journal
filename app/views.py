@@ -274,7 +274,20 @@ def get_grain_choices():
         group_names.sort()
         grain_choices = [(group, [(grain.id, grain.name) for grain in by_group[group]]) for group in group_names]
     return grain_choices
-        
+
+yeast_choices = None
+def get_yeast_choices():
+    global yeast_choices
+    if not yeast_choices:
+        by_type = {}
+        for yeast in models.Yeast.objects.all():
+            by_type.setdefault(yeast.type, []).append(yeast)
+            type_names = by_type.keys()
+            type_names.sort()
+            yeast_choices = [(type, [(yeast.id, str(yeast)) for yeast in by_type[type]]) for type in type_names]
+    return yeast_choices
+
+
 class RecipeForm (forms.ModelForm):
     style = forms.ModelChoiceField(models.Style.objects.all(),
                                    widget=widgets.TwoLevelSelectWidget(choices=get_style_choices()))
@@ -305,6 +318,8 @@ class RecipeAdjunctForm (forms.ModelForm):
         exclude = ['recipe']
 
 class RecipeYeastForm (forms.ModelForm):
+    yeast = forms.ModelChoiceField(models.Yeast.objects.all(),
+                                   widget=widgets.TwoLevelSelectWidget(choices=get_yeast_choices()))
     class Meta:
         model = models.RecipeYeast
         exclude = ['recipe']
@@ -321,7 +336,7 @@ def recipe_adjunct(request, recipe_id):
 def recipe_yeast(request, recipe_id):
     return recipe_component_generic(request, recipe_id, models.RecipeYeast, RecipeYeastForm)
 
-def recipe_component_generic(request, recipe_id, model_type, form_type):
+def recipe_component_generic(request, recipe_id, model_type, form_class):
     '''
     All the additions are going to be the same, so genericize them, leveraging the form to do the heavy lifting.
     '''
@@ -334,7 +349,7 @@ def recipe_component_generic(request, recipe_id, model_type, form_type):
         return _get_recipe_redirect(recipe_id)
     recipe = models.Recipe.objects.get(pk=recipe_id)
     if not recipe: return HttpResponseNotFound('no such recipe')
-    form = form_type(request.POST)
+    form = form_class(request.POST)
     new_component = form.save(commit=False)
     new_component.recipe = recipe
     new_component.save()

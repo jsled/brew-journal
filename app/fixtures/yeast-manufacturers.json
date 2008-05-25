@@ -1,0 +1,5 @@
+[{"model": "app.YeastManufacturer", "pk": 1,
+  "fields": {"name": "Wyeast"}},
+ {"model": "app.YeastManufacturer", "pk": 2,
+  "fields": {"name": "White Labs"}}
+]

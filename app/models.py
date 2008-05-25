@@ -124,6 +124,9 @@ class Adjunct (models.Model):
 class YeastManufacturer (models.Model):
     name = models.CharField(max_length=100)
 
+    def __unicode__(self):
+        return u'%(name)s' % self.__dict__
+
     class Admin:
         pass
 
@@ -131,18 +134,32 @@ class YeastManufacturer (models.Model):
 class Yeast (models.Model):
     Types = [
         ('ale', 'Ale'),
+        ('belgian', 'Belgian'),
+        ('brett', 'Brettanomyces'),
         ('lager', 'Lager'),
-        ('brett', 'Brett'),
         ('lambic', 'Lambic'),
+        ('wine', 'Wine'),
+        ('mead', 'Mead'),
+        ('cider', 'Cider'),
+        ('weird', 'Speciality'),
         ]
     manufacturer = models.ForeignKey(YeastManufacturer)
-    ident = models.CharField(max_length=30)
-    description = models.CharField(max_length=100, blank=True)
+    ident = models.CharField(max_length=10)
+    name = models.CharField(max_length=30)
+    description = models.CharField(max_length=1000, blank=True)
     type = models.CharField(max_length=6, choices=Types)
+
     # @fixme: attenuation; min/max temp; URL; class
+    #Flocc_Types = ['low', 'medium-low', 'medium', 'medium-high', 'high']
+    #flocculation = models.CharField(max_length=10, choices=Floc_Types)
+    #attenuation_low = models.IntegerField()
+    #attenuation_high = models.IntegerField()
+    #temp_low = models.IntegerField()
+    #temp_high = models.IntegerField()
+    #alc_tolerance = models.DecimalField(max_digits=3, decimal_places=1)
 
     def __unicode__(self):
-        return u'%s %s' % (self.manufacturer.name, self.ident)
+        return u'%s %s: %s' % (self.manufacturer.name, self.ident, self.name)
 
     class Admin:
         pass
@@ -201,7 +218,7 @@ class RecipeHop (models.Model):
 class RecipeYeast (models.Model):
     recipe = models.ForeignKey(Recipe)
     yeast = models.ForeignKey(Yeast)
-    ideal = models.BooleanField()
+    ideal = models.BooleanField(default=True)
 
     class Admin:
         pass
@@ -218,6 +235,7 @@ class RecipeAdjunct (models.Model):
     class Admin:
         pass
 
+
 class StarredRecipe (models.Model):
     '''
     A Recipe a User has specifically called out (to be turned into a Brew, or whatever).
@@ -228,6 +246,7 @@ class StarredRecipe (models.Model):
 
     class Admin:
         pass
+
 
 class Brew (models.Model):
     #recipe_name = models.CharField(max_length=500)

@@ -144,7 +144,7 @@ function set_delete_id_and_submit(form_name, item_id) {
 </form>
 
 <h2>yeast</h2>
-<form method="post" value="./yeast/" id="yeast_form">
+<form method="post" action="./yeast/" id="yeast_form">
   <input type="hidden" name="delete_id" value="-1"/>
 <table width="70%">
   <tr>
@@ -153,7 +153,7 @@ function set_delete_id_and_submit(form_name, item_id) {
     <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
   </tr>
   <tr py:for="yeast in yeasts" class="deletable">
-    <td>${yeast.yeast.manufacturer} ${yeast.yeast.ident}</td>
+    <td>${yeast.yeast}</td>
     <td>${yeast.ideal}</td>
     <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('yeast_form', ${yeast.id}); return false;">(del)</a></td>
   </tr>
@@ -163,8 +163,8 @@ function set_delete_id_and_submit(form_name, item_id) {
        </tr>
        <tr class="add" style="display:none">
            <td>${std.Markup(yeast_form['yeast'])}</td>
-           <td>${std.Markup(yeast_form['is_ideal'])}</td>
-           <td><input type="submit"  value="add"/></td>
+           <td>${std.Markup(yeast_form['ideal'])}</td>
+           <td><input type="submit" value="add" /></td>
        </tr>
   </div>
 </table>
