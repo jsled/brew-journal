@@ -16,8 +16,8 @@ recipe design as well.</p>
 
 <form py:if="not request.user.is_authenticated()" method="post" >
   <table class="form" py:content="std.Markup(auth_form.as_table())"/>
-  <input type="submit" name="submit" value="login"/>
-  <input type="submit" name="submit" value="create"/>
+  <input type="submit" name="sub" value="login"/>
+  <input type="submit" name="sub" value="create"/>
 </form>
   
 <div class="random-box">

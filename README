@@ -10,6 +10,7 @@ Todo
 - model cleanups
   - Brew
     - add brew name?
+    - must Brews have recipes?
     x remove recipe_name
     x recipe(_text) -> notes
     x recipe_id -> recipe
@@ -24,6 +25,9 @@ Todo
     - type: bittering? flavor? aroma?
     - class: german, american, british
     - notes: "floral, citrusy, &c."
+
+x recipe editing
+  x generalize delete handling
 
 - auth
   / general 'edit-controls-for-authorized-editor'

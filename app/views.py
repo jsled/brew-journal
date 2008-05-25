@@ -50,7 +50,7 @@ def root_post(request):
     auth_form = AuthForm(request.POST)
     username = request.POST['username']
     password = request.POST['password']
-    submit_type = request.POST['submit']
+    submit_type = request.POST['sub']
     if submit_type == 'create':
         user = None
         try:
@@ -331,7 +331,7 @@ def recipe_component_generic(request, recipe_id, model_type, form_type):
         return HttpResponseBadRequest('method not supported')
     if request.POST.has_key('delete_id') and request.POST['delete_id'] != '-1':
         model_type.objects.get(pk=request.POST['delete_id']).delete()
-        return _get_recipe_redirect(user_name, recipe_id)
+        return _get_recipe_redirect(recipe_id)
     recipe = models.Recipe.objects.get(pk=recipe_id)
     if not recipe: return HttpResponseNotFound('no such recipe')
     form = form_type(request.POST)
