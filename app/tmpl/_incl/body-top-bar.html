@@ -9,6 +9,7 @@
               <py:if test="request.user.is_authenticated()">
                   ${request.user.username}
                   | <a href="/user/${request.user.username}">my journal</a>
+                  | <a href="/">brew-journal</a>
                   | <a href="/user/${request.user.username}/profile">profile</a>
                   | <a href="/logout">sign out</a>
               </py:if>
@@ -18,14 +19,7 @@
           </nobr>
       </div>
       <div width="100%">
-          <a id="logotext" href="/">brew-journal</a>
-        <!-- img src="/static/logo_200_100.png" width="200" height="100"/ -->
-        <!-- div py:strip="True" py:if="request.user.is_authenticated()">
-            <a href="/user/${request.user.username}">my brew-journal</a>
-            |
-        </div>
-        <a href="/">brew-journal home</a -->
+          <a class="logotext" py:attrs="{'href': ['/', '/user/%s/' % (request.user.username)][request.user.is_authenticated()]}">brew-journal</a>
       </div>
   </div>
 </div>
-

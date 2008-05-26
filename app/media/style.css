@@ -66,15 +66,17 @@ TABLE.form
   padding-bottom: 0.25em;
 }
 
-.topbar #logotext
+.logotext
 {
   font-family: Gentium, serif;
-  /*color: white;
-  background-color: rgb(34, 139, 34);*/
   color: rgb(34, 140, 34);
+}
+
+.topbar .logotext
+{
+  font-size: 4em;
   marging-left: 0.75em;
   padding-left: 0.5em;
-  font-size: 4em;
   text-decoration: none;
 }
 

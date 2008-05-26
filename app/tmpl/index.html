@@ -2,34 +2,60 @@
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
   <head>
-    <title>BrewJournal</title>
+    <title>brew-journal</title>
     <xi:include href="_incl/head.html"/>
   </head>
 <body>
 <xi:include href="_incl/body-top-bar.html"/>
-<h1>Brew Journal</h1>
 
-<p>BrewJournal is a web site for you to track the status and progress of your
-home brews.  The initial focus is tracking the time, steps and details of
-the brewing/fermentation process, but we'll eventually support recipes and
-recipe design as well.</p>
+<p><span class="logotext">brew-journal</span> is a web site for you to track
+the status and progress of your home brews.</p>
 
 <form py:if="not request.user.is_authenticated()" method="post" >
-  <table class="form" py:content="std.Markup(auth_form.as_table())"/>
-  <input type="submit" name="sub" value="login"/>
-  <input type="submit" name="sub" value="create"/>
+  <table class="form">
+      <tr>
+          <th>username:</th>
+          <td py:content="std.Markup(auth_form.username)"/>
+          <td>&nbsp;</td>
+      </tr>
+      <tr>
+          <th>password</th>
+          <td py:content="std.Markup(auth_form.password)"/>
+          <td align="right"><input type="submit" name="sub" value="login"/></td>
+      </tr>
+      <tr>
+          <th>password (again):</th>
+          <td><input type="password" name="password_again"/></td>
+          <td>&nbsp;</td>
+      </tr>
+      <tr>
+          <th>email</th>
+          <td><input type="text" name="email"/></td>
+          <td><input type="submit" name="sub" value="create"/></td>
+      </tr>
+  </table>
 </form>
+
+<h1>recent brews</h1>
+
+<!-- @fixme:
+- Recent Updates
+  - by entry date
+-->
+&mdash;
+
+
+<h1>recent recipes</h1>
+
+&mdash;
   
-<div class="random-box">
-<h2>Recent Updates</h2>
+<h1>recent updates</h1>
 <ul>
   <li py:for="step in recent_updates"><a href="/user/${step.brew.brewer.username}/brew/${step.brew.id}">Step ${step.type} journaled for ${step.brew.brewer.username}'s ${step.brew.recipe_name} on ${std.fmt.date.ymdhm(step.date)}</a></li>
 </ul>
-</div>
+
 <!--
 
-- Recent Updates
-  - by entry date
 - Site News
   - inclusion
 - New Users
