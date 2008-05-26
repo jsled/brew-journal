@@ -1,6 +1,13 @@
 Todo
 ----
 
+- REST violations
+  - (->clone) recipe creates too quickly
+
+- remove /user/{user}/recipes/, fold into /user/{user}/
+
+- /user/{user}/brew/{id}?type={type} doesn't work.
+
 - data
   x grain
   x hops
@@ -54,6 +61,8 @@ x /recipe/new/
   - focus to support keyboard-based nav
 
 - starring recipes
+  - add (-> star) action to recipe lists
+  - add (-> star) action to recipe view
 
 x move recipes to /recipe/{id}/
 
