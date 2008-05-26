@@ -15,6 +15,7 @@
           <h2>notes</h2>
           <div class="notes" py:if="brew.notes and len(brew.notes) > 0"><pre class="notes">${brew.notes}</pre></div>
           <div py:if="not brew.notes or len(brew.notes) == 0"><em>(none)</em></div>
+          <a py:if="std.auth_user_is_user(request, user)" href="#" onClick="$('#details').children().slideToggle(); return false;">edit brew details &uarr;</a>
       </div>
       <div py:if="std.auth_user_is_user(request, user)" style="display:none">
           <h2>edit</h2>
@@ -25,8 +26,6 @@
           </form>
       </div>
   </div>
-  <br />
-  <a py:if="std.auth_user_is_user(request, user)" href="#" onClick="$('#details').children().slideToggle(); return false;">edit brew details &uarr;</a>
 
   <h2>log</h2>
 
