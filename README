@@ -43,6 +43,7 @@ x /recipe/new/
 
 - auth
   / general 'edit-controls-for-authorized-editor'
+    - /user/{user}/ -> starred, recipe actions, controls
   - generic 'auth-user-must-match-object-owner' during POST handling
   - superuser support all around
 

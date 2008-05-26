@@ -104,9 +104,11 @@ def user_index(request, user_name):
     brews = models.Brew.objects.filter(brewer=uri_user, is_done=False)
     done_brews = models.Brew.objects.filter(brewer=uri_user, is_done=True)
     starred_recipes = models.StarredRecipe.objects.filter(user=uri_user)
+    authored_recipes = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date')[0:10]
     return HttpResponse(render('user/index.html', request=request, user=uri_user, std=standard_context(),
                                brews=brews,
                                done_brews=done_brews,
+                               authored_recipes=authored_recipes,
                                starred_recipes=starred_recipes))
 
 class UserProfileForm (forms.ModelForm):
@@ -367,18 +369,6 @@ def recipe_post(request, recipe_id, recipe=None):
         upd_recipe.author = recipe.author
     upd_recipe.save()
     return HttpResponseRedirect('/recipe/%d' % (upd_recipe.id))
-
-def user_recipe_index(request, user_name):
-    uri_user = User.objects.get(username__exact = user_name)
-    if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
-    if request.method == 'POST':
-        rtn = recipe_post(request, None, None)
-        if rtn: return rtn
-    # populate data for page
-    authored = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date')[0:10]
-    starred = models.StarredRecipe.objects.filter(user=uri_user).order_by('-when')
-    return HttpResponse(render('user/recipe/index.html', request=request, uri_user=uri_user, std=standard_context(),
-                               authored_recipes=authored, starred_recipes=starred))
 
 def recipe_new(request):
     # uri_user = User.objects.get(username__exact = user_name)
