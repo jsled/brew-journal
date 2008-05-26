@@ -162,7 +162,7 @@ def new_brew(request, user_name):
         brew = models.Brew()
         brew.recipe = recipe
         form = BrewForm(instance=brew)
-    return HttpResponse(render('user/brew/new.html', request=request, user=uri_user, brew_form=form, Markup=Markup))
+    return HttpResponse(render('user/brew/new.html', request=request, recipe=recipe, user=uri_user, brew_form=form, Markup=Markup))
 
 def brew_edit(request,user_name, brew_id):
     '''POST /user/jsled/brew/2 edits'''

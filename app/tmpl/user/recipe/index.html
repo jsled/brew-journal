@@ -10,8 +10,6 @@
 
 <h1>recipes</h1>
 
-<a href="/recipe/new/">create new recipe</a><br/>
-
 <h2>authored</h2>
 <table width="90%">
   <thead>
@@ -34,12 +32,15 @@
       <td><a href="/recipe/${recipe.id}/">${recipe.name}</a></td>
       <td>${recipe.style.name} (${recipe.type})</td>
       <td>${std.fmt.date.ymd(recipe.insert_date)}</td>
-      <td><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">clone &rarr;</a>
-      &nbsp;<a href="/user/${uri_user.username}/brew/new/?recipe=${recipe.id}">brew &rarr;</a>
+      <td><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">(&rarr;clone)</a>
+      &nbsp;<a href="/user/${uri_user.username}/brew/new/?recipe=${recipe.id}">(&rarr;brew)</a>
       </td>
     </tr>
   </tbody>
 </table>
+
+<br />
+<a href="/recipe/new/">create new recipe</a><br/>
 
 <h2>recently starred</h2>
 <table width="90%">
@@ -61,8 +62,8 @@
       <td>${starred.recipe.author}</td>
       <td>${starred.recipe.name}</td>
       <td>${starred.recipe.style.name}</td>
-      <td><a href="/user/${uri_user.username}/recipe/new/?clone_from_recipe_id=${starred.recipe.id}">clone &rarr;</a>
-          &nbsp;<a href="/user/${uri_user.username}/brew/new/?recipe=${starred.recipe.id}">brew &rarr;</a>
+      <td><a href="/user/${uri_user.username}/recipe/new/?clone_from_recipe_id=${starred.recipe.id}">(&rarr;clone)</a>
+          &nbsp;<a href="/user/${uri_user.username}/brew/new/?recipe=${starred.recipe.id}">(&rarr;brew)</a>
       </td>
     </tr>
   </tbody>

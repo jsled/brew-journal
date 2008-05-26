@@ -70,7 +70,7 @@ x better "next step" computation from improved structure
 - turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
 - /recipe/{id}
-  - add "clone", "brew" options
+  - add "clone", "brew" ui options
   - show all brew instances of recipe
     - author user,  viewing user, all users
 
@@ -142,6 +142,33 @@ x better "next step" computation from improved structure
   - default units (english/metric)
 
 ----------
+
+Colors
+------
+
+Base green: rgb(34, 140, 34) (#228C22)
+
+<http://wellstyled.com/tools/colorscheme2/index-en.html#>, triad:
+
+green: #228C22
+dark: #186218
+light: #CFFFCF
+bright: #9EFF9E
+
+purple: #8C2272
+dark: #62184F
+light: #FFCFF3
+bright: #FF9EE7
+
+brown: #8C4C22
+dark: #623518
+light: #FFE2CF
+bright: #FFC59E
+
+
+<http://www.easyrgb.com/index.php?X=HARM#Result>:
+nice blue/purple/grey: #6977B0
+nice soft green: #75B368
 
 Done
 ----

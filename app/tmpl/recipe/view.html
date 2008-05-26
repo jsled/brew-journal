@@ -27,7 +27,12 @@ function set_delete_id_and_submit(form_name, item_id) {
 <body>
 <xi:include href="../_incl/body-top-bar.html"/>
 
-<h1 py:if="recipe">recipe : ${recipe.name}</h1>
+<h1 py:if="recipe">recipe "${recipe.name}"</h1>
+
+<div py:if="request.user.is_authenticated()">
+    <a href="/user/${request.user.username}/brew/new/?recipe=${recipe.id}">(&rarr; brew this recipe)</a>
+    <a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">(&rarr; clone this recipe)</a>
+</div>
 
 <h2>overview</h2>
 

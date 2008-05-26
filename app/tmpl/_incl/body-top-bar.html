@@ -17,7 +17,8 @@
           </nobr>
       </div>
       <div width="100%">
-        <img src="/static/logo_200_100.png" width="200" height="100"/>
+        <span id="logotext">brew-journal</span>
+        <!-- img src="/static/logo_200_100.png" width="200" height="100"/ -->
         <div py:strip="True" py:if="request.user.is_authenticated()">
             <a href="/user/${request.user.username}">my journal</a>
             | <a href="/user/${request.user.username}/recipe/">my recipes</a>

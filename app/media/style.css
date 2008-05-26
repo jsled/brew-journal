@@ -14,6 +14,10 @@ TABLE
   border-bottom: solid thin black;
 }
 
+H1, H2, H3, H4 {
+  font-family: serif;
+}
+
 TD {
   padding: 0;
 }
@@ -28,8 +32,17 @@ TBODY
   padding: 0;
 }
 
+TBODY TR {
+   border-top: solid thin #FFE2CF;
+}
+
+TBODY TR:first-child {
+   border-top: inherit;
+}
+
 TH {
-  background-color: rgb(220, 220, 220);
+  background-color: #75B368;
+  font-weight: bold;
   text-align: left;
 }
 
@@ -44,13 +57,26 @@ TABLE.form
 
 .topbar
 {
-  background: rgb(240, 240, 240);
+  border-bottom: solid thin green;
   margin-top: -2em;
   margin-left: -2em;
   width: 100%;
   padding-right: 2.5em;
   padding-top: 0.25em;
   padding-bottom: 0.25em;
+}
+
+.topbar #logotext
+{
+  margin-top: -0.5em;
+  font-family: Gentium, serif;
+  /*color: white;
+  background-color: rgb(34, 139, 34);*/
+  color: rgb(34, 140, 34);
+  marging-left: 0.75em;
+  padding-left: 1.0em;
+  padding-right: 0.5em;
+  font-size: 4em;
 }
 
 P
