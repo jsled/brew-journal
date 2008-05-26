@@ -298,7 +298,7 @@ class RecipeForm (forms.ModelForm):
 
     class Meta:
         model = models.Recipe
-        exclude = ['author', 'source', 'private']
+        exclude = ['author', 'derived_from_recipe_id', 'source', 'private']
 
 class RecipeGrainForm (forms.ModelForm):
     grain = forms.ModelChoiceField(models.Grain.objects.all(),

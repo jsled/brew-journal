@@ -28,8 +28,8 @@ Todo
     - class: german, american, british
     - notes: "floral, citrusy, &c."
 
-- /recipe/new/
-  - remove "derived from" control?
+x /recipe/new/
+  x remove "derived from" control?
 
 - recipe editing
   x generalize delete handling

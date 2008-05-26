@@ -202,10 +202,9 @@ class Recipe (models.Model):
     batch_size = models.DecimalField(max_digits=3, decimal_places=2)
     batch_size_units = models.CharField(max_length=2, choices = Volume_Units, default='gl')
     style = models.ForeignKey(Style)
-    derived_from_recipe_id = models.ForeignKey('self', null=True, blank=True)
-    type = models.CharField(max_length=1, choices=Types)
-    source = models.CharField(max_length=300, blank=True, default='')
-    private = models.BooleanField(default=False)
+    derived_from_recipe = models.ForeignKey('self', null=True, blank=True)
+    type = models.CharField(max_length=1, choices=Types, default='a')
+    source = models.CharField(max_length=300, blank=True, null=True)
 
     def __str__(self):
         return self.__unicode__()
