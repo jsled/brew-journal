@@ -298,7 +298,8 @@ class RecipeForm (forms.ModelForm):
 
     class Meta:
         model = models.Recipe
-        exclude = ['author', 'derived_from_recipe_id', 'source', 'private']
+        exclude = ['author', 'derived_from_recipe', 'source', 'private']
+
 
 class RecipeGrainForm (forms.ModelForm):
     grain = forms.ModelChoiceField(models.Grain.objects.all(),
@@ -382,23 +383,36 @@ def user_recipe_index(request, user_name):
 def recipe_new(request):
     # uri_user = User.objects.get(username__exact = user_name)
     # if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+    recipe = None
+    recipe_form = RecipeForm()
+    clone_id = None
     if request.method == 'GET' and request.GET.has_key('clone_from_recipe_id'):
-        to_clone = models.Recipe.objects.get(pk=int(request.GET['clone_from_recipe_id']))
-        to_clone.name = 'Copy of %s' % (to_clone.name)
+        clone_id = request.GET['clone_from_recipe_id']
+        to_clone = models.Recipe.objects.get(pk=int(clone_id))
+        recipe_form = RecipeForm(instance=to_clone,
+                                 initial={'name': 'Copy of %s' % (to_clone.name),
+                                          'derived_from_recipe': to_clone})
+    elif request.method == 'POST' and request.POST.has_key('clone_from_recipe_id'):
+        clone_id = request.POST['clone_from_recipe_id']
+        to_clone = models.Recipe.objects.get(pk=int(clone_id))
+        form = RecipeForm(request.POST, instance=to_clone)
+        cloning = form.save(commit=False)
         if request.user.is_authenticated():
-            to_clone.author = request.user
-        to_clone.derived_from_recipe_id = to_clone.id
+            cloning.author = request.user
+        cloning.derived_from_recipe = to_clone
         cloned_recipe_id = to_clone.id
-        to_clone.id = None
-        to_clone.save()
+        cloning.id = None
+        cloning.save()
         for type in [models.RecipeGrain, models.RecipeHop, models.RecipeAdjunct, models.RecipeYeast]:
             for component in type.objects.filter(recipe=cloned_recipe_id):
                 component.recipe = to_clone
                 component.id = None
                 component.save()
-        return HttpResponseRedirect('/recipe/%d/' % (to_clone.id))
+        return HttpResponseRedirect('/recipe/%d/' % (cloning.id))
     return HttpResponse(render('recipe/new.html', request=request, std=standard_context(),
-                               recipe_form=RecipeForm(), is_new=True))
+                               clone_from_recipe_id=clone_id,
+                               recipe_form=recipe_form,
+                               is_new=True))
 
 def recipe(request, recipe_id):
     # uri_user = User.objects.get(username__exact = user_name)

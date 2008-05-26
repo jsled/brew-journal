@@ -1,9 +1,6 @@
 Todo
 ----
 
-- REST violations
-  - (->clone) recipe creates too quickly
-
 - remove /user/{user}/recipes/, fold into /user/{user}/
 
 - /user/{user}/brew/{id}?type={type} doesn't work.
@@ -79,21 +76,19 @@ x better "next step" computation from improved structure
 - turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
 - /recipe/{id}
-  - add "clone", "brew" ui options
   - show all brew instances of recipe
-    - author user,  viewing user, all users
+    - by: authoring user, viewing user, all users
+  x add "clone", "brew" ui options
 
 - TwoLevelSelectWidget
   - cleanup
   - use for
-    x grains
     - hops
-    - yeast
+    x grains
+    x yeast
 
 - step addition
   - de-emphasise unrelated entry fields in any given step-type.
-
-- /user/jsled/brew/new should re-use {POST /user/jsled/brew/} code, a-la /user/jsled/recipe/new
 
 - choices-constrained field UI view ("gl" -> "gallon(s)")
 

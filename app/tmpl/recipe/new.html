@@ -10,9 +10,9 @@
 
 <h1>new recipe</h1>
 
-<form method="post" action="/recipe/">
-  <!-- editable form. -->
+<form method="post" action="/recipe/new/">
   <table class="form" width="70%" py:content="std.Markup(recipe_form.as_table())"/>
+  <input type="hidden" name="clone_from_recipe_id" value="${clone_from_recipe_id}"/>
   <input type="submit" name="submit" value="create"/>
 </form>
 

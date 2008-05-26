@@ -18,6 +18,7 @@ urlpatterns = patterns(
     # (r'^user/(?P<user_name>[^/]+)/recipe/star/$', 'user_recipe_star'),
     
     # /recipe/new/?clone_from_recipe_id=42
+    # /recipe/new/?clone_from_url=<...>
     (r'^recipe/new/$', 'recipe_new'),
     (r'^recipe/((?P<recipe_id>\d+)/)?$', 'recipe'),
     (r'^recipe/(?P<recipe_id>\d+)/grain/$', 'recipe_grain'),
