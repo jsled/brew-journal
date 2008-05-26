@@ -9,10 +9,6 @@ Todo
   - yeast 2
     - Wyeast: wine, distiller, cider, mead, sake, VSS archives
 
-- util
-  - celsius_to_farenheit
-  - correct_gravity
-
 - model cleanups
   - Brew
     - add brew name?
