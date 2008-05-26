@@ -242,7 +242,7 @@ def brew(request, user_name, brew_id, step_id):
         if len(steps) > 0:
             last_step = steps[len(steps)-1]
             last_step_type = last_step.type
-            next_step_type = models.get_likely_next_step_type(last_step_type)
+            next_step_type = models.get_likely_next_step_type_id(last_step_type)
             last_date = last_step.date
             if (datetime.now() - last_step.date).days > 2:
                 default_date = last_step.date

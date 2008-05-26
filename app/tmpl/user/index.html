@@ -28,7 +28,9 @@
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
       <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
       <td>${brew.last_state}</td>
-      <td py:if="std.auth_user_is_user(request, user)"><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=foo">update &rarr;</a></td>
+      <td py:if="std.auth_user_is_user(request, user)">
+          <span py:for="next in brew.next_step_types()"  py:strip="True"><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=${next.id}">(&rarr;${next.label})</a> </span>
+      </td>
     </tr>
   </tbody>
 </table>
