@@ -7,13 +7,13 @@ urlpatterns = patterns(
     (r'^user/(?P<user_name>[^/]+)/?$', 'user_index'),
     (r'^user/(?P<user_name>[^/]+)/profile/?$', 'user_profile'),
     (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)(/step/(?P<step_id>\d+))?/?$', 'brew'),
-    # /user/jsled/brew/new/?recipe=42
-    (r'^user/(?P<user_name>[^/]+)/brew/new/?$', 'new_brew'),
+    # /user/jsled/brew/new/?recipe_id=42
+    (r'^user/(?P<user_name>[^/]+)/brew/new/?$', 'user_brew_new'),
     (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/edit/$', 'brew_edit'),
 
     # GET /user/jsled/star?recipe_id=42 + POST
     # GET /user/jsled/star?url=<http://.../recipe> + POST
-    # (r'^user/(?P<user_name>[^/]+)/recipe/star/$', 'user_recipe_star'),
+    # (r'^user/(?P<user_name>[^/]+)/star/$', 'user_star'),
     
     # /recipe/new/?clone_from_recipe_id=42
     # /recipe/new/?clone_from_url=<...>

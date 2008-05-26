@@ -145,7 +145,7 @@ class BrewForm (forms.ModelForm):
         exclude = ['brewer']
 
 # sys.stdout = codecs.getwriter('utf-8')(sys.stdout, errors='replace')
-def new_brew(request, user_name):
+def user_brew_new(request, user_name):
     uri_user = User.objects.get(username__exact = user_name)
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     form = BrewForm()
@@ -158,8 +158,8 @@ def new_brew(request, user_name):
             brew.brewer = uri_user
             brew.save()
             return HttpResponseRedirect('/user/%s/brew/%s' % (uri_user.username, brew.id))
-    elif request.method == 'GET' and request.GET.has_key('recipe'):
-        recipe_id = request.GET['recipe']
+    elif request.method == 'GET' and request.GET.has_key('recipe_id'):
+        recipe_id = request.GET['recipe_id']
         recipe = models.Recipe.objects.get(pk=int(recipe_id))
         brew = models.Brew()
         brew.recipe = recipe
