@@ -142,7 +142,7 @@ def user_profile(request, user_name):
 class BrewForm (forms.ModelForm):
     class Meta:
         model = models.Brew
-        exclude = ['brewer']
+        exclude = ['brewer', 'recipe']
 
 # sys.stdout = codecs.getwriter('utf-8')(sys.stdout, errors='replace')
 def user_brew_new(request, user_name):
@@ -156,6 +156,11 @@ def user_brew_new(request, user_name):
         form = BrewForm(request.POST)
         if form.is_valid():
             brew = form.save(commit=False)
+            if not brew.recipe:
+                anon_recipe = models.Recipe.objects.create(author=uri_user,
+                                                           name=request.POST['brew_name'],
+                                                           batch_size=0)
+                brew.recipe = anon_recipe
             brew.brewer = uri_user
             brew.save()
             return HttpResponseRedirect('/user/%s/brew/%s' % (uri_user.username, brew.id))

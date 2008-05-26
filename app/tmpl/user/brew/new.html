@@ -2,14 +2,20 @@
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
   <head>
-    <title>new brew of "${recipe.name}" | brew-journal</title>
+    <title>new brew<py:if test="recipe">of "${recipe.name}"</py:if> | brew-journal</title>
     <xi:include href="../../_incl/head.html"/>
   </head>
 <body>
   <xi:include href="../../_incl/body-top-bar.html"/>
-  <h1>new brew of "${recipe.name}" </h1>
+  <h1>new brew<py:if test="recipe"> of "${recipe.name}"</py:if></h1>
   <form method="post">
-    <table class="form" py:content="std.Markup(brew_form.as_table())"/>
+    <table class="form">
+        <tr py:if="not recipe">
+            <th>Name:</th>
+            <td><input type="text" name="brew_name"/></td>
+        </tr>
+        <div py:strip="True" py:content="std.Markup(brew_form.as_table())"/>
+    </table>
     <input type="submit" value="create"/>
   </form>
 </body>

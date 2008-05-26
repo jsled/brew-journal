@@ -91,7 +91,6 @@ PRE.recipe
   width: 50%;
 }
 
-
 .random-box
 {
   width: 45%;
@@ -104,7 +103,16 @@ PRE.recipe
   margin-top: 0em;
 }
 
-TD {
-  padding-left: 0.25em;
-  padding-right: 0.25em;
+TABLE.form TBODY {
+  border-top: inherit;
+}
+TABLE.form TR {
+  border-top: inherit;
+}
+TABLE.form {
+  margin-bottom: 0.5em;
+}
+
+TH, TD {
+  padding: 0.25em;
 }
