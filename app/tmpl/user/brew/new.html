@@ -9,8 +9,8 @@
   <xi:include href="../../_incl/body-top-bar.html"/>
   <h1>new brew of "${recipe.name}" </h1>
   <form method="post">
-    <table class="form" py:content="Markup(brew_form.as_table())"/>
-    <input type="submit"/>
+    <table class="form" py:content="std.Markup(brew_form.as_table())"/>
+    <input type="submit" value="create"/>
   </form>
 </body>
 </html>

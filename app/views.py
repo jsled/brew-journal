@@ -148,6 +148,7 @@ class BrewForm (forms.ModelForm):
 def user_brew_new(request, user_name):
     uri_user = User.objects.get(username__exact = user_name)
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+    recipe = None
     form = BrewForm()
     if request.method == 'POST':
         if not (request.user.is_authenticated() and request.user == uri_user):
@@ -164,9 +165,10 @@ def user_brew_new(request, user_name):
         brew = models.Brew()
         brew.recipe = recipe
         form = BrewForm(instance=brew)
-    return HttpResponse(render('user/brew/new.html', request=request, recipe=recipe, user=uri_user, brew_form=form, Markup=Markup))
+    return HttpResponse(render('user/brew/new.html', request=request, user=uri_user, std=standard_context(),
+                               recipe=recipe, brew_form=form))
 
-def brew_edit(request,user_name, brew_id):
+def brew_edit(request, user_name, brew_id):
     '''POST /user/jsled/brew/2 edits'''
     uri_user = User.objects.get(username__exact = user_name)
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
@@ -254,8 +256,35 @@ def brew(request, user_name, brew_id, step_id):
                                brew_form=brew_form))
 
 
-style_choices = None
+class StarForm (forms.ModelForm):
+    class Meta:
+        model = models.StarredRecipe
+        exclude = ['recipe', 'user', 'when']
 
+
+def user_star(request, user_name):
+    uri_user = User.objects.get(username__exact = user_name)
+    if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+    if request.method == 'GET':
+        if request.GET.has_key('recipe_id'):
+            recipe_id = int(request.GET['recipe_id'])
+            recipe = models.Recipe.objects.get(pk=recipe_id)
+            return HttpResponse(render('user/star.html', request=request, std=standard_context(), user=uri_user,
+                                       form=StarForm(), recipe=recipe))
+    elif request.method == 'POST':
+        if request.POST.has_key('recipe_id'):
+            recipe_id = int(request.GET['recipe_id'])
+            recipe = models.Recipe.objects.get(pk=recipe_id)
+            form = StarForm(request.POST)
+            star = form.save(commit=False)
+            star.recipe = recipe
+            star.user = uri_user
+            star.save()
+            return HttpResponseRedirect('/user/%s/' % (user_name))
+    return HttpResponseBadRequest('bad request')
+
+
+style_choices = None
 def get_style_choices():
     global style_choices
     if not style_choices:

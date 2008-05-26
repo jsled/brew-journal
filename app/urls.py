@@ -13,7 +13,7 @@ urlpatterns = patterns(
 
     # GET /user/jsled/star?recipe_id=42 + POST
     # GET /user/jsled/star?url=<http://.../recipe> + POST
-    # (r'^user/(?P<user_name>[^/]+)/star/$', 'user_star'),
+    (r'^user/(?P<user_name>[^/]+)/star/$', 'user_star'),
     
     # /recipe/new/?clone_from_recipe_id=42
     # /recipe/new/?clone_from_url=<...>

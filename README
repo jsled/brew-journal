@@ -59,8 +59,9 @@ x /recipe/new/
   - focus to support keyboard-based nav
 
 - starring recipes
-  - add (-> star) action to recipe lists
-  - add (-> star) action to recipe view
+  x add (-> star) action to recipe lists
+  x add (-> star) action to recipe view
+  - AJAX-y
 
 x move recipes to /recipe/{id}/
 

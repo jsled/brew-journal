@@ -30,8 +30,9 @@ function set_delete_id_and_submit(form_name, item_id) {
 <h1 py:if="recipe">recipe "${recipe.name}"</h1>
 
 <div py:if="request.user.is_authenticated()">
-    <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">(&rarr; brew this recipe)</a>
-    <a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">(&rarr; clone this recipe)</a>
+    <a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">(&rarr;clone)</a>
+    <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">(&rarr;star)</a>
+    <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">(&rarr;brew)</a>
 </div>
 
 <h2>overview</h2>
@@ -39,7 +40,7 @@ function set_delete_id_and_submit(form_name, item_id) {
 <div id="overview">
   <div>
     <table width="60%">
-      <tr><th>name</th><td>${recipe.name}</td></tr>
+      <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
       <tr><th>style</th><td>${recipe.style.name} (${recipe.style.bjcp_code})</td></tr>
       <tr><th>batch_size</th><td>${recipe.batch_size} ${recipe.batch_size_units}</td></tr>
       <tr><th>type</th><td>${recipe.type}</td></tr>

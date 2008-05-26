@@ -267,6 +267,7 @@ class StarredRecipe (models.Model):
     recipe = models.ForeignKey(Recipe)
     user = models.ForeignKey(auth.models.User)
     when = models.DateTimeField(default=datetime.datetime.now)
+    notes = models.CharField(max_length=1000, blank=True, default='')
 
     class Admin:
         pass

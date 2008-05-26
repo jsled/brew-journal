@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+<head>
+  <title>star recipe "${recipe.name}" | Brew Journal</title>
+  <xi:include href="../_incl/head.html"/>
+</head>
+<body>
+  <xi:include href="../_incl/body-top-bar.html"/>
+
+<h1>star'ing recipe "<a href="/recipe/${recipe.id}/">${recipe.name}</a>"</h1>
+
+<form method="post">
+    <table class="form" py:content="std.Markup(form.as_table())"/>
+    <input type="hidden" name="recipe_id" value="${recipe.id}"/>
+    <input type="submit" value="star"/>
+</form>
+</body>
+</html>

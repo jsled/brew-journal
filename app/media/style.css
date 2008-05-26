@@ -68,14 +68,12 @@ TABLE.form
 
 .topbar #logotext
 {
-  margin-top: -0.5em;
   font-family: Gentium, serif;
   /*color: white;
   background-color: rgb(34, 139, 34);*/
   color: rgb(34, 140, 34);
   marging-left: 0.75em;
-  padding-left: 1.0em;
-  padding-right: 1.25em;
+  padding-left: 0.5em;
   font-size: 4em;
   text-decoration: none;
 }
@@ -104,4 +102,9 @@ PRE.recipe
 {
   border-bottom: solid thin black;
   margin-top: 0em;
+}
+
+TD {
+  padding-left: 0.25em;
+  padding-right: 0.25em;
 }
