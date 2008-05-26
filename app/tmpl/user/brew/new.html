@@ -16,6 +16,7 @@
         </tr>
         <div py:strip="True" py:content="std.Markup(brew_form.as_table())"/>
     </table>
+    <input py:if="recipe" type="hidden" name="recipe_id" value="${recipe.id}"/>
     <input type="submit" value="create"/>
   </form>
 </body>

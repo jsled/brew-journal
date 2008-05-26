@@ -156,11 +156,17 @@ def user_brew_new(request, user_name):
         form = BrewForm(request.POST)
         if form.is_valid():
             brew = form.save(commit=False)
-            if not brew.recipe:
+            if not request.POST.has_key('recipe_id'):
+                name = 'unknown'
+                if request.POST.has_key('brew_name'):
+                    name = request.POST['brew_name']
                 anon_recipe = models.Recipe.objects.create(author=uri_user,
-                                                           name=request.POST['brew_name'],
+                                                           name=name,
                                                            batch_size=0)
                 brew.recipe = anon_recipe
+            else:
+                recipe_id = int(request.POST['recipe_id'])
+                brew.recipe = models.Recipe.objects.get(pk=recipe_id)
             brew.brewer = uri_user
             brew.save()
             return HttpResponseRedirect('/user/%s/brew/%s' % (uri_user.username, brew.id))
