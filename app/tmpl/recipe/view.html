@@ -51,8 +51,7 @@ function set_delete_id_and_submit(form_name, item_id) {
     <form method="post" id="overview_form">
       <table width="60%" class="form" py:content="std.Markup(recipe_form.as_table())"/>
       <input type="submit" name="submit" value="update"/>
-    </form>
-    <div><a href="#" onClick="$('#overview_form').get()[0].reset(); $('#overview').children().slideToggle()">(cancel edit)</a></div>
+      <input type="reset" value="cancel" onClick="$('#overview').children().slideToggle(); return true;" /></form>
   </div>
 </div>
 
