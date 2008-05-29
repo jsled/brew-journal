@@ -1,9 +1,9 @@
 Todo
 ----
 
-- remove /user/{user}/recipes/, fold into /user/{user}/
-
 - /user/{user}/brew/{id}?type={type} doesn't work.
+
+x remove /user/{user}/recipes/, fold into /user/{user}/
 
 - data
   x grain
@@ -46,6 +46,9 @@ x /recipe/new/
     - /user/{user}/ -> starred, recipe actions, controls
   - generic 'auth-user-must-match-object-owner' during POST handling
   - superuser support all around
+
+- signup
+  - username character restrictions
 
 - visual design
   - logo/identity

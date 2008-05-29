@@ -170,9 +170,9 @@ class Yeast (models.Model):
         ]
     manufacturer = models.ForeignKey(YeastManufacturer)
     ident = models.CharField(max_length=10)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
     description = models.CharField(max_length=1000, blank=True)
-    type = models.CharField(max_length=6, choices=Types)
+    type = models.CharField(max_length=7, choices=Types)
 
     # @fixme: attenuation; min/max temp; URL; class
     #Flocc_Types = ['low', 'medium-low', 'medium', 'medium-high', 'high']
