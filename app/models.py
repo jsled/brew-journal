@@ -2,6 +2,7 @@ import datetime
 from django.db import models
 from django.contrib import auth
 import itertools
+import urllib
 
 class StepType (object):
     def __init__(self, id, label, interesting_fields=None, next_steps=None):
@@ -213,6 +214,9 @@ class Recipe (models.Model):
         return u'%(name)s - %(style)s %(batch_size)s' % {'name': self.name,
                                                          'style': self.style,
                                                          'batch_size': self.batch_size}
+
+    def url(self):
+        return u'/recipe/%d/%s' % (self.id, self.name)
 
     class Admin:
         pass

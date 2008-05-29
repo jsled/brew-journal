@@ -3,6 +3,10 @@ Todo
 
 - /user/{user}/brew/{id}?type={type} doesn't work.
 
+x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
+
+- calendaring
+
 x remove /user/{user}/recipes/, fold into /user/{user}/
 
 - data
@@ -77,8 +81,6 @@ x better "next step" computation from improved structure
 
 - /user/jsled/brew/42
   x Hide 'add step' form until requested
-
-- turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
 - /recipe/{id}
   - show all brew instances of recipe

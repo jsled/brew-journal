@@ -1,0 +1,11 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <?python
+    import urllib
+  ?>
+  <py:def function="recipe_url(recipe)">/recipe/${recipe.id}/${urllib.quote(recipe.name.encode('utf-8'))}</py:def>
+
+  <a py:def="recipe_a(recipe)" href="${recipe_url(recipe)}">${recipe.name}</a>
+
+</html>

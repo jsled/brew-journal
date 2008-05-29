@@ -1,6 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include href="../_incl/taglib.html"/>
 <head>
   <title>star recipe "${recipe.name}" | Brew Journal</title>
   <xi:include href="../_incl/head.html"/>
@@ -8,7 +9,7 @@
 <body>
   <xi:include href="../_incl/body-top-bar.html"/>
 
-<h1>star'ing recipe "<a href="/recipe/${recipe.id}/">${recipe.name}</a>"</h1>
+<h1>star'ing recipe "${recipe_a(recipe)}"</h1>
 
 <form method="post">
     <table class="form" py:content="std.Markup(form.as_table())"/>

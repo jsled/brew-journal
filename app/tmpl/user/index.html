@@ -1,6 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="../_incl/taglib.html"/>
 <head>
   <title>${user.username} | Brew Journal</title>
   <xi:include href="../_incl/head.html"/>
@@ -53,7 +54,7 @@
       <td colspan="5"><em>no starred recipes, yet.</em></td>
     </tr>
     <tr py:for="starred in starred_recipes">
-      <td><a href="/recipe/${starred.recipe.id}/">${starred.recipe.name}</a></td>
+      <td>${recipe_a(starred.recipe)}</td>
       <td><a href="/user/${starred.recipe.author.username}/">${starred.recipe.author}</a></td>
       <td>${starred.recipe.style.name}</td>
       <td>${std.fmt.date.ymdhm(starred.when)}</td>
@@ -83,7 +84,7 @@
       </td>
     </tr>
     <tr py:for="recipe in authored_recipes">
-      <td><a href="/recipe/${recipe.id}/">${recipe.name}</a></td>
+      <td>${recipe_a(recipe)}</td>
       <td>${recipe.style.name} (${recipe.type})</td>
       <td>${std.fmt.date.ymd(recipe.insert_date)}</td>
       <td><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">(&rarr;clone)</a>

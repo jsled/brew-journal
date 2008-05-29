@@ -384,7 +384,7 @@ def recipe_component_generic(request, recipe_id, model_type, form_class):
     All the additions are going to be the same, so genericize them, leveraging the form to do the heavy lifting.
     '''
     def _get_recipe_redirect(recipe_id):
-        return HttpResponseRedirect('/recipe/%s/' % (recipe_id))
+        return HttpResponseRedirect('/recipe/%s' % (recipe_id))
     if not request.method == 'POST':
         return HttpResponseBadRequest('method not supported')
     if request.POST.has_key('delete_id') and request.POST['delete_id'] != '-1':
@@ -408,7 +408,7 @@ def recipe_post(request, recipe_id, recipe=None):
     else:
         upd_recipe.author = recipe.author
     upd_recipe.save()
-    return HttpResponseRedirect('/recipe/%d' % (upd_recipe.id))
+    return HttpResponseRedirect('/recipe/%d/%s' % (upd_recipe.id, urllib.quote(upd_recipe.name.encode('utf-8')))
 
 def recipe_new(request):
     # uri_user = User.objects.get(username__exact = user_name)
@@ -438,13 +438,13 @@ def recipe_new(request):
                 component.recipe = to_clone
                 component.id = None
                 component.save()
-        return HttpResponseRedirect('/recipe/%d/' % (cloning.id))
+        return HttpResponseRedirect('/recipe/%d/%s' % (cloning.id, urllib.quote(cloning.name.encode('utf-8')))
     return HttpResponse(render('recipe/new.html', request=request, std=standard_context(),
                                clone_from_recipe_id=clone_id,
                                recipe_form=recipe_form,
                                is_new=True))
 
-def recipe(request, recipe_id):
+def recipe(request, recipe_id, recipe_name):
     # uri_user = User.objects.get(username__exact = user_name)
     # if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     if request.method == 'POST':
