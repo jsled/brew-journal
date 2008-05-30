@@ -408,7 +408,7 @@ def recipe_post(request, recipe_id, recipe=None):
     else:
         upd_recipe.author = recipe.author
     upd_recipe.save()
-    return HttpResponseRedirect('/recipe/%d/%s' % (upd_recipe.id, urllib.quote(upd_recipe.name.encode('utf-8')))
+    return HttpResponseRedirect('/recipe/%d/%s' % (upd_recipe.id, urllib.quote(upd_recipe.name.encode('utf-8'))))
 
 def recipe_new(request):
     # uri_user = User.objects.get(username__exact = user_name)
@@ -438,7 +438,7 @@ def recipe_new(request):
                 component.recipe = to_clone
                 component.id = None
                 component.save()
-        return HttpResponseRedirect('/recipe/%d/%s' % (cloning.id, urllib.quote(cloning.name.encode('utf-8')))
+        return HttpResponseRedirect('/recipe/%d/%s' % (cloning.id, urllib.quote(cloning.name.encode('utf-8'))))
     return HttpResponse(render('recipe/new.html', request=request, std=standard_context(),
                                clone_from_recipe_id=clone_id,
                                recipe_form=recipe_form,
