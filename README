@@ -94,44 +94,45 @@ x better "next step" computation from improved structure
     x grains
     x yeast
 
+- paginated views
+  - historical brews
+  - all authored recipes
+
 - step addition
   - de-emphasise unrelated entry fields in any given step-type.
+  - better form layout, anyways.
 
 - choices-constrained field UI view ("gl" -> "gallon(s)")
 
-- logging
-  - per request/timing
-  - general system
-  - auth-related
-
 - recipe/brew computation
+  - efficiency
+    - "?mumble?" vs. "brewhouse" efficiency
+    - grains + gravity readings
+    - efficiency tracker...
+  - A/V
+    - estimated: fn(grains, efficiency, yeast.attenuation)
+    - actual: FG - OG
   - OG
     - estimated: fn(grains, efficiency, yeast.attenuation)
     - actual: gravity at 'pitch'
   - FG
     - estimated: fn(grains, est_OG, yeast.attenuation)
     - actual: latest post-'pitch' gravity reading
-  - A/V
-    - estimated: fn(grains, efficiency, yeast.attenuation)
-    - actual: FG - OG
   - IBU: 
     - estimated: fn(hop schedule)
     - actual: none
   - SRM
     - estimated: fn(grains)
     - actual: none (manual entry)
-  - extract efficiency
-    - "?mumble?" vs. "brewhouse" efficiency
-    - grains + gravity readings
-    - efficiency tracker.
   - timing
     - brew day
     - fermentation
   - mash chart
 
-- paginated views
-  - historical brews
-  - all authored recipes
+- logging
+  - per request/timing
+  - general system
+  - auth-related
 
 / step type constraint
   x break out step options based on current state of brew instance
