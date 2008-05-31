@@ -13,6 +13,7 @@
 
 <form py:if="not request.user.is_authenticated()" method="post" >
   <table class="form">
+      <tr><td colspan="3">login:</td></tr>
       <tr>
           <th>username:</th>
           <td py:content="std.Markup(auth_form.username)"/>
@@ -23,6 +24,7 @@
           <td py:content="std.Markup(auth_form.password)"/>
           <td align="right"><input type="submit" name="sub" value="login"/></td>
       </tr>
+      <tr><td colspan="3">create account:</td></tr>
       <tr>
           <th>password (again):</th>
           <td><input type="password" name="password_again"/></td>

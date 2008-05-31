@@ -235,11 +235,6 @@ def brew(request, user_name, brew_id, step_id):
         if form.is_valid():
             step = form.save(commit=False)
             step.brew = brew
-            if step.gravity_orig:
-                temp = step.gravity_orig_temp or step.temp
-                if step.gravity_orig_temp_units == 'c':
-                    temp = util.celsius_to_farenheit(temp)
-                step.gravity = util.correct_gravity(step.gravity_orig, temp)
             step.save()
             steps_changed = True
     steps = []
@@ -264,7 +259,7 @@ def brew(request, user_name, brew_id, step_id):
         form = StepForm(initial={'brew': brew.id, 'date': default_date, 'type': next_step_type})
     return HttpResponse(render('user/brew/index.html', request=request, std=standard_context(), user=uri_user,
                                brew=brew, steps=steps, step_form=form, submit_label=submit_label,
-                               brew_form=brew_form))
+                               brew_form=brew_form, deriv=util.BrewDerivations(brew)))
 
 
 class StarForm (forms.ModelForm):

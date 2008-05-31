@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib import auth
 import itertools
 import urllib
+import util
 
 class StepType (object):
     def __init__(self, id, label, interesting_fields=None, next_steps=None):
@@ -358,12 +359,27 @@ class Step (models.Model):
     temp = models.IntegerField(null=True, blank=True)
     temp_units = models.CharField(max_length=1, null=True, blank=True, choices = Temp_Units, default='f')
 
-    gravity = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
-    gravity_orig = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
-    gravity_orig_temp = models.IntegerField(null=True, blank=True)
-    gravity_orig_temp_units = models.CharField(max_length=1, null=True, blank=True, choices = Temp_Units, default='f')
+    # gravity = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
+    gravity_read = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
+    gravity_read_temp = models.IntegerField(null=True, blank=True)
+    gravity_read_temp_units = models.CharField(max_length=1, null=True, blank=True, choices = Temp_Units, default='f')
 
     notes = models.CharField(max_length=500, blank=True)
+
+    def _get_gravity(self):
+        if not self.gravity_read or not self.gravity_read_temp:
+            return None
+        temp = self.gravity_read_temp
+        if self.gravity_read_temp_units == 'c':
+            temp = util.celsius_to_farenheit(self.gravity_read_temp)
+        return util.correct_gravity(self.gravity_read, temp)
+
+    def _set_gravity(self, gravity):
+        self._gravity_read = gravity
+        self._gravity_read_temp = 59
+        self._gravity_read_temp_units = 'f'
+
+    gravity = property(_get_gravity, _set_gravity)
 
     def __str__(self):
         return self.__unicode__()

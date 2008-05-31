@@ -5,7 +5,39 @@ Todo
 
 x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
+- computed values
+  - efficiency
+    - "?mumble?" vs. "brewhouse" efficiency
+    - need: grains + gravity readings + volume reading
+    - efficiency tracker...
+  - A/V
+    - estimated: fn(grains, efficiency, yeast.attenuation)
+    - actual: FG - OG
+  - OG
+    - estimated: fn(grains, efficiency, yeast.attenuation)
+    - actual: gravity at 'pitch'
+  - FG
+    - estimated: fn(grains, est_OG, yeast.attenuation)
+    - actual: latest post-'pitch' gravity reading
+  - IBU: 
+    - estimated: fn(hop schedule)
+    - actual: none
+  - SRM
+    - estimated: fn(grains)
+    - actual: none (manual entry)
+  - timing
+    - brew day
+    - fermentation
+  - mash chart/schedule
+    - planned
+    - actual
+
 - calendaring
+
+- shopping list
+  - http://beeradvocate.com/forum/read/1102362#1102497
+
+- use django `get_absolute_url`, `permalink` methods.
 
 x remove /user/{user}/recipes/, fold into /user/{user}/
 
@@ -104,31 +136,6 @@ x better "next step" computation from improved structure
 
 - choices-constrained field UI view ("gl" -> "gallon(s)")
 
-- recipe/brew computation
-  - efficiency
-    - "?mumble?" vs. "brewhouse" efficiency
-    - grains + gravity readings
-    - efficiency tracker...
-  - A/V
-    - estimated: fn(grains, efficiency, yeast.attenuation)
-    - actual: FG - OG
-  - OG
-    - estimated: fn(grains, efficiency, yeast.attenuation)
-    - actual: gravity at 'pitch'
-  - FG
-    - estimated: fn(grains, est_OG, yeast.attenuation)
-    - actual: latest post-'pitch' gravity reading
-  - IBU: 
-    - estimated: fn(hop schedule)
-    - actual: none
-  - SRM
-    - estimated: fn(grains)
-    - actual: none (manual entry)
-  - timing
-    - brew day
-    - fermentation
-  - mash chart
-
 - logging
   - per request/timing
   - general system
@@ -141,6 +148,7 @@ x better "next step" computation from improved structure
 - recipe
   - browsing
   - searching
+    - structured, by ingredient/style/&c.
 
 - refactor rendering
   - starred-recipe table on /user/jsled/ and /user/jsled/recipe/
@@ -152,6 +160,37 @@ x better "next step" computation from improved structure
 - profile additions
   - other web url
   - default units (english/metric)
+
+- alerts
+  - keg now.
+  - have you racked this week?
+
+- comments
+  - OpenID support
+
+- widget-style embedding
+  - brew overview
+  - upcoming brews
+
+- recipe
+  - browser
+  - clone from other URL
+  - star from other URL
+
+- import/export
+
+- add 'equipment'/'rig'
+
+- use the following style of the Google Reader "note this URL" bookmarklet for on-the-web recipe induction:
+    javascript:
+    var b=document.body;
+    var GR________bookmarklet_domain='http://www.google.com';
+    if(b&&!document.xmlVersion){
+    void(z=document.createElement('script'));
+    void(z.src='http://www.google.com/reader/ui/link-bookmarklet.js');
+    void(b.appendChild(z));
+    }
+    else{}
 
 ----------
 
@@ -216,39 +255,3 @@ x Recipe* amounts can't be sub-integer, which makes it hard to have "0.5 oz" of 
 Weirdness
 ---------
 - when journaling after racking to secondary, is it entered as primary-ferm or secondary-ferm?
-
-Later
------
-- shopping list
-  - http://beeradvocate.com/forum/read/1102362#1102497
-
-- alerts
-  - keg now.
-  - have you racked this week?
-
-- comments
-  - OpenID support
-
-- widget-style embedding
-  - brew overview
-  - upcoming brews
-
-- recipe
-  - browser
-  - clone from other URL
-  - star from other URL
-
-- import/export
-
-- add 'equipment'/'rig'
-
-- use the following style of the Google Reader "note this URL" bookmarklet for on-the-web recipe induction:
-    javascript:
-    var b=document.body;
-    var GR________bookmarklet_domain='http://www.google.com';
-    if(b&&!document.xmlVersion){
-    void(z=document.createElement('script'));
-    void(z.src='http://www.google.com/reader/ui/link-bookmarklet.js');
-    void(b.appendChild(z));
-    }
-    else{}

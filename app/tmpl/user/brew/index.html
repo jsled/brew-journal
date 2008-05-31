@@ -68,5 +68,18 @@
         </form>
     </div>
   </div>
+
+<h1>derivations</h1>
+<table>
+  <tr>
+    <th>efficiency</th>
+    <td py:if="deriv.can_not_derive_efficiency()">
+      <py:for each="reason in deriv.can_not_derive_efficiency()">
+        ${reason}<br/>
+      </py:for>
+    </td>
+    <td py:if="not deriv.can_not_derive_efficiency()">${'%0.2f' % deriv.efficiency()}%</td>
+  </tr>
+</table>
 </body>
 </html>
