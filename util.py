@@ -2,6 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 from decimal import Decimal, Context, ROUND_HALF_UP
+import itertools
 
 class TimeConst:
     SECOND = 1000
@@ -65,37 +66,39 @@ class BrewDerivations (object):
     def __init__(self, brew):
         self._brew = brew
 
-    def can_not_derive_efficiency(self):
-        '''@return None or a list of Strings describing what needs to be provided'''
-        # boil-start with gravity, volume
-        # sparge with gravity, volume
-        # pitch with gravity, volume
-        needed_step_set = ['boil-start', 'sparge', 'pitch']
-        rtn = []
+    def _get_sorted_steps(self, allowable_step_types_sorted):
+        allowable_types = dict([(type,idx)
+                                for type,idx
+                                in itertools.izip(allowable_step_types_sorted,itertools.count())])
         steps = self._brew.step_set.all()
-        required = [step for step in steps if step.type in needed_step_set and step.gravity]
+        steps = [step for step in steps
+                    if allowable_types.has_key(step.type)]
+        steps.sort(lambda a,b: allowable_types[b.type] - allowable_types[a.type])
+        return steps
+
+
+    efficiency_needed_steps = ['boil-start', 'sparge', 'pitch']
+    def _get_efficiency_steps(self):
+        related_steps = self._get_sorted_steps(BrewDerivations.efficiency_needed_steps)
+        related_steps = [step for step in related_steps if step.volume and step.gravity]
+        return related_steps
+    
+    def can_not_derive_efficiency(self):
+        '''@return A list of Strings describing what needs to be provided, or [] if we can perform the op'''
+        rtn = []
+        required = self._get_efficiency_steps()
         if len(required) == 0:
-            rtn.append('need one step of of type %s with gravity' % (needed_step_set))
+            rtn.append('need one step of of type %s with gravity and volume' % (BrewDerivations.efficiency_needed_steps))
         recipe_grains = self._brew.recipe.recipegrain_set.all()
         if len(recipe_grains) == 0:
             rtn.append('need grains on recipe')
-        if not rtn:
-            return False
         return rtn
 
     def efficiency(self):
-        interesting_step_types = {'boil-start': 1, 'sparge': 2, 'pitch': 3}
-        steps = self._brew.step_set.all()
-        interesting_step_type_set = [k for k,v in interesting_step_types.iteritems()]
-        required = [step for step in steps if
-                    step.type in interesting_step_type_set
-                    and step.gravity
-                    and step.volume]
-        if len(required) == 0:
+        related_steps = self._get_efficiency_steps()
+        if len(related_steps) == 0:
             raise Exception('assertion violation')
-        required.sort(lambda a,b: interesting_step_types[b.type] - interesting_step_types[a.type])
-        best_step = required[0]
-        #
+        best_step = related_steps[0]
         ctx = Context(prec=3, rounding=ROUND_HALF_UP)
         potential_points = ctx.create_decimal('0')
         for recipe_grain in self._brew.recipe.recipegrain_set.all():
@@ -111,6 +114,30 @@ class BrewDerivations (object):
         efficiency = (obtained_points / potential_points) * ctx.create_decimal('100')
         return efficiency
 
+    abv_start_steps = ['pitch', 'boil-end', 'boil-start']
+    abv_end_steps = ['consumed', 'aging', 'bottle', 'keg', 'condition', 'lager', 'ferm-add', 'sample', 'ferm2', 'ferm1']
+    def _get_abv_steps(self):
+        starting_steps = self._get_sorted_steps(BrewDerivations.abv_start_steps)
+        starting_steps = [step for step in starting_steps if step.gravity]
+        ending_steps = self._get_sorted_steps(BrewDerivations.abv_end_steps)
+        ending_steps = [step for step in ending_steps if step.gravity]
+        return starting_steps,ending_steps
+
+    def can_not_derive_abv(self):
+        starting_steps,ending_steps = self._get_abv_steps()
+        rtn = []
+        if len(starting_steps) == 0:
+            rtn.append('need a starting-gravity step of type %s with gravity reading' % (BrewDerivations.abv_start_steps))
+        if len(ending_steps) == 0:
+            rtn.append('need a ending-gravity step of type %s with gravity reading' % (BrewDerivations.abv_end_steps))
+        return rtn
+
+    def alcohol_by_volume(self):
+        starting_steps,ending_steps = self._get_abv_steps()
+        best_start = starting_steps[0]
+        best_end = ending_steps[0]
+        return (best_start.gravity - best_end.gravity) * Decimal('135')
+        
 
 def convert_volume_to_gls(volume, units):
     '''
@@ -161,8 +188,6 @@ def convert_weight_to_lbs(amount, from_units):
     if from_units == 'lb':
         return amount
     raise Exception('unknown units [%s]' % (from_units))
-            
-        
         
 
 if __name__ == '__main__':

@@ -80,6 +80,17 @@
     </td>
     <td py:if="not deriv.can_not_derive_efficiency()">${'%0.2f' % deriv.efficiency()}%</td>
   </tr>
+  <tr>
+    <th>alcohol by volume</th>
+    <td py:if="deriv.can_not_derive_abv()">
+      <py:for each="reason in deriv.can_not_derive_abv()">
+        ${reason}<br />
+      </py:for>
+    </td>
+    <td py:if="not deriv.can_not_derive_abv()">
+      ${'%0.2f' % (deriv.alcohol_by_volume())}%
+    </td>
+  </tr>
 </table>
 </body>
 </html>

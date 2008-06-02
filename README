@@ -8,11 +8,11 @@ x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 - computed values
   - efficiency
     - "?mumble?" vs. "brewhouse" efficiency
-    - need: grains + gravity readings + volume reading
+    x need: grains + gravity readings + volume reading
     - efficiency tracker...
   - A/V
     - estimated: fn(grains, efficiency, yeast.attenuation)
-    - actual: FG - OG
+    x actual: FG - OG
   - OG
     - estimated: fn(grains, efficiency, yeast.attenuation)
     - actual: gravity at 'pitch'
