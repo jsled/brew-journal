@@ -12,7 +12,7 @@
 
 <form method="post" action="/recipe/new/">
   <table class="form" width="70%" py:content="std.Markup(recipe_form.as_table())"/>
-  <input type="hidden" name="clone_from_recipe_id" value="${clone_from_recipe_id}"/>
+  <input py:if="clone_from_recipe_id" type="hidden" name="clone_from_recipe_id" value="${clone_from_recipe_id}"/>
   <input type="submit" name="submit" value="create"/>
 </form>
 

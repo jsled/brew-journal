@@ -17,11 +17,11 @@ urlpatterns = patterns(
     
     # /recipe/new/?clone_from_recipe_id=42
     # /recipe/new/?clone_from_url=<...>
-    (r'^recipe/(?P<recipe_id>\d+)/(?P<recipe_name>.+)?$', 'recipe'),
     (r'^recipe/new/$', 'recipe_new'),
     (r'^recipe/(?P<recipe_id>\d+)/grain/$', 'recipe_grain'),
     (r'^recipe/(?P<recipe_id>\d+)/hop/$', 'recipe_hop'),
     (r'^recipe/(?P<recipe_id>\d+)/adjunct/$', 'recipe_adjunct'),
     (r'^recipe/(?P<recipe_id>\d+)/yeast/$', 'recipe_yeast'),
 
+    (r'^recipe/(?P<recipe_id>\d+)/(?P<recipe_name>.+)?$', 'recipe'),
 )

@@ -9,6 +9,7 @@ from brewjournal import util
 from brewjournal.app import models, widgets
 from django import newforms as forms
 from datetime import datetime
+import urllib
 
 genshi_template_loader = None
 def init_genshi():
@@ -417,23 +418,31 @@ def recipe_new(request):
         recipe_form = RecipeForm(instance=to_clone,
                                  initial={'name': 'Copy of %s' % (to_clone.name),
                                           'derived_from_recipe': to_clone})
-    elif request.method == 'POST' and request.POST.has_key('clone_from_recipe_id'):
-        clone_id = request.POST['clone_from_recipe_id']
-        to_clone = models.Recipe.objects.get(pk=int(clone_id))
-        form = RecipeForm(request.POST, instance=to_clone)
-        cloning = form.save(commit=False)
+    elif request.method == 'POST':
+        clone_id = None
+        if request.POST.has_key('clone_from_recipe_id') \
+           and len(request.POST['clone_from_recipe_id']) > 0:
+            clone_id = int(request.POST['clone_from_recipe_id'])
+        form = RecipeForm(request.POST)
+        if clone_id:
+            to_clone = models.Recipe.objects.get(pk=int(clone_id))
+            form = RecipeForm(request.POST, instance=to_clone)
+        new_recipe = form.save(commit=False)
         if request.user.is_authenticated():
-            cloning.author = request.user
-        cloning.derived_from_recipe = to_clone
-        cloned_recipe_id = to_clone.id
-        cloning.id = None
-        cloning.save()
-        for type in [models.RecipeGrain, models.RecipeHop, models.RecipeAdjunct, models.RecipeYeast]:
-            for component in type.objects.filter(recipe=cloned_recipe_id):
-                component.recipe = to_clone
-                component.id = None
-                component.save()
-        return HttpResponseRedirect('/recipe/%d/%s' % (cloning.id, urllib.quote(cloning.name.encode('utf-8'))))
+            new_recipe.author = request.user
+        if clone_id:
+            to_clone = models.Recipe.objects.get(pk=clone_id)
+            new_recipe.derived_from_recipe = to_clone
+        new_recipe.id = None
+        new_recipe.save()
+        if clone_id:
+            to_clone = models.Recipe.objects.get(pk=clone_id)
+            for type in [models.RecipeGrain, models.RecipeHop, models.RecipeAdjunct, models.RecipeYeast]:
+                for component in type.objects.filter(recipe=to_clone):
+                    component.recipe = new_recipe
+                    component.id = None
+                    component.save()
+        return HttpResponseRedirect('/recipe/%d/%s' % (new_recipe.id, urllib.quote(new_recipe.name.encode('utf-8'))))
     return HttpResponse(render('recipe/new.html', request=request, std=standard_context(),
                                clone_from_recipe_id=clone_id,
                                recipe_form=recipe_form,
