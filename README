@@ -9,6 +9,12 @@ Todo
 
 x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
+- focus improvements:
+
+  - first useful link on page load
+
+  - first element of form when editing/adding
+
 - computed values
   - efficiency
     - "?mumble?" vs. "brewhouse" efficiency
