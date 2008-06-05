@@ -9,11 +9,20 @@ Todo
 
 x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
-- focus improvements:
+- focus improvements
 
-  - first useful link on page load
+  - /user/{user} 
+    - next action
 
-  - first element of form when editing/adding
+  x /user/{user}/brew/{id}
+    x page load -> "edit brew details"
+    x add step -> first step form
+    x step form cancel -> "edit brew details"
+
+  - /recipe/{id}/{text}
+    x top actions
+    x edit details -> :input:first
+    - GET after POST of {grain, hop, …} -> [add] button on same form.
 
 - computed values
   - efficiency
@@ -110,7 +119,7 @@ x /recipe/new/
 - starring recipes
   x add (-> star) action to recipe lists
   x add (-> star) action to recipe view
-  - AJAX-y
+  - make AJAX-y
 
 x move recipes to /recipe/{id}/
 
@@ -190,6 +199,8 @@ x better "next step" computation from improved structure
 - import/export
 
 - add 'equipment'/'rig'
+
+- general keyboard navigation
 
 - use the following style of the Google Reader "note this URL" bookmarklet for on-the-web recipe induction:
     javascript:

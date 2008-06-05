@@ -223,12 +223,14 @@ def brew(request, user_name, brew_id, step_id):
     brew_form = BrewForm(instance=brew)
     form = None
     step = None
-    submit_label = 'Add Step'
+    step_edit = False
+    submit_label = 'add step'
     steps_changed = False
     if step_id:
         step = models.Step.objects.get(pk=step_id)
         form = StepForm(instance=step)
-        submit_label = 'Update Step'
+        submit_label = 'update step'
+        step_edit = True
     if request.method == 'POST':
         if not (request.user.is_authenticated() and request.user == uri_user):
             return HttpResponseForbidden()
@@ -259,7 +261,7 @@ def brew(request, user_name, brew_id, step_id):
                 default_date = last_step.date
         form = StepForm(initial={'brew': brew.id, 'date': default_date, 'type': next_step_type})
     return HttpResponse(render('user/brew/index.html', request=request, std=standard_context(), user=uri_user,
-                               brew=brew, steps=steps, step_form=form, submit_label=submit_label,
+                               brew=brew, steps=steps, step_form=form, step_edit=step_edit, submit_label=submit_label,
                                brew_form=brew_form, deriv=util.BrewDerivations(brew)))
 
 

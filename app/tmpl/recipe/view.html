@@ -6,7 +6,7 @@
   <title>recipe "${recipe.name}" | Brew Journal</title>
   <xi:include href="../_incl/head.html"/>
   <script type="application/javascript">
-// get jquery-ui?
+// @fixme: jquery-ui?
 /*
 $(document).ready(function(){
 $('input[name=insert_date]').datepicker();
@@ -14,7 +14,6 @@ $('input[name=insert_date]').datepicker();
 */
 
 function set_delete_id_and_submit(form_name, item_id) {
-
   form_name = '#' + form_name;
 
   $(form_name)
@@ -23,6 +22,10 @@ function set_delete_id_and_submit(form_name, item_id) {
 
   $(form_name).get()[0].submit();
 }
+
+$(document).ready(function(){
+  $('#first-focused').focus();
+});
   </script>
 </head>
 <body>
@@ -31,7 +34,7 @@ function set_delete_id_and_submit(form_name, item_id) {
 <h1 py:if="recipe">recipe "${recipe.name}"</h1>
 
 <div py:if="request.user.is_authenticated()">
-    <a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">(&rarr;clone)</a>
+    <a id="first-focused" href="/recipe/new/?clone_from_recipe_id=${recipe.id}">(&rarr;clone)</a>
     <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">(&rarr;star)</a>
     <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">(&rarr;brew)</a>
 </div>
@@ -46,13 +49,13 @@ function set_delete_id_and_submit(form_name, item_id) {
       <tr><th>batch_size</th><td>${recipe.batch_size} ${recipe.batch_size_units}</td></tr>
       <tr><th>type</th><td>${recipe.type}</td></tr>
     </table>
-    <div py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="$('#overview').children().slideToggle()">(edit)</a></div>
+    <div py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">(edit)</a></div>
   </div>
   <div py:if="std.auth_user_is_user(request, recipe.author)" style="display:none">
-    <form method="post" id="overview_form">
+    <form method="post" id="overview-form">
       <table width="60%" class="form" py:content="std.Markup(recipe_form.as_table())"/>
       <input type="submit" name="submit" value="update"/>
-      <input type="reset" value="cancel" onClick="$('#overview').children().slideToggle(); return true;" /></form>
+      <input type="reset" value="cancel" onClick="$('#overview').children().slideToggle(); $('#edit').focus(); return true;" /></form>
   </div>
 </div>
 

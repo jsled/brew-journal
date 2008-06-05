@@ -64,13 +64,14 @@
   </table>
   <br />
   <div py:if="std.auth_user_is_user(request, user)" id="add-step">
-    <a href="#" onClick="$('#add-step').children().slideToggle(); return false;">add new log step &darr;</a>
-    <div><!-- empty --></div>
-    <div style="display:none">
+    <div py:attrs="{'style': 'display:' + ['inherit', 'none'][step_edit]}">
+      <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;">${submit_label} &darr;</a>
+    </div>
+    <div py:attrs="{'style': 'display:' + ['inherit', 'none'][not step_edit]}">
         <form method="post" id="add-step-form">
             <table class="form" py:content="std.Markup(step_form.as_table())"/>
             <input type="submit" value="${submit_label}"/>
-            <button onClick="$('#add-step').children().slideToggle(); $('#add-step-form').get()[0].reset(); return false;">Cancel</button>
+            <button onClick="$('#add-step').children().slideToggle(); $('#add-step-form').get()[0].reset(); $('#first-focused').focus(); return false;">Cancel</button>
         </form>
     </div>
   </div>
