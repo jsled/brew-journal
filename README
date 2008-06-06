@@ -10,6 +10,7 @@ Todo
 x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
 - focus improvements
+  - login form
 
   - /user/{user} 
     - next action
@@ -22,7 +23,8 @@ x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
   - /recipe/{id}/{text}
     x top actions
     x edit details -> :input:first
-    - GET after POST of {grain, hop, …} -> [add] button on same form.
+    x add -> first form elt
+    _ GET after POST of {grain, hop, …} -> [add] button on same form.
 
 - computed values
   - efficiency
@@ -52,6 +54,11 @@ x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
     - actual
 
 - calendaring
+  - encourage future steps
+  - add "future" range to table
+  - "standard" ferm schedules?
+    - 1 wk primary, 2 wk secondary
+    - style-based
 
 - shopping list
   - http://beeradvocate.com/forum/read/1102362#1102497
