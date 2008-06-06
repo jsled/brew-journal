@@ -1,6 +1,7 @@
-from django.utils.html import escape
+<from django.utils.html import escape, conditional_escape
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
+import django.newforms as forms
 
 def flatatt(attrs):
     """
@@ -16,14 +17,15 @@ def flatatt(attrs):
 class TwoLevelSelectWidget (forms.Widget):
     def __init__(self, attrs=None, choices=()):
         super(TwoLevelSelectWidget, self).__init__(attrs)
-        self.choices = list(choices)
+        self._choices = list(choices)
 
     def render(self, name, value, attrs=None, choices=()):
         if value is None: value = ''
         final_attrs = self.build_attrs(attrs, name=name)
         output = [u'<select%s>' % flatatt(final_attrs)]
         str_value = force_unicode(value)
-        for top_label,subs in choices:
+        for top_label,subs in self._choices:
+            print 'a', top_label, subs
             output.append(u'<optgroup label="%s">' % (conditional_escape(force_unicode(top_label))))
             for opt_value,opt_label in subs:
                 opt_value = force_unicode(opt_value)
