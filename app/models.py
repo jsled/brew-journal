@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib import auth
 import itertools
 import urllib
-import util
+from brewjournal import util
 
 class StepType (object):
     def __init__(self, id, label, interesting_fields=None, next_steps=None):
