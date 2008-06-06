@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns(
-    'app.views',
+    'brewjournal.app.views',
     (r'^$', 'root'),
     (r'^logout/$', 'logout_view'),
     (r'^user/(?P<user_name>[^/]+)/?$', 'user_index'),
