@@ -1,4 +1,4 @@
-<from django.utils.html import escape, conditional_escape
+from django.utils.html import escape, conditional_escape
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 import django.newforms as forms
