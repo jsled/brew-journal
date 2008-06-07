@@ -406,7 +406,7 @@ def recipe_new(request):
         clone_id = request.GET['clone_from_recipe_id']
         to_clone = models.Recipe.objects.get(pk=int(clone_id))
         recipe_form = RecipeForm(instance=to_clone,
-                                 initial={'name': 'Copy of %s' % (to_clone.name),
+                                 initial={'name': 'Clone of %s' % (to_clone.name),
                                           'derived_from_recipe': to_clone})
     elif request.method == 'POST':
         clone_id = None
@@ -417,6 +417,12 @@ def recipe_new(request):
         if clone_id:
             to_clone = models.Recipe.objects.get(pk=int(clone_id))
             form = RecipeForm(request.POST, instance=to_clone)
+        if not form.is_valid():
+            return HttpResponse(render('recipe/new.html', request=request, std=standard_context(),
+                                       clone_from_recipe_id=clone_id,
+                                       recipe_form=form,
+                                       is_new=True))
+
         new_recipe = form.save(commit=False)
         if request.user.is_authenticated():
             new_recipe.author = request.user

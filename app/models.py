@@ -280,7 +280,7 @@ class StarredRecipe (models.Model):
 
 class Brew (models.Model):
     #recipe_name = models.CharField(max_length=500)
-    brew_date = models.DateTimeField('brew date',null=True, blank=True, default=datetime.datetime.now)
+    brew_date = models.DateTimeField('brew date', null=True, blank=True, default=datetime.datetime.now)
     brewer = models.ForeignKey(auth.models.User)
     notes = models.TextField(null=True, blank=True)
     recipe = models.ForeignKey(Recipe, null=True)
