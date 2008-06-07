@@ -396,18 +396,6 @@ def recipe_component_generic(request, recipe_id, model_type, form_class):
     new_component.save()
     return _get_recipe_redirect(recipe_id)
 
-def recipe_post(request, recipe_id, recipe=None):
-    if not recipe and recipe_id:
-        recipe = models.Recipe.objects.get(pk=recipe_id)
-    form = RecipeForm(request.POST, instance=recipe)
-    upd_recipe = form.save(commit=False)
-    if not recipe and request.user.is_authenticated():
-        upd_recipe.author = request.user
-    else:
-        upd_recipe.author = recipe.author
-    upd_recipe.save()
-    return HttpResponseRedirect('/recipe/%d/%s' % (upd_recipe.id, urllib.quote(upd_recipe.name.encode('utf-8'))))
-
 def recipe_new(request):
     # uri_user = User.objects.get(username__exact = user_name)
     # if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
@@ -450,23 +438,46 @@ def recipe_new(request):
                                recipe_form=recipe_form,
                                is_new=True))
 
+
+def recipe_post(request, recipe_id, recipe=None):
+    '''@return (successOrError:boolean, formOrHttpResposne)'''
+    if not recipe and recipe_id:
+        recipe = models.Recipe.objects.get(pk=recipe_id)
+    form = RecipeForm(request.POST, instance=recipe)
+    if not form.is_valid():
+        return (False, form)
+    upd_recipe = form.save(commit=False)
+    if not recipe and request.user.is_authenticated():
+        upd_recipe.author = request.user
+    else:
+        upd_recipe.author = recipe.author
+    upd_recipe.save()
+    return (True, HttpResponseRedirect('/recipe/%d/%s' % (upd_recipe.id, urllib.quote(upd_recipe.name.encode('utf-8')))))
+
+
 def recipe(request, recipe_id, recipe_name):
     # uri_user = User.objects.get(username__exact = user_name)
     # if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+    form = None
     if request.method == 'POST':
-        rtn = recipe_post(request, recipe_id, None)
-        if rtn: return rtn
+        success,thing = recipe_post(request, recipe_id, None)
+        if success:
+            return thing
+        else:
+            form = thing
     recipe = models.Recipe.objects.get(pk=recipe_id)
+    if not form:
+        form = RecipeForm(instance=recipe)
     grains = models.RecipeGrain.objects.filter(recipe=recipe)[0:100]
     hops = models.RecipeHop.objects.filter(recipe=recipe)[0:100]
     adjuncts = models.RecipeAdjunct.objects.filter(recipe=recipe)[0:100]
     yeasts = models.RecipeYeast.objects.filter(recipe=recipe)[0:100]
     return HttpResponse(render('recipe/view.html', request=request, std=standard_context(),
                                recipe=recipe, grains=grains, hops=hops, adjuncts=adjuncts, yeasts=yeasts,
-                               recipe_form=RecipeForm(instance=recipe),
+                               recipe_form=form,
                                grain_form=RecipeGrainForm(),
                                hop_form=RecipeHopForm(),
                                adj_form=RecipeAdjunctForm(),
                                yeast_form=RecipeYeastForm()
                                ))
-    
+

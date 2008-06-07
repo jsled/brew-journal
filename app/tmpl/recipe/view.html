@@ -36,16 +36,19 @@ $(document).ready(function(){
 <!-- h2>overview</h2 -->
 
 <div id="overview">
-  <div>
+  <div py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}">
     <table width="60%">
       <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
       <tr><th>style</th><td>${recipe.style.name} (${recipe.style.bjcp_code})</td></tr>
       <tr><th>batch_size</th><td>${recipe.batch_size} ${recipe.batch_size_units}</td></tr>
       <tr><th>type</th><td>${recipe.type}</td></tr>
     </table>
-    <div py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">(edit)</a></div>
+    <div py:if="std.auth_user_is_user(request, recipe.author)">
+      <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">(edit)</a>
+    </div>
   </div>
-  <div py:if="std.auth_user_is_user(request, recipe.author)" style="display:none">
+  <div py:if="std.auth_user_is_user(request, recipe.author)"
+       py:attrs="{'style': ['display:none', 'display:inherit'][recipe_form.is_bound and not recipe_form.is_valid()]}">
     <form method="post" id="overview-form">
       <table width="60%" class="form" py:content="std.Markup(recipe_form.as_table())"/>
       <input type="submit" name="submit" value="update"/>
