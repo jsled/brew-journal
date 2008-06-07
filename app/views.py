@@ -240,6 +240,8 @@ def brew(request, user_name, brew_id, step_id):
             step.brew = brew
             step.save()
             steps_changed = True
+        else:
+            step_edit = True
     steps = []
     try:
         steps = models.Step.objects.filter(brew__id = brew.id)
@@ -251,14 +253,19 @@ def brew(request, user_name, brew_id, step_id):
         return HttpResponseRedirect('/user/%s/brew/%d/' % (brew.brewer.username, brew.id))
     if not form:
         default_date = datetime.now()
+        explicit_type = request.method == 'GET' and request.GET.has_key('type')
         next_step_type = 'strike'
-        if len(steps) > 0:
-            last_step = steps[len(steps)-1]
-            last_step_type = last_step.type
-            next_step_type = models.get_likely_next_step_type_id(last_step_type)
-            last_date = last_step.date
-            if (datetime.now() - last_step.date).days > 2:
-                default_date = last_step.date
+        if explicit_type:
+            next_step_type = request.GET['type']
+            step_edit = True
+        else:
+            if len(steps) > 0:
+                last_step = steps[len(steps)-1]
+                last_step_type = last_step.type
+                next_step_type = models.get_likely_next_step_type_id(last_step_type)
+                last_date = last_step.date
+                if (datetime.now() - last_step.date).days > 2:
+                    default_date = last_step.date
         form = StepForm(initial={'brew': brew.id, 'date': default_date, 'type': next_step_type})
     return HttpResponse(render('user/brew/index.html', request=request, std=standard_context(), user=uri_user,
                                brew=brew, steps=steps, step_form=form, step_edit=step_edit, submit_label=submit_label,
