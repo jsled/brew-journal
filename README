@@ -7,6 +7,11 @@ Todo
 
   - with validation error on step addition, the form is correctly populated, but collapsed
 
+- form validation
+  - visual (see Yahoo patterns)
+  - actual submission logic
+  - client-side validation
+
 x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
 - focus improvements
@@ -55,10 +60,12 @@ x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
 - calendaring
   - encourage future steps
-  - add "future" range to table
+    - need to make sure they're marked as "future" steps so if they don't get
+      handled in time, they "bump" forward.
+  - add "future" sub-body to table
   - "standard" ferm schedules?
     - 1 wk primary, 2 wk secondary
-    - style-based
+    - style-based?
 
 - shopping list
   - http://beeradvocate.com/forum/read/1102362#1102497
@@ -73,6 +80,7 @@ x remove /user/{user}/recipes/, fold into /user/{user}/
   x yeasts
   - adjuncts
   - yeast 2
+    - dry yeasts (Safale, Windsor, &c.)
     - Wyeast: wine, distiller, cider, mead, sake, VSS archives
 
 - model cleanups
@@ -93,6 +101,8 @@ x remove /user/{user}/recipes/, fold into /user/{user}/
     - type: bittering? flavor? aroma?
     - class: german, american, british
     - notes: "floral, citrusy, &c."
+
+- user-friendly field values ("gl" -> "gallon(s)")
 
 x /recipe/new/
   x remove "derived from" control?
@@ -119,9 +129,15 @@ x /recipe/new/
     - graph paper = journal
   - how wide are tables normally?  90%?  80%?
 
+  - steal "Actions" table from <https://launchpad.net/bzr-rebase>
+    - recipe actions?
+    - brew actions?
+
+  - brew next steps list: only show most likely, hide rest behind "(more…)"
+
 - user interface
   - abbrev -> full label in views
-  - focus to support keyboard-based nav
+  - auto-complete text fields for style, grain, hops...
 
 - starring recipes
   x add (-> star) action to recipe lists
@@ -146,7 +162,7 @@ x better "next step" computation from improved structure
   x add "clone", "brew" ui options
 
 - TwoLevelSelectWidget
-  - cleanup
+  - cleanup, review
   - use for
     - hops
     x grains
@@ -160,18 +176,22 @@ x better "next step" computation from improved structure
   - de-emphasise unrelated entry fields in any given step-type.
   - better form layout, anyways.
 
-- choices-constrained field UI view ("gl" -> "gallon(s)")
+- better auth
+  - OpenID
+  - verification
+  - forgot password
+  - forgot username
 
-- logging
+- system logging
   - per request/timing
   - general system
   - auth-related
 
 / step type constraint
   x break out step options based on current state of brew instance
-  - better step_type modeling dervied to options,constraints,labels,&c.
+  / better step_type modeling dervied to options,constraints,labels,&c.
 
-- recipe
+- recipe browse/search
   - browsing
   - searching
     - structured, by ingredient/style/&c.
@@ -183,13 +203,32 @@ x better "next step" computation from improved structure
   - recipe
   - brew
 
-- profile additions
+- game
+  - user must be able to turn this off, but defaults to on
+  - achievements
+    - First Brew in ${style}
+    - {x100} gallons brewed
+    - {10,25,50,100,150,…} brews complete
+    - {75,80,85,90,95,>95} efficiency
+    - {5,6,7,9,10} abv
+    - First {1.060,70,80,90,100} OG brew
+    - Brewing for {1,2,3,…} years.
+
+- user profile
   - other web url
-  - default units (english/metric)
+  - preferences 
+    - default recipe type (extract, partial-mash, all-grain)
+    - default units (english/metric)
+    - favorite style
+
+- user addition of recipe components
+  - yeasts
+  - grains/fermentable
+  - hops
 
 - alerts
-  - keg now.
-  - have you racked this week?
+  - "keg now!"
+  - "rack this week?"
 
 - comments
   - OpenID support
@@ -198,16 +237,17 @@ x better "next step" computation from improved structure
   - brew overview
   - upcoming brews
 
-- recipe
-  - browser
+- recipe editing
+  x regular browser
   - clone from other URL
   - star from other URL
+  - parse block of text
+
+- keyboard navigation
 
 - import/export
 
 - add 'equipment'/'rig'
-
-- general keyboard navigation
 
 - use the following style of the Google Reader "note this URL" bookmarklet for on-the-web recipe induction:
     javascript:
