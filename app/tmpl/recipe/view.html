@@ -27,12 +27,13 @@ $(document).ready(function(){
 <h1 py:if="recipe">recipe "${recipe.name}"</h1>
 
 <div py:if="request.user.is_authenticated()">
-    <a id="first-focused" href="/recipe/new/?clone_from_recipe_id=${recipe.id}">(&rarr;clone)</a>
-    <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">(&rarr;star)</a>
-    <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">(&rarr;brew)</a>
+    <a id="first-focused" href="/recipe/new/?clone_from_recipe_id=${recipe.id}">clone »</a>
+    | <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">star »</a>
+    | <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">brew »</a>
 </div>
 
-<h2>overview</h2>
+<br /><br/>
+<!-- h2>overview</h2 -->
 
 <div id="overview">
   <div>
@@ -52,8 +53,8 @@ $(document).ready(function(){
   </div>
 </div>
 
-
-<h2>grains</h2>
+<br /><br/>
+<!-- h2>grains</h2 -->
 <form method="post" action="./grain/" id="grain_form">
   <input type="hidden" name="delete_id" value="-1"/>
 <table width="70%">
@@ -81,7 +82,8 @@ $(document).ready(function(){
 </table>
 </form>
 
-<h2>hops</h2>
+<br /><br/>
+<!-- h2>hops</h2 -->
 
 <form method="post" action="./hop/" id="hop_form">
   <input type="hidden" name="delete_id" value="-1"/>
@@ -112,7 +114,8 @@ $(document).ready(function(){
 </table>
 </form>
 
-<h2>adjuncts</h2>
+<!-- h2>adjuncts</h2 -->
+<br/><br/>
 
 <form method="post" action="./adjunct/" id="adj_form">
   <input type="hidden" name="delete_id" value="-1"/>
@@ -146,7 +149,8 @@ $(document).ready(function(){
 </table>
 </form>
 
-<h2>yeast</h2>
+<br /><br/>
+<!-- h2>yeast</h2 -->
 <form method="post" action="./yeast/" id="yeast_form">
   <input type="hidden" name="delete_id" value="-1"/>
 <table width="70%">
