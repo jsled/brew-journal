@@ -25,7 +25,6 @@ class TwoLevelSelectWidget (forms.Widget):
         output = [u'<select%s>' % flatatt(final_attrs)]
         str_value = force_unicode(value)
         for top_label,subs in self._choices:
-            print 'a', top_label, subs
             output.append(u'<optgroup label="%s">' % (conditional_escape(force_unicode(top_label))))
             for opt_value,opt_label in subs:
                 opt_value = force_unicode(opt_value)
