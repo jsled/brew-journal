@@ -4,6 +4,7 @@ Todo
 - bugs, misc
   - can't do 800 ml in Step volume
   - std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
+  - 500/404 page handling
   x /user/{user}/brew/{id}?type={type} doesn't work.
   x with validation error on step addition, the form is correctly populated, but collapsed
 
@@ -40,6 +41,8 @@ Todo
     - visually/functionally distinct how?
 
 - focus improvements
+  - profile form after new user creation
+
   - /user/{user} 
     - next action
 
