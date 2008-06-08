@@ -109,12 +109,14 @@ def user_index(request, user_name):
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     brews = models.Brew.objects.filter(brewer=uri_user, is_done=False)
     future_brews = models.Brew.objects.brews_with_future_steps(uri_user)
+    future_steps = models.Step.objects.future_steps_for_user(uri_user).order_by('date')
     done_brews = models.Brew.objects.filter(brewer=uri_user, is_done=True)
     starred_recipes = models.StarredRecipe.objects.filter(user=uri_user)
     authored_recipes = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date')[0:10]
     return HttpResponse(render('user/index.html', request=request, user=uri_user, std=standard_context(),
                                brews=brews,
                                future_brews=future_brews,
+                               future_steps=future_steps,
                                done_brews=done_brews,
                                authored_recipes=authored_recipes,
                                starred_recipes=starred_recipes))

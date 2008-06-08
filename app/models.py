@@ -360,6 +360,11 @@ def get_likely_next_step_type_id(last_step_type_id):
     return None
 
 
+class StepManager (models.Manager):
+    def future_steps_for_user(self, user):
+        return Step.objects.filter(brew__brewer__exact=user).extra(where=['entry_date < date'])
+
+
 class Step (models.Model):
     '''
     Individual steps/events/readings/samples associated with the brew instance.
@@ -406,8 +411,11 @@ class Step (models.Model):
     def in_future(self):
         return self.entry_date < self.date
 
+    objects = StepManager()
+
     class Meta:
         ordering = ['date']
 
     class Admin:
         pass
+
