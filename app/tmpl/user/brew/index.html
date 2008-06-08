@@ -14,11 +14,13 @@
 </head>
 <body>
   <xi:include href="../../_incl/body-top-bar.html"/>
-  <h1>brew of "${brew.recipe.name}"</h1>
+  <h1 py:if="brew.recipe">brew of "${brew.recipe.name}"</h1>
+  <h1 py:if="not brew.recipe">un-named brew</h1>
   <div id="details">
       <div>
-          <span py:if="brew.brew_date">brewed on ${std.fmt.date.ymd(brew.brew_date)} by ${brew.brewer.username}<br /></span>
-          <span py:if="brew.recipe">from recipe ${recipe_a(brew.recipe)}.</span>
+          <span py:if="brew.brew_date">brewed on ${std.fmt.date.ymd(brew.brew_date)} </span>
+          by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
+          <span py:if="brew.recipe">from recipe ${recipe_a(brew.recipe)}</span>
           <h2>notes</h2>
           <div class="notes" py:if="brew.notes and len(brew.notes) > 0"><pre class="notes">${brew.notes}</pre></div>
           <div py:if="not brew.notes or len(brew.notes) == 0"><em>(none)</em></div>
