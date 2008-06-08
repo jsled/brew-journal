@@ -118,3 +118,11 @@ TABLE.form {
 TH, TD {
   padding: 0.25em;
 }
+
+UL.errorlist {
+  color: red;
+}
+
+UL.errorlist + INPUT {
+  border: inset thin red;
+}
