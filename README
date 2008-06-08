@@ -14,8 +14,6 @@ Todo
 
 - calendaring
 
-  x upcoming events list/cal
-
   - if a "future" action gets updated in time, what happens to other future actions after it?
     - nothing
     - they're moved forward in time by the same delta-T they had before the update (nifty, but maybe wrong.)
@@ -47,13 +45,6 @@ Todo
     x edit details -> :input:first
     x add -> first form elt
     _ GET after POST of {grain, hop, …} -> [add] button on same form.
-
-  x login form
-
-  x /user/{user}/brew/{id}
-    x page load -> "edit brew details"
-    x add step -> first step form
-    x step form cancel -> "edit brew details"
 
 - computed values
   - efficiency
@@ -92,16 +83,9 @@ Todo
 
 - use django `get_absolute_url`, `permalink` methods.
 
-x remove /user/{user}/recipes/, fold into /user/{user}/
-
-x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
-
 - data
-  x grain
-  x hops
-  x yeasts
   - adjuncts
-  - yeast 2
+  - more yeasts
     - dry yeasts (Safale, Windsor, &c.)
     - Wyeast: wine, distiller, cider, mead, sake, VSS archives
 
@@ -109,15 +93,6 @@ x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
   - Brew
     - add brew name?
     - must Brews have recipes?
-    x remove recipe_name
-    x recipe(_text) -> notes
-    x recipe_id -> recipe
-
-  - RecipeGrain 
-    x fractional amounts
-
-  - RecipeHop
-    x fractional amounts
 
   - Hops
     - type: bittering? flavor? aroma?
@@ -126,11 +101,7 @@ x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
 - user-friendly field values ("gl" -> "gallon(s)")
 
-x /recipe/new/
-  x remove "derived from" control?
-
 - recipe editing
-  x generalize delete handling
   - pre-select units fields
     - same as the last-used units in the item-class
     - prefs
@@ -162,21 +133,7 @@ x /recipe/new/
   - auto-complete text fields for style, grain, hops...
 
 - starring recipes
-  x add (-> star) action to recipe lists
-  x add (-> star) action to recipe view
   - make AJAX-y
-
-x move recipes to /recipe/{id}/
-
-x brew/recipe integration
-  x model Brew -> Recipe
-  x create Brew from Recipe
-
-x better "next step" computation from improved structure
-  x tied into state_types modeling rework?
-
-- /user/jsled/brew/42
-  x Hide 'add step' form until requested
 
 - /recipe/{id}
   - show all brew instances of recipe
@@ -187,8 +144,6 @@ x better "next step" computation from improved structure
   - cleanup, review
   - use for
     - hops
-    x grains
-    x yeast
 
 - paginated views
   - historical brews
@@ -313,37 +268,6 @@ bright: #FFC59E
 <http://www.easyrgb.com/index.php?X=HARM#Result>:
 nice blue/purple/grey: #6977B0
 nice soft green: #75B368
-
-Done
-----
-
-x rename: brewlog -> brew-journal
-x brew doneness/state
-x brew last-update-step inclusion
-x brew sorting on main page
-  x finished vs. upcoming, date-order
-x brew status, last-update date
-x some way to edit existing brew details
-x projected/upcoming brew date
-x site templating/skinning
-x unicode support/problem
-x login, user
-x users
-  x login/logout
-  x auth checks for actions
-    x create/edit brews
-    x create/edit brew steps
-  x create new user
-x admin security
-x gravity temperature adjustment
-  x related to units work
-  x should always store at 60°, but record record temp, too.
-x /user/${user}/brew/new
-  x no need for 'brewer' field.
-
-Bugs
-----
-x Recipe* amounts can't be sub-integer, which makes it hard to have "0.5 oz" of hops. :(
 
 Weirdness
 ---------
