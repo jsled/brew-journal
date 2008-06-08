@@ -44,7 +44,7 @@ $(document).ready(function(){
       <tr><th>type</th><td>${recipe.type}</td></tr>
     </table>
     <div py:if="std.auth_user_is_user(request, recipe.author)">
-      <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">(edit)</a>
+      <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">edit &uarr;</a>
     </div>
   </div>
   <div py:if="std.auth_user_is_user(request, recipe.author)"
