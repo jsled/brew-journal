@@ -7,11 +7,6 @@ Todo
   x /user/{user}/brew/{id}?type={type} doesn't work.
   x with validation error on step addition, the form is correctly populated, but collapsed
 
-- add steps
-  - buy ingredients
-  - make starter
-  - fwh
-
 - shitty things
   - recipe_new()
   - brew()
@@ -42,7 +37,6 @@ Todo
 
   x add "future" sub-body to table
     - visually/functionally distinct how?
-
 
 - focus improvements
   - /user/{user} 

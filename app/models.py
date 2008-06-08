@@ -22,24 +22,22 @@ class StepType (object):
     def is_terminal(self):
         return len(self.next_steps) == 0
 
-# @fixme, add:
-# - purchase
-# - starter / pre-pitch # time, volume
-# - steep grains (extract, pm)
-# - first-wort-hopping
-#   - http://brewery.org/library/1stwort.html
-new_step_types = [ StepType('strike', 'strike water', ['volume', 'temp'], ['dough']),
+new_step_types = [ StepType('buy', 'buy ingredients', ['time'], ['starter', 'strike', 'steep']),
+                   StepType('starter', 'make starter', ['time', 'volume'], ['strike', 'steep']),
+                   StepType('strike', 'strike water', ['volume', 'temp'], ['dough']),
                    StepType('dough', 'dough-in', ['volume', 'temp'], ['mash']),
                    StepType('mash', 'mash', ['time', 'temp'], ['recirc', 'vourlauf', 'sparge']),
                    StepType('recirc', 'recirculation', [], ['vourlauf', 'sparge']),
                    StepType('vourlauf', 'vourlauf', ['time'], ['sparge']),
                    StepType('sparge', 'sparge', ['volume', 'temp'], ['batch1-start', 'boil-start']),
+                   StepType('fwh', 'first wort hopping', ['time'], ['batch1-start', 'boil-start']),
                    StepType('batch1-start', '1st runnings, start', ['gravity'], ['batch1-end']),
                    StepType('batch1-end', '1st runnings, end', ['gravity', 'volume'], ['batch2-start', 'boil-start']),
                    StepType('batch2-start', '2nd runnings, start', ['gravity'], ['batch2-end']),
                    StepType('batch2-end', '2nd runnings, end', ['gravity', 'volume'], ['batch3-start', 'boil-start']),
                    StepType('batch3-start', '3rd runnings, start', ['gravity'], ['batch3-end']),
                    StepType('batch3-end', '3rd runnings, end', ['gravity', 'volume'], ['boil-start']),
+                   StepType('steep', 'steep', ['time', 'volume', 'temp'], ['boil-start']),
                    StepType('boil-start', 'boil, start', ['time'], ['boil-add', 'boil-end']),
                    StepType('boil-add', 'boil, addition', ['time'], ['boil-add', 'boil-end']),
                    StepType('boil-end', 'boil, end', ['time'], ['pitch']),
@@ -337,7 +335,7 @@ class Brew (models.Model):
         if self.last_state == None:
             # @fixme: move to StepType structure, factor out, &c.
             # @fixme: this is really a function of the type of recipe (extract, all-grain, &c.)
-            return [step_types_by_id['strike'], step_types_by_id['boil-start']]
+            return [step_types_by_id[x] for x in ['starter', 'strike', 'steep', 'boil-start']]
         step = step_types_by_id[self.last_state]
         return [step_types_by_id[next] for next in step.next_steps]
 
