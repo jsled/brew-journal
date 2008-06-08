@@ -6,34 +6,27 @@ Todo
   x /user/{user}/brew/{id}?type={type} doesn't work.
   x with validation error on step addition, the form is correctly populated, but collapsed
 
-- form validation
-  - visual (see Yahoo patterns)
-  - actual submission logic
-  - client-side validation
-
 - shitty things
   - recipe_new()
   - brew()
   - toggled <div> py:attrs style form mumble.
 
-x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
-
 - focus improvements
-  - login form
-
   - /user/{user} 
     - next action
-
-  x /user/{user}/brew/{id}
-    x page load -> "edit brew details"
-    x add step -> first step form
-    x step form cancel -> "edit brew details"
 
   - /recipe/{id}/{text}
     x top actions
     x edit details -> :input:first
     x add -> first form elt
     _ GET after POST of {grain, hop, …} -> [add] button on same form.
+
+  x login form
+
+  x /user/{user}/brew/{id}
+    x page load -> "edit brew details"
+    x add step -> first step form
+    x step form cancel -> "edit brew details"
 
 - computed values
   - efficiency
@@ -66,10 +59,23 @@ x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
   - encourage future steps
     - need to make sure they're marked as "future" steps so if they don't get
       handled in time, they "bump" forward.
+      - if a "future"
+
   - add "future" sub-body to table
+
   - "standard" ferm schedules?
     - 1 wk primary, 2 wk secondary
     - style-based?
+
+  - what can be done in the future?
+    - steps
+    - brews?
+      - or just a brew steps
+
+- form validation
+  x actual submission logic
+  - visual (see Yahoo patterns)
+  - client-side validation
 
 - shopping list
   - http://beeradvocate.com/forum/read/1102362#1102497
@@ -77,6 +83,8 @@ x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 - use django `get_absolute_url`, `permalink` methods.
 
 x remove /user/{user}/recipes/, fold into /user/{user}/
+
+x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
 - data
   x grain
@@ -248,6 +256,9 @@ x better "next step" computation from improved structure
   - parse block of text
 
 - keyboard navigation
+  - j/k should navigate between displayed table rows, jumping between tables.
+  - 'g {location}' paradigm?
+  - '?' overlay
 
 - import/export
 

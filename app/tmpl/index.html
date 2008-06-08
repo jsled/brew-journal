@@ -5,13 +5,21 @@
   <head>
     <title>brew-journal</title>
     <xi:include href="_incl/head.html"/>
+    <script type="application/javascript">
+        <py:if test="not request.user.is_authenticated()">
+        $(document).ready(function() {
+          $('#login :input:first').focus();
+        });
+        </py:if>
+    </script>
+
   </head>
 <body>
 <xi:include href="_incl/body-top-bar.html"/>
 
 <p><span class="logotext">brew-journal</span> is a web site for you to track the status and progress of your home brews.</p>
 
-<form py:if="not request.user.is_authenticated()" method="post" >
+<form id="login" py:if="not request.user.is_authenticated()" method="post" >
   <table class="form">
       <tr><td colspan="3">login:</td></tr>
       <tr>
