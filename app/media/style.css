@@ -108,9 +108,11 @@ PRE.recipe
 TABLE.form TBODY {
   border-top: inherit;
 }
+
 TABLE.form TR {
   border-top: inherit;
 }
+
 TABLE.form {
   margin-bottom: 0.5em;
 }
@@ -125,4 +127,10 @@ UL.errorlist {
 
 UL.errorlist + INPUT {
   border: inset thin red;
+}
+
+
+.muted,
+.muted A {
+  color: rgb(150, 150, 150);
 }

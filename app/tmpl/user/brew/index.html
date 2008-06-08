@@ -8,9 +8,8 @@
   <xi:include href="../../_incl/head.html"/>
   <script type="application/javascript">
     $(document).ready(function(){
-    $('#first-focused').focus();
-});
-    
+      $('#first-focused').focus();
+    });
   </script>
 </head>
 <body>
@@ -81,18 +80,34 @@
   <tr>
     <th>efficiency</th>
     <td py:if="deriv.can_not_derive_efficiency()">
-      <py:for each="reason in deriv.can_not_derive_efficiency()">
-        ${reason}<br/>
-      </py:for>
+      <div id="why_not_efficiency">
+          <div class="muted">
+              can't yet compute. <a href="#" onClick="$('#why_not_efficiency').children().slideToggle(); return false;">(why not?)</a>
+          </div>
+          <div style="display:none">
+              <a class="muted" href="#" onClick="$('#why_not_efficiency').children().slideToggle(); return false;">(hide)</a><br />
+              <py:for each="reason in deriv.can_not_derive_efficiency()">
+                  ${reason}<br/>
+              </py:for>
+          </div>
+      </div>
     </td>
     <td py:if="not deriv.can_not_derive_efficiency()">${'%0.2f' % deriv.efficiency()}%</td>
   </tr>
   <tr>
     <th>alcohol by volume</th>
     <td py:if="deriv.can_not_derive_abv()">
-      <py:for each="reason in deriv.can_not_derive_abv()">
-        ${reason}<br />
-      </py:for>
+      <div id="why_not_abv">
+          <div class="muted">
+              can't yet compute. <a href="#" onClick="$('#why_not_abv').children().slideToggle(); return false;">(why not?)</a>
+          </div>
+          <div style="display:none">
+              <a class="muted" href="#" onClick="$('#why_not_abv').children().slideToggle(); return false;">(hide)</a><br />
+              <py:for each="reason in deriv.can_not_derive_abv()">
+                  ${reason}<br />
+              </py:for>
+          </div>
+      </div>
     </td>
     <td py:if="not deriv.can_not_derive_abv()">
       ${'%0.2f' % (deriv.alcohol_by_volume())}%
