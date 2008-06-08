@@ -263,19 +263,27 @@ def brew(request, user_name, brew_id, step_id):
     if not form:
         default_date = datetime.now()
         explicit_type = request.method == 'GET' and request.GET.has_key('type')
-        next_step_type = 'strike'
+        next_step_type = 'starter'
         if explicit_type:
             next_step_type = request.GET['type']
             step_edit = True
         else:
             if len(steps) > 0:
-                last_step = steps[len(steps)-1]
-                last_step_type = last_step.type
-                next_step_type = models.get_likely_next_step_type_id(last_step_type)
-                last_date = last_step.date
-                if (datetime.now() - last_step.date).days > 2:
-                    default_date = last_step.date
-        form = StepForm(initial={'brew': brew.id, 'date': default_date, 'type': next_step_type})
+                non_future_steps = [step for step in steps if not step.in_future()]
+                if len(non_future_steps) > 0:
+                    last_step = non_future_steps[-1]
+                    if (datetime.now() - last_step.date).days > 2:
+                        default_date = last_step.date
+                next_step_types = brew.next_step_types()
+                if len(next_step_types) > 0:
+                    id,step = next_step_types[0]
+                    if not id:
+                        next_step_type = step.id
+                    else:
+                        step_edit = True
+                        form = StepForm(initial={'date': default_date}, instance=step)
+        if not form:
+            form = StepForm(initial={'brew': brew.id, 'date': default_date, 'type': next_step_type})
     return HttpResponse(render('user/brew/index.html', request=request, std=standard_context(), user=uri_user,
                                brew=brew, steps=steps, step_form=form, step_edit=step_edit, submit_label=submit_label,
                                brew_form=brew_form, deriv=util.BrewDerivations(brew)))

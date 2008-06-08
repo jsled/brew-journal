@@ -10,6 +10,10 @@ Todo
 - shitty things
   - recipe_new()
   - brew()
+    - way too deep/nested
+  - "next_possible_step[s]" logic, including future-dated steps
+    - semi-duplicated between model and (view) brew()
+     
   - toggled <div> py:attrs style form mumble.
 
 - calendaring
@@ -25,15 +29,12 @@ Todo
     - make them all immediately after the new step.
 
   - encourage future steps visually, … how?
+    - when adding a 'pitch' step, prompt to add future steps for 'ferm1' and 'ferm2'
+    - when adding 'starter', prompt for 'strike-water', 'ferm1', 'ferm2', &c.…
 
   - "standard" ferm schedules?
     - 1 wk primary, 2 wk secondary
     - style-based?
-
-  - what can be done in the future?
-    - steps
-    - brews?
-      - or just a brew steps
 
   x add "future" sub-body to table
     - visually/functionally distinct how?
@@ -192,6 +193,8 @@ Todo
     - {5,6,7,9,10} abv
     - First {1.060,70,80,90,100} OG brew
     - Brewing for {1,2,3,…} years.
+    - competition awards
+    - BJCP scoring
 
 - user profile
   - other web url
