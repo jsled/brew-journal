@@ -8,4 +8,7 @@
 
   <a py:def="recipe_a(recipe)" href="${recipe_url(recipe)}">${recipe.name}</a>
 
+  <py:def function="action(text)">${text}&nbsp;»</py:def>
+  <py:def function="back_action(text)">«&nbsp;${text}</py:def>
+
 </html>

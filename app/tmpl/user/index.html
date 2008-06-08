@@ -29,8 +29,24 @@
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
       <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
       <td>${brew.last_state}</td>
+      <span py:def="step(brew, next)" py:strip="True"><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=${next.id}">${action(next.label)}</a> </span>
       <td py:if="std.auth_user_is_user(request, user)">
-          <span py:for="next in brew.next_step_types()" py:strip="True"><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=${next.id}">(&rarr;${next.label})</a> </span>
+          <py:for each="next in brew.next_step_types()[0:2]">
+              ${step(brew, next)}
+          </py:for>
+          <py:if test="len(brew.next_step_types()) > 2">
+              <span id="more_steps_brew_${brew.id}">
+                  <span>
+                      <a href="#" onClick="$('#more_steps_brew_${brew.id}').children().toggle(); return false;">(more)</a>
+                  </span>
+                  <span style="display: none">
+                      <py:for each="next in brew.next_step_types()[2:]">
+                          ${step(brew, next)}
+                      </py:for>
+                      <a href="#" onClick="$('#more_steps_brew_${brew.id}').children().toggle(); return false;">(less)</a>
+                  </span>
+              </span>
+          </py:if>
       </td>
     </tr>
   </tbody>
@@ -58,8 +74,8 @@
       <td><a href="/user/${starred.recipe.author.username}/">${starred.recipe.author}</a></td>
       <td>${starred.recipe.style.name}</td>
       <td>${std.fmt.date.ymdhm(starred.when)}</td>
-      <td><a href="/recipe/new/?clone_from_recipe_id=${starred.recipe.id}">(&rarr;clone)</a>
-          &nbsp;<a href="/user/${request.user.username}/brew/new/?recipe_id=${starred.recipe.id}">(&rarr;brew)</a>
+      <td><a href="/recipe/new/?clone_from_recipe_id=${starred.recipe.id}">${action('clone')}</a>
+          &nbsp;<a href="/user/${request.user.username}/brew/new/?recipe_id=${starred.recipe.id}">${action('brew')}</a>
       </td>
     </tr>
   </tbody>
@@ -87,9 +103,9 @@
       <td>${recipe_a(recipe)}</td>
       <td>${recipe.style.name} (${recipe.type})</td>
       <td>${std.fmt.date.ymd(recipe.insert_date)}</td>
-      <td><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">(&rarr;clone)</a>
-       <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">(&rarr;star)</a>
-       <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">(&rarr;brew)</a>
+      <td><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">${action('clone')}</a>
+       <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">${action('star')}</a>
+       <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">${action('brew')}</a>
       </td>
     </tr>
   </tbody>
