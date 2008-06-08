@@ -10,6 +10,9 @@
   <xi:include href="../_incl/body-top-bar.html"/>
 
 <h1>${user.username} current brews</h1>
+<py:if test="std.auth_user_is_user(request, user)">
+  <a href="/user/${user.username}/brew/new">${action('create new brew')}</a><br/><br />
+</py:if>
 <table width="80%">
   <thead>
     <tr>
@@ -52,7 +55,6 @@
   </tbody>
 </table>
 <br />
-<a py:if="std.auth_user_is_user(request, user)" href="/user/${user.username}/brew/new">create new brew</a>
 
 <h1>starred recipes</h1>
 <table width="80%">
@@ -82,6 +84,9 @@
 </table>
 
 <h1>authored recipes</h1>
+<py:if test="std.auth_user_is_user(request, user)">
+  <a href="/recipe/new/">${action('create new recipe')}</a><br /><br />
+</py:if>
 <table width="80%">
   <thead>
     <tr>
@@ -111,7 +116,6 @@
   </tbody>
 </table>
 <br />
-<a href="/recipe/new/">create new recipe</a>
 
 <h1>historical brews</h1>
 <table width="80%">
