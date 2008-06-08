@@ -312,9 +312,10 @@ class Brew (models.Model):
         Based on the type and timestamp of the latest step of `steps`, update the state of the Brew.
         It's the caller's responsibility to save the updated object.
         '''
-        steps = steps or []
+        # only allow non-future steps to update state.
+        steps = [step for step in steps if not step.in_future()] or []
         if len(steps) > 0:
-            last_step = steps[len(steps)-1]
+            last_step = steps[-1]
             self.last_update_date = last_step.date
             self.last_state = last_step.type
             if step_types_by_id[last_step.type].is_terminal():
@@ -336,18 +337,18 @@ class Brew (models.Model):
         next[0] is None if the step does not exist, then next[1] is the StepType.
         Otherwise, next[0] is an existing step id to be updated, and next[1] is the Step.
         '''
-        if self.last_state == None:
-            # @fixme: move to StepType structure, factor out, &c.
-            # @fixme: this is really a function of the type of recipe (extract, all-grain, &c.)
-            return [(None,step_types_by_id[x]) for x in ['starter', 'strike', 'steep', 'boil-start']]
         rtn_next_steps = [(step.id, step) for step in self.step_set.all() if step.in_future()]
         existing_next_step_types = dict([(type,None) for id,type in rtn_next_steps])
-        last_step = step_types_by_id[self.last_state]
-        for next_step in last_step.next_steps:
-            if existing_next_step_types.has_key(next_step):
-                continue
-            rtn_next_steps.append((None,step_types_by_id[next_step]))
-        return rtn_next_steps
+        if self.last_state:
+            last_step = step_types_by_id[self.last_state]
+            for next_step in last_step.next_steps:
+                if existing_next_step_types.has_key(next_step):
+                    continue
+                rtn_next_steps.append((None,step_types_by_id[next_step]))
+        # @fixme: move to StepType structure, factor out, &c.
+        # @fixme: this is really a function of the type of recipe (extract, all-grain, &c.)
+        return rtn_next_steps \
+               or [(None,step_types_by_id[x]) for x in ['starter', 'strike', 'steep', 'boil-start']]
     
     def future_steps(self):
         return [step for step in self.step_set.all() if step.in_future()]
