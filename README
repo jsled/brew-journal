@@ -11,6 +11,11 @@ Todo
   - actual submission logic
   - client-side validation
 
+- shitty things
+  - recipe_new()
+  - brew()
+  - toggled <div> py:attrs style form mumble.
+
 x turn </recipe/{id}> into </recipe/{id}/{safe(name)}>
 
 - focus improvements
