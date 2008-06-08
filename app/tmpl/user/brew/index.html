@@ -54,9 +54,9 @@
       </tr>
       <tr py:for="step in steps">
         <td><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date.ymdhm(step.date)}</a></td>
-        <td>${step.type}</td>
-        <td>${step.volume}</td>
-        <td>${step.temp}</td>
+        <td>${step.get_type_display()}</td>
+        <td><py:if test="step.volume">${step.volume} ${step.volume_units}</py:if></td>
+        <td><py:if test="step.temp">${step.temp} ${step.temp_units}</py:if></td>
         <td>${step.gravity}</td>
         <td>${step.notes}</td>
       </tr>

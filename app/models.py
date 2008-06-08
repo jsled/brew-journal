@@ -23,10 +23,11 @@ class StepType (object):
         return len(self.next_steps) == 0
 
 # @fixme, add:
+# - purchase
+# - starter / pre-pitch # time, volume
 # - steep grains (extract, pm)
 # - first-wort-hopping
 #   - http://brewery.org/library/1stwort.html
-# - starter / pre-pitch # time, volume
 new_step_types = [ StepType('strike', 'strike water', ['volume', 'temp'], ['dough']),
                    StepType('dough', 'dough-in', ['volume', 'temp'], ['mash']),
                    StepType('mash', 'mash', ['time', 'temp'], ['recirc', 'vourlauf', 'sparge']),

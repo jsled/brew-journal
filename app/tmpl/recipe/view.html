@@ -40,8 +40,8 @@ $(document).ready(function(){
     <table width="60%">
       <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
       <tr><th>style</th><td>${recipe.style.name} (${recipe.style.bjcp_code})</td></tr>
-      <tr><th>batch_size</th><td>${recipe.batch_size} ${recipe.batch_size_units}</td></tr>
-      <tr><th>type</th><td>${recipe.type}</td></tr>
+      <tr><th>batch_size</th><td>${recipe.batch_size} ${recipe.get_batch_size_units_display()}</td></tr>
+      <tr><th>type</th><td>${recipe.get_type_display()}</td></tr>
     </table>
     <div py:if="std.auth_user_is_user(request, recipe.author)">
       <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">edit &uarr;</a>

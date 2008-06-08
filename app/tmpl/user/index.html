@@ -31,7 +31,7 @@
       <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe.name}</a></td>
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
       <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
-      <td>${brew.last_state}</td>
+      <td>${brew.get_last_state_display()}</td>
       <span py:def="step(brew, next)" py:strip="True"><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=${next.id}">${action(next.label)}</a> </span>
       <td py:if="std.auth_user_is_user(request, user)">
           <py:for each="next in brew.next_step_types()[0:2]">
@@ -106,7 +106,7 @@
     </tr>
     <tr py:for="recipe in authored_recipes">
       <td>${recipe_a(recipe)}</td>
-      <td>${recipe.style.name} (${recipe.type})</td>
+      <td>${recipe.style.name} (${recipe.get_type_display()})</td>
       <td>${std.fmt.date.ymd(recipe.insert_date)}</td>
       <td><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">${action('clone')}</a>
        <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">${action('star')}</a>
