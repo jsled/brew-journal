@@ -90,6 +90,7 @@ Temp_Units = [
 
 All_Units = flatten(Weight_Units, Volume_Units)
 
+
 class Style (models.Model):
     name = models.CharField(max_length=100)
     bjcp_code = models.CharField(max_length=8)
@@ -279,6 +280,11 @@ class StarredRecipe (models.Model):
         pass
 
 
+class BrewManager (models.Manager):
+    def brews_with_future_steps(self, user):
+        return Brew.objects.filter(brewer=user).extra(where=['id IN (SELECT brew_id FROM app_step WHERE entry_date < date)'])
+
+
 class Brew (models.Model):
     #recipe_name = models.CharField(max_length=500)
     brew_date = models.DateTimeField('brew date', null=True, blank=True, default=datetime.datetime.now)
@@ -294,6 +300,8 @@ class Brew (models.Model):
 
     def __unicode__(self):
         return u'%s (%s)' % (self.recipe.name, self.brewer.username)
+
+    objects = BrewManager()
 
     class Admin:
         pass
@@ -333,6 +341,13 @@ class Brew (models.Model):
         step = step_types_by_id[self.last_state]
         return [step_types_by_id[next] for next in step.next_steps]
 
+    def future_steps(self):
+        return [step for step in self.step_set.all() if step.in_future()]
+
+    def title(self):
+        if not self.recipe:
+            return "unnamed"
+        return self.recipe.name
 
 
 def get_likely_next_step_type_id(last_step_type_id):
@@ -387,6 +402,9 @@ class Step (models.Model):
 
     def __unicode__(self):
         return u'[%s:%s:%s] vol=%s, temp=%s, gravity=%s, notes [%s]' % (self.brew.recipe.name, self.date.strftime('%x %X'), self.type, self.volume, self.temp, self.gravity, self.notes)
+
+    def in_future(self):
+        return self.entry_date < self.date
 
     class Meta:
         ordering = ['date']

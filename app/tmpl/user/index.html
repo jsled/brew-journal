@@ -9,6 +9,17 @@
 <body>
   <xi:include href="../_incl/body-top-bar.html"/>
 
+<h1>calendar</h1>
+<ul>
+    <li py:for="brew in future_brews">brew <a href="/user/${user.username}/brew/${brew.id}/">${brew.title()}</a>
+        <ul>
+            <li py:for="step in brew.future_steps()">
+                ${step.get_type_display()} on ${std.fmt.date.ymdhm(step.date)}
+            </li>
+        </ul>
+    </li>
+</ul>
+
 <h1>${user.username} current brews</h1>
 <py:if test="std.auth_user_is_user(request, user)">
   <a href="/user/${user.username}/brew/new">${action('create new brew')}</a><br/><br />

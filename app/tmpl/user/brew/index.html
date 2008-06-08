@@ -38,6 +38,18 @@
 
   <h2>log</h2>
 
+  <?python
+    now_steps = [step for step in steps if not step.in_future()]
+    future_steps = [step for step in steps if step.in_future()]
+  ?>
+  <py:def function="step_row(std,user,brew,step)">
+      <td><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date.ymdhm(step.date)}</a></td>
+      <td>${step.get_type_display()}</td>
+      <td><py:if test="step.volume">${step.volume} ${step.volume_units}</py:if></td>
+      <td><py:if test="step.temp">${step.temp} ${step.temp_units}</py:if></td>
+      <td>${step.gravity}</td>
+      <td>${step.notes}</td>
+  </py:def>
   <table width="95%">
     <thead>
       <tr>
@@ -53,14 +65,10 @@
       <tr py:if="not steps">
         <td colspan="1000"><em>no steps recorded, yet.</em></td>
       </tr>
-      <tr py:for="step in steps">
-        <td><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date.ymdhm(step.date)}</a></td>
-        <td>${step.get_type_display()}</td>
-        <td><py:if test="step.volume">${step.volume} ${step.volume_units}</py:if></td>
-        <td><py:if test="step.temp">${step.temp} ${step.temp_units}</py:if></td>
-        <td>${step.gravity}</td>
-        <td>${step.notes}</td>
-      </tr>
+      <tr py:for="step in now_steps">${step_row(std,user,brew,step)}</tr>
+    </tbody>
+    <tbody py:if="future_steps" class="future">
+        <tr py:for="step in future_steps">${step_row(std,user,brew,step)}</tr>
     </tbody>
   </table>
   <br />

@@ -18,16 +18,18 @@ Todo
   - toggled <div> py:attrs style form mumble.
 
 - calendaring
-  - encourage future steps
-    - need to make sure they're marked as "future" steps so if they don't get
-      handled in time, they "bump" forward.
-      - if a "future" action gets updated in time, what happens to other future actions after it?
-        - nothing
-        - they're moved forward in time by the same delta-T they had before the update (nifty, but maybe wrong.)
-          - then make it some policy of the type of future step?  Ferm vs. keg vs. …?
-        - make them all immediately after the new step.
 
-  - add "future" sub-body to table
+  - upcoming events list/cal
+
+  - if a "future" action gets updated in time, what happens to other future actions after it?
+    - nothing
+    - they're moved forward in time by the same delta-T they had before the update (nifty, but maybe wrong.)
+      - then make it some policy of the type of future step?  Ferm vs. keg vs. …?
+    - make them all immediately after the new step.
+
+  - next step types += first future step for update
+
+  - encourage future steps visually, … how?
 
   - "standard" ferm schedules?
     - 1 wk primary, 2 wk secondary
@@ -37,6 +39,10 @@ Todo
     - steps
     - brews?
       - or just a brew steps
+
+  x add "future" sub-body to table
+    - visually/functionally distinct how?
+
 
 - focus improvements
   - /user/{user} 
