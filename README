@@ -1,15 +1,38 @@
 Todo
 ----
 
-- bugs
+- bugs, misc
 
+  - std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
   x /user/{user}/brew/{id}?type={type} doesn't work.
   x with validation error on step addition, the form is correctly populated, but collapsed
+
+- add steps
+  - buy ingredients
+  - make starter
+  - fwh
 
 - shitty things
   - recipe_new()
   - brew()
   - toggled <div> py:attrs style form mumble.
+
+- calendaring
+  - encourage future steps
+    - need to make sure they're marked as "future" steps so if they don't get
+      handled in time, they "bump" forward.
+      - if a "future"
+
+  - add "future" sub-body to table
+
+  - "standard" ferm schedules?
+    - 1 wk primary, 2 wk secondary
+    - style-based?
+
+  - what can be done in the future?
+    - steps
+    - brews?
+      - or just a brew steps
 
 - focus improvements
   - /user/{user} 
@@ -54,23 +77,6 @@ Todo
   - mash chart/schedule
     - planned
     - actual
-
-- calendaring
-  - encourage future steps
-    - need to make sure they're marked as "future" steps so if they don't get
-      handled in time, they "bump" forward.
-      - if a "future"
-
-  - add "future" sub-body to table
-
-  - "standard" ferm schedules?
-    - 1 wk primary, 2 wk secondary
-    - style-based?
-
-  - what can be done in the future?
-    - steps
-    - brews?
-      - or just a brew steps
 
 - form validation
   x actual submission logic

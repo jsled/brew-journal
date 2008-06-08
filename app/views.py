@@ -91,9 +91,14 @@ def root(request):
         rtn = root_post(request)
         if rtn:
             return rtn
+    recent_brews = models.Brew.objects.order_by('-brew_date')[0:10]
+    recent_recipes = models.Recipe.objects.order_by('-insert_date')[0:10]
     recent_updates = models.Step.objects.order_by('-date')[0:10]
     auth_form = AuthForm()
-    return HttpResponse(render('index.html', request=request, std=standard_context(), auth_form=auth_form, recent_updates=recent_updates))
+    return HttpResponse(render('index.html', request=request, std=standard_context(), auth_form=auth_form,
+                               recent_brews=recent_brews,
+                               recent_recipes=recent_recipes,
+                               recent_updates=recent_updates))
 
 def logout_view(request):
     logout(request)

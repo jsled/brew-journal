@@ -48,16 +48,23 @@
 
 <h1>recent brews</h1>
 
-<!-- @fixme:
-- Recent Updates
-  - by entry date
--->
-&mdash;
-
+<ul>
+    <li py:for="brew in recent_brews">
+        <a href="/user/${brew.brewer.username}/brew/${brew.id}/"><py:if test="brew.recipe">"${brew.recipe.name}"</py:if><py:if test="not brew.recipe">A brew</py:if></a>
+        by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
+        <py:if test="brew.brew_date">
+            on ${std.fmt.date.ymd(brew.brew_date)}
+        </py:if>
+    </li>
+</ul>
 
 <h1>recent recipes</h1>
 
-&mdash;
+<ul>
+    <li py:for="recipe in recent_recipes">
+        "${recipe_a(recipe)}", added ${std.fmt.date.ymdhm(recipe.insert_date)} by <a href="/user/${recipe.author.username}/">${recipe.author}</a>.
+    </li>
+</ul>
   
 <h1>recent updates</h1>
 <ul>
