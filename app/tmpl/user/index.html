@@ -59,7 +59,10 @@
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
       <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
       <td>${brew.get_last_state_display()}</td>
-      <span py:def="step(brew, next)" py:strip="True"><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=${next.id}">${action(next.label)}</a> </span>
+      <span py:def="step(brew, next)" py:strip="True">
+          <py:if     test="next[0]"><a href="/user/${brew.brewer.username}/brew/${brew.id}/step/${next[0]}/">${action(next[1].get_type_display())}</a></py:if>
+          <py:if test="not next[0]"><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=${next[1].id}">${action(next[1].label)}</a></py:if>
+      </span>
       <td py:if="std.auth_user_is_user(request, user)">
           <py:for each="next in brew.next_step_types()[0:2]">
               ${step(brew, next)}

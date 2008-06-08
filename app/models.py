@@ -331,14 +331,24 @@ class Brew (models.Model):
             self.is_done = False
 
     def next_step_types(self):
-        '''@return a list of possible next step types.'''
+        '''
+        @return a list of possible next step types, as tuples.
+        next[0] is None if the step does not exist, then next[1] is the StepType.
+        Otherwise, next[0] is an existing step id to be updated, and next[1] is the Step.
+        '''
         if self.last_state == None:
             # @fixme: move to StepType structure, factor out, &c.
             # @fixme: this is really a function of the type of recipe (extract, all-grain, &c.)
-            return [step_types_by_id[x] for x in ['starter', 'strike', 'steep', 'boil-start']]
-        step = step_types_by_id[self.last_state]
-        return [step_types_by_id[next] for next in step.next_steps]
-
+            return [(None,step_types_by_id[x]) for x in ['starter', 'strike', 'steep', 'boil-start']]
+        rtn_next_steps = [(step.id, step) for step in self.step_set.all() if step.in_future()]
+        existing_next_step_types = dict([(type,None) for id,type in rtn_next_steps])
+        last_step = step_types_by_id[self.last_state]
+        for next_step in last_step.next_steps:
+            if existing_next_step_types.has_key(next_step):
+                continue
+            rtn_next_steps.append((None,step_types_by_id[next_step]))
+        return rtn_next_steps
+    
     def future_steps(self):
         return [step for step in self.step_set.all() if step.in_future()]
 
