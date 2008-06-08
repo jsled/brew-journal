@@ -95,11 +95,6 @@
                 "last_update_date": "2007-12-02",
                 "last_state": "ferm2",
                 "is_done": 0}},
-    {"model": "app.Brew", "pk": 4,
-     "fields": {"recipe": 3,
-                "brew_date": "2008-10-05",
-                "brewer": 1,
-                "is_done": 0}},
 
 {"model": "app.Step", "pk": 3, "fields": {"brew": 1, "type": "strike", "date": "2008-03-12 17:15:00", "volume": "4.5", "temp": 167, "volume_units": "gl", "temp_units": "f", "entry_date": "2008-03-12 17:15:00"}},
 {"model": "app.Step", "pk": 4, "fields": {"brew": 1, "type": "strike", "date": "2008-03-12 17:52:00", "volume": "4.76", "temp": 167, "volume_units": "gl", "temp_units": "f", "entry_date": "2008-03-12 17:52:00"}},
@@ -117,20 +112,905 @@
 {"model": "app.Step", "pk": 14, "fields": {"brew": 3, "type": "ferm1", "date": "2007-11-19 00:00:00", "gravity_read": "1.012", "gravity_read_temp": "59.0",  "temp": 58, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-11-19 00:00:00"}},
 {"model": "app.Step", "pk": 15, "fields": {"brew": 3, "type": "keg", "date": "2008-01-13 00:00:00", "gravity_read": "1.003", "gravity_read_temp": "59.0",  "temp": 58, "volume_units": "gl", "temp_units": "f", "entry_date": "2008-01-13 00:00:00"}},
 
-{"model": "app.Step", "pk": 16, "fields": {"brew": 4, "type": "strike", "date": "2007-10-21 11:50:00", "volume": 4, "temp": 167, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-21 11:50:00"}},
-{"model": "app.Step", "pk": 17, "fields": {"brew": 4, "type": "dough", "date": "2007-10-21 11:50:00", "temp": 157, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-21 11:50:00"}},
-{"model": "app.Step", "pk": 18, "fields": {"brew": 4, "type": "mash", "date": "2007-10-21 12:20:00", "temp": 154, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-21 12:20:00"}},
-{"model": "app.Step", "pk": 19, "fields": {"brew": 4, "type": "mash", "date": "2007-10-21 12:50:00", "temp": 152, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-21 12:50:00"}},
-{"model": "app.Step", "pk": 20, "fields": {"brew": 4, "type": "batch1-start", "date": "2007-10-21 12:50:00", "gravity_read": "1.060", "gravity_read_temp": "83.0", "gravity_read_temp_units": "f", "temp": 78, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-21 12:50:00"}},
-{"model": "app.Step", "pk": 21, "fields": {"brew": 4, "type": "batch1-end", "date": "2007-10-21 12:50:00", "volume": 2, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-21 12:50:00"}},
-{"model": "app.Step", "pk": 22, "fields": {"brew": 4, "type": "batch2-start", "date": "2007-10-21 12:50:00", "gravity_read": "1.04", "gravity_read_temp": "59.0",  "temp": 85, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-21 12:50:00"}},
-{"model": "app.Step", "pk": 23, "fields": {"brew": 4, "type": "batch2-end", "date": "2007-10-21 12:50:00", "volume": "3.75", "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-21 12:50:00"}},
-{"model": "app.Step", "pk": 24, "fields": {"brew": 4, "type": "boil-start", "date": "2007-10-21 13:45:00", "volume": "5.5", "gravity_read": "1.050", "gravity_read_temp": "82.0", "temp": 98, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-21 13:45:00"}},
-{"model": "app.Step", "pk": 25, "fields": {"brew": 4, "type": "boil-add", "date": "2007-10-21 13:45:00", "notes": "hops", "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-21 13:45:00"}},
-{"model": "app.Step", "pk": 26, "fields": {"brew": 4, "type": "pitch", "date": "2007-10-21 13:45:00", "volume": "5.5", "gravity_read": "1.058", "gravity_read_temp": "59.0",  "temp": 84, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-21 13:45:00"}},
-{"model": "app.Step", "pk": 27, "fields": {"brew": 4, "type": "ferm1", "date": "2007-10-28 00:00:00", "gravity_read": "1.016", "gravity_read_temp": "59.0",  "temp": 61, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-28 00:00:00"}},
-{"model": "app.Step", "pk": 28, "fields": {"brew": 4, "type": "ferm2", "date": "2007-12-02 00:00:00", "gravity_read": "1.019", "gravity_read_temp": "59.0",  "temp": 57, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-12-02 00:00:00"}},
-{"model": "app.Step", "pk": 29, "fields": {"brew": 4, "type": "keg", "date": "2007-12-02 00:00:00", "volume_units": "gl", "temp_units": "f", "entry_date": "2007-12-02 00:00:00"}},
+  {
+    "pk": 6, 
+    "model": "app.recipe", 
+    "fields": {
+      "style": 61, 
+      "insert_date": "2008-05-03 00:00:00", 
+      "author": 1, 
+      "derived_from_recipe": null, 
+      "batch_size": "5", 
+      "batch_size_units": "gl", 
+      "source": null, 
+      "type": "a", 
+      "name": "Rye Pale"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "app.recipe", 
+    "fields": {
+      "style": 11, 
+      "insert_date": "2008-05-11 00:00:00", 
+      "author": 1, 
+      "derived_from_recipe": null, 
+      "batch_size": "5", 
+      "batch_size_units": "gl", 
+      "source": null, 
+      "type": "a", 
+      "name": "Brown Sugar"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "app.recipe", 
+    "fields": {
+      "style": 72, 
+      "insert_date": "2008-05-18 00:00:00", 
+      "author": 1, 
+      "derived_from_recipe": null, 
+      "batch_size": "5", 
+      "batch_size_units": "gl", 
+      "source": null, 
+      "type": "a", 
+      "name": "Ventral Sally Oat Stout"
+    }
+  }, 
 
-{"model": "app.Step", "pk": 30, "fields": {"brew": 4, "type": "batch1-start", "date": "2008-03-14 22:25:37", "entry_date": "2008-03-14 22:25:37"}}
+  {
+    "pk": 5, 
+    "model": "app.brew", 
+    "fields": {
+      "last_state": "keg", 
+      "brewer": 1, 
+      "is_done": false, 
+      "notes": "", 
+      "recipe": 6, 
+      "brew_date": "2008-05-03 00:00:00", 
+      "last_update_date": "2008-06-01 00:00:00"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "app.brew", 
+    "fields": {
+      "last_state": "keg", 
+      "brewer": 1, 
+      "is_done": false, 
+      "notes": "", 
+      "recipe": 7, 
+      "brew_date": "2008-05-11 00:00:00", 
+      "last_update_date": "2008-06-01 00:00:00"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "app.brew", 
+    "fields": {
+      "last_state": "keg", 
+      "brewer": 1, 
+      "is_done": false, 
+      "notes": "", 
+      "recipe": 8, 
+      "brew_date": "2008-05-18 00:00:00", 
+      "last_update_date": "2008-06-01 00:00:00"
+    }
+  }, 
+
+  {
+    "pk": 31, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": 169, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "5", 
+      "date": "2008-05-03 12:28:00", 
+      "entry_date": "2008-06-03 00:13:46", 
+      "temp_units": "f", 
+      "brew": 5, 
+      "gravity_read_temp": null, 
+      "type": "dough", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 32, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": 158, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-03 13:04:00", 
+      "entry_date": "2008-06-03 00:14:01", 
+      "temp_units": "f", 
+      "brew": 5, 
+      "gravity_read_temp": null, 
+      "type": "mash", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 33, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.073", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-03 13:20:00", 
+      "entry_date": "2008-06-03 00:14:26", 
+      "temp_units": "f", 
+      "brew": 5, 
+      "gravity_read_temp": 66, 
+      "type": "batch1-start", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 34, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "1.5", 
+      "date": "2008-05-03 13:40:00", 
+      "entry_date": "2008-06-03 00:14:43", 
+      "temp_units": "f", 
+      "brew": 5, 
+      "gravity_read_temp": null, 
+      "type": "batch1-end", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 35, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.038", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-03 13:50:00", 
+      "entry_date": "2008-06-03 00:15:01", 
+      "temp_units": "f", 
+      "brew": 5, 
+      "gravity_read_temp": 76, 
+      "type": "batch2-start", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 36, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.029", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "3.8", 
+      "date": "2008-05-03 14:00:00", 
+      "entry_date": "2008-06-03 00:15:37", 
+      "temp_units": "f", 
+      "brew": 5, 
+      "gravity_read_temp": 67, 
+      "type": "batch2-end", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 37, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.042", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "5", 
+      "date": "2008-05-03 16:00:00", 
+      "entry_date": "2008-06-03 00:16:17", 
+      "temp_units": "f", 
+      "brew": 5, 
+      "gravity_read_temp": 68, 
+      "type": "pitch", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 38, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.012", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-11 00:00:00", 
+      "entry_date": "2008-06-03 00:16:35", 
+      "temp_units": "f", 
+      "brew": 5, 
+      "gravity_read_temp": 62, 
+      "type": "ferm2", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 39, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.016", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-06-01 00:00:00", 
+      "entry_date": "2008-06-03 00:16:52", 
+      "temp_units": "f", 
+      "brew": 5, 
+      "gravity_read_temp": 60, 
+      "type": "keg", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 40, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": 171, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "5", 
+      "date": "2008-05-11 11:18:00", 
+      "entry_date": "2008-06-03 00:22:29", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": null, 
+      "type": "dough", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 41, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": 154, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-11 11:46:00", 
+      "entry_date": "2008-06-03 00:22:54", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": null, 
+      "type": "mash", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 42, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": 154, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-11 12:10:00", 
+      "entry_date": "2008-06-03 00:23:07", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": null, 
+      "type": "mash", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 43, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.08", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-11 12:20:00", 
+      "entry_date": "2008-06-03 00:23:29", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": 71, 
+      "type": "batch1-start", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 44, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.064", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "3", 
+      "date": "2008-05-11 12:30:00", 
+      "entry_date": "2008-06-03 00:23:48", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": 85, 
+      "type": "batch1-end", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 45, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": 170, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "3", 
+      "date": "2008-05-11 12:30:00", 
+      "entry_date": "2008-06-03 00:24:04", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": null, 
+      "type": "sparge", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 46, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.028", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-11 12:40:00", 
+      "entry_date": "2008-06-03 00:24:18", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": 72, 
+      "type": "batch2-start", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 47, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.02", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "3", 
+      "date": "2008-05-11 12:45:00", 
+      "entry_date": "2008-06-03 00:24:28", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": 84, 
+      "type": "batch2-end", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 48, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.044", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-11 12:55:00", 
+      "entry_date": "2008-06-03 00:24:50", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": 89, 
+      "type": "boil-start", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 49, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.06", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "5", 
+      "date": "2008-05-11 14:00:00", 
+      "entry_date": "2008-06-03 00:25:17", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": 71, 
+      "type": "pitch", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 50, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.014", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-18 00:00:00", 
+      "entry_date": "2008-06-03 00:25:37", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": 65, 
+      "type": "ferm2", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 51, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.016", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-06-01 00:00:00", 
+      "entry_date": "2008-06-03 00:25:52", 
+      "temp_units": "f", 
+      "brew": 6, 
+      "gravity_read_temp": 60, 
+      "type": "keg", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 52, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": 173, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "5", 
+      "date": "2008-05-18 10:50:00", 
+      "entry_date": "2008-06-03 00:28:54", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": null, 
+      "type": "strike", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 53, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": 158, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "5", 
+      "date": "2008-05-18 10:50:00", 
+      "entry_date": "2008-06-03 00:29:01", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": null, 
+      "type": "dough", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 54, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": 154, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-18 11:20:00", 
+      "entry_date": "2008-06-03 00:29:12", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": null, 
+      "type": "mash", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 55, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": 155, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-18 11:50:00", 
+      "entry_date": "2008-06-03 00:29:24", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": null, 
+      "type": "mash", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 56, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": 153, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-18 12:30:00", 
+      "entry_date": "2008-06-03 00:29:34", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": null, 
+      "type": "mash", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 57, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.087", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-18 12:40:00", 
+      "entry_date": "2008-06-03 00:29:46", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": 73, 
+      "type": "batch1-start", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 58, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.082", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "2.5", 
+      "date": "2008-05-18 12:45:00", 
+      "entry_date": "2008-06-03 00:29:56", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": 84, 
+      "type": "batch1-end", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 59, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.034", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-18 13:05:00", 
+      "entry_date": "2008-06-03 00:30:16", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": 75, 
+      "type": "batch2-start", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 60, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.032", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "3.5", 
+      "date": "2008-05-18 13:05:00", 
+      "entry_date": "2008-06-03 00:30:25", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": 86, 
+      "type": "batch2-end", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 61, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.06", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "6", 
+      "date": "2008-05-18 13:05:00", 
+      "entry_date": "2008-06-03 00:30:41", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": 76, 
+      "type": "boil-start", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 62, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-18 13:58:00", 
+      "entry_date": "2008-06-03 00:31:01", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": null, 
+      "type": "boil-add", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 63, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": null, 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": null, 
+      "date": "2008-05-18 14:20:00", 
+      "entry_date": "2008-06-03 00:31:12", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": null, 
+      "type": "boil-end", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+  {
+    "pk": 64, 
+    "model": "app.step", 
+    "fields": {
+      "gravity_read": "1.02", 
+      "temp": null, 
+      "notes": "", 
+      "volume_units": "gl", 
+      "volume": "5", 
+      "date": "2008-06-01 00:00:00", 
+      "entry_date": "2008-06-03 00:31:36", 
+      "temp_units": "f", 
+      "brew": 7, 
+      "gravity_read_temp": 60, 
+      "type": "keg", 
+      "gravity_read_temp_units": "f"
+    }
+  }, 
+
+  {
+    "pk": 5, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 14, 
+      "amount_units": "lb", 
+      "recipe": 6, 
+      "amount_value": "9"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 1, 
+      "amount_units": "lb", 
+      "recipe": 6, 
+      "amount_value": "1"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 68, 
+      "amount_units": "lb", 
+      "recipe": 6, 
+      "amount_value": "1"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "app.recipehop", 
+    "fields": {
+      "amount_units": "oz", 
+      "recipe": 6, 
+      "amount_value": "1", 
+      "hop": 9, 
+      "boil_time": 60
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "app.recipehop", 
+    "fields": {
+      "amount_units": "oz", 
+      "recipe": 6, 
+      "amount_value": "1", 
+      "hop": 9, 
+      "boil_time": 30
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "app.recipeyeast", 
+    "fields": {
+      "ideal": true, 
+      "recipe": 6, 
+      "yeast": 4
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 14, 
+      "amount_units": "lb", 
+      "recipe": 7, 
+      "amount_value": "9"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 5, 
+      "amount_units": "lb", 
+      "recipe": 7, 
+      "amount_value": "0.5"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 12, 
+      "amount_units": "lb", 
+      "recipe": 7, 
+      "amount_value": "0.25"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 76, 
+      "amount_units": "lb", 
+      "recipe": 7, 
+      "amount_value": "1"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "app.recipeyeast", 
+    "fields": {
+      "ideal": true, 
+      "recipe": 7, 
+      "yeast": 4
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 14, 
+      "amount_units": "lb", 
+      "recipe": 8, 
+      "amount_value": "11"
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 67, 
+      "amount_units": "lb", 
+      "recipe": 8, 
+      "amount_value": "1"
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 7, 
+      "amount_units": "lb", 
+      "recipe": 8, 
+      "amount_value": "1"
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 12, 
+      "amount_units": "lb", 
+      "recipe": 8, 
+      "amount_value": "0.75"
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 10, 
+      "amount_units": "lb", 
+      "recipe": 8, 
+      "amount_value": "0.5"
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "app.recipegrain", 
+    "fields": {
+      "grain": 9, 
+      "amount_units": "lb", 
+      "recipe": 8, 
+      "amount_value": "0.25"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "app.recipehop", 
+    "fields": {
+      "amount_units": "oz", 
+      "recipe": 8, 
+      "amount_value": "1", 
+      "hop": 36, 
+      "boil_time": 60
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "app.recipehop", 
+    "fields": {
+      "amount_units": "oz", 
+      "recipe": 8, 
+      "amount_value": "1", 
+      "hop": 36, 
+      "boil_time": 30
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "app.recipeyeast", 
+    "fields": {
+      "ideal": true, 
+      "recipe": 8, 
+      "yeast": 4
+    }
+  }
+
 ]
