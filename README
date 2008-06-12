@@ -5,6 +5,7 @@ Todo
   - can't do 800 ml in Step volume
   - std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
   - 500/404 page handling
+  - after new user creation, email isn't shown in profile form.
   x /user/{user}/brew/{id}?type={type} doesn't work.
   x with validation error on step addition, the form is correctly populated, but collapsed
 
@@ -39,6 +40,11 @@ Todo
 
   x add "future" sub-body to table
     - visually/functionally distinct how?
+
+- shopping list
+  - http://beeradvocate.com/forum/read/1102362#1102497
+
+- be able to (re-)associate a recipe with a Brew
 
 - focus improvements
   - profile form after new user creation
@@ -79,17 +85,67 @@ Todo
     - planned
     - actual
 
+- game
+  - meta
+    - user must be able to turn this off, but defaults to on...
+    - user must be able to decline
+      - "first keg", but we've been kegging for a while, and are working backwards in entry.
+  - achievements
+    - firsts/technique
+      - "First Brew!  Welcome! :)"
+      - "First Brew in ${style}"
+      - First {Ale,Lager,Common,Brett,Cider,Mead,Bragot}
+      - First {1.060,70,80,90,100} OG brew
+      - first {single-infusion,decoction} mash
+      - mash-out with your bad self!
+      - first {cont.sparge, batch sparge, oat sparge, >25% wheat sparge}
+      - first dry-hopping
+      - first fruit
+      - first smoke
+      - first oak/wood
+    - journeyman
+      - x{50|100} gallons brewed
+      - {10,25,50,100,150,…} brews complete
+      - Brewing for {1,2,3,…} years.
+    - perfection/technique
+      - {75,80,85,90,95,>95} efficiency
+      - competition awards
+      - BJCP scoring
+    - height
+      - {6,7,9,10,11,12,13,15} abv
+      - "Hop Bomb!": >100 IBU brewed
+      - 60, 90, 120 minute boil
+    - random
+      - "Session ": 3-4% abv
+      - "most novel ingredient"
+      - selection of weird ingredients
+        - honey
+        - grains of paradise
+        - cinnamon
+      - "Weird!"
+        - ale grain profile, lager yeast
+        - ?   
+    - series
+      - 5 >{70,80,90}% efficiency in a row.
+      - >{1,2,5} gal/week brewed for this year.
+    - site-wide
+      - longest {{primary,second} fermentation,conditioning}
+      - these need to be "rescinded".
+
+- identity links to other fora
+  - beeradvocate, &c.
+
 - form validation
   x actual submission logic
   - visual (see Yahoo patterns)
   - client-side validation
 
-- shopping list
-  - http://beeradvocate.com/forum/read/1102362#1102497
-
 - use django `get_absolute_url`, `permalink` methods.
 
 - data
+  - grains
+    - flaked wheat
+    - German pils
   - adjuncts
   - more yeasts
     - dry yeasts (Safale, Windsor, &c.)
@@ -111,6 +167,10 @@ Todo
   - pre-select units fields
     - same as the last-used units in the item-class
     - prefs
+
+- google crawling
+  - anything private?
+  - robots.txt
 
 - auth
   / general 'edit-controls-for-authorized-editor'
@@ -185,19 +245,6 @@ Todo
 - deletion
   - recipe
   - brew
-
-- game
-  - user must be able to turn this off, but defaults to on
-  - achievements
-    - First Brew in ${style}
-    - {x100} gallons brewed
-    - {10,25,50,100,150,…} brews complete
-    - {75,80,85,90,95,>95} efficiency
-    - {5,6,7,9,10} abv
-    - First {1.060,70,80,90,100} OG brew
-    - Brewing for {1,2,3,…} years.
-    - competition awards
-    - BJCP scoring
 
 - user profile
   - other web url
