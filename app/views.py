@@ -47,6 +47,12 @@ class AuthForm (forms.Form):
     username = forms.CharField(max_length=30)
     password = forms.CharField(widget=forms.PasswordInput)
 
+class RegisterForm (forms.Form):
+    username = forms.CharField(max_length=30)
+    password = forms.CharField(widget=forms.PasswordInput)
+    password_again = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField()
+
 def root_post(request):
     auth_form = AuthForm(request.POST)
     username = request.POST['username']
@@ -62,11 +68,19 @@ def root_post(request):
             # error; user already existss
             return HttpResponseBadRequest('user with username [%s] already exists' % (username))
         else:
-            user = User.objects.create_user(username, '', password)
+            reg = RegisterForm(request.POST)
+            if not reg.is_valid():
+                # @fixme
+                return HttpResponseRedirect('/')
+            email = request.POST['email']
+            user = User.objects.create_user(reg.cleaned_data['username'],
+                                            reg.cleaned_data['email'],
+                                            reg.cleaned_data['password'])
             if not user:
                 # error creating user
                 return HttpResponseServerError('unknown error creating user [%s]' % (username))
-            user = authenticate(username = username, password = password)
+            user = authenticate(username = reg.cleaned_data['username'],
+                                password = reg.cleaned_data['password'])
             login(request, user)
             return HttpResponseRedirect('/user/%s/profile' % (username))
         pass

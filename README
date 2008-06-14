@@ -4,7 +4,6 @@ Todo
 - bugs, misc
   - std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
   - 500/404 page handling
-  - after new user creation, email isn't shown in profile form.
   x /user/{user}/brew/{id}?type={type} doesn't work.
   x with validation error on step addition, the form is correctly populated, but collapsed
 
