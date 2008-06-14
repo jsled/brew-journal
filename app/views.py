@@ -259,9 +259,8 @@ def brew(request, user_name, brew_id, step_id):
             return HttpResponseForbidden()
         form = StepForm(request.POST, instance=step)
         if form.is_valid():
-            step = form.save(commit=False)
-            step.brew = brew
-            step.save()
+	    form.cleaned_data['brew'] = brew
+            step = form.save()
             steps_changed = True
         else:
             step_edit = True
