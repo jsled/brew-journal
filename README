@@ -13,7 +13,6 @@ Todo
     - way too deep/nested
   - "next_possible_step[s]" logic, including future-dated steps
     - semi-duplicated between model and (view) brew()
-     
   - toggled <div> py:attrs style form mumble.
 
 - calendaring
