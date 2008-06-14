@@ -206,7 +206,7 @@ class Recipe (models.Model):
     style = models.ForeignKey(Style, null=True)
     derived_from_recipe = models.ForeignKey('self', null=True, blank=True)
     type = models.CharField(max_length=1, choices=Types, default='a')
-    source = models.CharField(max_length=300, blank=True, null=True)
+    source_url = models.URLField(max_length=300, blank=True, null=True, verify_exists=True)
 
     def __str__(self):
         return self.__unicode__()
@@ -383,7 +383,7 @@ class Step (models.Model):
     date = models.DateTimeField()
     entry_date = models.DateTimeField(editable=False, default=datetime.datetime.now)
 
-    volume = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
+    volume = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
     volume_units = models.CharField(max_length=2, null=True, blank=True, choices = Volume_Units, default='gl')
 
     temp = models.IntegerField(null=True, blank=True)

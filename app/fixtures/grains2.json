@@ -1,0 +1,5 @@
+[
+    {"model": "app.Grain", "pk": null, "fields": {"name": "Pilsner Malt (2-row)", "lovibond_min": 2, "lovibond_max": 2, "extract_min": 1037, "extract_max": 1037, "group": "German"}},
+    {"model": "app.Grain", "pk": null, "fields": {"name": "Flaked Wheat", "lovibond_min": 2, "lovibond_max": 2, "extract_min": 1035, "extract_max": 1035 , "group": "Other"}},
+    {"model": "app.Grain", "pk": null, "fields": {"name": "Pale Malt (2-row)", "lovibond_min": 18, "lovibond_max": 18, "extract_min": 1037, "extract_max": 1038 , "description": "Smooth, less grainy, moderate malt flavor. Basic malt for all beer styles.", "group": "German"}}
+]

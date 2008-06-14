@@ -122,7 +122,6 @@
       "derived_from_recipe": null, 
       "batch_size": "5", 
       "batch_size_units": "gl", 
-      "source": null, 
       "type": "a", 
       "name": "Rye Pale"
     }
@@ -137,7 +136,6 @@
       "derived_from_recipe": null, 
       "batch_size": "5", 
       "batch_size_units": "gl", 
-      "source": null, 
       "type": "a", 
       "name": "Brown Sugar"
     }
@@ -152,9 +150,9 @@
       "derived_from_recipe": null, 
       "batch_size": "5", 
       "batch_size_units": "gl", 
-      "source": null, 
       "type": "a", 
-      "name": "Ventral Sally Oat Stout"
+      "name": "Ventral Sally Oat Stout",
+      "source_url": "http://www.ratebeer.com/Recipe.asp?RecipeID=122"
     }
   }, 
 

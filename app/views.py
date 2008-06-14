@@ -355,14 +355,12 @@ def get_yeast_choices():
 class RecipeForm (forms.ModelForm):
     style = forms.ModelChoiceField(models.Style.objects.all(),
                                    widget=widgets.TwoLevelSelectWidget(choices=get_style_choices()))
-
-    #def __init__(self, *args, **kwargs):
-    #    super(RecipeForm, self).__init__(*args, **kwargs)
-    #    self.style.choices = style_choices
-
+    name = forms.CharField(widget=forms.TextInput(attrs={'size': 40}))
+    source_url = forms.URLField(widget=forms.TextInput(attrs={'size': 40}))
+    
     class Meta:
         model = models.Recipe
-        exclude = ['author', 'derived_from_recipe', 'source', 'private']
+        exclude = ['author', 'derived_from_recipe']
 
 
 class RecipeGrainForm (forms.ModelForm):

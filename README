@@ -2,7 +2,6 @@ Todo
 ----
 
 - bugs, misc
-  - can't do 800 ml in Step volume
   - std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
   - 500/404 page handling
   - after new user creation, email isn't shown in profile form.
@@ -143,9 +142,6 @@ Todo
 - use django `get_absolute_url`, `permalink` methods.
 
 - data
-  - grains
-    - flaked wheat
-    - German pils
   - adjuncts
   - more yeasts
     - dry yeasts (Safale, Windsor, &c.)
@@ -155,6 +151,9 @@ Todo
   - Brew
     - add brew name?
     - must Brews have recipes?
+    - Notes
+      - add differentiated, timestampped, author'd notes
+        - this approaches Comments, where Brew.brewer = Comment.author is a bit special.
 
   - Hops
     - type: bittering? flavor? aroma?
@@ -197,6 +196,9 @@ Todo
 - user interface
   - abbrev -> full label in views
   - auto-complete text fields for style, grain, hops...
+  - step addition
+    - if the brew knows the mash grains, then it can compute strike and
+      sparge water volumes, absorption, &c.
 
 - starring recipes
   - make AJAX-y
@@ -295,8 +297,6 @@ Todo
     }
     else{}
 
-----------
-
 Colors
 ------
 
@@ -326,4 +326,10 @@ nice soft green: #75B368
 
 Weirdness
 ---------
+
 - when journaling after racking to secondary, is it entered as primary-ferm or secondary-ferm?
+
+Resources
+---------
+
+- http://www.beersmith.com/GrainList.htm
