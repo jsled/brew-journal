@@ -370,7 +370,7 @@ class RecipeForm (forms.ModelForm):
     style = forms.ModelChoiceField(models.Style.objects.all(),
                                    widget=widgets.TwoLevelSelectWidget(choices=get_style_choices()))
     name = forms.CharField(widget=forms.TextInput(attrs={'size': 40}))
-    source_url = forms.URLField(widget=forms.TextInput(attrs={'size': 40}))
+    source_url = forms.URLField(required=False, widget=forms.TextInput(attrs={'size': 40}))
     
     class Meta:
         model = models.Recipe
