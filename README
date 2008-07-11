@@ -2,6 +2,7 @@ Todo
 ----
 
 - bugs, misc
+  - it's 'vorlauf' not 'vourlauf'. :p
   - std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
   - 500/404 page handling
   x /user/{user}/brew/{id}?type={type} doesn't work.
