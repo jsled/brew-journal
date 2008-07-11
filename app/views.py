@@ -3,11 +3,11 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django import newforms as forms
 from genshi.template import TemplateLoader
 from genshi.core import Markup
 from brewjournal import util
 from brewjournal.app import models, widgets
-from django import newforms as forms
 from datetime import datetime
 import urllib
 
