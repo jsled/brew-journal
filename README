@@ -337,3 +337,7 @@ Resources
 ---------
 
 - http://www.beersmith.com/GrainList.htm
+
+Random
+------
+git rebase remotes/origin/master
