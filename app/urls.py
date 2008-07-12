@@ -11,6 +11,8 @@ urlpatterns = patterns(
     (r'^user/(?P<user_name>[^/]+)/brew/new/?$', 'user_brew_new'),
     (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/edit/$', 'brew_edit'),
 
+    (r'^user/(?P<user_name>[^/]+)/shopping/?$', 'user_shopping_list'),
+
     # GET /user/jsled/star?recipe_id=42 + POST
     # GET /user/jsled/star?url=<http://.../recipe> + POST
     (r'^user/(?P<user_name>[^/]+)/star/$', 'user_star'),

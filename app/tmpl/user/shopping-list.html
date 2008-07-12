@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="../_incl/taglib.html"/>
+<head>
+  <title>${user.username} shopping list | brew-journal</title>
+  <xi:include href="../_incl/head.html"/>
+</head>
+<body>
+  <xi:include href="../_incl/body-top-bar.html"/>
+
+  <py:def function="default_item_brew_amount_getter(item_brew)">${item_brew.amount_value} ${item_brew.amount_units} - </py:def>
+  <py:def function="default_item_name_getter(item)">${item.name}</py:def>
+  <py:def function="yeast_name_getter(yeast)">${yeast.manufacturer.name} ${yeast.ident} ${yeast.name}</py:def>
+  <py:def function="yeast_amt_getter(yeast)"/>
+  <py:def function="itemize(shopping_list, type, item_list, amount_getter = default_item_brew_amount_getter, name_getter = default_item_name_getter)">
+      <dt>${type}</dt>
+      <dd>
+          <em py:if="len(item_list) == 0">no items</em>
+          <ul py:if="len(item_list) > 0">
+              <py:for each="item,item_brews in item_list">
+                  <li py:for="item_brew,brew in item_brews">${amount_getter(item_brew)} ${name_getter(item)} (brew ${brew_a(brew)})</li>
+              </py:for>
+          </ul>
+      </dd>
+  </py:def>
+
+  <dl>
+      ${itemize(shopping_list, 'grain', shopping_list.grains)}
+
+      ${itemize(shopping_list, 'hops', shopping_list.hops)}
+
+      ${itemize(shopping_list, 'adjuncts', shopping_list.adjuncts)}
+
+      ${itemize(shopping_list, 'yeasts', shopping_list.yeasts, yeast_amt_getter, yeast_name_getter)}
+  </dl>
+
+</body>
+</html>

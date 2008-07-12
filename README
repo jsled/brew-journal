@@ -40,6 +40,12 @@ Todo
     - visually/functionally distinct how?
 
 - shopping list
+  - better shopping list:
+    - collapse ingredients (hops esp.) in same brew
+    - sum ingredient amounts
+    - better ordering
+    - table display?
+    - probably actually want to model "need to buy" or "don't need to buy" states.
   - http://beeradvocate.com/forum/read/1102362#1102497
 
 - be able to (re-)associate a recipe with a Brew

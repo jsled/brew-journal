@@ -282,9 +282,19 @@ class BrewManager (models.Manager):
     def brews_with_future_steps(self, user):
         return Brew.objects.filter(brewer=user).extra(where=['id IN (SELECT brew_id FROM app_step WHERE entry_date < date)'])
 
+    def brews_pre_brew(self, user):
+        future_brews = Brew.objects.brews_with_future_steps(user)
+        def pre_brew(brew):
+            future_steps = brew.future_steps()
+            # @fixme, this should probably be step.is_pre_brew() or something.
+            substeps = [step for step in future_steps if step.type in ['buy', 'strike', 'steep']]
+            return len(substeps) > 0
+        pre_brews = [recipe for recipe in future_brews if pre_brew(recipe)]
+        return pre_brews
+        
 
 class Brew (models.Model):
-    #recipe_name = models.CharField(max_length=500)
+    # recipe_name = models.CharField(max_length=500)
     brew_date = models.DateTimeField('brew date', null=True, blank=True, default=datetime.datetime.now)
     brewer = models.ForeignKey(auth.models.User)
     notes = models.TextField(null=True, blank=True)
