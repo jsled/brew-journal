@@ -340,4 +340,20 @@ Resources
 
 Random
 ------
+git fetch
 git rebase remotes/origin/master
+
+Thanks, Google Cache
+--------------------
+
+date 	step 	volume 	temp 	gravity (corrected) 	notes
+2008-06-13 00:00 	make starter 	800 ml 			
+2008-06-21 12:50 	dough-in 	5 gl 	151 f 		overshot mash temp, needed more water to cool.
+2008-06-21 13:20 	mash 				
+2008-06-21 13:50 	mash 		151 f 		
+2008-06-21 13:51 	1st runnings, start 			1.064 	
+2008-06-21 14:05 	1st runnings, end 			1.054 	
+2008-06-21 14:20 	2nd runnings, start 			1.031 	
+2008-06-21 16:15 	pitch 	5 gl 		1.037 	
+2008-06-29 13:30 	kegged 			1.009 	
+2008-06-21 12:35 	strike water 	4.5 gl 	170 f 		
