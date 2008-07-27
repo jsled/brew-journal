@@ -51,7 +51,7 @@
 ** focus improvements
 *** profile form after new user creation
 
-*** /user/{user} 
+*** /user/{user}
 **** next action
 
 *** /recipe/{id}/{text}
@@ -74,7 +74,7 @@
 *** FG
 **** estimated: fn(grains, est_OG, yeast.attenuation)
 **** actual: latest post-'pitch' gravity reading
-*** IBU: 
+*** IBU:
 **** estimated: fn(hop schedule)
 **** actual: none
 *** SRM
@@ -126,7 +126,7 @@
 ****** cinnamon
 ***** "Weird!"
 ****** ale grain profile, lager yeast
-****** ?   
+****** ? what else...?
 **** series
 ***** 5 >{70,80,90}% efficiency in a row.
 ***** >{1,2,5} gal/week brewed for this year.
@@ -252,7 +252,7 @@
 
 ** user profile
 *** other web url
-*** preferences 
+*** preferences
 **** default recipe type (extract, partial-mash, all-grain)
 **** default units (english/metric)
 **** favorite style
