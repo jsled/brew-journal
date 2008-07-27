@@ -15,10 +15,9 @@
 *** toggled <div> py:attrs style form mumble.
 
 ** calendaring
-
-*** DONE next step types += first future step for update
-
-*** DONE add step form takes into account first future step
+*** encourage future steps visually … how?
+**** when adding a 'pitch' step, prompt to add future steps for 'ferm1' and 'ferm2'
+**** when adding 'starter', prompt for 'strike-water', 'ferm1', 'ferm2', &c.…
 
 *** if a "future" action gets updated in time, what happens to other future actions after it?
 **** nothing
@@ -26,13 +25,13 @@
 ***** then make it some policy of the type of future step?  Ferm vs. keg vs. …?
 **** make them all immediately after the new step.
 
-*** encourage future steps visually, … how?
-**** when adding a 'pitch' step, prompt to add future steps for 'ferm1' and 'ferm2'
-**** when adding 'starter', prompt for 'strike-water', 'ferm1', 'ferm2', &c.…
-
 *** "standard" ferm schedules?
 **** 1 wk primary, 2 wk secondary
 **** style-based?
+
+*** DONE next step types += first future step for update
+
+*** DONE add step form takes into account first future step
 
 *** DONE add "future" sub-body to table
 **** visually/functionally distinct how?
@@ -47,7 +46,6 @@
 *** http://beeradvocate.com/forum/read/1102362#1102497
 
 ** be able to (re-)associate a recipe with a Brew
-
 ** focus improvements
 *** profile form after new user creation
 
@@ -87,11 +85,12 @@
 **** planned
 **** actual
 
-** game
+** game/achievements
 *** meta
-**** user must be able to turn this off, but defaults to on...
-**** user must be able to decline
+**** user must be able to turn this off, but defaults to on
+**** user must be able to decline [?]
 ***** "first keg", but we've been kegging for a while, and are working backwards in entry.
+**** future brews should show user what achievements will be earned.
 *** achievements
 **** firsts/technique
 ***** "First Brew!  Welcome! :)"
@@ -134,14 +133,15 @@
 ***** longest {{primary,second} fermentation,conditioning}
 ***** these need to be "rescinded".
 
-** identity links to other fora
-*** beeradvocate, &c.
-
+** identity links in profile to other fora
+*** beeradvocate
+*** tastybrew
+*** ?others?
 ** form validation
-*** DONE actual submission logic
 *** visual (see Yahoo patterns)
 *** client-side validation
 
+*** DONE actual submission logic
 ** use django `get_absolute_url`, `permalink` methods.
 
 ** data
@@ -284,6 +284,8 @@
 *** 'g {location}' paradigm?
 *** '?' overlay
 
+** printable journal pages
+*** long-term storage/archiving
 ** import/export
 
 ** add 'equipment'/'rig'
