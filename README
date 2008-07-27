@@ -1,6 +1,7 @@
 # -*- org -*-
 * Todo
 ** bugs, misc
+*** TODO login/new-account failures don't have standard form behavior
 *** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
 *** TODO 500/404 page handling
 *** DONE /user/{user}/brew/{id}?type={type} doesn't work.
