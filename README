@@ -1,296 +1,295 @@
-Todo
-----
+# -*- org -*-
+* Todo
+** bugs, misc
+*** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
+*** TODO 500/404 page handling
+*** DONE /user/{user}/brew/{id}?type={type} doesn't work.
+*** DONE with validation error on step addition, the form is correctly populated, but collapsed
 
-- bugs, misc
-  - std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
-  - 500/404 page handling
-  x /user/{user}/brew/{id}?type={type} doesn't work.
-  x with validation error on step addition, the form is correctly populated, but collapsed
+** shitty things
+*** recipe_new()
+*** brew()
+**** way too deep/nested
+*** "next_possible_step[s]" logic, including future-dated steps
+**** semi-duplicated between model and (view) brew()
+*** toggled <div> py:attrs style form mumble.
 
-- shitty things
-  - recipe_new()
-  - brew()
-    - way too deep/nested
-  - "next_possible_step[s]" logic, including future-dated steps
-    - semi-duplicated between model and (view) brew()
-  - toggled <div> py:attrs style form mumble.
+** calendaring
 
-- calendaring
+*** DONE next step types += first future step for update
 
-  x next step types += first future step for update
+*** DONE add step form takes into account first future step
 
-  x add step form takes into account first future step
+*** if a "future" action gets updated in time, what happens to other future actions after it?
+**** nothing
+**** they're moved forward in time by the same delta-T they had before the update (nifty, but maybe wrong.)
+***** then make it some policy of the type of future step?  Ferm vs. keg vs. …?
+**** make them all immediately after the new step.
 
-  - if a "future" action gets updated in time, what happens to other future actions after it?
-    - nothing
-    - they're moved forward in time by the same delta-T they had before the update (nifty, but maybe wrong.)
-      - then make it some policy of the type of future step?  Ferm vs. keg vs. …?
-    - make them all immediately after the new step.
+*** encourage future steps visually, … how?
+**** when adding a 'pitch' step, prompt to add future steps for 'ferm1' and 'ferm2'
+**** when adding 'starter', prompt for 'strike-water', 'ferm1', 'ferm2', &c.…
 
-  - encourage future steps visually, … how?
-    - when adding a 'pitch' step, prompt to add future steps for 'ferm1' and 'ferm2'
-    - when adding 'starter', prompt for 'strike-water', 'ferm1', 'ferm2', &c.…
+*** "standard" ferm schedules?
+**** 1 wk primary, 2 wk secondary
+**** style-based?
 
-  - "standard" ferm schedules?
-    - 1 wk primary, 2 wk secondary
-    - style-based?
+*** DONE add "future" sub-body to table
+**** visually/functionally distinct how?
 
-  x add "future" sub-body to table
-    - visually/functionally distinct how?
+** shopping list
+*** better shopping list:
+**** collapse ingredients (hops esp.) in same brew
+**** sum ingredient amounts
+**** better ordering
+**** table display?
+**** probably actually want to model "need to buy" or "don't need to buy" states.
+*** http://beeradvocate.com/forum/read/1102362#1102497
 
-- shopping list
-  - better shopping list:
-    - collapse ingredients (hops esp.) in same brew
-    - sum ingredient amounts
-    - better ordering
-    - table display?
-    - probably actually want to model "need to buy" or "don't need to buy" states.
-  - http://beeradvocate.com/forum/read/1102362#1102497
+** be able to (re-)associate a recipe with a Brew
 
-- be able to (re-)associate a recipe with a Brew
+** focus improvements
+*** profile form after new user creation
 
-- focus improvements
-  - profile form after new user creation
+*** /user/{user} 
+**** next action
 
-  - /user/{user} 
-    - next action
+*** /recipe/{id}/{text}
+**** DONE top actions
+**** DONE edit details -> :input:first
+**** DONE add -> first form elt
+**** GET after POST of {grain, hop, …} -> [add] button on same form.
 
-  - /recipe/{id}/{text}
-    x top actions
-    x edit details -> :input:first
-    x add -> first form elt
-    _ GET after POST of {grain, hop, …} -> [add] button on same form.
+** computed values
+*** efficiency
+**** "?mumble?" vs. "brewhouse" efficiency
+**** DONE need: grains + gravity readings + volume reading
+**** efficiency tracker...
+*** A/V
+**** estimated: fn(grains, efficiency, yeast.attenuation)
+**** DONE actual: FG - OG
+*** OG
+**** estimated: fn(grains, efficiency, yeast.attenuation)
+**** actual: gravity at 'pitch'
+*** FG
+**** estimated: fn(grains, est_OG, yeast.attenuation)
+**** actual: latest post-'pitch' gravity reading
+*** IBU: 
+**** estimated: fn(hop schedule)
+**** actual: none
+*** SRM
+**** estimated: fn(grains)
+**** actual: none (manual entry)
+*** timing
+**** brew day
+**** fermentation
+*** mash chart/schedule
+**** planned
+**** actual
 
-- computed values
-  - efficiency
-    - "?mumble?" vs. "brewhouse" efficiency
-    x need: grains + gravity readings + volume reading
-    - efficiency tracker...
-  - A/V
-    - estimated: fn(grains, efficiency, yeast.attenuation)
-    x actual: FG - OG
-  - OG
-    - estimated: fn(grains, efficiency, yeast.attenuation)
-    - actual: gravity at 'pitch'
-  - FG
-    - estimated: fn(grains, est_OG, yeast.attenuation)
-    - actual: latest post-'pitch' gravity reading
-  - IBU: 
-    - estimated: fn(hop schedule)
-    - actual: none
-  - SRM
-    - estimated: fn(grains)
-    - actual: none (manual entry)
-  - timing
-    - brew day
-    - fermentation
-  - mash chart/schedule
-    - planned
-    - actual
+** game
+*** meta
+**** user must be able to turn this off, but defaults to on...
+**** user must be able to decline
+***** "first keg", but we've been kegging for a while, and are working backwards in entry.
+*** achievements
+**** firsts/technique
+***** "First Brew!  Welcome! :)"
+***** "First Brew in ${style}"
+***** First {Ale,Lager,Common,Brett,Cider,Mead,Bragot}
+***** First {1.060,70,80,90,100} OG brew
+***** first {single-infusion,decoction} mash
+***** mash-out with your bad self!
+***** first {cont.sparge, batch sparge, oat sparge, >25% wheat sparge}
+***** first dry-hopping
+***** first fruit
+***** first smoke
+***** first oak/wood
+**** journeyman
+***** x{50|100} gallons brewed
+***** {10,25,50,100,150,…} brews complete
+***** Brewing for {1,2,3,…} years.
+**** perfection/technique
+***** {75,80,85,90,95,>95} efficiency
+***** competition awards
+***** BJCP scoring
+**** height
+***** {6,7,9,10,11,12,13,15} abv
+***** "Hop Bomb!": >100 IBU brewed
+***** 60, 90, 120 minute boil
+**** random
+***** "Session ": 3-4% abv
+***** "most novel ingredient"
+***** selection of weird ingredients
+****** honey
+****** grains of paradise
+****** cinnamon
+***** "Weird!"
+****** ale grain profile, lager yeast
+****** ?   
+**** series
+***** 5 >{70,80,90}% efficiency in a row.
+***** >{1,2,5} gal/week brewed for this year.
+**** site-wide
+***** longest {{primary,second} fermentation,conditioning}
+***** these need to be "rescinded".
 
-- game
-  - meta
-    - user must be able to turn this off, but defaults to on...
-    - user must be able to decline
-      - "first keg", but we've been kegging for a while, and are working backwards in entry.
-  - achievements
-    - firsts/technique
-      - "First Brew!  Welcome! :)"
-      - "First Brew in ${style}"
-      - First {Ale,Lager,Common,Brett,Cider,Mead,Bragot}
-      - First {1.060,70,80,90,100} OG brew
-      - first {single-infusion,decoction} mash
-      - mash-out with your bad self!
-      - first {cont.sparge, batch sparge, oat sparge, >25% wheat sparge}
-      - first dry-hopping
-      - first fruit
-      - first smoke
-      - first oak/wood
-    - journeyman
-      - x{50|100} gallons brewed
-      - {10,25,50,100,150,…} brews complete
-      - Brewing for {1,2,3,…} years.
-    - perfection/technique
-      - {75,80,85,90,95,>95} efficiency
-      - competition awards
-      - BJCP scoring
-    - height
-      - {6,7,9,10,11,12,13,15} abv
-      - "Hop Bomb!": >100 IBU brewed
-      - 60, 90, 120 minute boil
-    - random
-      - "Session ": 3-4% abv
-      - "most novel ingredient"
-      - selection of weird ingredients
-        - honey
-        - grains of paradise
-        - cinnamon
-      - "Weird!"
-        - ale grain profile, lager yeast
-        - ?   
-    - series
-      - 5 >{70,80,90}% efficiency in a row.
-      - >{1,2,5} gal/week brewed for this year.
-    - site-wide
-      - longest {{primary,second} fermentation,conditioning}
-      - these need to be "rescinded".
+** identity links to other fora
+*** beeradvocate, &c.
 
-- identity links to other fora
-  - beeradvocate, &c.
+** form validation
+*** DONE actual submission logic
+*** visual (see Yahoo patterns)
+*** client-side validation
 
-- form validation
-  x actual submission logic
-  - visual (see Yahoo patterns)
-  - client-side validation
+** use django `get_absolute_url`, `permalink` methods.
 
-- use django `get_absolute_url`, `permalink` methods.
+** data
+*** adjuncts
+*** more yeasts
+**** dry yeasts (Safale, Windsor, &c.)
+**** Wyeast: wine, distiller, cider, mead, sake, VSS archives
 
-- data
-  - adjuncts
-  - more yeasts
-    - dry yeasts (Safale, Windsor, &c.)
-    - Wyeast: wine, distiller, cider, mead, sake, VSS archives
+** model cleanups
+*** Brew
+**** add brew name?
+**** must Brews have recipes?
+**** Notes
+***** add differentiated, timestampped, author'd notes
+****** this approaches Comments, where Brew.brewer = Comment.author is a bit special.
 
-- model cleanups
-  - Brew
-    - add brew name?
-    - must Brews have recipes?
-    - Notes
-      - add differentiated, timestampped, author'd notes
-        - this approaches Comments, where Brew.brewer = Comment.author is a bit special.
+*** Hops
+**** type: bittering? flavor? aroma?
+**** class: german, american, british
+**** notes: "floral, citrusy, &c."
 
-  - Hops
-    - type: bittering? flavor? aroma?
-    - class: german, american, british
-    - notes: "floral, citrusy, &c."
+** user-friendly field values ("gl" -> "gallon(s)")
 
-- user-friendly field values ("gl" -> "gallon(s)")
+** recipe editing
+*** pre-select units fields
+**** same as the last-used units in the item-class
+**** prefs
 
-- recipe editing
-  - pre-select units fields
-    - same as the last-used units in the item-class
-    - prefs
+** google crawling
+*** anything private?
+*** robots.txt
 
-- google crawling
-  - anything private?
-  - robots.txt
+** auth
+*** general 'edit-controls-for-authorized-editor'
+**** /user/{user}/ -> starred, recipe actions, controls
+*** generic 'auth-user-must-match-object-owner' during POST handling
+*** superuser support all around
 
-- auth
-  / general 'edit-controls-for-authorized-editor'
-    - /user/{user}/ -> starred, recipe actions, controls
-  - generic 'auth-user-must-match-object-owner' during POST handling
-  - superuser support all around
+** signup
+*** username character restrictions
 
-- signup
-  - username character restrictions
+** visual design
+*** logo/identity
+**** typeface-based
+**** beer mug ring/stain
+**** graph paper = journal
+*** how wide are tables normally?  90%?  80%?
 
-- visual design
-  - logo/identity
-    - typeface-based
-    - beer mug ring/stain
-    - graph paper = journal
-  - how wide are tables normally?  90%?  80%?
+*** steal "Actions" table from <https://launchpad.net/bzr-rebase>
+**** recipe actions?
+**** brew actions?
 
-  - steal "Actions" table from <https://launchpad.net/bzr-rebase>
-    - recipe actions?
-    - brew actions?
+*** brew next steps list: only show most likely, hide rest behind "(more…)"
 
-  - brew next steps list: only show most likely, hide rest behind "(more…)"
+** user interface
+*** abbrev -> full label in views
+*** auto-complete text fields for style, grain, hops...
+*** step addition
+**** if the brew knows the mash grains, then it can compute strike and sparge water volumes, absorption, &c.
 
-- user interface
-  - abbrev -> full label in views
-  - auto-complete text fields for style, grain, hops...
-  - step addition
-    - if the brew knows the mash grains, then it can compute strike and
-      sparge water volumes, absorption, &c.
+** starring recipes
+*** make AJAX-y
 
-- starring recipes
-  - make AJAX-y
+** /recipe/{id}
+*** show all brew instances of recipe
+**** by: authoring user, viewing user, all users
+*** DONE add "clone", "brew" ui options
 
-- /recipe/{id}
-  - show all brew instances of recipe
-    - by: authoring user, viewing user, all users
-  x add "clone", "brew" ui options
+** TwoLevelSelectWidget
+*** cleanup, review
+*** use for
+**** hops
 
-- TwoLevelSelectWidget
-  - cleanup, review
-  - use for
-    - hops
+** paginated views
+*** historical brews
+*** all authored recipes
 
-- paginated views
-  - historical brews
-  - all authored recipes
+** step addition
+*** de-emphasise unrelated entry fields in any given step-type.
+*** better form layout, anyways.
 
-- step addition
-  - de-emphasise unrelated entry fields in any given step-type.
-  - better form layout, anyways.
+** better auth
+*** OpenID
+*** verification
+*** forgot password
+*** forgot username
 
-- better auth
-  - OpenID
-  - verification
-  - forgot password
-  - forgot username
+** system logging
+*** per request/timing
+*** general system
+*** auth-related
 
-- system logging
-  - per request/timing
-  - general system
-  - auth-related
+** step type constraint
+*** DONE break out step options based on current state of brew instance
+*** better step_type modeling dervied to options,constraints,labels,&c.
 
-/ step type constraint
-  x break out step options based on current state of brew instance
-  / better step_type modeling dervied to options,constraints,labels,&c.
+** recipe browse/search
+*** browsing
+*** searching
+**** structured, by ingredient/style/&c.
 
-- recipe browse/search
-  - browsing
-  - searching
-    - structured, by ingredient/style/&c.
+** refactor rendering
+*** starred-recipe table on /user/jsled/ and /user/jsled/recipe/
 
-- refactor rendering
-  - starred-recipe table on /user/jsled/ and /user/jsled/recipe/
+** deletion
+*** recipe
+*** brew
 
-- deletion
-  - recipe
-  - brew
+** user profile
+*** other web url
+*** preferences 
+**** default recipe type (extract, partial-mash, all-grain)
+**** default units (english/metric)
+**** favorite style
 
-- user profile
-  - other web url
-  - preferences 
-    - default recipe type (extract, partial-mash, all-grain)
-    - default units (english/metric)
-    - favorite style
+** user addition of recipe components
+*** yeasts
+*** grains/fermentable
+*** hops
 
-- user addition of recipe components
-  - yeasts
-  - grains/fermentable
-  - hops
+** alerts
+*** "keg now!"
+*** "rack this week?"
 
-- alerts
-  - "keg now!"
-  - "rack this week?"
+** comments
+*** OpenID support
 
-- comments
-  - OpenID support
+** widget-style embedding
+*** brew overview
+*** upcoming brews
 
-- widget-style embedding
-  - brew overview
-  - upcoming brews
+** recipe editing
+*** DONE regular browser
+*** clone from other URL
+*** star from other URL
+*** parse block of text
 
-- recipe editing
-  x regular browser
-  - clone from other URL
-  - star from other URL
-  - parse block of text
+** keyboard navigation
+*** j/k should navigate between displayed table rows, jumping between tables.
+*** 'g {location}' paradigm?
+*** '?' overlay
 
-- keyboard navigation
-  - j/k should navigate between displayed table rows, jumping between tables.
-  - 'g {location}' paradigm?
-  - '?' overlay
+** import/export
 
-- import/export
+** add 'equipment'/'rig'
 
-- add 'equipment'/'rig'
+** use the following style of the Google Reader "note this URL" bookmarklet for on-the-web recipe induction:
 
-- use the following style of the Google Reader "note this URL" bookmarklet for on-the-web recipe induction:
     javascript:
     var b=document.body;
     var GR________bookmarklet_domain='http://www.google.com';
@@ -301,8 +300,7 @@ Todo
     }
     else{}
 
-Colors
-------
+* Colors
 
 Base green: rgb(34, 140, 34) (#228C22)
 
@@ -328,23 +326,20 @@ bright: #FFC59E
 nice blue/purple/grey: #6977B0
 nice soft green: #75B368
 
-Weirdness
----------
+* Weirdness
 
-- when journaling after racking to secondary, is it entered as primary-ferm or secondary-ferm?
+** when journaling after racking to secondary, is it entered as primary-ferm or secondary-ferm?
 
-Resources
----------
+* Resources
 
-- http://www.beersmith.com/GrainList.htm
+** http://www.beersmith.com/GrainList.htm
 
-Random
-------
+* git notes
+
 git fetch
 git rebase remotes/origin/master
 
-Thanks, Google Cache
---------------------
+* Thanks, Google Cache
 
 date 	step 	volume 	temp 	gravity (corrected) 	notes
 2008-06-13 00:00 	make starter 	800 ml 			
