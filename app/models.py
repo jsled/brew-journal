@@ -22,6 +22,14 @@ class StepType (object):
     def is_terminal(self):
         return len(self.next_steps) == 0
 
+# ./manage.py shell
+# from app import models
+# print 'digraph G {';
+# for step in models.new_step_types:
+#   for next in step.next_steps:
+#     print '%s -> %s;' % (step.id.replace('-', '_'), next.replace('-', '_'))
+# print '}'
+# | dot -Tpng -o step-graph.png -
 new_step_types = [ StepType('buy', 'buy ingredients', ['time'], ['starter', 'strike', 'steep']),
                    StepType('starter', 'make starter', ['time', 'volume'], ['strike', 'steep']),
                    StepType('strike', 'strike water', ['volume', 'temp'], ['dough']),
