@@ -8,13 +8,12 @@
 *** DONE with validation error on step addition, the form is correctly populated, but collapsed
 
 ** shitty things
+*** "next_possible_step[s]" logic, including future-dated steps
+**** semi-duplicated between model and (view) brew()
 *** recipe_new()
 *** brew()
 **** way too deep/nested
-*** "next_possible_step[s]" logic, including future-dated steps
-**** semi-duplicated between model and (view) brew()
 *** toggled <div> py:attrs style form mumble
-
 ** tests
 *** front-to-back-script
 
@@ -54,6 +53,13 @@
 **** schedule steps, test 'next step' computations
 **** future steps:
 - check dashboard reflects changes appropriately
+- check future steps
+  - changing future date
+  - changing future date -> "now"
+  - changing future date -> "a few seconds ago"
+  - changing future date -> way in the past
+  - "realize" a future dated step with other future dated steps
+    - follow-on effect on "next step" logic
 **** changes to steps, impact
 *** brew impacts
 **** shopping list
@@ -342,6 +348,96 @@
 *** deletion
 **** recipe
 **** brew
+
+* Concepts
+** Future Steps
+
+Future steps are used a couple of ways:
+- to schedule out a whole brew session, with rough times, &c.
+- to schedule transition points in a fermentation session
+  - to establish calendar/task/reminder entries
+
+
+When operating with a mix of future and realized steps; let's assume a
+time-stamped mix of future (f_) and real (r_) events:
+
+   [f_0, f_5, f_10, f_15]      | 4 future steps
+-> [r_1, f_5, f_10, f_15]      | realize the first step, about the right time
+-> [r_1, r_12, f_10, f_15]     | realize the second step *after* the future 3rd step
+
+
+At this point, it seems that next_step is f_10, but with its time adjusted to
+be equal to the value of r_12.
+
+
+Another option is that the second transition "pushes" the timestamps of the
+other future steps out by the same amount; thus, that last transition would
+instead effect:
+
+-> [r_1, r_12, f_17, f_22]
+
+This is most useful for a brew session which has its events scheduled at
+fixed offsets from each other, where a slip should "cascade" to other
+events.  E.g., if the mash starts 25 minutes late, it still takes an hour,
+and all subsequent steps (the boil, hop additions, &c.) should get
+pushed out 25 minutes.  However, on a different scale, there is no need for a
+cascade.  If the mash/pitch happens 1 or 5 or even 12 hours later, I'm
+probably still racking next Saturday, and kegging in 3 weeks.
+
+
+What's the threshold?
+
+- change steps on the same (literal) day
+- change steps within the next N (=6?) hour window
+- change steps until the inter-step distance is N (=6?) hours
+- change steps while the magnitude of change is a fraction of the inter-step delta.
+
+I like the the inter-step distance test, maybe with a threshold of 12 hours
+or so.
+
+Note that "push" and "pull" are the same, above.  We should probably say
+"adjust" instead.
+
+----------
+
+Now, what about intermediate non-Future steps that get inserted, but are part
+of the Step-relation depgraph?  For instance, we create future steps for
+'strike' and 'boil', but then actually record realized steps for the
+intervening 'mash' and 'sparge' steps?
+
+If the immediately next Future step is in the (multi-level) tree of future
+steps possible from the newly-added Step, we're in one of two sitautions:
+
+- the new step is intentionally "splitting" the time the steps were
+  allocating.
+- the new step represents a delay, and the future steps should be pushed out;
+  but it's not clear by how much, except if we take some "standard" schedules
+  into account, where possible.
+
+I don't think it's possible to handle this without being pretty – perhaps too
+– clever.  So, don't.
+
+
+Now, if the new Realized step is (topologically and temporally) *after* the
+first Future scheduled step, then we have a problem.  E.g., we have:
+
+    [r_strike, f_mash, r_boil(new)]
+
+We have a few options:
+
+- ignore the "missed" Future step.  Don't consider it as a valid next step.
+- Error/force the realization of the missed step.
+- silently realize the missed step with its existing timestamp
+  - maybe only iff its timestamp "makes sense" given the previous and
+    currently-realized steps?
+
+Next Steps
+----------
+
+At any given point, the most likely Next Steps follow from the latest
+realized step.  If those steps coincide with any future steps, then the next
+steps *are* the future steps (for update), otherwise they are steps for
+creation.
 
 * Colors
 
