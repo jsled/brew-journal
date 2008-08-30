@@ -1,6 +1,7 @@
 # -*- org -*-
 * Todo
 ** bugs, misc
+*** TODO adding hop without boil time -> 500?
 *** TODO login/new-account failures don't have standard form behavior
 *** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
 *** TODO 500/404 page handling
@@ -132,7 +133,7 @@
 ****** "First Brew!  Welcome! :)"
 ****** "First Brew in ${style}"
 ****** First {Ale,Lager,Common,Brett,Cider,Mead,Bragot}
-****** First {1.060,70,80,90,100} OG brew
+****** First {1.060,70,80,90,100,} OG brew
 ****** first {single-infusion,decoction} mash
 ****** mash-out with your bad self!
 ****** first {cont.sparge, batch sparge, oat sparge, >25% wheat sparge}
@@ -168,7 +169,6 @@
 ***** site-wide
 ****** longest {{primary,second} fermentation,conditioning}
 ****** these need to be "rescinded".
-
 *** form validation
 **** visual (see Yahoo patterns)
 **** client-side validation
@@ -439,6 +439,10 @@ realized step.  If those steps coincide with any future steps, then the next
 steps *are* the future steps (for update), otherwise they are steps for
 creation.
 
+** Medals
+
+Medals are awarded based on achieving a condition 
+
 * Colors
 
 Base green: rgb(34, 140, 34) (#228C22)
@@ -466,19 +470,18 @@ nice blue/purple/grey: #6977B0
 nice soft green: #75B368
 
 * Weirdness
-
 ** when journaling after racking to secondary, is it entered as primary-ferm or secondary-ferm?
 
 * Resources
-
 ** http://www.beersmith.com/GrainList.htm
-
 * git notes
 
 git fetch
 git rebase remotes/origin/master
 
 * Thanks, Google Cache
+
+This is for the … weizen?
 
 date 	step 	volume 	temp 	gravity (corrected) 	notes
 2008-06-13 00:00 	make starter 	800 ml 			
