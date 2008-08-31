@@ -78,6 +78,7 @@ Weight_Units = [
     ('kg', 'kilograms'),
     ('oz', 'ounces'),
     ('lb', 'pounds'),
+    ('ct', 'count')
     ]
 
 Volume_Units = [
@@ -86,7 +87,8 @@ Volume_Units = [
     ('q', 'quarts'),
     ('gl', 'gallons'),
     ('ml', 'milliliters'),
-    ('l', 'liters')
+    ('l', 'liters'),
+    ('ct', 'count')
     ]
 
 Temp_Units = [
@@ -148,9 +150,10 @@ class Hop (models.Model):
 
 class Adjunct (models.Model):
     name = models.CharField(max_length=100)
+    group = models.CharField(max_length=30)
 
     def __unicode__(self):
-        return self.name
+        return u'%s (%s)' % (self.name, self.group)
 
     class Admin:
         pass
