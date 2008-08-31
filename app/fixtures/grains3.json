@@ -1,0 +1,9 @@
+[
+    {"model": "app.Grain", "pk": null, "fields": {"name": "Clover Honey", "lovibond_min": 15, "lovibond_max": 20, "extract_min": 1044, "extract_max": 1044 , "description": "", "group": "Sugars"}},
+
+    {"model": "app.Grain", "pk": null, "fields": {"name": "Cane (Beet) Sugar", "lovibond_min": 0, "lovibond_max": 0, "extract_min": 1046, "extract_max": 1046 , "description": "Neutral sugar for gravity adjustment", "group": "Sugars"}},
+    {"model": "app.Grain", "pk": null, "fields": {"name": "Turbinado Sugar", "lovibond_min": 10, "lovibond_max": 10, "extract_min": 1044, "extract_max": 1044 , "description": "", "group": "Sugars"}},
+
+    {"model": "app.Grain", "pk": null, "fields": {"name": "Apple Must", "lovibond_min": 20, "lovibond_max": 30, "extract_min": 1050, "extract_max": 1060, "description": "Pressed apple juice.", "group": "Fruit"}}
+
+]
