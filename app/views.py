@@ -399,29 +399,48 @@ def get_style_choices():
                 subs.append( (sub_style.id, '%s (%s)' % (sub_style.name, sub_style.bjcp_code)) )
     return style_choices
 
+
+def _group_items(item_gen_fn, item_grouping_key_accessor_fn, item_label_gen_fn):
+    by_group = {}
+    for item in item_gen_fn():
+        by_group.setdefault(item_grouping_key_accessor_fn(item), []).append(item)
+    group_keys = by_group.keys()
+    group_keys.sort()
+    item_choices = [(group, [(item.id, item_label_gen_fn(item)) for item in by_group[group]]) for group in group_keys]
+    return item_choices
+    
+
 grain_choices = None
 def get_grain_choices():
     global grain_choices
     if not grain_choices:
-        by_group = {}
-        for grain in models.Grain.objects.all():
-            by_group.setdefault(grain.group, []).append(grain)
-        group_names = by_group.keys()
-        group_names.sort()
-        grain_choices = [(group, [(grain.id, grain.name) for grain in by_group[group]]) for group in group_names]
+        def _get_grains(): return models.Grain.objects.all()
+        def _get_grouping_key(grain): return grain.group
+        def _get_label(grain): return grain.name
+        grain_choices = _group_items(_get_grains, _get_grouping_key, _get_label)
     return grain_choices
+
 
 yeast_choices = None
 def get_yeast_choices():
     global yeast_choices
     if not yeast_choices:
-        by_type = {}
-        for yeast in models.Yeast.objects.all():
-            by_type.setdefault(yeast.type, []).append(yeast)
-            type_names = by_type.keys()
-            type_names.sort()
-            yeast_choices = [(type, [(yeast.id, str(yeast)) for yeast in by_type[type]]) for type in type_names]
+        def _get_yeasts() : return models.Yeast.objects.all()
+        def _get_grouping_key(yeast): return yeast.type
+        def _get_label(yeast): return str(yeast)
+        yeast_choices = _group_items(_get_yeasts, _get_grouping_key, _get_label)
     return yeast_choices
+
+
+adjunct_choices = None
+def get_adjunct_choices():
+    global adjunct_choices
+    if not adjunct_choices:
+        def _get_adjuncts(): return models.Adjunct.objects.all()
+        def _get_grouping_key(adj): return adj.group
+        def _get_label(adj): return adj.name
+        adjunct_choices = _group_items(_get_adjuncts, _get_grouping_key, _get_label)
+    return adjunct_choices
 
 
 class RecipeForm (forms.ModelForm):
@@ -448,6 +467,8 @@ class RecipeHopForm (forms.ModelForm):
         exclude = ['recipe']
 
 class RecipeAdjunctForm (forms.ModelForm):
+    adjunct = forms.ModelChoiceField(models.Adjunct.objects.all(),
+                                     widget=widgets.TwoLevelSelectWidget(choices=get_adjunct_choices()))
     class Meta:
         model = models.RecipeAdjunct
         exclude = ['recipe']
@@ -485,10 +506,15 @@ def recipe_component_generic(request, recipe_id, model_type, form_class):
     recipe = models.Recipe.objects.get(pk=recipe_id)
     if not recipe: return HttpResponseNotFound('no such recipe')
     form = form_class(request.POST)
+    if not form.is_valid():
+        # @fixme this isn't right, but getting the recipe page back with the
+        # subform validation in effect is "hard".
+        return HttpResponseRedirect('/recipe/%d/%s' % (recipe.id, urllib.quote(recipe.name.encode('utf-8'))))
     new_component = form.save(commit=False)
     new_component.recipe = recipe
     new_component.save()
     return _get_recipe_redirect(recipe_id)
+
 
 def recipe_new(request):
     # uri_user = User.objects.get(username__exact = user_name)
@@ -580,4 +606,3 @@ def recipe(request, recipe_id, recipe_name):
                                adj_form=RecipeAdjunctForm(),
                                yeast_form=RecipeYeastForm()
                                ))
-
