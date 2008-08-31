@@ -2,15 +2,19 @@
 * Todo
 ** bugs, misc
 *** TODO adding hop without boil time -> 500?
-*** TODO login/new-account failures don't have standard form behavior
+*** TODO login/new-account failures don't have standard form behavior; wrong password has no feedback
 *** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
 *** TODO 500/404 page handling
+
+Mostly on public/production site.
+
 *** DONE /user/{user}/brew/{id}?type={type} doesn't work.
 *** DONE with validation error on step addition, the form is correctly populated, but collapsed
 
 ** shitty things
 *** "next_possible_step[s]" logic, including future-dated steps
 **** semi-duplicated between model and (view) brew()
+**** See [[*Future%20Steps][future steps]]
 *** recipe_new()
 *** brew()
 **** way too deep/nested
@@ -441,7 +445,13 @@ creation.
 
 ** Medals
 
-Medals are awarded based on achieving a condition 
+*** medals are awarded based on achieving a condition
+*** we should be tolerant of data entered in non-temporal order
+*** "standing rules"
+
+it may make sense to have some sort of trigger-based rule system to determine
+when/what data needs to be loaded in order to determine if a particular medal
+is now allowed.
 
 * Colors
 
@@ -471,6 +481,9 @@ nice soft green: #75B368
 
 * Weirdness
 ** when journaling after racking to secondary, is it entered as primary-ferm or secondary-ferm?
+
+Maybe Steps should strictly be "transitions" or "activtives", not just states
+of being.
 
 * Resources
 ** http://www.beersmith.com/GrainList.htm
