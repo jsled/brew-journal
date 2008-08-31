@@ -218,6 +218,7 @@ class Recipe (models.Model):
     derived_from_recipe = models.ForeignKey('self', null=True, blank=True)
     type = models.CharField(max_length=1, choices=Types, default='a')
     source_url = models.URLField(max_length=300, blank=True, null=True, verify_exists=True)
+    notes = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.__unicode__()
