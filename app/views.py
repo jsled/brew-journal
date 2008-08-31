@@ -481,18 +481,18 @@ class RecipeYeastForm (forms.ModelForm):
         exclude = ['recipe']
 
 def recipe_grain(request, recipe_id):
-    return recipe_component_generic(request, recipe_id, models.RecipeGrain, RecipeGrainForm)
+    return recipe_component_generic(request, recipe_id, models.RecipeGrain, 'grain_form', RecipeGrainForm)
 
 def recipe_hop(request, recipe_id):
-    return recipe_component_generic(request, recipe_id, models.RecipeHop, RecipeHopForm)
+    return recipe_component_generic(request, recipe_id, models.RecipeHop, 'hop_form', RecipeHopForm)
 
 def recipe_adjunct(request, recipe_id):
-    return recipe_component_generic(request, recipe_id, models.RecipeAdjunct, RecipeAdjunctForm)
+    return recipe_component_generic(request, recipe_id, models.RecipeAdjunct, 'adj_form', RecipeAdjunctForm)
 
 def recipe_yeast(request, recipe_id):
-    return recipe_component_generic(request, recipe_id, models.RecipeYeast, RecipeYeastForm)
+    return recipe_component_generic(request, recipe_id, models.RecipeYeast, 'yeast_form', RecipeYeastForm)
 
-def recipe_component_generic(request, recipe_id, model_type, form_class):
+def recipe_component_generic(request, recipe_id, model_type, type_form_name, form_class):
     '''
     All the additions are going to be the same, so genericize them, leveraging the form to do the heavy lifting.
     '''
@@ -507,9 +507,7 @@ def recipe_component_generic(request, recipe_id, model_type, form_class):
     if not recipe: return HttpResponseNotFound('no such recipe')
     form = form_class(request.POST)
     if not form.is_valid():
-        # @fixme this isn't right, but getting the recipe page back with the
-        # subform validation in effect is "hard".
-        return HttpResponseRedirect('/recipe/%d/%s' % (recipe.id, urllib.quote(recipe.name.encode('utf-8'))))
+        return _render_recipe(request, recipe, **{type_form_name: form})
     new_component = form.save(commit=False)
     new_component.recipe = recipe
     new_component.save()
@@ -581,6 +579,25 @@ def recipe_post(request, recipe_id, recipe=None):
     return (True, HttpResponseRedirect('/recipe/%d/%s' % (upd_recipe.id, urllib.quote(upd_recipe.name.encode('utf-8')))))
 
 
+def _render_recipe(request, recipe, **kwargs):
+    form = kwargs.setdefault('form', RecipeForm(instance=recipe))
+    grains = models.RecipeGrain.objects.filter(recipe=recipe)
+    hops = models.RecipeHop.objects.filter(recipe=recipe)
+    adjuncts = models.RecipeAdjunct.objects.filter(recipe=recipe)
+    yeasts = models.RecipeYeast.objects.filter(recipe=recipe)
+    grain_form = kwargs.setdefault('grain_form', RecipeGrainForm())
+    hop_form = kwargs.setdefault('hop_form', RecipeHopForm())
+    adj_form = kwargs.setdefault('adj_form', RecipeAdjunctForm())
+    yeast_form = kwargs.setdefault('yeast_form', RecipeYeastForm())
+    return HttpResponse(render('recipe/view.html', request=request, std=standard_context(),
+                               recipe=recipe, grains=grains, hops=hops, adjuncts=adjuncts, yeasts=yeasts,
+                               recipe_form=form,
+                               grain_form=grain_form,
+                               hop_form=hop_form,
+                               adj_form=adj_form,
+                               yeast_form=yeast_form
+                               ))
+
 def recipe(request, recipe_id, recipe_name):
     # uri_user = User.objects.get(username__exact = user_name)
     # if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
@@ -592,17 +609,4 @@ def recipe(request, recipe_id, recipe_name):
         else:
             form = thing
     recipe = models.Recipe.objects.get(pk=recipe_id)
-    if not form:
-        form = RecipeForm(instance=recipe)
-    grains = models.RecipeGrain.objects.filter(recipe=recipe)[0:100]
-    hops = models.RecipeHop.objects.filter(recipe=recipe)[0:100]
-    adjuncts = models.RecipeAdjunct.objects.filter(recipe=recipe)[0:100]
-    yeasts = models.RecipeYeast.objects.filter(recipe=recipe)[0:100]
-    return HttpResponse(render('recipe/view.html', request=request, std=standard_context(),
-                               recipe=recipe, grains=grains, hops=hops, adjuncts=adjuncts, yeasts=yeasts,
-                               recipe_form=form,
-                               grain_form=RecipeGrainForm(),
-                               hop_form=RecipeHopForm(),
-                               adj_form=RecipeAdjunctForm(),
-                               yeast_form=RecipeYeastForm()
-                               ))
+    return _render_recipe(request, recipe)

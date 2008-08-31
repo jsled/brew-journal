@@ -1,11 +1,12 @@
 # -*- org -*-
 * Todo
 ** bugs, misc
-*** TODO adding hop without boil time -> 500?
 *** TODO login/new-account failures don't have standard form behavior; wrong password has no feedback
 *** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
 *** TODO 500/404 page handling
 Mostly on public/production site.
+*** DONE adding hop without boil time -> 500?
+    CLOSED: [2008-08-31 Sun 18:32]
 *** DONE /user/{user}/brew/{id}?type={type} doesn't work.
 *** DONE with validation error on step addition, the form is correctly populated, but collapsed
 ** shitty things

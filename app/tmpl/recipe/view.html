@@ -72,15 +72,15 @@ $(document).ready(function(){
     <td>${grain.amount_value} ${grain.amount_units}</td>
     <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('grain_form', ${grain.id}); return false;">(del)</a></td>
   </tr>
-  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True">
-      <tr class="add">
-          <td colspan="3"><a href="#" class="add-button" onClick="$('#grain_form .add').toggle(); $('#grain_form .add :input:first').focus(); return false;">(add)</a></td>
-      </tr>
-      <tr class="add" style="display:none">
-          <td>${std.Markup(grain_form['grain'])}</td>
-          <td>${std.Markup(grain_form['amount_value'])} ${std.Markup(grain_form['amount_units'])}</td>
+  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="grain_form_invalid=grain_form.is_bound and not grain_form.is_valid()">
+      <tr class="add" py:attrs="{'style':['display:none', ''][grain_form_invalid]}">
+          <td>${std.Markup(grain_form['grain'].errors)} ${std.Markup(grain_form['grain'])}</td>
+          <td>${std.Markup(grain_form['amount_value'].errors)} ${std.Markup(grain_form['amount_units'].errors)} ${std.Markup(grain_form['amount_value'])} ${std.Markup(grain_form['amount_units'])}</td>
           <td><input type="submit" value="add"/>
           <input type="reset" value="cancel" onClick="$('#grain_form .add').toggle(); $('#grain_form .add-button').focus(); return true;" /></td>
+      </tr>
+      <tr class="add" py:attrs="{'style':['display:none',''][not grain_form_invalid]}">
+          <td colspan="3"><a href="#" class="add-button" onClick="$('#grain_form .add').toggle(); $('#grain_form .add :input:first').focus(); return false;">(add)</a></td>
       </tr>
   </div>
 </table>
@@ -104,15 +104,15 @@ $(document).ready(function(){
     <td>${hop.boil_time} minutes</td>
     <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('hop_form', ${hop.id}); return false;">(del)</a></td>
   </tr>
-  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True">
-      <tr class="add">
-          <td colspan="4"><a href="#" onClick="$('#hop_form .add').toggle(); return false;">(add)</a></td>
-      </tr>
-      <tr class="add" style="display:none">
-          <td>${std.Markup(hop_form['hop'])}</td>
-          <td>${std.Markup(hop_form['amount_value'])} ${std.Markup(hop_form['amount_units'])}</td>
-          <td>${std.Markup(hop_form['boil_time'])} minutes</td>
+  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="hop_form_invalid=hop_form.is_bound and not hop_form.is_valid()">
+      <tr class="add" py:attrs="{'style': ['display:none', ''][hop_form_invalid]}">
+          <td>${std.Markup(hop_form['hop'].errors)} ${std.Markup(hop_form['hop'])}</td>
+          <td>${std.Markup(hop_form['amount_value'].errors)} ${std.Markup(hop_form['amount_units'].errors)} ${std.Markup(hop_form['amount_value'])}&nbsp;${std.Markup(hop_form['amount_units'])}</td>
+          <td>${std.Markup(hop_form['boil_time'].errors)} ${std.Markup(hop_form['boil_time'])}&nbsp;minutes</td>
           <td><input type="submit" value="add"/></td>
+      </tr>
+      <tr class="add" py:attrs="{'style': ['display:none', ''][not hop_form_invalid]}">
+          <td colspan="4"><a href="#" onClick="$('#hop_form .add').toggle(); return false;">(add)</a></td>
       </tr>
   </div>
 </table>
@@ -138,16 +138,16 @@ $(document).ready(function(){
     <td>${adjunct.notes}</td>
     <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('adj_form', ${adjunct.id}); return false;">(del)</a></td>
   </tr>
-  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True">
-      <tr class="add">
-          <td colspan="5"><a href="#" onClick="$('#adj_form .add').toggle(); return false;">(add)</a></td>
-      </tr>
-      <tr class="add" style="display:none">
-          <td>${std.Markup(adj_form['adjunct'])}</td>
-          <td>${std.Markup(adj_form['amount_value'])} ${std.Markup(adj_form['amount_units'])}</td>
-          <td>${std.Markup(adj_form['boil_time'])} minutes</td>
-          <td>${std.Markup(adj_form['notes'])}</td>
+  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="adj_form_invalid=adj_form.is_bound and not adj_form.is_valid()">
+      <tr class="add" py:attrs="{'style':['display:none', ''][adj_form_invalid]}">
+          <td>${std.Markup(adj_form['adjunct'].errors)} ${std.Markup(adj_form['adjunct'])}</td>
+          <td>${std.Markup(adj_form['amount_value'].errors)} ${std.Markup(adj_form['amount_units'].errors)} ${std.Markup(adj_form['amount_value'])} ${std.Markup(adj_form['amount_units'])}</td>
+          <td>${std.Markup(adj_form['boil_time'].errors)} ${std.Markup(adj_form['boil_time'])} minutes</td>
+          <td>${std.Markup(adj_form['notes'].errors)} ${std.Markup(adj_form['notes'])}</td>
           <td><input type="submit" value="add" /></td>
+      </tr>
+      <tr class="add" py:attrs="{'style':['display:none',''][not adj_form_invalid]}">
+          <td colspan="5"><a href="#" onClick="$('#adj_form .add').toggle(); return false;">(add)</a></td>
       </tr>
   </div>
 </table>
@@ -168,15 +168,15 @@ $(document).ready(function(){
     <td>${yeast.ideal}</td>
     <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('yeast_form', ${yeast.id}); return false;">(del)</a></td>
   </tr>
-  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True">
-       <tr class="add">
-           <td colspan="5"><a href="#" onClick="$('#yeast_form .add').toggle(); return false;">(add)</a></td>
-       </tr>
-       <tr class="add" style="display:none">
-           <td>${std.Markup(yeast_form['yeast'])}</td>
-           <td>${std.Markup(yeast_form['ideal'])}</td>
-           <td><input type="submit" value="add" /></td>
-       </tr>
+  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="yeast_form_invalid=yeast_form.is_bound and not yeast_form.is_valid()">
+      <tr class="add" py:attrs="{'style':['display:none', ''][yeast_form_invalid]}">
+          <td>${std.Markup(yeast_form['yeast'].errors)} ${std.Markup(yeast_form['yeast'])}</td>
+          <td>${std.Markup(yeast_form['ideal'].errors)} ${std.Markup(yeast_form['ideal'])}</td>
+          <td><input type="submit" value="add" /></td>
+      </tr>
+      <tr class="add" py:attrs="{'style':['display:none', ''][not yeast_form_invalid]}">
+          <td colspan="5"><a href="#" onClick="$('#yeast_form .add').toggle(); return false;">(add)</a></td>
+      </tr>
   </div>
 </table>
 </form>
