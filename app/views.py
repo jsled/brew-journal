@@ -263,7 +263,10 @@ def user_shopping_list(request, user_name):
                                
 
 def brew_edit(request, user_name, brew_id):
-    '''POST /user/jsled/brew/2 edits'''
+    '''
+    POST /user/jsled/brew/2/edit
+    @fixme this is lame.  Make GET an error, use form.is_valid(), integrate with brew(…).
+    '''
     uri_user = User.objects.get(username__exact = user_name)
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     brew = models.Brew.objects.get(id=brew_id)
@@ -290,27 +293,6 @@ class StepForm (forms.ModelForm):
         model = models.Step
         exclude = ['gravity']
 
-
-# auth; user lookup
-# brew lookup
-# if step-id in url: step lookup
-# if POST:
-#   if invalid form: re-do
-#   else: update step
-# refresh steps
-# if steps changed above: brew.update_from_steps(steps)
-# if not form:
-#   if type requested: form(type)
-#   else:
-#      <<compute "next" step>>
-#      form(next)
-#   if not form: generic form
-# render page
-
-# POST /user/foo/brew/1 -> new step, redirect
-# POST /user/foo/brew/1/step/5 -> update step, redirect
-# POST /user/foo/brew/1 invalid -> same
-# POST /user/foo/brew/1/step/5 invalid -> same
 
 def brew_post(request, uri_user, brew, step):
     if not (request.user.is_authenticated() and request.user == uri_user):
