@@ -291,48 +291,73 @@ class StepForm (forms.ModelForm):
         exclude = ['gravity']
 
 
+# auth; user lookup
+# brew lookup
+# if step-id in url: step lookup
+# if POST:
+#   if invalid form: re-do
+#   else: update step
+# refresh steps
+# if steps changed above: brew.update_from_steps(steps)
+# if not form:
+#   if type requested: form(type)
+#   else:
+#      <<compute "next" step>>
+#      form(next)
+#   if not form: generic form
+# render page
+
+# POST /user/foo/brew/1 -> new step, redirect
+# POST /user/foo/brew/1/step/5 -> update step, redirect
+# POST /user/foo/brew/1 invalid -> same
+# POST /user/foo/brew/1/step/5 invalid -> same
+
+def brew_post(request, uri_user, brew, step):
+    if not (request.user.is_authenticated() and request.user == uri_user):
+        return HttpResponseForbidden()
+    step_form = StepForm(request.POST, instance=step)
+    if step_form.is_valid():
+        step_form.cleaned_data['brew'] = brew
+        step = step_form.save()
+        try:
+            steps = models.Step.objects.filter(brew__id = brew.id)
+        except models.Step.DoesNotExist:
+            pass
+        brew.update_from_steps(steps)
+        brew.save()
+        return HttpResponseRedirect('/user/%s/brew/%d/' % (brew.brewer.username, brew.id))
+    return brew_render(request, uri_user, brew, step_form, True)
+
+
+def brew_render(request, uri_user, brew, step_form, step_edit):
+    steps = [step for step in brew.step_set.all()]
+    brew_form = BrewForm(instance=brew)
+    return HttpResponse(render('user/brew/index.html', request=request, std=standard_context(), user=uri_user,
+                               brew=brew, steps=steps, step_form=step_form, step_edit=step_edit,
+                               brew_form=brew_form, deriv=util.BrewDerivations(brew)))
+    
+
 def brew(request, user_name, brew_id, step_id):
     '''
-    e.g., /user/jsled/brew/2[/step/3]
-    
-    @todo when editing an existing step, the type (at least) should not be changeable.
-    @fixme method is too big; reduce
+    e.g., /user/jsled/brew/2/[step/3], /user/jsled/brew/2/?type=pitch
     '''
     uri_user = User.objects.get(username__exact = user_name)
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     brew = models.Brew.objects.get(id=brew_id)
     if not brew: return HttpResponseNotFound('no such brew with id [%d]' % (brew_id))
-    brew_form = BrewForm(instance=brew)
-    form = None
     step = None
-    step_edit = False
-    submit_label = 'add step'
-    steps_changed = False
     if step_id:
         step = models.Step.objects.get(pk=step_id)
-        form = StepForm(instance=step)
-        submit_label = 'update step'
-        step_edit = True
+        if not step: return HttpResponseNotFound('no such user [%s] brew [%s] step id [%s]' % (user_name, brew_id, step_id))
     if request.method == 'POST':
-        if not (request.user.is_authenticated() and request.user == uri_user):
-            return HttpResponseForbidden()
-        form = StepForm(request.POST, instance=step)
-        if form.is_valid():
-	    form.cleaned_data['brew'] = brew
-            step = form.save()
-            steps_changed = True
-        else:
-            step_edit = True
-    steps = []
-    try:
-        steps = models.Step.objects.filter(brew__id = brew.id)
-    except models.Step.DoesNotExist:
-        pass
-    if steps_changed:
-        brew.update_from_steps(steps)
-        brew.save()
-        return HttpResponseRedirect('/user/%s/brew/%d/' % (brew.brewer.username, brew.id))
-    if not form:
+        return brew_post(request, uri_user, brew, step)
+    # else:
+    step_form = None
+    step_edit = False
+    if step:
+        step_form = StepForm(instance=step)
+        step_edit = True
+    if not step_form:
         default_date = datetime.now()
         explicit_type = request.method == 'GET' and request.GET.has_key('type')
         next_step_type = 'starter'
@@ -340,25 +365,30 @@ def brew(request, user_name, brew_id, step_id):
             next_step_type = request.GET['type']
             step_edit = True
         else:
-            if len(steps) > 0:
-                non_future_steps = [step for step in steps if not step.in_future()]
-                if len(non_future_steps) > 0:
-                    last_step = non_future_steps[-1]
-                    if (datetime.now() - last_step.date).days > 2:
-                        default_date = last_step.date
-                next_step_types = brew.next_step_types()
-                if len(next_step_types) > 0:
-                    id,step = next_step_types[0]
-                    if not id:
-                        next_step_type = step.id
-                    else:
-                        step_edit = True
-                        form = StepForm(initial={'date': default_date}, instance=step)
-        if not form:
-            form = StepForm(initial={'brew': brew.id, 'date': default_date, 'type': next_step_type})
-    return HttpResponse(render('user/brew/index.html', request=request, std=standard_context(), user=uri_user,
-                               brew=brew, steps=steps, step_form=form, step_edit=step_edit, submit_label=submit_label,
-                               brew_form=brew_form, deriv=util.BrewDerivations(brew)))
+            step_edit, step_form = _lame_compute_next_steps(brew, default_date)
+        if not step_form:
+            step_form = StepForm(initial={'brew': brew.id, 'date': default_date, 'type': next_step_type})
+    return brew_render(request, uri_user, brew, step_form, step_edit)
+
+def _lame_compute_next_steps(brew, default_date):
+    step_edit = False
+    form = None
+    steps = [step for step in brew.step_set.all()]
+    if len(steps) > 0:
+        non_future_steps = [step for step in steps if not step.in_future()]
+        if len(non_future_steps) > 0:
+            last_step = non_future_steps[-1]
+            if (datetime.now() - last_step.date).days > 2:
+                default_date = last_step.date
+        next_step_types = brew.next_step_types()
+        if len(next_step_types) > 0:
+            id,step = next_step_types[0]
+            if not id:
+                next_step_type = step.id
+            else:
+                step_edit = True
+                form = StepForm(initial={'date': default_date}, instance=step)
+    return step_edit, form
 
 
 class StarForm (forms.ModelForm):

@@ -14,8 +14,6 @@ Mostly on public/production site.
 **** semi-duplicated between model and (view) brew()
 **** See [[*Future%20Steps][future steps]]
 *** recipe_new()
-*** brew()
-**** way too deep/nested
 *** toggled <div> py:attrs style form mumble
 ** tests
 *** front-to-back-script
