@@ -49,7 +49,7 @@ new_step_types = [ StepType('buy', 'buy ingredients', ['time'], ['starter', 'str
                    StepType('boil-start', 'boil, start', ['time'], ['boil-add', 'boil-end']),
                    StepType('boil-add', 'boil, addition', ['time'], ['boil-add', 'boil-end']),
                    StepType('boil-end', 'boil, end', ['time'], ['pitch']),
-                   StepType('pitch', 'pitch', [], ['ferm1']),
+                   StepType('pitch', 'pitch', ['time', 'gravity', 'volume', 'temp'], ['ferm1']),
                    StepType('ferm1', 'primary fermentation', ['time', 'gravity', 'temp'], ['sample', 'ferm2', 'ferm-add', 'lager', 'keg', 'bottle', 'aging']),
                    StepType('ferm2', 'secondary fermentation', ['time', 'gravity', 'temp'], ['sample', 'ferm-add', 'lager', 'keg', 'bottle', 'aging']),
                    StepType('sample', 'gravity sample', ['gravity'], ['ferm-add', 'ferm2', 'sample','lager', 'keg', 'bottle', 'aging']),
@@ -340,12 +340,10 @@ class Brew (models.Model):
             last_step = steps[-1]
             self.last_update_date = last_step.date
             self.last_state = last_step.type
-            if step_types_by_id[last_step.type].is_terminal():
-                self.is_done = True
-            else:
-                self.is_done = False
+            self.is_done = step_types_by_id[last_step.type].is_terminal()
             if not self.brew_date:
                 # @fixme; this could be better, taking the first actually-brewing-related step, rather than just index=0.
+                # @fixme: then, get "is_actually_brewing_related" into StepTypes model
                 self.brew_date = steps[0].date
         else:
             self.brew_date = None
@@ -367,7 +365,7 @@ class Brew (models.Model):
                 if existing_next_step_types.has_key(next_step):
                     continue
                 rtn_next_steps.append((None,step_types_by_id[next_step]))
-        # @fixme: move to StepType structure, factor out, &c.
+        # @fixme: move "is_initial" to StepType structure, factor out, &c.
         # @fixme: this is really a function of the type of recipe (extract, all-grain, &c.)
         return rtn_next_steps \
                or [(None,step_types_by_id[x]) for x in ['starter', 'strike', 'steep', 'boil-start']]
@@ -393,6 +391,7 @@ def get_likely_next_step_type_id(last_step_type_id):
 
 class StepManager (models.Manager):
     def future_steps_for_user(self, user):
+        # this is simply incorrect:
         return Step.objects.filter(brew__brewer__exact=user).extra(where=['entry_date < date'])
 
 
@@ -440,6 +439,7 @@ class Step (models.Model):
         return u'[%s:%s:%s] vol=%s, temp=%s, gravity=%s, notes [%s]' % (self.brew.recipe.name, self.date.strftime('%x %X'), self.type, self.volume, self.temp, self.gravity, self.notes)
 
     def in_future(self):
+        # this is incorrect.?
         return self.entry_date < self.date
 
     objects = StepManager()
