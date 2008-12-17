@@ -78,7 +78,7 @@ Weight_Units = [
     ('kg', 'kilograms'),
     ('oz', 'ounces'),
     ('lb', 'pounds'),
-    ('ct', 'count')
+    ('ct', 'count'),
     ]
 
 Volume_Units = [
@@ -88,7 +88,10 @@ Volume_Units = [
     ('gl', 'gallons'),
     ('ml', 'milliliters'),
     ('l', 'liters'),
-    ('ct', 'count')
+    ('ct', 'count'),
+    ('tsp', 'teaspoon'),
+    ('tbsp', 'tablespoon'),
+    ('pt', 'pint')
     ]
 
 Temp_Units = [
