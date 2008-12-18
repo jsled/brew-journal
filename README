@@ -142,12 +142,25 @@ is now allowed.
 
 * Todo
 ** bugs, misc
+*** TODO move to django 1.0
+See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges
+*** TODO move to a defined/modern genshi release?
 *** TODO login/new-account failures don't have standard form behavior; wrong password has no feedback
 *** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
-*** TODO 500/404 page handling
 
-Mostly on public/production site.
 *** TODO there's *no* logging on dreamhost, which is annoying.
+*** DONE 500/404 page handling
+    CLOSED: [2008-12-17 Wed 21:48]
+Mostly on public/production site.
+
+http://docs.djangoproject.com/en/dev/howto/error-reporting/#howto-error-reporting
+(seems to be in 1.0 only?)
+
+http://docs.djangoproject.com/en/dev/topics/http/views/#returning-errors
+
+urlconf:
+handler404 = 'app.views.custom_404'
+handler500 = 'app.views.custom_500'
 *** DONE brew step volume only allows one sigdigit, making '3.75 g' not acceptable. :(
     CLOSED: [2008-12-17 Wed 20:41]
 *** DONE adding hop without boil time -> 500?

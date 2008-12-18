@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django import newforms as forms
@@ -42,6 +42,12 @@ def standard_context():
                     'auth_user_is_user': auth_user_is_user,
                     }
     return _std_ctx
+
+def custom_404(request):
+    return HttpResponse(render('404.html', request=request, ctx=standard_context()))
+
+def custom_500(request):
+    return HttpResponse(render('500.html', request=request, ctx=standard_context()))
 
 class AuthForm (forms.Form):
     username = forms.CharField(max_length=30)
@@ -119,7 +125,10 @@ def logout_view(request):
     return HttpResponseRedirect('/')
 
 def user_index(request, user_name):
-    uri_user = User.objects.get(username__exact = user_name)
+    try:
+        uri_user = User.objects.get(username__exact = user_name)
+    except User.DoesNotExist:
+        raise Http404
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     brews = models.Brew.objects.filter(brewer=uri_user, is_done=False)
     future_brews = models.Brew.objects.brews_with_future_steps(uri_user)

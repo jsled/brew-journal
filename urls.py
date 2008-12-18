@@ -1,5 +1,9 @@
 from django.conf.urls.defaults import *
 
+handler404 = 'app.views.custom_404'
+
+handler500 = 'app.views.custom_500'
+
 urlpatterns = patterns(
     '',
     (r'^admin/', include('django.contrib.admin.urls')),

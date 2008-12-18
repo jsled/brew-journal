@@ -3,6 +3,8 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+SEND_BROKEN_LINK_EMAILS = True
+
 ADMINS = (
     ('Josh Sled', 'jsled@asynchronous.org')
     # ('Your Name', 'your_email@domain.com'),
