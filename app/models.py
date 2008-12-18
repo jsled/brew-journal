@@ -216,7 +216,7 @@ class Recipe (models.Model):
     name = models.CharField(max_length=200)
     insert_date = models.DateTimeField(default=datetime.datetime.now)
     batch_size = models.DecimalField(max_digits=3, decimal_places=2)
-    batch_size_units = models.CharField(max_length=2, choices = Volume_Units, default='gl')
+    batch_size_units = models.CharField(max_length=4, choices = Volume_Units, default='gl')
     style = models.ForeignKey(Style, null=True)
     derived_from_recipe = models.ForeignKey('self', null=True, blank=True)
     type = models.CharField(max_length=1, choices=Types, default='a')
@@ -272,7 +272,7 @@ class RecipeAdjunct (models.Model):
     recipe = models.ForeignKey(Recipe)
     adjunct = models.ForeignKey(Adjunct)
     amount_value = models.DecimalField(max_digits=5, decimal_places=2)
-    amount_units = models.CharField(max_length=2, choices=All_Units)
+    amount_units = models.CharField(max_length=4, choices=All_Units)
     boil_time = models.SmallIntegerField()
     notes = models.CharField(max_length=300, null=True, blank=True)
 
@@ -408,7 +408,7 @@ class Step (models.Model):
     entry_date = models.DateTimeField(editable=False, default=datetime.datetime.now)
 
     volume = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
-    volume_units = models.CharField(max_length=2, null=True, blank=True, choices = Volume_Units, default='gl')
+    volume_units = models.CharField(max_length=4, null=True, blank=True, choices = Volume_Units, default='gl')
 
     temp = models.IntegerField(null=True, blank=True)
     temp_units = models.CharField(max_length=1, null=True, blank=True, choices = Temp_Units, default='f')
