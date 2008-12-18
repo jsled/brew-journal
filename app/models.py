@@ -215,7 +215,7 @@ class Recipe (models.Model):
     author = models.ForeignKey(auth.models.User)
     name = models.CharField(max_length=200)
     insert_date = models.DateTimeField(default=datetime.datetime.now)
-    batch_size = models.DecimalField(max_digits=3, decimal_places=2)
+    batch_size = models.DecimalField(max_digits=4, decimal_places=2)
     batch_size_units = models.CharField(max_length=4, choices = Volume_Units, default='gl')
     style = models.ForeignKey(Style, null=True)
     derived_from_recipe = models.ForeignKey('self', null=True, blank=True)
@@ -407,7 +407,7 @@ class Step (models.Model):
     date = models.DateTimeField()
     entry_date = models.DateTimeField(editable=False, default=datetime.datetime.now)
 
-    volume = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    volume = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     volume_units = models.CharField(max_length=4, null=True, blank=True, choices = Volume_Units, default='gl')
 
     temp = models.IntegerField(null=True, blank=True)

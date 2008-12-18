@@ -147,7 +147,9 @@ is now allowed.
 *** TODO 500/404 page handling
 
 Mostly on public/production site.
-*** TODO brew step volume only allows one sigdigit, making '3.75 g' not acceptable. :(
+*** TODO there's *no* logging on dreamhost, which is annoying.
+*** DONE brew step volume only allows one sigdigit, making '3.75 g' not acceptable. :(
+    CLOSED: [2008-12-17 Wed 20:41]
 *** DONE adding hop without boil time -> 500?
     CLOSED: [2008-08-31 Sun 18:32]
 *** DONE /user/{user}/brew/{id}?type={type} doesn't work.
