@@ -73,9 +73,8 @@ class BrewDerivations (object):
         steps = self._brew.step_set.all()
         steps = [step for step in steps
                     if allowable_types.has_key(step.type)]
-        steps.sort(lambda a,b: allowable_types[b.type] - allowable_types[a.type])
+        steps.sort(lambda a,b: allowable_types[a.type] - allowable_types[b.type])
         return steps
-
 
     efficiency_needed_steps = ['boil-start', 'sparge', 'pitch']
     def _get_efficiency_steps(self):

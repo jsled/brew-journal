@@ -1,7 +1,10 @@
 # -*- encoding: utf-8 -*-
+import decimal
 import unittest
 from django.test.client import Client
 from django.test import TestCase
+import util
+
 
 class AppTestCase (TestCase):
     fixtures = ['auth', 'grains1', 'grains2', 'grains3', 'hops', 'hops1', 'yeasts1', 'adjuncts', 'yeast-manufacturers', 'yeasts', 'styles']
@@ -48,3 +51,39 @@ class HopWithoutBoilTime (AppTestCase):
 #   - changing a recipe
 # - creating a brew from a recipe
 #   - adding steps to the brew
+
+class MockStep (object):
+    def __init__(self, type, gravity):
+        self._type = type
+        self._gravity = decimal.Decimal(gravity)
+    type = property(lambda s: s._type)
+    gravity = property(lambda s: s._gravity)
+
+class MockSteppedBrew (object):
+    def __init__(self, **kwargs):
+        self._steps = kwargs.get('steps', [])
+        pass
+
+    step_set = property(lambda s: s._get_step_set())
+    steps = property(lambda s: s._steps)
+
+    def _get_step_set(self):
+        class _StepSet (object):
+            def __init__(self, brew):
+                self._brew = brew
+                
+            def all(self):
+                return self._brew.steps
+
+        return _StepSet(self)
+
+
+class BrewDerivativesTest (TestCase):
+    def test(self):
+        brew = MockSteppedBrew(steps=[MockStep('boil-start', '1.049'),
+                                      MockStep('pitch', '1.064'),
+                                      MockStep('keg', '1.022')])
+        bd = util.BrewDerivations(brew)
+        abv = bd.alcohol_by_volume()
+        self.assert_(abv > decimal.Decimal('3.645'), str(abv))
+        self.assertEquals(abv, decimal.Decimal('5.67'), str(abv))
