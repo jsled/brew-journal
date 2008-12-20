@@ -141,10 +141,7 @@ when/what data needs to be loaded in order to determine if a particular medal
 is now allowed.
 
 * Todo
-** bugs, misc
-*** TODO move to django 1.0
-See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges
-*** TODO move to a defined/modern genshi release?
+** bugs
 *** TODO login/new-account failures don't have standard form behavior; wrong password has no feedback
 *** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
 
@@ -174,7 +171,7 @@ handler500 = 'app.views.custom_500'
 *** recipe_new()
 *** toggled <div> py:attrs style form mumble
 ** tests
-*** front-to-back-script
+*** TODO front-to-back-script
 - create new user, fail
 - correct mistake, success
 - login, fail
@@ -196,19 +193,18 @@ handler500 = 'app.views.custom_500'
 - advance clock forward
 - update brew
 *** recipe editing
-**** from url
-**** add grain: happy, sad
+**** TODO add grain: happy, sad
 ***** sad
 - absurd units
   - missing values
   - wrong values
 - OOB units
-**** add hop: happy, sad
-**** add yeast: happy, sad
-**** add adjunct: happy, sad
+**** TODO add hop: happy, sad
+**** TODO add yeast: happy, sad
+**** TODO add adjunct: happy, sad
 *** brew editing
-**** schedule steps, test 'next step' computations
-**** future steps:
+**** TODO schedule steps, test 'next step' computations
+**** TODO future steps:
 - check dashboard reflects changes appropriately
 - check future steps
   - changing future date
@@ -217,9 +213,9 @@ handler500 = 'app.views.custom_500'
   - changing future date -> way in the past
   - "realize" a future dated step with other future dated steps
     - follow-on effect on "next step" logic
-**** changes to steps, impact
-*** brew impacts
-**** shopping list
+**** TODO changes to steps, impact
+*** creating a brew impacts
+**** TODO shopping list
 ** major
 *** calendaring
 **** encourage future steps visually … how?
@@ -271,7 +267,7 @@ handler500 = 'app.views.custom_500'
 **** mash chart/schedule
 ***** planned
 ***** actual
-*** game/achievements
+*** achievements
 **** meta
 ***** user must be able to turn this off, but defaults to on
 ***** user must be able to decline [?]
@@ -279,7 +275,7 @@ handler500 = 'app.views.custom_500'
 ***** future brews should show user what achievements will be earned.
 **** achievements
 ***** firsts/technique
-****** "First Brew!  Welcome! :)"
+****** "First Brew! Welcome! :)"
 ****** "First Brew in ${style}"
 ****** First {Ale,Lager,Common,Brett,Cider,Mead,Bragot}
 ****** First {1.060,70,80,90,100,} OG brew
@@ -371,61 +367,72 @@ handler500 = 'app.views.custom_500'
 *** import/export
 *** add 'equipment'/'rig'
 ** minor
-*** be able to (re-)associate a recipe with a Brew
+*** TODO move to django 1.0
+See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges
+*** TODO move to a defined/modern genshi release?
+*** TODO be able to (re-)associate a recipe with a Brew
 *** focus improvements
-**** profile form after new user creation
+**** TODO profile form after new user creation
 **** /user/{user}
-***** next action
+***** TODO next action
 **** /recipe/{id}/{text}
 ***** DONE top actions
 ***** DONE edit details -> :input:first
 ***** DONE add -> first form elt
-***** GET after POST of {grain, hop, …} -> [add] button on same form.
-*** identity links in profile to other fora
-**** beeradvocate
-**** tastybrew
-**** ?others?
-*** use django `get_absolute_url`, `permalink` methods.
+***** TODO GET after POST of {grain, hop, …} -> [add] button on same form.
+*** TODO use django `get_absolute_url`, `permalink` methods
 *** /recipe/{id}
-**** show all brew instances of recipe
+**** TODO show all brew instances of recipe
 ***** by: authoring user, viewing user, all users
 **** DONE add "clone", "brew" ui options
 *** starring recipes
-**** make AJAX-y
+**** TODO make AJAX-y
 *** recipe editing
 **** pre-select units fields
-***** same as the last-used units in the item-class
-***** prefs
-**** Should have a place for boil-length, expected efficiency
+***** TODO same as the last-used units in the item-class
+***** TODO based on user prefs
+**** TODO Should have a place for boil-length, expected efficiency
 - noticed while entering saison automné recipe/brew details from notes … was
   the 90 minute boil intentional or a side effect of the brew-day?
-*** user profile
-**** other web url
-**** preferences
+- What other things should be part of the recipe?
+*** improve user profile
+**** TODO preferences
 ***** default recipe type (extract, partial-mash, all-grain)
 ***** default units (english/metric)
-***** favorite style
+**** TODO identity links in profile to other fora
+***** beeradvocate
+***** tastybrew
+***** ?others?
+***** other web urls
 *** step addition
 **** de-emphasise unrelated entry fields in any given step-type.
 **** better form layout, anyways
 *** google crawling
-**** anything private?
-**** robots.txt
+**** is there anything private?
+**** TODO add reasonable robots.txt
 *** model cleanups
 **** Brew
 ***** add brew name?
-***** must Brews have recipes?
 ***** Notes
 ****** add differentiated, timestampped, author'd notes
 ******* this approaches Comments, where Brew.brewer = Comment.author is a bit special.
 **** Hops
-***** type: bittering? flavor? aroma?
-***** class: german, american, british
-***** notes: "floral, citrusy, &c."
+***** TODO type: {bittering, flavor, aroma}
+***** TODO class: {german, american, british, …}
+***** TODO notes: "floral, citrusy, &c."
+**** Adjunct
+***** TODO some way for an adjunct to be not in the boil (e.g., "secondary", "keg", &c.)
 *** signup
-**** username character restrictions
-**** email verification
-*** user-friendly field values ("gl" -> "gallon(s)")
+**** TODO username character restrictions, confirmation
+**** TODO existing username check?
+**** TODO naughtyness check?
+**** TODO verification
+*** better auth
+**** OpenID (maybe for comments only?)
+**** verification
+**** forgot password
+**** forgot username
+*** TODO user-friendly field values ("gl" -> "gallon(s)")
 *** add data
 **** adjuncts
 **** more yeasts
@@ -433,17 +440,12 @@ handler500 = 'app.views.custom_500'
 ***** dry yeasts (Safale, Windsor, &c.)
 ***** Wyeast: wine, distiller, cider, mead, sake, VSS archives
 ***** White Labs
-*** paginated views
+*** TODO paginated views
 **** historical brews
 **** all authored recipes
-*** better auth
-**** OpenID
-**** verification
-**** forgot password
-**** forgot username
 *** system logging
-**** per request/timing
-**** general system
+**** per request/timing accesslog (add to page footer, too)
+**** general system: startup, shutdown, resource util, &c.
 **** auth-related
 *** refactor rendering
 **** starred-recipe table on /user/jsled/ and /user/jsled/recipe/
@@ -453,7 +455,6 @@ handler500 = 'app.views.custom_500'
 **** generic 'auth-user-must-match-object-owner' during POST handling
 **** superuser support all around
 *** user interface
-**** abbrev -> full label in views
 **** auto-complete text fields for style, grain, hops...
 **** step addition
 ***** if the brew knows the mash grains, then it can compute strike and sparge water volumes, absorption, &c.
