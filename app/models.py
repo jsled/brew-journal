@@ -113,9 +113,6 @@ class Style (models.Model):
     def __unicode__(self):
         return u'%(name)s %(bjcp_code)s' % self.__dict__
 
-    class Admin:
-        pass
-
 
 class Grain (models.Model):
     name = models.CharField(max_length=200)
@@ -132,9 +129,6 @@ class Grain (models.Model):
     def __unicode__(self):
         return u'%(name)s' % self.__dict__
 
-    class Admin:
-        pass
-
 
 class Hop (models.Model):
     name = models.CharField(max_length=100)
@@ -147,9 +141,6 @@ class Hop (models.Model):
     def __unicode__(self):
         return u'%(name)s' % self.__dict__
 
-    class Admin:
-        pass
-
 
 class Adjunct (models.Model):
     name = models.CharField(max_length=100)
@@ -158,18 +149,12 @@ class Adjunct (models.Model):
     def __unicode__(self):
         return u'%s (%s)' % (self.name, self.group)
 
-    class Admin:
-        pass
-
 
 class YeastManufacturer (models.Model):
     name = models.CharField(max_length=100)
 
     def __unicode__(self):
         return u'%(name)s' % self.__dict__
-
-    class Admin:
-        pass
 
 
 class Yeast (models.Model):
@@ -202,8 +187,6 @@ class Yeast (models.Model):
     def __unicode__(self):
         return u'%s %s: %s' % (self.manufacturer.name, self.ident, self.name)
 
-    class Admin:
-        pass
 
 class Recipe (models.Model):
     Types = (
@@ -234,18 +217,12 @@ class Recipe (models.Model):
     def url(self):
         return u'/recipe/%d/%s' % (self.id, self.name)
 
-    class Admin:
-        pass
-
 
 class RecipeGrain (models.Model):
     recipe = models.ForeignKey(Recipe)
     grain = models.ForeignKey(Grain)
     amount_value = models.DecimalField(max_digits=4, decimal_places=2)
     amount_units = models.CharField(max_length=2, choices=Weight_Units, default='lb')
-
-    class Admin:
-        pass
 
 
 class RecipeHop (models.Model):
@@ -255,17 +232,11 @@ class RecipeHop (models.Model):
     amount_units = models.CharField(max_length=2, choices=Weight_Units)
     boil_time = models.SmallIntegerField()
 
-    class Admin:
-        pass
-
 
 class RecipeYeast (models.Model):
     recipe = models.ForeignKey(Recipe)
     yeast = models.ForeignKey(Yeast)
     ideal = models.BooleanField(default=True)
-
-    class Admin:
-        pass
 
 
 class RecipeAdjunct (models.Model):
@@ -276,9 +247,6 @@ class RecipeAdjunct (models.Model):
     boil_time = models.SmallIntegerField()
     notes = models.CharField(max_length=300, null=True, blank=True)
 
-    class Admin:
-        pass
-
 
 class StarredRecipe (models.Model):
     '''
@@ -288,9 +256,6 @@ class StarredRecipe (models.Model):
     user = models.ForeignKey(auth.models.User)
     when = models.DateTimeField(default=datetime.datetime.now)
     notes = models.CharField(max_length=1000, blank=True, default='')
-
-    class Admin:
-        pass
 
 
 class BrewManager (models.Manager):
@@ -325,9 +290,6 @@ class Brew (models.Model):
         return u'%s (%s)' % (self.recipe.name, self.brewer.username)
 
     objects = BrewManager()
-
-    class Admin:
-        pass
 
     class Meta:
         ordering = ['brew_date', 'last_update_date']
@@ -449,7 +411,4 @@ class Step (models.Model):
 
     class Meta:
         ordering = ['date']
-
-    class Admin:
-        pass
 

@@ -3,7 +3,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django import newforms as forms
+from django import forms
 from genshi.template import TemplateLoader
 from genshi.core import Markup
 from brewjournal import util
