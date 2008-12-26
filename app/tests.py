@@ -219,3 +219,49 @@ class TestReg (AppTestCase):
         self.assertContains(res, 'is unavailable', status_code=200)
 
     # testUnknownSubmitType
+
+
+class Mock (object):
+    def __init__(self, **kwargs):
+        for k,v in kwargs.iteritems():
+            self.__dict__[k] = v
+
+class FkSet (object):
+    def __init__(self, list = None):
+        if not list: list = []
+        self._items = list
+
+    def all(self):
+        return self._items
+
+
+class ShoppingListTest (TestCase):
+
+    def test(self):
+        import random
+        grains = [Mock(name='g%d' % (i)) for i in range(10)]
+        rgrains = [Mock(grain=g, amount_value=1, amount_units='lbs') for g in grains]
+        hops = [Mock(name='h%d' % (i)) for i in range(10)]
+        rhops = [Mock(hop=h, amount_value=1, amount_units='oz') for h in hops]
+        #
+        r1_grains = random.sample(rgrains, 5)
+        r1_hops = random.sample(rhops, 5)
+        r1 = Mock(recipegrain_set = FkSet(r1_grains),
+                  recipehop_set = FkSet(r1_hops),
+                  recipeyeast_set = FkSet(),
+                  recipeadjunct_set = FkSet())
+        r2 = Mock(recipegrain_set = FkSet(rgrains),
+                  recipehop_set = FkSet(rhops),
+                  recipeyeast_set = FkSet(),
+                  recipeadjunct_set = FkSet())
+        b1 = Mock(recipe=r1)
+        b2 = Mock(recipe=r1)
+        b3 = Mock(recipe=r2)
+        #
+        groceries = models.ShoppingList([b1, b2, b3])
+        self.assertEquals(10, len(groceries.grains))
+        self.assertEquals(10, len(groceries.hops))
+        for grain,brews in groceries.grains:
+            self.assertTrue(len(brews) <= 3)
+        for hop,brews in groceries.hops:
+            self.assertTrue(len(brews) <= 3)

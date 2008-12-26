@@ -232,60 +232,11 @@ def user_brew_new(request, user_name):
                                recipe=recipe, brew_form=form))
 
 
-class ShoppingListView (object):
-    '''
-    takes a list of pre-brews, and consolidates the ingredients by type
-
-    Each ingredient type is a list of (Ingredient,[(RecipeIngredient,Brew)])
-
-    E.g., Grains[Centenniel] -> [ (5oz,Brew#42), (2oz,Brew#43), ...]
-    
-    '''
-    
-    def __init__(self, pre_brews):
-        self._grains = {}
-        self._hops = {}
-        self._adjuncts = {}
-        self._yeasts = {}
-        self._aggregate_brews(pre_brews)
-
-    def _get_grains(self):
-        return [(grain,brews) for grain,brews in self._grains.iteritems()]
-    grains = property(_get_grains)
-
-    def _get_hops(self):
-        return [(hop,brews) for hop,brews in self._hops.iteritems()]
-    hops = property(_get_hops)
-
-    def _get_adjuncts(self):
-        return [(adjunct,brews) for adjunct,brews in self._adjuncts.iteritems()]
-    adjuncts = property(_get_adjuncts)
-
-    def _get_yeasts(self):
-        return [(yeast,brews) for yeast,brews in self._yeasts.iteritems()]
-    yeasts = property(_get_yeasts)
-    
-    def _aggregate_brews(self, pre_brews):
-        for brew in pre_brews:
-            recipe = brew.recipe
-            if not recipe:
-                continue
-            for collection, recipe_item_getter, item_type_getter in \
-                    [(self._grains, lambda: recipe.recipegrain_set.all(), lambda x: x.grain),
-                     (self._hops, lambda: recipe.recipehop_set.all(), lambda x: x.hop),
-                     (self._adjuncts, lambda: recipe.recipeadjunct_set.all(), lambda x: x.adjunct),
-                     (self._yeasts, lambda: recipe.recipeyeast_set.all(), lambda x: x.yeast)]:
-                for recipe_item in recipe_item_getter():
-                    item = item_type_getter(recipe_item)
-                    collection.setdefault(item, []).append((recipe_item,brew))
-            
-        
-
 def user_shopping_list(request, user_name):
     uri_user = User.objects.get(username__exact = user_name)
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     pre_brews = models.Brew.objects.brews_pre_brew(uri_user)
-    shopping_list = ShoppingListView(pre_brews)
+    shopping_list = models.ShoppingList(pre_brews)
     return HttpResponse(render('user/shopping-list.html', request=request, user=uri_user, std=standard_context(),
                                shopping_list = shopping_list))
                                
