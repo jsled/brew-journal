@@ -142,12 +142,12 @@ is now allowed.
 
 * Todo
 ** bugs, misc
-*** TODO move to django 1.0
+*** DONE move to django 1.0
+    CLOSED: [2008-12-26 Fri]
 See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges
 *** TODO move to a defined/modern genshi release?
 *** TODO login/new-account failures don't have standard form behavior; wrong password has no feedback
 *** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
-
 *** TODO there's *no* logging on dreamhost, which is annoying.
 *** DONE 500/404 page handling
     CLOSED: [2008-12-17 Wed 21:48]
