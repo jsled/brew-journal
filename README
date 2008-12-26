@@ -251,7 +251,7 @@ handler500 = 'app.views.custom_500'
 **** efficiency
 ***** TODO [#S] "?mumble?" vs. "brewhouse" efficiency
 ***** DONE [#N] need: grains + gravity readings + volume reading
-***** TODO [#N] efficiency tracker
+***** TODO [#N] efficiency tracker (based on 'system'?)
 **** A/V
 ***** TODO [#S] estimated: fn(grains, efficiency, yeast.attenuation)
 ***** DONE [#N] actual: FG - OG
