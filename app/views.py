@@ -120,9 +120,11 @@ def root(request):
                                recent_recipes=recent_recipes,
                                recent_updates=recent_updates))
 
+
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/')
+
 
 def user_index(request, user_name):
     try:
@@ -143,6 +145,7 @@ def user_index(request, user_name):
                                done_brews=done_brews,
                                authored_recipes=authored_recipes,
                                starred_recipes=starred_recipes))
+
 
 class UserProfileForm (forms.ModelForm):
     class Meta:
