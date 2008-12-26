@@ -52,7 +52,11 @@
 
 <ul>
     <li py:for="brew in recent_brews">
-        <a href="/user/${brew.brewer.username}/brew/${brew.id}/"><py:if test="brew.recipe">"${brew.recipe.name}"</py:if><py:if test="not brew.recipe">A brew</py:if></a>
+        <a href="/user/${brew.brewer.username}/brew/${brew.id}/">
+	  <py:choose test="">
+	    <py:when test="brew.recipe">"${brew.recipe.name}"</py:when>
+	    <py:otherwise>A brew</py:otherwise>
+	  </py:choose></a>
         by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
         <py:if test="brew.brew_date">
             on ${std.fmt.date.ymd(brew.brew_date)}
