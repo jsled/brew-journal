@@ -49,21 +49,36 @@ def custom_404(request):
 def custom_500(request):
     return HttpResponse(render('500.html', request=request, ctx=standard_context()))
 
-class AuthForm (forms.Form):
-    username = forms.CharField(max_length=30)
-    password = forms.CharField(widget=forms.PasswordInput)
-
 class RegisterForm (forms.Form):
     username = forms.CharField(max_length=30)
     password = forms.CharField(widget=forms.PasswordInput)
-    password_again = forms.CharField(widget=forms.PasswordInput)
-    email = forms.EmailField()
+    password_again = forms.CharField(widget=forms.PasswordInput, required=False)
+    email = forms.EmailField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        self._is_reg = kwargs.get('is_reg', False)
+        if kwargs.has_key('is_reg'):
+            del kwargs['is_reg']
+        forms.Form.__init__(self, *args, **kwargs)
+    
+    def clean(self):
+        if self._is_reg:
+            data = self.cleaned_data
+            if not data.has_key('password') and not data.has_key('password_again'):
+                raise forms.ValidationError(u'Matching passwords required')
+            if data['password'] != data['password_again']:
+                raise forms.ValidationError(u'Passwords must match')
+            #if not data.has_key('email') or data['email'] == u'':
+            #    raise forms.ValidationError('Must have valid email')
+        return self.cleaned_data
+            
 
 def root_post(request):
-    auth_form = AuthForm(request.POST)
     username = request.POST['username']
     password = request.POST['password']
     submit_type = request.POST['sub']
+    auth_form = RegisterForm(request.POST, is_reg=submit_type == 'create')
+    auth_errors = forms.util.ErrorList()
     if submit_type == 'create':
         user = None
         try:
@@ -71,22 +86,18 @@ def root_post(request):
         except User.DoesNotExist:
             pass
         if user:
-            # error; user already existss
-            return HttpResponseBadRequest('user with username [%s] already exists' % (username))
+            auth_errors = forms.util.ErrorList([u'Username [%s] is unavailable' % (username)])
         else:
-            reg = RegisterForm(request.POST)
-            if not reg.is_valid():
-                # @fixme
-                return HttpResponseRedirect('/')
+            if not auth_form.is_valid():
+                return root_common(request, auth_form)
             email = request.POST['email']
-            user = User.objects.create_user(reg.cleaned_data['username'],
-                                            reg.cleaned_data['email'],
-                                            reg.cleaned_data['password'])
+            user = User.objects.create_user(auth_form.cleaned_data['username'],
+                                            auth_form.cleaned_data['email'],
+                                            auth_form.cleaned_data['password'])
             if not user:
-                # error creating user
-                return HttpResponseServerError('unknown error creating user [%s]' % (username))
-            user = authenticate(username = reg.cleaned_data['username'],
-                                password = reg.cleaned_data['password'])
+                auth_errors = forms.util.ErrorList([u'unknown error creating user [%s]' % (username)])
+            user = authenticate(username = auth_form.cleaned_data['username'],
+                                password = auth_form.cleaned_data['password'])
             login(request, user)
             return HttpResponseRedirect('/user/%s/profile' % (username))
         pass
@@ -94,31 +105,36 @@ def root_post(request):
         user = authenticate(username = username,
                             password = password)
         if not user:
-            # error: username/password incorrect
+            auth_errors = forms.util.ErrorList([u'invalid username or password'])
             pass
         elif not user.is_active:
-            # error: disabled account
+            auth_errors = forms.util.ErrorList([u'account has been disabled'])
             pass
         else:
             login(request, user)
             return HttpResponseRedirect('/user/%s/' % (user.username))
     else:
-        # error
+        auth_errors = forms.util.ErrorList([u'unknown form submission style [%s]' % (submit_type)])
         pass
+    return root_common(request, auth_form, auth_errors)
+
+def root_common(request, auth_form = None, auth_errors = forms.util.ErrorList()):
+    recent_brews = models.Brew.objects.order_by('-brew_date')[0:10]
+    recent_recipes = models.Recipe.objects.order_by('-insert_date')[0:10]
+    recent_updates = models.Step.objects.order_by('-date')[0:10]
+    return HttpResponse(render('index.html', request=request, std=standard_context(), auth_form=auth_form,
+                               auth_errors=auth_errors,
+                               recent_brews=recent_brews,
+                               recent_recipes=recent_recipes,
+                               recent_updates=recent_updates))
+    
 
 def root(request):
     if request.method == 'POST':
         rtn = root_post(request)
         if rtn:
             return rtn
-    recent_brews = models.Brew.objects.order_by('-brew_date')[0:10]
-    recent_recipes = models.Recipe.objects.order_by('-insert_date')[0:10]
-    recent_updates = models.Step.objects.order_by('-date')[0:10]
-    auth_form = AuthForm()
-    return HttpResponse(render('index.html', request=request, std=standard_context(), auth_form=auth_form,
-                               recent_brews=recent_brews,
-                               recent_recipes=recent_recipes,
-                               recent_updates=recent_updates))
+    return root_common(request, RegisterForm())
 
 
 def logout_view(request):

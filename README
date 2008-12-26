@@ -147,7 +147,8 @@ is now allowed.
 See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges
 *** DONE move to a defined/modern genshi release?
     CLOSED: [2008-12-26 Fri]
-*** TODO login/new-account failures don't have standard form behavior; wrong password has no feedback
+*** DONE login/new-account failures don't have standard form behavior; wrong password has no feedback
+    CLOSED: [2008-12-26 Fri]
 *** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
 *** TODO there's *no* logging on dreamhost, which is annoying.
 *** DONE 500/404 page handling

@@ -180,3 +180,42 @@ class BrewDerivativesTest (TestCase):
         cannot = derivs.can_not_derive_efficiency()
         self.assertTrue(len(cannot) > 0, len(cannot))
         self.assertEquals(2, len(cannot))
+
+class TestLogin (AppTestCase):
+    fixtures = ['auth']
+
+    def testLogin(self):
+        res = self.client.post('/', {'username': 'jsled', 'password': 's3kr1t', 'sub': 'login'})
+        self.assertEquals(302, res.status_code)
+        new_url = '/' + '/'.join(res['Location'].split('/')[3:])
+        res = self.client.get(new_url)
+        self.assertContains(res, 'sign out', status_code=200)
+
+    def testInvalidLogin(self):
+        res = self.client.post('/', {'username': 'jsled', 'password': 'foobar', 'sub': 'login'})
+        self.assertNotContains(res, 'sign out', 200)
+        self.assertContains(res, 'invalid username or password', status_code=200)
+
+    # testDisabledAccount
+
+
+class TestReg (AppTestCase):
+    fixtures = ['auth']
+
+    def testBrokenReg(self):
+        res = self.client.post('/', {'sub': 'create', 'username': 'bill', 'password': 'foo', 'password_again': 'bar', 'email': 'invalid'})
+        self.assertContains(res, 'Passwords must match', status_code=200)
+        self.assertContains(res, 'valid e-mail address', status_code=200)
+
+    def testSuccessfulReg(self):
+        passwd = 'foo'
+        res = self.client.post('/', {'sub': 'create', 'username': 'bill', 'password': passwd, 'password_again': passwd, 'email': 'jsled@asynchronous.org'})
+        self.assertEquals(302, res.status_code)
+        self.assertTrue(res['Location'].index('profile') != -1)
+
+    def testExistingUsername(self):
+        passwd = 'foo'
+        res = self.client.post('/', {'sub': 'create', 'username': 'jsled', 'password': passwd, 'password_again': passwd, 'email': 'jsled@asynchronous.org'})
+        self.assertContains(res, 'is unavailable', status_code=200)
+
+    # testUnknownSubmitType
