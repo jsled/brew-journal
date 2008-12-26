@@ -104,13 +104,13 @@
 {"model": "app.Step", "pk": 8, "fields": {"brew": 1, "type": "vorlauf", "date": "2008-03-13 00:55:00", "volume_units": "gl", "temp_units": "f", "entry_date": "2008-03-13 00:55:00"}},
 {"model": "app.Step", "pk": 9, "fields": {"brew": 1, "type": "vorlauf", "date": "2008-03-13 00:55:00", "volume_units": "gl", "temp_units": "f", "entry_date": "2008-03-13 00:55:00"}},
 
-{"model": "app.Step", "pk": 10, "fields": {"brew": 2, "type": "keg", "date": "2008-01-13 00:00:00", "gravity_read": "1.006", "gravity_read_temp": "59.0",  "temp": 56, "volume_units": "gl", "temp_units": "f", "entry_date": "2008-01-13 00:00:00"}},
-{"model": "app.Step", "pk": 11, "fields": {"brew": 2, "type": "pitch", "date": "2007-10-27 00:00:00", "volume": 5, "gravity_read": "1.051", "gravity_read_temp": "59.0",  "temp": 48, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-27 00:00:00"}},
-{"model": "app.Step", "pk": 12, "fields": {"brew": 2, "type": "ferm1", "date": "2007-11-19 00:00:00", "gravity_read": "1.002", "gravity_read_temp": "59.0",  "temp": 58, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-11-19 00:00:00"}},
+{"model": "app.Step", "pk": 10, "fields": {"brew": 2, "type": "keg", "date": "2008-01-13 00:00:00", "gravity_read": "1.006", "gravity_read_temp": 59,  "temp": 56, "volume_units": "gl", "temp_units": "f", "entry_date": "2008-01-13 00:00:00"}},
+{"model": "app.Step", "pk": 11, "fields": {"brew": 2, "type": "pitch", "date": "2007-10-27 00:00:00", "volume": 5, "gravity_read": "1.051", "gravity_read_temp": 59,  "temp": 48, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-27 00:00:00"}},
+{"model": "app.Step", "pk": 12, "fields": {"brew": 2, "type": "ferm1", "date": "2007-11-19 00:00:00", "gravity_read": "1.002", "gravity_read_temp": 59,  "temp": 58, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-11-19 00:00:00"}},
 
-{"model": "app.Step", "pk": 13, "fields": {"brew": 3, "type": "pitch", "date": "2007-10-27 00:00:00", "volume": 5, "gravity_read": "1.051", "gravity_read_temp": "59.0",  "temp": 58, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-27 00:00:00"}},
-{"model": "app.Step", "pk": 14, "fields": {"brew": 3, "type": "ferm1", "date": "2007-11-19 00:00:00", "gravity_read": "1.012", "gravity_read_temp": "59.0",  "temp": 58, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-11-19 00:00:00"}},
-{"model": "app.Step", "pk": 15, "fields": {"brew": 3, "type": "keg", "date": "2008-01-13 00:00:00", "gravity_read": "1.003", "gravity_read_temp": "59.0",  "temp": 58, "volume_units": "gl", "temp_units": "f", "entry_date": "2008-01-13 00:00:00"}},
+{"model": "app.Step", "pk": 13, "fields": {"brew": 3, "type": "pitch", "date": "2007-10-27 00:00:00", "volume": 5, "gravity_read": "1.051", "gravity_read_temp": 59,  "temp": 58, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-10-27 00:00:00"}},
+{"model": "app.Step", "pk": 14, "fields": {"brew": 3, "type": "ferm1", "date": "2007-11-19 00:00:00", "gravity_read": "1.012", "gravity_read_temp": 59,  "temp": 58, "volume_units": "gl", "temp_units": "f", "entry_date": "2007-11-19 00:00:00"}},
+{"model": "app.Step", "pk": 15, "fields": {"brew": 3, "type": "keg", "date": "2008-01-13 00:00:00", "gravity_read": "1.003", "gravity_read_temp": 59,  "temp": 58, "volume_units": "gl", "temp_units": "f", "entry_date": "2008-01-13 00:00:00"}},
 
   {
     "pk": 6, 
