@@ -161,6 +161,10 @@ def convert_volume_to_gls(volume, units):
         return volume / ctx.create_decimal('3.7854')
     if units == 'gl':
         return volume
+    # ('ct', 'count'),
+    # ('tsp', 'teaspoon'),
+    # ('tbsp', 'tablespoon'),
+    # ('pt', 'pint')
     raise Exception('unknown units [%s]' % (units))
 
 

@@ -20,27 +20,29 @@
 <p><span class="logotext">brew-journal</span> is a web site for people to track the status and progress of their homebrews.</p>
 
 <form id="login" py:if="not request.user.is_authenticated()" method="post" >
+  ${auth_errors}
+  ${auth_form.non_field_errors()}
   <table class="form">
       <tr><td colspan="3">login:</td></tr>
       <tr>
-          <th>username:</th>
+          <th>username:${auth_form.username.errors}</th>
           <td py:content="std.Markup(auth_form.username)"/>
           <td>&nbsp;</td>
       </tr>
       <tr>
-          <th>password</th>
+          <th>password:${auth_form.password.errors}</th>
           <td py:content="std.Markup(auth_form.password)"/>
           <td align="right"><input type="submit" name="sub" value="login"/></td>
       </tr>
       <tr><td colspan="3">create account:</td></tr>
       <tr>
-          <th>password (again):</th>
-          <td><input type="password" name="password_again"/></td>
+          <th>password (again):${auth_form.password_again.errors}</th>
+          <td py:content="std.Markup(auth_form.password_again)"/>
           <td>&nbsp;</td>
       </tr>
       <tr>
-          <th>email</th>
-          <td><input type="text" name="email"/></td>
+          <th>email:${auth_form.email.errors}</th>
+          <td py:content="std.Markup(auth_form.email)"/>
           <td><input type="submit" name="sub" value="create"/></td>
       </tr>
   </table>
@@ -50,7 +52,11 @@
 
 <ul>
     <li py:for="brew in recent_brews">
-        <a href="/user/${brew.brewer.username}/brew/${brew.id}/"><py:if test="brew.recipe">"${brew.recipe.name}"</py:if><py:if test="not brew.recipe">A brew</py:if></a>
+        <a href="/user/${brew.brewer.username}/brew/${brew.id}/">
+	  <py:choose test="">
+	    <py:when test="brew.recipe">"${brew.recipe.name}"</py:when>
+	    <py:otherwise>A brew</py:otherwise>
+	  </py:choose></a>
         by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
         <py:if test="brew.brew_date">
             on ${std.fmt.date.ymd(brew.brew_date)}

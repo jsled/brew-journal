@@ -61,7 +61,7 @@ TABLE.form
   margin-top: -2em;
   margin-left: -2em;
   width: 100%;
-  padding-right: 2.5em;
+  padding-right: 0.25em;
   padding-top: 0.25em;
   padding-bottom: 0.25em;
 }
@@ -74,9 +74,9 @@ TABLE.form
 
 .topbar .logotext
 {
-  font-size: 4em;
-  margin-left: 1em;
-  padding-left: 0.5em;
+  font-size: xx-large;
+  margin-left: 1.0em;
+  padding-left: 0.0em;
   text-decoration: none;
 }
 

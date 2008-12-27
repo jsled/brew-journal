@@ -113,9 +113,6 @@ class Style (models.Model):
     def __unicode__(self):
         return u'%(name)s %(bjcp_code)s' % self.__dict__
 
-    class Admin:
-        pass
-
 
 class Grain (models.Model):
     name = models.CharField(max_length=200)
@@ -132,9 +129,6 @@ class Grain (models.Model):
     def __unicode__(self):
         return u'%(name)s' % self.__dict__
 
-    class Admin:
-        pass
-
 
 class Hop (models.Model):
     name = models.CharField(max_length=100)
@@ -147,9 +141,6 @@ class Hop (models.Model):
     def __unicode__(self):
         return u'%(name)s' % self.__dict__
 
-    class Admin:
-        pass
-
 
 class Adjunct (models.Model):
     name = models.CharField(max_length=100)
@@ -158,18 +149,12 @@ class Adjunct (models.Model):
     def __unicode__(self):
         return u'%s (%s)' % (self.name, self.group)
 
-    class Admin:
-        pass
-
 
 class YeastManufacturer (models.Model):
     name = models.CharField(max_length=100)
 
     def __unicode__(self):
         return u'%(name)s' % self.__dict__
-
-    class Admin:
-        pass
 
 
 class Yeast (models.Model):
@@ -202,8 +187,6 @@ class Yeast (models.Model):
     def __unicode__(self):
         return u'%s %s: %s' % (self.manufacturer.name, self.ident, self.name)
 
-    class Admin:
-        pass
 
 class Recipe (models.Model):
     Types = (
@@ -234,18 +217,12 @@ class Recipe (models.Model):
     def url(self):
         return u'/recipe/%d/%s' % (self.id, self.name)
 
-    class Admin:
-        pass
-
 
 class RecipeGrain (models.Model):
     recipe = models.ForeignKey(Recipe)
     grain = models.ForeignKey(Grain)
     amount_value = models.DecimalField(max_digits=4, decimal_places=2)
     amount_units = models.CharField(max_length=2, choices=Weight_Units, default='lb')
-
-    class Admin:
-        pass
 
 
 class RecipeHop (models.Model):
@@ -255,17 +232,11 @@ class RecipeHop (models.Model):
     amount_units = models.CharField(max_length=2, choices=Weight_Units)
     boil_time = models.SmallIntegerField()
 
-    class Admin:
-        pass
-
 
 class RecipeYeast (models.Model):
     recipe = models.ForeignKey(Recipe)
     yeast = models.ForeignKey(Yeast)
     ideal = models.BooleanField(default=True)
-
-    class Admin:
-        pass
 
 
 class RecipeAdjunct (models.Model):
@@ -276,9 +247,6 @@ class RecipeAdjunct (models.Model):
     boil_time = models.SmallIntegerField()
     notes = models.CharField(max_length=300, null=True, blank=True)
 
-    class Admin:
-        pass
-
 
 class StarredRecipe (models.Model):
     '''
@@ -288,9 +256,6 @@ class StarredRecipe (models.Model):
     user = models.ForeignKey(auth.models.User)
     when = models.DateTimeField(default=datetime.datetime.now)
     notes = models.CharField(max_length=1000, blank=True, default='')
-
-    class Admin:
-        pass
 
 
 class BrewManager (models.Manager):
@@ -325,9 +290,6 @@ class Brew (models.Model):
         return u'%s (%s)' % (self.recipe.name, self.brewer.username)
 
     objects = BrewManager()
-
-    class Admin:
-        pass
 
     class Meta:
         ordering = ['brew_date', 'last_update_date']
@@ -450,6 +412,53 @@ class Step (models.Model):
     class Meta:
         ordering = ['date']
 
-    class Admin:
-        pass
+
+class ShoppingList (object):
+    '''
+    takes a list of pre-brews, and consolidates the ingredients by type
+
+    Each ingredient type is a list of (Ingredient,[(RecipeIngredient,Brew)])
+
+    E.g., Grains -> (Centenniel, [ (5oz,Brew#42), (2oz,Brew#43), ...])
+    
+    '''
+    
+    def __init__(self, pre_brews):
+        self._grains = {}
+        self._hops = {}
+        self._adjuncts = {}
+        self._yeasts = {}
+        self._aggregate_brews(pre_brews)
+
+    def _get_grains(self):
+        return [(grain,brews) for grain,brews in self._grains.iteritems()]
+    grains = property(_get_grains)
+
+    def _get_hops(self):
+        return [(hop,brews) for hop,brews in self._hops.iteritems()]
+    hops = property(_get_hops)
+
+    def _get_adjuncts(self):
+        return [(adjunct,brews) for adjunct,brews in self._adjuncts.iteritems()]
+    adjuncts = property(_get_adjuncts)
+
+    def _get_yeasts(self):
+        return [(yeast,brews) for yeast,brews in self._yeasts.iteritems()]
+    yeasts = property(_get_yeasts)
+    
+    def _aggregate_brews(self, pre_brews):
+        for brew in pre_brews:
+            recipe = brew.recipe
+            if not recipe:
+                continue
+            for collection, recipe_item_getter, item_type_getter in \
+                    [(self._grains, lambda: recipe.recipegrain_set.all(), lambda x: x.grain),
+                     (self._hops, lambda: recipe.recipehop_set.all(), lambda x: x.hop),
+                     (self._adjuncts, lambda: recipe.recipeadjunct_set.all(), lambda x: x.adjunct),
+                     (self._yeasts, lambda: recipe.recipeyeast_set.all(), lambda x: x.yeast)]:
+                for recipe_item in recipe_item_getter():
+                    item = item_type_getter(recipe_item)
+                    collection.setdefault(item, []).append((recipe_item,brew))
+            
+        
 

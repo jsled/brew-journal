@@ -3,7 +3,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django import newforms as forms
+from django import forms
 from genshi.template import TemplateLoader
 from genshi.core import Markup
 from brewjournal import util
@@ -49,21 +49,36 @@ def custom_404(request):
 def custom_500(request):
     return HttpResponse(render('500.html', request=request, ctx=standard_context()))
 
-class AuthForm (forms.Form):
-    username = forms.CharField(max_length=30)
-    password = forms.CharField(widget=forms.PasswordInput)
-
 class RegisterForm (forms.Form):
     username = forms.CharField(max_length=30)
     password = forms.CharField(widget=forms.PasswordInput)
-    password_again = forms.CharField(widget=forms.PasswordInput)
-    email = forms.EmailField()
+    password_again = forms.CharField(widget=forms.PasswordInput, required=False)
+    email = forms.EmailField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        self._is_reg = kwargs.get('is_reg', False)
+        if kwargs.has_key('is_reg'):
+            del kwargs['is_reg']
+        forms.Form.__init__(self, *args, **kwargs)
+    
+    def clean(self):
+        if self._is_reg:
+            data = self.cleaned_data
+            if not data.has_key('password') and not data.has_key('password_again'):
+                raise forms.ValidationError(u'Matching passwords required')
+            if data['password'] != data['password_again']:
+                raise forms.ValidationError(u'Passwords must match')
+            #if not data.has_key('email') or data['email'] == u'':
+            #    raise forms.ValidationError('Must have valid email')
+        return self.cleaned_data
+            
 
 def root_post(request):
-    auth_form = AuthForm(request.POST)
     username = request.POST['username']
     password = request.POST['password']
     submit_type = request.POST['sub']
+    auth_form = RegisterForm(request.POST, is_reg=submit_type == 'create')
+    auth_errors = forms.util.ErrorList()
     if submit_type == 'create':
         user = None
         try:
@@ -71,22 +86,18 @@ def root_post(request):
         except User.DoesNotExist:
             pass
         if user:
-            # error; user already existss
-            return HttpResponseBadRequest('user with username [%s] already exists' % (username))
+            auth_errors = forms.util.ErrorList([u'Username [%s] is unavailable' % (username)])
         else:
-            reg = RegisterForm(request.POST)
-            if not reg.is_valid():
-                # @fixme
-                return HttpResponseRedirect('/')
+            if not auth_form.is_valid():
+                return root_common(request, auth_form)
             email = request.POST['email']
-            user = User.objects.create_user(reg.cleaned_data['username'],
-                                            reg.cleaned_data['email'],
-                                            reg.cleaned_data['password'])
+            user = User.objects.create_user(auth_form.cleaned_data['username'],
+                                            auth_form.cleaned_data['email'],
+                                            auth_form.cleaned_data['password'])
             if not user:
-                # error creating user
-                return HttpResponseServerError('unknown error creating user [%s]' % (username))
-            user = authenticate(username = reg.cleaned_data['username'],
-                                password = reg.cleaned_data['password'])
+                auth_errors = forms.util.ErrorList([u'unknown error creating user [%s]' % (username)])
+            user = authenticate(username = auth_form.cleaned_data['username'],
+                                password = auth_form.cleaned_data['password'])
             login(request, user)
             return HttpResponseRedirect('/user/%s/profile' % (username))
         pass
@@ -94,35 +105,42 @@ def root_post(request):
         user = authenticate(username = username,
                             password = password)
         if not user:
-            # error: username/password incorrect
+            auth_errors = forms.util.ErrorList([u'invalid username or password'])
             pass
         elif not user.is_active:
-            # error: disabled account
+            auth_errors = forms.util.ErrorList([u'account has been disabled'])
             pass
         else:
             login(request, user)
             return HttpResponseRedirect('/user/%s/' % (user.username))
     else:
-        # error
+        auth_errors = forms.util.ErrorList([u'unknown form submission style [%s]' % (submit_type)])
         pass
+    return root_common(request, auth_form, auth_errors)
+
+def root_common(request, auth_form = None, auth_errors = forms.util.ErrorList()):
+    recent_brews = models.Brew.objects.order_by('-brew_date')[0:10]
+    recent_recipes = models.Recipe.objects.order_by('-insert_date')[0:10]
+    recent_updates = models.Step.objects.order_by('-date')[0:10]
+    return HttpResponse(render('index.html', request=request, std=standard_context(), auth_form=auth_form,
+                               auth_errors=auth_errors,
+                               recent_brews=recent_brews,
+                               recent_recipes=recent_recipes,
+                               recent_updates=recent_updates))
+    
 
 def root(request):
     if request.method == 'POST':
         rtn = root_post(request)
         if rtn:
             return rtn
-    recent_brews = models.Brew.objects.order_by('-brew_date')[0:10]
-    recent_recipes = models.Recipe.objects.order_by('-insert_date')[0:10]
-    recent_updates = models.Step.objects.order_by('-date')[0:10]
-    auth_form = AuthForm()
-    return HttpResponse(render('index.html', request=request, std=standard_context(), auth_form=auth_form,
-                               recent_brews=recent_brews,
-                               recent_recipes=recent_recipes,
-                               recent_updates=recent_updates))
+    return root_common(request, RegisterForm())
+
 
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/')
+
 
 def user_index(request, user_name):
     try:
@@ -143,6 +161,7 @@ def user_index(request, user_name):
                                done_brews=done_brews,
                                authored_recipes=authored_recipes,
                                starred_recipes=starred_recipes))
+
 
 class UserProfileForm (forms.ModelForm):
     class Meta:
@@ -213,60 +232,11 @@ def user_brew_new(request, user_name):
                                recipe=recipe, brew_form=form))
 
 
-class ShoppingListView (object):
-    '''
-    takes a list of pre-brews, and consolidates the ingredients by type
-
-    Each ingredient type is a list of (Ingredient,[(RecipeIngredient,Brew)])
-
-    E.g., Grains[Centenniel] -> [ (5oz,Brew#42), (2oz,Brew#43), ...]
-    
-    '''
-    
-    def __init__(self, pre_brews):
-        self._grains = {}
-        self._hops = {}
-        self._adjuncts = {}
-        self._yeasts = {}
-        self._aggregate_brews(pre_brews)
-
-    def _get_grains(self):
-        return [(grain,brews) for grain,brews in self._grains.iteritems()]
-    grains = property(_get_grains)
-
-    def _get_hops(self):
-        return [(hop,brews) for hop,brews in self._hops.iteritems()]
-    hops = property(_get_hops)
-
-    def _get_adjuncts(self):
-        return [(adjunct,brews) for adjunct,brews in self._adjuncts.iteritems()]
-    adjuncts = property(_get_adjuncts)
-
-    def _get_yeasts(self):
-        return [(yeast,brews) for yeast,brews in self._yeasts.iteritems()]
-    yeasts = property(_get_yeasts)
-    
-    def _aggregate_brews(self, pre_brews):
-        for brew in pre_brews:
-            recipe = brew.recipe
-            if not recipe:
-                continue
-            for collection, recipe_item_getter, item_type_getter in \
-                    [(self._grains, lambda: recipe.recipegrain_set.all(), lambda x: x.grain),
-                     (self._hops, lambda: recipe.recipehop_set.all(), lambda x: x.hop),
-                     (self._adjuncts, lambda: recipe.recipeadjunct_set.all(), lambda x: x.adjunct),
-                     (self._yeasts, lambda: recipe.recipeyeast_set.all(), lambda x: x.yeast)]:
-                for recipe_item in recipe_item_getter():
-                    item = item_type_getter(recipe_item)
-                    collection.setdefault(item, []).append((recipe_item,brew))
-            
-        
-
 def user_shopping_list(request, user_name):
     uri_user = User.objects.get(username__exact = user_name)
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     pre_brews = models.Brew.objects.brews_pre_brew(uri_user)
-    shopping_list = ShoppingListView(pre_brews)
+    shopping_list = models.ShoppingList(pre_brews)
     return HttpResponse(render('user/shopping-list.html', request=request, user=uri_user, std=standard_context(),
                                shopping_list = shopping_list))
                                

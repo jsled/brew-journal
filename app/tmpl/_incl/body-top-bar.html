@@ -8,9 +8,9 @@
           <nobr>
               <py:if test="request.user.is_authenticated()">
                   ${request.user.username}
-                  | <a href="/user/${request.user.username}">my journal</a>
+                  | <a href="/user/${request.user.username}/">my journal</a>
                   | <a href="/">brew-journal</a>
-                  | <a href="/user/${request.user.username}/profile">profile</a>
+                  | <a href="/user/${request.user.username}/profile/">profile</a>
                   | <a href="/logout">sign out</a>
               </py:if>
               <py:if test="not request.user.is_authenticated()">
