@@ -132,7 +132,6 @@ is now allowed.
 
 * Todo
 ** bugs, misc
-*** TODO /admin/ broken
 *** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
 *** TODO there's *no* logging on dreamhost, which is annoying.
 *** TODO cascading /recipe/{id}/hops/hops/hops/… in the case of ingredient add failure

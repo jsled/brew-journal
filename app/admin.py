@@ -15,5 +15,6 @@ for cls in (models.Style,
             models.RecipeAdjunct,
             models.StarredRecipe,
             models.Brew,
-            models.Step):
+            models.Step,
+            models.UserProfile):
     admin.site.register(cls)
