@@ -121,6 +121,16 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 - entry_date << date *and* entry_date > date
 
+*** Use Cases redux
+
+(basic future steps case)
+- in the past, enter future steps; update future steps to "now", sequentially
+
+- in the past, enter future steps; in the future, update now-past steps and now-future steps
+
+- in the past, enter future steps;  in the far-future, update all-now-past steps
+
+
 * Todo
 ** bugs, misc
 *** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
@@ -157,7 +167,7 @@ handler500 = 'app.views.custom_500'
 Maybe Steps should strictly be "transitions" or "activtives", not just states
 of being.
 ** shitty things
-*** recipe_new()
+*** recipe_new() is a bit too busy for comfort
 *** toggled <div> py:attrs style form mumble
 ** tests
 *** TODO front-to-back-script

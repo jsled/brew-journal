@@ -19,6 +19,16 @@
 
 <p><span class="logotext">brew-journal</span> is a web site for people to track the status and progress of their homebrews.</p>
 
+<br/>
+
+<blockquote>
+<p><strong class="big">NOTE!</strong> <span class="logotext">brew-journal</span> is – in early 2009 – somewhere between alpha and beta.  I (<a href="/user/jsled/">jsled</a>, the author) am adding my own historical journal entries and future journal entries to the site, so I'm highly motivated to keep the data safe from both site failure and schema changes as the code progresses … at the same time, you should note that the code is in active development, and I've not yet authored any export functionality.  Caveat user.</p>
+
+<p>That being said, I'm quite happy for you to sign up, try it out, and would love bug reports and feedback!  As well, please feel free to contact me at <a href="http://asynchronous.org/jsled/">jsled [at] asynchronous [dot] org</a> before more formal contact/feedback mechanisms are establised.</p>
+</blockquote>
+
+<br/>
+
 <form id="login" py:if="not request.user.is_authenticated()" method="post" >
   ${auth_errors}
   ${auth_form.non_field_errors()}
@@ -48,8 +58,14 @@
   </table>
 </form>
 
-<h1>recent brews</h1>
-
+<table>
+<tr>
+<td><h1>recent brews</h1></td>
+<td><h1>recent recipes</h1></td>
+<td><h1>recent updates</h1></td>
+</tr>
+<tr>
+<td>
 <ul>
     <li py:for="brew in recent_brews">
         <a href="/user/${brew.brewer.username}/brew/${brew.id}/">
@@ -63,19 +79,23 @@
         </py:if>
     </li>
 </ul>
-
-<h1>recent recipes</h1>
+</td>
+<td>
 
 <ul>
     <li py:for="recipe in recent_recipes">
         "${recipe_a(recipe)}", added ${std.fmt.date.ymdhm(recipe.insert_date)} by <a href="/user/${recipe.author.username}/">${recipe.author}</a>.
     </li>
 </ul>
+</td>
   
-<h1>recent updates</h1>
+<td>
 <ul>
   <li py:for="step in recent_updates"><a href="/user/${step.brew.brewer.username}/brew/${step.brew.id}">Step ${step.type}</a> journaled for <a href="/user/${step.brew.brewer.username}/">${step.brew.brewer.username}</a>'s <py:if test="step.brew.recipe">${recipe_a(step.brew.recipe)}</py:if> on ${std.fmt.date.ymdhm(step.date)}</li>
 </ul>
+</td>
+</tr>
+</table>
 
 <!--
 

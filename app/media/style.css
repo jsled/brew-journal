@@ -6,6 +6,10 @@ BODY
   margin-top: 2em;
 }
 
+.big {
+  font-size: large;
+}
+
 TABLE
 {
   empty-cells: show;
