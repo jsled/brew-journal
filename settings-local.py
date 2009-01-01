@@ -93,3 +93,5 @@ INSTALLED_APPS = (
 )
 
 DEFAULT_CHARSET = 'utf-8'
+
+AUTH_PROFILE_MODULE = 'app.userprofile'

@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import datetime
 import decimal
 import unittest
 from django.test.client import Client
@@ -130,34 +131,7 @@ class ShoppingListViewTest (AppTestCase):
 # - creating a brew from a recipe
 #   - adding steps to the brew
 
-class MockStep (object):
-    def __init__(self, type, gravity):
-        self._type = type
-        self._gravity = decimal.Decimal(gravity)
-    type = property(lambda s: s._type)
-    gravity = property(lambda s: s._gravity)
-
-
-class MockSteppedBrew (object):
-    def __init__(self, **kwargs):
-        self._steps = kwargs.get('steps', [])
-        pass
-
-    step_set = property(lambda s: s._get_step_set())
-    steps = property(lambda s: s._steps)
-
-    def _get_step_set(self):
-        class _StepSet (object):
-            def __init__(self, brew):
-                self._brew = brew
-                
-            def all(self):
-                return self._brew.steps
-
-        return _StepSet(self)
-
-
-class BrewDerivativesTest (TestCase):
+class BrewDerivatiesTest (TestCase):
     def testNoAbvComputation(self):
         brew = models.Brew()
         derivs = util.BrewDerivations(brew)
@@ -166,9 +140,9 @@ class BrewDerivativesTest (TestCase):
         self.assertEquals(2, len(cannot))
 
     def testMultiStepAbvComputation(self):
-        brew = MockSteppedBrew(steps=[MockStep('boil-start', '1.049'),
-                                      MockStep('pitch', '1.064'),
-                                      MockStep('keg', '1.022')])
+        brew = Mock(step_set=FkSet([Mock(type='boil-start', gravity=decimal.Decimal('1.049')),
+                                    Mock(type='pitch', gravity=decimal.Decimal('1.064')),
+                                    Mock(type='keg', gravity=decimal.Decimal('1.022'))]))
         derivs = util.BrewDerivations(brew)
         abv = derivs.alcohol_by_volume()
         self.assert_(abv > decimal.Decimal('3.645'), str(abv))
@@ -196,7 +170,7 @@ class TestLogin (AppTestCase):
         self.assertNotContains(res, 'sign out', 200)
         self.assertContains(res, 'invalid username or password', status_code=200)
 
-    # testDisabledAccount
+    # @add testDisabledAccount
 
 
 class TestReg (AppTestCase):
@@ -218,7 +192,7 @@ class TestReg (AppTestCase):
         res = self.client.post('/', {'sub': 'create', 'username': 'jsled', 'password': passwd, 'password_again': passwd, 'email': 'jsled@asynchronous.org'})
         self.assertContains(res, 'is unavailable', status_code=200)
 
-    # testUnknownSubmitType
+    # @add: testUnknownSubmitType
 
 
 class Mock (object):
@@ -265,3 +239,113 @@ class ShoppingListTest (TestCase):
             self.assertTrue(len(brews) <= 3)
         for hop,brews in groceries.hops:
             self.assertTrue(len(brews) <= 3)
+
+class MockUser (Mock):
+    def __init__(self, profile, **kwargs):
+        self.profile = profile
+        super(MockUser, self).__init__(**kwargs)
+
+    def get_profile(self):
+        return self.profile
+
+
+class MockProfile (Mock):
+    def __init__(self, **kwargs):
+        super(MockProfile, self).__init__(**kwargs)
+
+    def __getitem__(self, key):
+        return self.__dict__.get(key, None)
+
+
+class MockStep (models.Step, Mock):
+    def __init__(self, **kwargs):
+        Mock.__init__(self, **kwargs)
+
+
+class NextStepsTest (TestCase):
+    def testBasic(self):
+        profile = MockProfile()
+        user = MockUser(profile)
+        recipe = Mock(type='e')
+        brew = Mock(brewer=user, recipe=recipe, last_state=None, step_set=FkSet([]))
+        next_step_gen = models.NextStepGenerator(brew)
+        next_steps = next_step_gen.get_next_steps()
+        self.assertTrue(len(next_steps.possible) == 2)
+        possible_types = [s.type.id for s in next_steps.possible]
+        self.assertTrue('steep' in possible_types, next_steps)
+        self.assertTrue('boil-start' in possible_types, next_steps)
+        #
+        all_grain_recipe = Mock(type='a')
+        brew = Mock(brewer=user, recipe=all_grain_recipe, last_state=None, step_set=FkSet([]))
+        next_steps = models.NextStepGenerator(brew).get_next_steps()
+        self.assertTrue(len(next_steps.possible) == 1, next_steps)
+        possible_types = [s.type.id for s in next_steps.possible]
+        self.assertTrue('strike' in possible_types)
+        #
+        profile = MockProfile(pref_make_starter=True)
+        user = MockUser(profile)
+        brew = Mock(brewer=user, recipe=recipe, last_state=None, step_set=FkSet([]))
+        next_step_gen = models.NextStepGenerator(brew)
+        next_steps = next_step_gen.get_next_steps()
+        self.assertTrue(len(next_steps.possible) == 3)
+        possible_types = [s.type.id for s in next_steps.possible]
+        for asserted in ['steep', 'boil-start', 'starter']:
+            self.assertTrue(asserted in possible_types, '%s, looking for %s' % (next_steps, asserted))
+
+    def testEndStage(self):
+        profile = MockProfile(pref_dispensing_style='k')
+        user = MockUser(profile)
+        recipe = Mock(type='a')
+        steps = [MockStep(id=1, type='ferm1', date=1, entry_date=1)]
+        brew = Mock(brewer=user, recipe=recipe, last_state='ferm1', step_set=FkSet(steps))
+        next_steps = models.NextStepGenerator(brew).get_next_steps()
+        possible_types = [step.type.id for step in next_steps.possible]
+        maybe_types = [step.type.id for step in next_steps.maybe]
+        self.assertTrue('keg' in possible_types, str(next_steps))
+        self.assertTrue('consumed' not in possible_types, str(next_steps))
+        self.assertTrue('bottle' in maybe_types, str(next_steps))
+        
+
+    def testFuture(self):
+        profile = MockProfile()
+        user = MockUser(profile)
+        steps = [MockStep(id=1, type='strike', entry_date=5, date=105),
+                 MockStep(id=2, type='dough', entry_date=6, date=106),
+                 MockStep(id=3, type='mash', entry_date=7, date=107),
+                 MockStep(id=4, type='boil-start', entry_date=10, date=110),
+                 MockStep(id=5, type='pitch', entry_date=20, date=120)]
+        for recipe_type in ('a', 'e'):
+            recipe = Mock(type=recipe_type)
+            brew = Mock(brewer=user, recipe=recipe, last_state=None, step_set=FkSet(steps))
+            next_steps = models.NextStepGenerator(brew).get_next_steps()
+            for step in next_steps.possible:
+                next_step_type_in_defined_steps = step.type.id in [s.type for s in steps]
+                if next_step_type_in_defined_steps:
+                    self.assertTrue(step.existing_step)
+            possible_types = [s.type.id for s in next_steps.possible]
+            to_assert = {'a': ['strike'],
+                         'e': ['steep', 'boil-start']}[recipe_type]
+            self.assertTrue(len(next_steps.possible) == len(to_assert),
+                            'expecting %d items in %s for type %s' % (len(to_assert), next_steps, recipe_type))
+            for asserted in to_assert:
+                self.assertTrue(asserted in possible_types, '%s asserted %s' % (next_steps, asserted))
+        steps[0].date = 125
+        recipe = Mock(type='a')
+        brew = Mock(brewer=user, recipe=recipe, last_state='strike', step_set=FkSet(steps))
+        next_steps = models.NextStepGenerator(brew).get_next_steps()
+        self.assertTrue(len(next_steps.possible) == 2, next_steps)
+        import itertools
+        for next_step,expected_type in itertools.izip(next_steps.possible, ['dough', 'mash']):
+            # @fixme: of course, these are wrong given how we really want future-dated steps to work.
+            self.assertTrue(next_step.type.id == expected_type, next_step)
+            self.assertTrue(next_step.date == 125, next_step)
+
+
+#class BrewViewTest (AppTestCase):
+
+    # brew has no steps:
+    #   next-step = 'starter' or something
+    #   with type=boil-start, next-step = boil-start
+    # brew has future steps:
+    #   brew has relevant future steps:
+    #       no ?type: next-step = 

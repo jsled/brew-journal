@@ -71,7 +71,15 @@ class RegisterForm (forms.Form):
             #if not data.has_key('email') or data['email'] == u'':
             #    raise forms.ValidationError('Must have valid email')
         return self.cleaned_data
-            
+
+
+def test_maybe_create_user_profile(user):
+    try:
+        profile = user.get_profile()
+    except models.UserProfile.DoesNotExist,e:
+        user_profile = models.UserProfile(user=user)
+        user_profile.save()
+           
 
 def root_post(request):
     username = request.POST['username']
@@ -96,6 +104,7 @@ def root_post(request):
                                             auth_form.cleaned_data['password'])
             if not user:
                 auth_errors = forms.util.ErrorList([u'unknown error creating user [%s]' % (username)])
+            test_maybe_create_user_profile(user)
             user = authenticate(username = auth_form.cleaned_data['username'],
                                 password = auth_form.cleaned_data['password'])
             login(request, user)
@@ -112,6 +121,7 @@ def root_post(request):
             pass
         else:
             login(request, user)
+            test_maybe_create_user_profile(user)
             return HttpResponseRedirect('/user/%s/' % (user.username))
     else:
         auth_errors = forms.util.ErrorList([u'unknown form submission style [%s]' % (submit_type)])
@@ -164,31 +174,44 @@ def user_index(request, user_name):
 
 
 class UserProfileForm (forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ('first_name','last_name','email')
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    email = forms.EmailField()
     new_pass_1 = forms.CharField(widget=forms.PasswordInput, label="change password", required=False)
     new_pass_2 = forms.CharField(widget=forms.PasswordInput, label="change password (again)", required=False)
 
+    class Meta:
+        model = models.UserProfile
+        exclude = ('user')
+
+
 def user_profile(request, user_name):
     uri_user = User.objects.get(username__exact = user_name)
-    if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+    if not uri_user:
+        return HttpResponseNotFound('no such user [%s]' % (user_name))
     if request.user.is_authenticated() and request.user != uri_user:
         return HttpResponseForbidden('you [%s] can access the profile for user [%s]' % (request.user.username, uri_user.userrname))
-    profile_form = UserProfileForm(instance=uri_user)
+    profile_form = UserProfileForm(initial={'first_name': uri_user.first_name,
+                                            'last_name': uri_user.last_name,
+                                            'email': uri_user.email},
+                                   instance=uri_user.get_profile())
     if request.method == 'POST':
         # handle save
-        profile_form = UserProfileForm(request.POST, instance=uri_user)
+        profile_form = UserProfileForm(request.POST, instance=uri_user.get_profile())
         if not profile_form.errors:
-            new_user = profile_form.save(commit=False)
-            uri_user.first_name = new_user.first_name
-            uri_user.last_name = new_user.last_name
-            uri_user.email = new_user.email
-            new_pass_1,new_pass_2 = request.POST['new_pass_1'],request.POST['new_pass_2']
+            profile = profile_form.save(commit=False)
+            profile.user = uri_user
+            profile.save()
+            #
+            cleaned_data = profile_form.cleaned_data
+            uri_user.first_name = cleaned_data['first_name']
+            uri_user.last_name = cleaned_data['last_name']
+            uri_user.email = cleaned_data['email']
+            new_pass_1,new_pass_2 = cleaned_data['new_pass_1'], cleaned_data['new_pass_2']
             if new_pass_1 and new_pass_1 == new_pass_2:
                 uri_user.set_password(new_pass_1)
             uri_user.save()
-            return HttpResponseRedirect('/user/%s' % (uri_user.username))
+            return HttpResponseRedirect('/user/%s/' % (uri_user.username))
     return HttpResponse(render('user/profile.html', request=request, user=uri_user, profile_form=profile_form, std=standard_context()))
 
 class BrewForm (forms.ModelForm):
@@ -309,47 +332,32 @@ def brew(request, user_name, brew_id, step_id):
     step = None
     if step_id:
         step = models.Step.objects.get(pk=step_id)
-        if not step: return HttpResponseNotFound('no such user [%s] brew [%s] step id [%s]' % (user_name, brew_id, step_id))
+        if not step:
+            return HttpResponseNotFound('no such user [%s] brew [%s] step id [%s]' % (user_name, brew_id, step_id))
     if request.method == 'POST':
         return brew_post(request, uri_user, brew, step)
     # else:
     step_form = None
-    step_edit = False
+    step_expand_edit = False
     if step:
         step_form = StepForm(instance=step)
-        step_edit = True
+        step_expand_edit = True
     if not step_form:
-        default_date = datetime.now()
+        next_steps = brew.next_steps()
         explicit_type = request.method == 'GET' and request.GET.has_key('type')
-        next_step_type = 'starter'
         if explicit_type:
+            step_expand_edit = True
             next_step_type = request.GET['type']
-            step_edit = True
+            steps = [step for step in next_steps.possible if step.type.id == next_step_type]
+            if len(steps) > 0:
+                next_step = steps[0]
         else:
-            step_edit, step_form = _lame_compute_next_steps(brew, default_date)
-        if not step_form:
-            step_form = StepForm(initial={'brew': brew.id, 'date': default_date, 'type': next_step_type})
-    return brew_render(request, uri_user, brew, step_form, step_edit)
-
-def _lame_compute_next_steps(brew, default_date):
-    step_edit = False
-    form = None
-    steps = [step for step in brew.step_set.all()]
-    if len(steps) > 0:
-        non_future_steps = [step for step in steps if not step.in_future()]
-        if len(non_future_steps) > 0:
-            last_step = non_future_steps[-1]
-            if (datetime.now() - last_step.date).days > 2:
-                default_date = last_step.date
-        next_step_types = brew.next_step_types()
-        if len(next_step_types) > 0:
-            id,step = next_step_types[0]
-            if not id:
-                next_step_type = step.id
-            else:
-                step_edit = True
-                form = StepForm(initial={'date': default_date}, instance=step)
-    return step_edit, form
+            next_step = next_steps.possible[0]
+        if next_step.existing_step:
+            step_form = StepForm(initial={'date': next_step.date or datetime.now()}, instance=next_step.existing_step)
+        else:
+            step_form = StepForm(initial={'brew': brew.id, 'date': next_step.date or datetime.now(), 'type': next_step.type.id})
+    return brew_render(request, uri_user, brew, step_form, step_expand_edit)
 
 
 class StarForm (forms.ModelForm):

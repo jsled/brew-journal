@@ -93,7 +93,7 @@
                 "brewer": 1,
                 "notes": "10 lbs 2-row (Maris Otter)\n1.25 lbs Crystal 60°\n0.75 lbs Chocolate\n1 oz Northern Brewer, plug, @ 60min\nWyeast 1272 yeast cake (from 80/-)",
                 "last_update_date": "2007-12-02",
-                "last_state": "ferm2",
+                "last_state": "keg",
                 "is_done": 0}},
 
 {"model": "app.Step", "pk": 3, "fields": {"brew": 1, "type": "strike", "date": "2008-03-12 17:15:00", "volume": "4.5", "temp": 167, "volume_units": "gl", "temp_units": "f", "entry_date": "2008-03-12 17:15:00"}},

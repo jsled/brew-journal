@@ -4,11 +4,23 @@ from django.contrib import auth
 import itertools
 import urllib
 from brewjournal import util
+from decimal import Decimal
+
+class StepFilter (object):
+    def __init__(self, conditions=None):
+        self._conditions = conditions or []
+
+    def eval(self, **kwargs):
+        for condition in self._conditions:
+            if not condition(**kwargs):
+                return False
+        return True
 
 class StepType (object):
-    def __init__(self, id, label, interesting_fields=None, next_steps=None):
+    def __init__(self, id, label, input_filter, interesting_fields=None, next_steps=None):
         self._id = id
         self._label = label
+        self._input_filter = input_filter or StepFilter()
         if not interesting_fields: interesting_fields = []
         if not next_steps: next_steps = []
         self._interesting_fields = interesting_fields
@@ -18,10 +30,66 @@ class StepType (object):
     label = property(lambda s: s._label)
     interesting_fields = property(lambda s: s._interesting_fields)
     next_steps = property(lambda s: s._next_steps)
+    input_filter = property(lambda s: s._input_filter)
 
     def is_terminal(self):
         return len(self.next_steps) == 0
 
+RecipeTypes = (
+    ('e', 'Extract'),
+    ('p', 'Partial Mash'),
+    ('a', 'All Grain'),
+    )
+
+DispenseTypes = (
+    ('k', 'kegging'),
+    ('b', 'bottling')
+    )
+    
+class UserProfile (models.Model):
+    user = models.ForeignKey(auth.models.User, unique=True)
+
+    pref_brew_type = models.CharField(max_length=1, choices=RecipeTypes, default='a')
+    pref_make_starter = models.BooleanField(default=False)
+    pref_secondary_ferm = models.BooleanField(default=False)
+    pref_dispensing_style = models.CharField(max_length=1, choices=DispenseTypes, default='b')
+
+    def __getitem__(self, key):
+        return self.__dict__.get(key, None)
+
+
+def filter_user_pref(preference_name, value=True):
+    def _foo(**kwargs):
+        user = kwargs['user']
+        profile = user.get_profile()
+        return profile[preference_name] == value
+    return _foo
+
+def filter_recipe_type(types):
+    def _foo(**kwargs):
+        recipe = kwargs['recipe']
+        return recipe.type in types
+    return _foo
+
+def filter_recipe_is_lager():
+    return lambda **kw: True
+
+def filter_recipe_estimated_og_above(val):
+    return lambda **kw: True
+
+no_filter = StepFilter()
+
+# Other possible preferences/variants
+# -----------------------------------
+# practice fwh?
+# typical sparge schedule: 1, 2, 3 steps?
+# all_grain journal detail level:
+#  - low: dough -> sparge -> boil-start
+#  - medium: dough -> batch1-start -> batch1-end [-> batchN-start -> batchN-end] -> boil-start
+#  - high:
+
+# to get a graph of step relations/dependencies:
+#
 # ./manage.py shell
 # from app import models
 # print 'digraph G {';
@@ -30,41 +98,42 @@ class StepType (object):
 #     print '%s -> %s;' % (step.id.replace('-', '_'), next.replace('-', '_'))
 # print '}'
 # | dot -Tpng -o step-graph.png -
-new_step_types = [ StepType('buy', 'buy ingredients', ['time'], ['starter', 'strike', 'steep']),
-                   StepType('starter', 'make starter', ['time', 'volume'], ['strike', 'steep']),
-                   StepType('strike', 'strike water', ['volume', 'temp'], ['dough']),
-                   StepType('dough', 'dough-in', ['volume', 'temp'], ['mash']),
-                   StepType('mash', 'mash', ['time', 'temp'], ['recirc', 'vorlauf', 'sparge']),
-                   StepType('recirc', 'recirculation', [], ['vorlauf', 'sparge']),
-                   StepType('vorlauf', 'vorlauf', ['time'], ['sparge']),
-                   StepType('sparge', 'sparge', ['volume', 'temp'], ['batch1-start', 'boil-start']),
-                   StepType('fwh', 'first wort hopping', ['time'], ['batch1-start', 'boil-start']),
-                   StepType('batch1-start', '1st runnings, start', ['gravity'], ['batch1-end']),
-                   StepType('batch1-end', '1st runnings, end', ['gravity', 'volume'], ['batch2-start', 'boil-start']),
-                   StepType('batch2-start', '2nd runnings, start', ['gravity'], ['batch2-end']),
-                   StepType('batch2-end', '2nd runnings, end', ['gravity', 'volume'], ['batch3-start', 'boil-start']),
-                   StepType('batch3-start', '3rd runnings, start', ['gravity'], ['batch3-end']),
-                   StepType('batch3-end', '3rd runnings, end', ['gravity', 'volume'], ['boil-start']),
-                   StepType('steep', 'steep', ['time', 'volume', 'temp'], ['boil-start']),
-                   StepType('boil-start', 'boil, start', ['time'], ['boil-add', 'boil-end']),
-                   StepType('boil-add', 'boil, addition', ['time'], ['boil-add', 'boil-end']),
-                   StepType('boil-end', 'boil, end', ['time'], ['pitch']),
-                   StepType('pitch', 'pitch', ['time', 'gravity', 'volume', 'temp'], ['ferm1']),
-                   StepType('ferm1', 'primary fermentation', ['time', 'gravity', 'temp'], ['sample', 'ferm2', 'ferm-add', 'lager', 'keg', 'bottle', 'aging']),
-                   StepType('ferm2', 'secondary fermentation', ['time', 'gravity', 'temp'], ['sample', 'ferm-add', 'lager', 'keg', 'bottle', 'aging']),
-                   StepType('sample', 'gravity sample', ['gravity'], ['ferm-add', 'ferm2', 'sample','lager', 'keg', 'bottle', 'aging']),
-                   StepType('ferm-add', 'addition', ['time'], ['sample', 'ferm-add', 'lager', 'keg', 'bottle', 'aging']),
-                   StepType('lager', 'lagering', ['time', 'temp'], ['sample', 'condition', 'keg', 'bottle', 'aging']),
-                   StepType('condition', 'conditioning', ['time', 'temp'], ['keg', 'bottle', 'aging']),
-                   StepType('keg', 'kegged', ['time', 'temp', 'gravity'], ['consumed']),
-                   StepType('bottle', 'bottled', ['time'], ['consumed']),
-                   StepType('aging', 'aging', [], ['keg', 'bottle']),
-                   StepType('consumed', 'consumed', [], []),
+new_step_types = [ StepType('buy', 'buy ingredients', no_filter, ['time'], ['starter', 'strike', 'steep']),
+                   StepType('starter', 'make starter', StepFilter([filter_user_pref('pref_make_starter')]), ['time', 'volume'], ['strike', 'steep']),
+                   StepType('strike', 'strike water', StepFilter([filter_recipe_type(['a', 'p'])]), ['volume', 'temp'],  ['dough', 'mash']),
+                   StepType('dough', 'dough-in', no_filter, ['volume', 'temp'], ['mash', 'sparge']),
+                   StepType('mash', 'mash', no_filter, ['time', 'temp'], ['recirc', 'vorlauf', 'sparge']),
+                   StepType('recirc', 'recirculation', no_filter, [], ['vorlauf', 'sparge']),
+                   StepType('vorlauf', 'vorlauf', no_filter, ['time'], ['sparge']),
+                   StepType('sparge', 'sparge', no_filter, ['volume', 'temp'], ['batch1-start', 'boil-start']),
+                   StepType('fwh', 'first wort hopping', no_filter, ['time'], ['batch1-start', 'boil-start']),
+                   StepType('batch1-start', '1st runnings, start', no_filter, ['gravity'], ['batch1-end']),
+                   StepType('batch1-end', '1st runnings, end', no_filter, ['gravity', 'volume'], ['batch2-start', 'boil-start']),
+                   StepType('batch2-start', '2nd runnings, start', no_filter, ['gravity'], ['batch2-end']),
+                   StepType('batch2-end', '2nd runnings, end', no_filter, ['gravity', 'volume'], ['batch3-start', 'boil-start']),
+                   StepType('batch3-start', '3rd runnings, start', no_filter, ['gravity'], ['batch3-end']),
+                   StepType('batch3-end', '3rd runnings, end', no_filter, ['gravity', 'volume'], ['boil-start']),
+                   StepType('steep', 'steep', StepFilter([filter_recipe_type(['e', 'p'])]), ['time', 'volume', 'temp'], ['boil-start']),
+                   StepType('boil-start', 'boil, start', StepFilter([filter_recipe_type(['e'])]), ['time'], ['boil-add', 'boil-end']),
+                   StepType('boil-add', 'boil, addition', no_filter, ['time'], ['boil-add', 'boil-end']),
+                   StepType('boil-end', 'boil, end', no_filter, ['time'], ['pitch']),
+                   StepType('pitch', 'pitch', no_filter, ['time', 'gravity', 'volume', 'temp'], ['ferm1']),
+                   StepType('ferm1', 'primary fermentation', no_filter, ['time', 'gravity', 'temp'], ['sample', 'ferm2', 'ferm-add', 'lager', 'keg', 'bottle', 'aging']),
+                   StepType('ferm2', 'secondary fermentation', StepFilter([filter_user_pref('pref_secondary_ferm')]), ['time', 'gravity', 'temp'],
+                            ['sample', 'ferm-add', 'lager', 'keg', 'bottle', 'aging']),
+                   StepType('sample', 'gravity sample', no_filter, ['gravity'],
+                            ['ferm-add', 'ferm2', 'sample','lager', 'keg', 'bottle', 'aging']),
+                   StepType('ferm-add', 'addition', no_filter, ['time'], ['sample', 'ferm-add', 'lager', 'keg', 'bottle', 'aging']),
+                   StepType('lager', 'lagering', StepFilter([filter_recipe_is_lager()]), ['time', 'temp'], ['sample', 'condition', 'keg', 'bottle', 'aging']),
+                   StepType('condition', 'conditioning', no_filter, ['time', 'temp'], ['keg', 'bottle', 'aging']),
+                   StepType('keg', 'kegged', StepFilter([filter_user_pref('pref_dispensing_style', 'k')]), ['time', 'temp', 'gravity'], ['consumed']),
+                   StepType('bottle', 'bottled', StepFilter([filter_user_pref('pref_dispensing_style', 'b')]), ['time'], ['consumed']),
+                   StepType('aging', 'aging', StepFilter([filter_recipe_estimated_og_above(Decimal('1.100'))]), [], ['keg', 'bottle']),
+                   StepType('consumed', 'consumed', no_filter, [], []),
                ]
 
 step_types_by_id = dict([(type.id, type) for type in new_step_types])
 step_types_ui_choices = [(type.id, type.label) for type in new_step_types]
-
 
 def flatten(*args):
     rtn = []
@@ -100,7 +169,6 @@ Temp_Units = [
     ]
 
 All_Units = flatten(Weight_Units, Volume_Units)
-
 
 class Style (models.Model):
     name = models.CharField(max_length=100)
@@ -189,12 +257,6 @@ class Yeast (models.Model):
 
 
 class Recipe (models.Model):
-    Types = (
-        ('e', 'Extract'),
-        ('p', 'Partial Mash'),
-        ('a', 'All Grain'),
-        )
-
     author = models.ForeignKey(auth.models.User)
     name = models.CharField(max_length=200)
     insert_date = models.DateTimeField(default=datetime.datetime.now)
@@ -202,7 +264,7 @@ class Recipe (models.Model):
     batch_size_units = models.CharField(max_length=4, choices = Volume_Units, default='gl')
     style = models.ForeignKey(Style, null=True)
     derived_from_recipe = models.ForeignKey('self', null=True, blank=True)
-    type = models.CharField(max_length=1, choices=Types, default='a')
+    type = models.CharField(max_length=1, choices=RecipeTypes, default='a')
     source_url = models.URLField(max_length=300, blank=True, null=True, verify_exists=True)
     notes = models.TextField(null=True, blank=True)
 
@@ -263,6 +325,7 @@ class BrewManager (models.Manager):
         return Brew.objects.filter(brewer=user).extra(where=['id IN (SELECT brew_id FROM app_step WHERE entry_date < date)'])
 
     def brews_pre_brew(self, user):
+        # @fixme: if the brew date is in the future, too?
         future_brews = Brew.objects.brews_with_future_steps(user)
         def pre_brew(brew):
             future_steps = brew.future_steps()
@@ -300,40 +363,25 @@ class Brew (models.Model):
         It's the caller's responsibility to save the updated object.
         '''
         # only allow non-future steps to update state.
-        steps = [step for step in steps if not step.in_future()] or []
-        if len(steps) > 0:
-            last_step = steps[-1]
+        past_steps = [step for step in steps if not step.in_future()] or []
+        if len(past_steps) > 0:
+            last_step = past_steps[-1]
             self.last_update_date = last_step.date
             self.last_state = last_step.type
             self.is_done = step_types_by_id[last_step.type].is_terminal()
             if not self.brew_date:
                 # @fixme; this could be better, taking the first actually-brewing-related step, rather than just index=0.
                 # @fixme: then, get "is_actually_brewing_related" into StepTypes model
-                self.brew_date = steps[0].date
+                self.brew_date = past_steps[0].date
         else:
             self.brew_date = None
             self.last_update_date = None
             self.last_state =  None
             self.is_done = False
 
-    def next_step_types(self):
-        '''
-        @return a list of possible next step types, as tuples.
-        next[0] is None if the step does not exist, then next[1] is the StepType.
-        Otherwise, next[0] is an existing step id to be updated, and next[1] is the Step.
-        '''
-        rtn_next_steps = [(step.id, step) for step in self.step_set.all() if step.in_future()]
-        existing_next_step_types = dict([(type,None) for id,type in rtn_next_steps])
-        if self.last_state:
-            last_step = step_types_by_id[self.last_state]
-            for next_step in last_step.next_steps:
-                if existing_next_step_types.has_key(next_step):
-                    continue
-                rtn_next_steps.append((None,step_types_by_id[next_step]))
-        # @fixme: move "is_initial" to StepType structure, factor out, &c.
-        # @fixme: this is really a function of the type of recipe (extract, all-grain, &c.)
-        return rtn_next_steps \
-               or [(None,step_types_by_id[x]) for x in ['starter', 'strike', 'steep', 'boil-start']]
+    def next_steps(self):
+        gennie = NextStepGenerator(self)
+        return gennie.get_next_steps()
     
     def future_steps(self):
         return [step for step in self.step_set.all() if step.in_future()]
@@ -342,16 +390,6 @@ class Brew (models.Model):
         if not self.recipe:
             return "unnamed"
         return self.recipe.name
-
-
-def get_likely_next_step_type_id(last_step_type_id):
-    '''Given the last step, determine the likely next step, by StepType id'''
-    global new_step_types
-    global step_types_by_id
-    last_step = step_types_by_id[last_step_type_id]
-    if len(last_step.next_steps) > 0:
-        return last_step.next_steps[0]
-    return None
 
 
 class StepManager (models.Manager):
@@ -413,6 +451,86 @@ class Step (models.Model):
         ordering = ['date']
 
 
+class NextStep (object):
+    def __init__(self, type, date, existing_step=None):
+        self.type = type
+        self.date = date
+        self.existing_step = existing_step
+
+    def __unicode__(self):
+        existing_part = u''
+        if self.existing_step:
+            existing_part = ' (existing id %d)' % (self.existing_step.id)
+        date_part = u''
+        if self.date:
+            date_part = u' @ %s' % (self.date)
+        return u'[%s%s%s]' % (self.type.id, date_part, existing_part)
+
+    def __str__(self):
+        return self.__unicode__()
+
+
+class NextSteps (object):
+    def __init__(self, possible=None, maybe=None):
+        self.possible = possible or []
+        self.maybe = maybe or []
+
+    def __unicode__(self):
+        return u'possible: %s, maybe: %s' % ([str(x) for x in self.possible],
+                                             [str(x) for x in self.maybe])
+
+    def __str__(self):
+        return self.__unicode__()
+
+
+class NextStepGenerator (object):
+    '''
+    Encapsulate the process of getting the next-step structure from a brew, user, prefs, &c.
+    '''
+    def __init__(self, brew, **kwargs):
+        self._brew = brew
+        self._user = kwargs.get('user', brew.brewer)
+        self._recipe = brew.recipe
+
+    def get_next_steps(self):
+        next_steps = NextSteps()
+        to_try = []
+        last_date = None
+        if self._brew.last_state:
+            last_step_type = step_types_by_id[self._brew.last_state]
+            try:
+                last_step = [s for s in self._brew.step_set.all() if s.type == self._brew.last_state][0]
+            except Exception,e:
+                print 'brew,last_state,steps',self._brew,self._brew.last_state,self._brew.step_set.all()
+                raise
+            # @fixme: assert(last_step is not None)
+            last_date = last_step.date
+            to_try.extend(last_step_type.next_steps)
+        else:
+            # @fixme: get these from StepTypes themselves
+            to_try.extend(['starter', 'strike', 'steep', 'boil-start'])
+        future_steps = [step for step in self._brew.step_set.all() if step.in_future()]
+        for typeid in to_try:
+            steptype = step_types_by_id[typeid]
+            appropriate_list = None
+            if steptype.input_filter.eval(brew=self._brew, user=self._user, recipe=self._recipe):
+                appropriate_list = next_steps.possible
+            else:
+                appropriate_list = next_steps.maybe
+            #
+            existing_step = None
+            next_step_date = last_date
+            matching_future_steps = [step for step in future_steps if step.type == typeid]
+            if len(matching_future_steps) > 0:
+                existing_step = matching_future_steps[0]
+                if existing_step.date > next_step_date:
+                    next_step_date = existing_step.date
+            #
+            next_step = NextStep(steptype, next_step_date, existing_step)
+            appropriate_list.append(next_step)
+        return next_steps
+       
+
 class ShoppingList (object):
     '''
     takes a list of pre-brews, and consolidates the ingredients by type
@@ -459,6 +577,3 @@ class ShoppingList (object):
                 for recipe_item in recipe_item_getter():
                     item = item_type_getter(recipe_item)
                     collection.setdefault(item, []).append((recipe_item,brew))
-            
-        
-

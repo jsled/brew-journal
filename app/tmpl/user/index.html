@@ -61,20 +61,22 @@
       <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
       <td>${brew.get_last_state_display()}</td>
       <span py:def="step(brew, next)" py:strip="True">
-          <py:if     test="next[0]"><a href="/user/${brew.brewer.username}/brew/${brew.id}/step/${next[0]}/">${action(next[1].get_type_display())}</a></py:if>
-          <py:if test="not next[0]"><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=${next[1].id}">${action(next[1].label)}</a></py:if>
+          <py:choose test="">
+              <py:when test="next.existing_step"><a href="/user/${brew.brewer.username}/brew/${brew.id}/step/${next.existing_step.id}/">${action(next.existing_step.get_type_display())}</a></py:when>
+              <py:otherwise><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=${next.type.id}">${action(next.type.label)}</a></py:otherwise>
+          </py:choose>
       </span>
       <td py:if="std.auth_user_is_user(request, user)">
-          <py:for each="next in brew.next_step_types()[0:2]">
+          <py:for each="next in brew.next_steps().possible[0:2]">
               ${step(brew, next)}
           </py:for>
-          <py:if test="len(brew.next_step_types()) > 2">
+          <py:if test="len(brew.next_steps().possible) > 2">
               <span id="more_steps_brew_${brew.id}">
                   <span>
                       <a href="#" onClick="$('#more_steps_brew_${brew.id}').children().toggle(); return false;">(more)</a>
                   </span>
                   <span style="display: none">
-                      <py:for each="next in brew.next_step_types()[2:]">
+                      <py:for each="next in brew.next_steps().possible[2:]">
                           ${step(brew, next)}
                       </py:for>
                       <a href="#" onClick="$('#more_steps_brew_${brew.id}').children().toggle(); return false;">(less)</a>

@@ -1,7 +1,7 @@
 -*- org -*-
 * Concepts
 ** Future Steps
-
+*** Notes
 Future steps are used a couple of ways:
 - to schedule out a whole brew session, with rough times, &c.
 - to schedule transition points in a fermentation session
@@ -11,8 +11,8 @@ Future steps are used a couple of ways:
 When operating with a mix of future and realized steps; let's assume a
 time-stamped mix of future (f_) and real (r_) events:
 
-   [f_0, f_5, f_10, f_15]      | 4 future steps
--> [r_1, f_5, f_10, f_15]      | realize the first step, about the right time
+   [f_0,  f_5, f_10, f_15]     | 4 future steps
+-> [r_1,  f_5, f_10, f_15]     | realize the first step, about the right time
 -> [r_1, r_12, f_10, f_15]     | realize the second step *after* the future 3rd step
 
 
@@ -55,7 +55,7 @@ of the Step-relation depgraph?  For instance, we create future steps for
 intervening 'mash' and 'sparge' steps?
 
 If the immediately next Future step is in the (multi-level) tree of future
-steps possible from the newly-added Step, we're in one of two sitautions:
+steps possible from the newly-added Step, we're in one of two situations:
 
 - the new step is intentionally "splitting" the time the steps were
   allocating.
@@ -84,29 +84,26 @@ We have a few options:
 Next Steps
 ----------
 
-At any given point, the most likely Next Steps follow from the latest
-realized step.  If those steps coincide with any future steps, then the next
-steps *are* the future steps (for update), otherwise they are steps for
-creation.
-
-** Next Steps
-
 At any given point, the most recently realized step "suggests" a set of
 potential 'next' steps that can be taken.  Elements of this set may or may
 not align with any temporally-next Future Steps.  If they do, then that
 Future step should be taken as the Next step, and used in its place, though
 this is a function of the user interface to a large degree.
 
-*** Use Cases
+"future" vs. future
+-------------------
 
-**** Historical Entry
+What is the essence of "future" steps?  They haven't happened, yet.
+
+*** Use Cases
+***** Historical Entry
 
 - entry_date >> date
 - dates are sequentially entered
 - Step.date is all that matters
 - there are never "future" steps
 
-**** Immediate Entry
+***** Immediate Entry
 
 - entry_date ~~ date
 - items are sequentially entered
@@ -114,22 +111,15 @@ this is a function of the user interface to a large degree.
 - "now" used as default for .date, value for .entry_date
 - there are never "future" steps
 
-**** Forward Planning
+***** Forward Planning
 
 - entry_date << date
 - items are sequentially entered
 - Step date is all that matters
 
-**** Forward Planning with After-The-Fact Fixup
+***** Forward Planning with After-The-Fact Fixup
 
 - entry_date << date *and* entry_date > date
-
-*** Impl?
-
-During step editing, clock time is either before, equal-to or after
-Step.date.
-
-.is_future = (now < .date)
 
 ** Medals/Achievements
 *** medals are awarded based on achieving a condition
@@ -142,6 +132,11 @@ is now allowed.
 
 * Todo
 ** bugs, misc
+*** TODO /admin/ broken
+*** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
+*** TODO there's *no* logging on dreamhost, which is annoying.
+*** TODO cascading /recipe/{id}/hops/hops/hops/… in the case of ingredient add failure
+*** TODO user profile should require existing password for password change; use django form validation/cleaning routines
 *** DONE move to django 1.0
     CLOSED: [2008-12-26 Fri]
 See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges
@@ -149,8 +144,6 @@ See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges
     CLOSED: [2008-12-26 Fri]
 *** DONE login/new-account failures don't have standard form behavior; wrong password has no feedback
     CLOSED: [2008-12-26 Fri]
-*** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
-*** TODO there's *no* logging on dreamhost, which is annoying.
 *** DONE 500/404 page handling
     CLOSED: [2008-12-17 Wed 21:48]
 Mostly on public/production site.
@@ -169,10 +162,11 @@ handler500 = 'app.views.custom_500'
     CLOSED: [2008-08-31 Sun 18:32]
 *** DONE /user/{user}/brew/{id}?type={type} doesn't work.
 *** DONE with validation error on step addition, the form is correctly populated, but collapsed
+** weirdness
+*** when journaling after racking to secondary, is it entered as primary-ferm or secondary-ferm?
+Maybe Steps should strictly be "transitions" or "activtives", not just states
+of being.
 ** shitty things
-*** "next_possible_step[s]" logic, including future-dated steps
-**** semi-duplicated between model and (view) brew()
-**** See [[*Future%20Steps][future steps]]
 *** recipe_new()
 *** toggled <div> py:attrs style form mumble
 ** tests
@@ -501,14 +495,10 @@ bright: #FFC59E
 nice blue/purple/grey: #6977B0
 nice soft green: #75B368
 
-* Weirdness
-** when journaling after racking to secondary, is it entered as primary-ferm or secondary-ferm?
-
-Maybe Steps should strictly be "transitions" or "activtives", not just states
-of being.
-
 * Resources
 ** http://www.beersmith.com/GrainList.htm
+** Testing
+*** http://ericholscher.com/blog/2008/aug/14/using-mock-objects-django-and-python-testing/
 * git notes
 
 git fetch
