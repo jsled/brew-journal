@@ -121,15 +121,6 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 - entry_date << date *and* entry_date > date
 
-** Medals/Achievements
-*** medals are awarded based on achieving a condition
-*** we should be tolerant of data entered in non-temporal order
-*** "standing rules"
-
-it may make sense to have some sort of trigger-based rule system to determine
-when/what data needs to be loaded in order to determine if a particular medal
-is now allowed.
-
 * Todo
 ** bugs, misc
 *** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
@@ -241,14 +232,14 @@ of being.
 **** http://beeradvocate.com/forum/read/1102362#1102497
 *** computed values
 **** efficiency
-***** TODO [#S] "?mumble?" vs. "brewhouse" efficiency
 ***** DONE [#N] need: grains + gravity readings + volume reading
 ***** TODO [#N] efficiency tracker (based on 'system'?)
-**** A/V
+***** TODO [#S] "?mumble?" vs. "brewhouse" efficiency
+**** alc/vol
 ***** TODO [#S] estimated: fn(grains, efficiency, yeast.attenuation)
 ***** DONE [#N] actual: FG - OG
 **** OG
-***** TODO [#S] estimated: fn(grains, efficiency, yeast.attenuation)
+***** TODO [#S] estimated: fn(grains, efficiency)
 ***** actual: gravity at 'pitch'
 **** FG
 ***** TODO [#S] estimated: fn(grains, est_OG, yeast.attenuation)
@@ -365,9 +356,6 @@ of being.
 *** import/export
 *** add 'equipment'/'rig'
 ** minor
-*** TODO move to django 1.0
-See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges
-*** TODO move to a defined/modern genshi release?
 *** TODO be able to (re-)associate a recipe with a Brew
 *** focus improvements
 **** TODO profile form after new user creation
@@ -395,8 +383,8 @@ See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges
 - What other things should be part of the recipe?
 *** improve user profile
 **** TODO preferences
-***** default recipe type (extract, partial-mash, all-grain)
-***** default units (english/metric)
+***** DONE default recipe type (extract, partial-mash, all-grain)
+***** TODO default units (english/metric)
 **** TODO identity links in profile to other fora
 ***** beeradvocate
 ***** tastybrew
@@ -497,7 +485,8 @@ nice soft green: #75B368
 * Resources
 ** http://www.beersmith.com/GrainList.htm
 ** Testing
-*** http://ericholscher.com/blog/2008/aug/14/using-mock-objects-django-and-python-testing/
+*** http://ericholscher.com/blog/2008/aug/14/using-mock-objects-django-and-python-testing/ - datetime.datetime monkey patching
+*** http://www.voidspace.org.uk/python/weblog/arch_d7_2008_07_26.shtml - module monkey patching as decorator
 * git notes
 
 git fetch
