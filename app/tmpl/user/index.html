@@ -160,7 +160,7 @@
       <td colspan="3"><em>no historical brews</em></td>
     </tr>
     <tr py:for="brew in done_brews">
-      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe.name}</a></td>
+      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}/">${brew.recipe.name}</a></td>
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
       <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
     </tr>
