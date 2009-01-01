@@ -343,6 +343,7 @@ def brew(request, user_name, brew_id, step_id):
         step_form = StepForm(instance=step)
         step_expand_edit = True
     if not step_form:
+        next_step = None
         next_steps = brew.next_steps()
         explicit_type = request.method == 'GET' and request.GET.has_key('type')
         if explicit_type:
@@ -352,11 +353,15 @@ def brew(request, user_name, brew_id, step_id):
             if len(steps) > 0:
                 next_step = steps[0]
         else:
-            next_step = next_steps.possible[0]
-        if next_step.existing_step:
-            step_form = StepForm(initial={'date': next_step.date or datetime.now()}, instance=next_step.existing_step)
+            if len(next_steps.possible) > 0:
+                next_step = next_steps.possible[0]
+        if next_step:
+            if next_step.existing_step:
+                step_form = StepForm(initial={'date': next_step.date or datetime.now()}, instance=next_step.existing_step)
+            else:
+                step_form = StepForm(initial={'brew': brew.id, 'date': next_step.date or datetime.now(), 'type': next_step.type.id})
         else:
-            step_form = StepForm(initial={'brew': brew.id, 'date': next_step.date or datetime.now(), 'type': next_step.type.id})
+            step_form = StepForm(initial={'brew': brew.id, 'date': datetime.now()})
     return brew_render(request, uri_user, brew, step_form, step_expand_edit)
 
 

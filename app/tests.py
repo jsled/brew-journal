@@ -348,4 +348,5 @@ class NextStepsTest (TestCase):
     #   with type=boil-start, next-step = boil-start
     # brew has future steps:
     #   brew has relevant future steps:
-    #       no ?type: next-step = 
+    #       no ?type: next-step =
+    # brew is "complete", has no future steps
