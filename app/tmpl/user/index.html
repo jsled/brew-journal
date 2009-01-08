@@ -56,7 +56,10 @@
       <td colspan="3"><em>no active brews</em></td>
     </tr>
     <tr py:for="brew in brews">
-      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}">${brew.recipe.name}</a></td>
+      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}"><py:choose test="">
+          <py:when test="brew.recipe">${brew.recipe.name or "(unknown)"}</py:when>
+          <py:otherwise>(no name)</py:otherwise>
+</py:choose></a></td>
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
       <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
       <td>${brew.get_last_state_display()}</td>
@@ -135,11 +138,15 @@
     </tr>
     <tr py:for="recipe in authored_recipes">
       <td>${recipe_a(recipe)}</td>
-      <td>${recipe.style.name} (${recipe.get_type_display()})</td>
+      <td>
+        <py:choose test="">
+          <py:when test="recipe.style">${recipe.style.name}</py:when>
+          <py:otherwise><em>unknown style</em></py:otherwise>
+        </py:choose> (${recipe.get_type_display()})</td>
       <td>${std.fmt.date.ymd(recipe.insert_date)}</td>
       <td py:if="request.user.is_authenticated()"><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">${action('clone')}</a>
-       <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">${action('star')}</a>
-       <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">${action('brew')}</a>
+        <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">${action('star')}</a>
+        <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">${action('brew')}</a>
       </td>
     </tr>
   </tbody>
@@ -160,7 +167,11 @@
       <td colspan="3"><em>no historical brews</em></td>
     </tr>
     <tr py:for="brew in done_brews">
-      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}/">${brew.recipe.name}</a></td>
+      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}/">
+          <py:choose test="">
+              <py:when test="brew.recipe">${brew.recipe.name or "(unknown)"}</py:when>
+              <py:otherwise>(unnamed recipe)</py:otherwise>
+          </py:choose></a></td>
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
       <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
     </tr>
