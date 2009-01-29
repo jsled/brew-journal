@@ -64,12 +64,12 @@ class RegisterForm (forms.Form):
     def clean(self):
         if self._is_reg:
             data = self.cleaned_data
-            if not data.has_key('password') and not data.has_key('password_again'):
+            if not data.has_key('password') \
+               or not data.has_key('password_again') \
+               or data['password'] != data['password_again']:
                 raise forms.ValidationError(u'Matching passwords required')
-            if data['password'] != data['password_again']:
-                raise forms.ValidationError(u'Passwords must match')
-            #if not data.has_key('email') or data['email'] == u'':
-            #    raise forms.ValidationError('Must have valid email')
+            if not data.has_key('email')  or data['email'] == u'':
+                raise forms.ValidationError('Must have valid email')
         return self.cleaned_data
 
 

@@ -2,9 +2,9 @@
 import datetime
 import decimal
 import unittest
+import util
 from django.test.client import Client
 from django.test import TestCase
-import util
 from brewjournal.app import models
 
 
@@ -122,14 +122,49 @@ class ShoppingListViewTest (AppTestCase):
             raise e
                           
 
-
-# - creating a new user
-#   - invalid user name
+# @fixme:
 # - creating a recipe
 #   - adding items to a recipe
 #   - changing a recipe
 # - creating a brew from a recipe
 #   - adding steps to the brew
+
+class NewUserTest (TestCase):
+    def testNewUserInvalidUsername(self):
+        res = self.client.post('/', {'sub': 'create', 'username': '', 'password': '', 'password_again': '', 'email': ''})
+        import re
+        assertion = re.compile(r'username.{0,20}required', re.IGNORECASE)
+        matches = assertion.search(str(res))
+        self.assertTrue(matches)
+        # self.assertFormError(res, 'RegisterForm', …
+        
+    def testNewUserInvalidNoPassword(self):
+        res = self.client.post('/', {'sub': 'create', 'username': 'foo', 'password': '', 'password_again': '', 'email': ''})
+        self.assertContains(res, 'Matching passwords required')
+
+    def testMismatchedPasswords(self):
+        res = self.client.post('/', {'sub': 'create', 'username': 'novelUsername', 'password': 'foo', 'password_again': 'bar'})
+        self.assertContains(res, 'Matching passwords required')
+
+    def testEmptyEmail(self):
+        res = self.client.post('/', {'sub': 'create', 'username': 'novelUsername', 'password': 'foo', 'password_again': 'foo', 'email': ''})
+        self.assertContains(res, 'Must have valid email')
+
+    def testInvalidEmail(self):
+        res = self.client.post('/', {'sub': 'create', 'username': 'novelUsername', 'password': 'foo', 'password_again': 'foo', 'email': 'lol cat @ lolhost.zomg'})
+        self.assertContains(res, 'Must have valid email')
+
+    def testValidNewUser(self):
+        res = self.client.post('/', {'sub': 'create', 'username': 'novelUsername', 'password': 'foo', 'password_again': 'foo', 'email': 'user@validhost.com'})
+        self.assertRedirects(res, '/user/novelUsername/profile')
+
+    def testInvalidExistingUsername(self):
+        res = self.client.post('/', {'sub': 'create', 'username': 'novelUsername', 'password': 'foo', 'password_again': 'foo', 'email': 'user@validhost.com'})
+        self.assertRedirects(res, '/user/novelUsername/profile')
+        self.client.logout()
+        res2 = self.client.post('/', {'sub': 'create', 'username': 'novelUsername', 'password': 'foo', 'password_again': 'foo', 'email': 'user@validhost.com'})
+        self.assertContains(res2, 'Username [novelUsername] is unavailable')
+        
 
 class BrewDerivatiesTest (TestCase):
     def testNoAbvComputation(self):
