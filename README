@@ -379,6 +379,7 @@ of being.
 *** import/export
 *** add 'equipment'/'rig'
 ** minor
+*** TODO compute strike/sparge water volume from recipe, mash type, desired water/grist ratio
 *** TODO be able to (re-)associate a recipe with a Brew
 *** focus improvements
 **** TODO profile form after new user creation
