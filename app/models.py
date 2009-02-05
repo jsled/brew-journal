@@ -442,8 +442,8 @@ class Step (models.Model):
         return u'[%s:%s:%s] vol=%s, temp=%s, gravity=%s, notes [%s]' % (self.brew.recipe.name, self.date.strftime('%x %X'), self.type, self.volume, self.temp, self.gravity, self.notes)
 
     def in_future(self):
-        # this is incorrect.?
-        return self.entry_date < self.date
+        # @fixme: inject datetime.datetime for testability
+        return self.date > datetime.datetime.now()
 
     objects = StepManager()
 
@@ -523,7 +523,7 @@ class NextStepGenerator (object):
             matching_future_steps = [step for step in future_steps if step.type == typeid]
             if len(matching_future_steps) > 0:
                 existing_step = matching_future_steps[0]
-                if existing_step.date > next_step_date:
+                if not next_step_date or existing_step.date > next_step_date:
                     next_step_date = existing_step.date
             #
             next_step = NextStep(steptype, next_step_date, existing_step)

@@ -213,7 +213,7 @@ class TestReg (AppTestCase):
 
     def testBrokenReg(self):
         res = self.client.post('/', {'sub': 'create', 'username': 'bill', 'password': 'foo', 'password_again': 'bar', 'email': 'invalid'})
-        self.assertContains(res, 'Passwords must match', status_code=200)
+        self.assertContains(res, 'Matching passwords required', status_code=200)
         self.assertContains(res, 'valid e-mail address', status_code=200)
 
     def testSuccessfulReg(self):
@@ -297,6 +297,15 @@ class MockStep (models.Step, Mock):
         Mock.__init__(self, **kwargs)
 
 
+def fake_datetime(timestamp):
+    # http://ericholscher.com/blog/2008/aug/14/using-mock-objects-django-and-python-testing/
+    class MockDatetime (datetime.datetime):
+        @classmethod
+        def now(cls):
+            return datetime.datetime.fromtimestamp(timestamp)
+    return MockDatetime
+
+
 class NextStepsTest (TestCase):
     def testBasic(self):
         profile = MockProfile()
@@ -331,7 +340,7 @@ class NextStepsTest (TestCase):
         profile = MockProfile(pref_dispensing_style='k')
         user = MockUser(profile)
         recipe = Mock(type='a')
-        steps = [MockStep(id=1, type='ferm1', date=1, entry_date=1)]
+        steps = [MockStep(id=1, type='ferm1', date=datetime.datetime.fromtimestamp(1), entry_date=datetime.datetime.fromtimestamp(1))]
         brew = Mock(brewer=user, recipe=recipe, last_state='ferm1', step_set=FkSet(steps))
         next_steps = models.NextStepGenerator(brew).get_next_steps()
         possible_types = [step.type.id for step in next_steps.possible]
@@ -344,11 +353,15 @@ class NextStepsTest (TestCase):
     def testFuture(self):
         profile = MockProfile()
         user = MockUser(profile)
-        steps = [MockStep(id=1, type='strike', entry_date=5, date=105),
-                 MockStep(id=2, type='dough', entry_date=6, date=106),
-                 MockStep(id=3, type='mash', entry_date=7, date=107),
-                 MockStep(id=4, type='boil-start', entry_date=10, date=110),
-                 MockStep(id=5, type='pitch', entry_date=20, date=120)]
+        steps = [MockStep(id=1, type='strike', entry_date=datetime.datetime.fromtimestamp(5), date=datetime.datetime.fromtimestamp(105)),
+                 MockStep(id=2, type='dough', entry_date=datetime.datetime.fromtimestamp(6), date=datetime.datetime.fromtimestamp(106)),
+                 MockStep(id=3, type='mash', entry_date=datetime.datetime.fromtimestamp(7), date=datetime.datetime.fromtimestamp(107)),
+                 MockStep(id=4, type='boil-start', entry_date=datetime.datetime.fromtimestamp(10), date=datetime.datetime.fromtimestamp(110)),
+                 MockStep(id=5, type='pitch', entry_date=datetime.datetime.fromtimestamp(20), date=datetime.datetime.fromtimestamp(120))]
+
+        saved_datetime = datetime.datetime
+        datetime.datetime = fake_datetime(30)
+        # + with
         for recipe_type in ('a', 'e'):
             recipe = Mock(type=recipe_type)
             brew = Mock(brewer=user, recipe=recipe, last_state=None, step_set=FkSet(steps))
@@ -364,7 +377,13 @@ class NextStepsTest (TestCase):
                             'expecting %d items in %s for type %s' % (len(to_assert), next_steps, recipe_type))
             for asserted in to_assert:
                 self.assertTrue(asserted in possible_types, '%s asserted %s' % (next_steps, asserted))
-        steps[0].date = 125
+        datetime.datetime = saved_datetime
+        # - with
+
+        # + with
+        saved_datetime = datetime.datetime
+        datetime.datetime = fake_datetime(125)
+        steps[0].date = datetime.datetime.fromtimestamp(125)
         recipe = Mock(type='a')
         brew = Mock(brewer=user, recipe=recipe, last_state='strike', step_set=FkSet(steps))
         next_steps = models.NextStepGenerator(brew).get_next_steps()
@@ -373,8 +392,9 @@ class NextStepsTest (TestCase):
         for next_step,expected_type in itertools.izip(next_steps.possible, ['dough', 'mash']):
             # @fixme: of course, these are wrong given how we really want future-dated steps to work.
             self.assertTrue(next_step.type.id == expected_type, next_step)
-            self.assertTrue(next_step.date == 125, next_step)
-
+            self.assertTrue(next_step.date == datetime.datetime.fromtimestamp(125), next_step)
+        # - with
+        datetime.datetime = saved_datetime
 
 #class BrewViewTest (AppTestCase):
 
