@@ -164,13 +164,17 @@ def user_index(request, user_name):
     done_brews = models.Brew.objects.filter(brewer=uri_user, is_done=True)
     starred_recipes = models.StarredRecipe.objects.filter(user=uri_user)
     authored_recipes = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date')[0:10]
+    efficiency_tracker = None
+    if request.user.is_superuser:
+        efficiency_tracker = EfficiencyTracker(uri_user)
     return HttpResponse(render('user/index.html', request=request, user=uri_user, std=standard_context(),
                                brews=brews,
                                future_brews=future_brews,
                                future_steps=future_steps,
                                done_brews=done_brews,
                                authored_recipes=authored_recipes,
-                               starred_recipes=starred_recipes))
+                               starred_recipes=starred_recipes,
+                               efficiency_tracker=efficiency_tracker))
 
 
 class UserProfileForm (forms.ModelForm):
@@ -614,3 +618,27 @@ def recipe(request, recipe_id, recipe_name):
             form = thing
     recipe = models.Recipe.objects.get(pk=recipe_id)
     return _render_recipe(request, recipe)
+
+
+class EfficiencyTracker (object):
+    def __init__(self, user):
+        self._brews = list(models.Brew.objects.filter(brewer__exact = user)[0:10])
+        self._brews.reverse()
+        self._derivations = [util.BrewDerivations(brew) for brew in self._brews]
+
+    def has_data(self):
+        return len(self._derivations) > 0
+
+    def url(self):
+        url = 'http://chart.apis.google.com/chart?chs=400x100&cht=lc'
+        # url += '&chds=0,100'
+        efficiencies_dates = [{'efficiency': '%0.2f' % (derived.efficiency()), 'date': safe_datetime_fmt(derived._brew.brew_date, '%m/%d')}
+                              for derived
+                              in self._derivations
+                              if not derived.can_not_derive_efficiency()]
+        csv = ','.join([x['efficiency'] for x in efficiencies_dates])
+        url += '&chd=t:%s' % (csv)
+        url += '&chxt=x,r'
+        url += '&chxl=0:|' + '|'.join([x['date'] for x in efficiencies_dates])
+        url += '&chm=N*f1*,000000,0,-1,10'
+        return url

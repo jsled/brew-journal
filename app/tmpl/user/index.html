@@ -37,6 +37,11 @@
     <a href="shopping/">shopping list</a><br />
 </py:if>
 
+<py:if test="efficiency_tracker and efficiency_tracker.has_data()">
+    <h1>efficiency tracker</h1>
+    <img width="400" height="100" src="${efficiency_tracker.url()}"/>
+</py:if>
+
 <h1>${user.username} current brews</h1>
 <py:if test="std.auth_user_is_user(request, user)">
   <a href="/user/${user.username}/brew/new">${action('create new brew')}</a><br/><br />
