@@ -349,7 +349,6 @@ class NextStepsTest (TestCase):
         self.assertTrue('consumed' not in possible_types, str(next_steps))
         self.assertTrue('bottle' in maybe_types, str(next_steps))
         
-
     def testFuture(self):
         profile = MockProfile()
         user = MockUser(profile)
