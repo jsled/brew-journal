@@ -109,8 +109,18 @@
     </tr>
     <tr py:for="starred in starred_recipes">
       <td>${recipe_a(starred.recipe)}</td>
-      <td><a href="/user/${starred.recipe.author.username}/">${starred.recipe.author}</a></td>
-      <td>${starred.recipe.style.name}</td>
+      <td>
+          <py:choose test="">
+              <py:when test="starred.recipe.author"><a href="/user/${starred.recipe.author.username}/">${starred.recipe.author}</a></py:when>
+              <py:otherwise>&nbsp;</py:otherwise>
+          </py:choose>
+      </td>
+      <td>
+          <py:choose test="">
+              <py:when test="starred.recipe.style">${starred.recipe.style.name}</py:when>
+              <py:otherwise>(style undefined)</py:otherwise>
+          </py:choose>
+      </td>
       <td>${std.fmt.date.ymdhm(starred.when)}</td>
       <td py:if="request.user.is_authenticated()"><a href="/recipe/new/?clone_from_recipe_id=${starred.recipe.id}">${action('clone')}</a>
           &nbsp;<a href="/user/${request.user.username}/brew/new/?recipe_id=${starred.recipe.id}">${action('brew')}</a>

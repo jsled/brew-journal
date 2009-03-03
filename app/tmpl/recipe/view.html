@@ -39,7 +39,12 @@ $(document).ready(function(){
   <div py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}">
     <table width="60%">
       <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
-      <tr><th>style</th><td>${recipe.style.name} (${recipe.style.bjcp_code})</td></tr>
+      <tr><th>style</th><td>
+        <py:choose test="">
+            <py:when test="recipe.style">${recipe.style.name} (${recipe.style.bjcp_code})</py:when>
+            <py:otherwise>(style undefined)</py:otherwise>
+        </py:choose>
+      </td></tr>
       <tr><th>batch_size</th><td>${recipe.batch_size} ${recipe.get_batch_size_units_display()}</td></tr>
       <tr><th>type</th><td>${recipe.get_type_display()}</td></tr>
       <tr py:if="recipe.notes"><th>notes</th><td>${recipe.notes}</td></tr>
