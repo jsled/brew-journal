@@ -150,6 +150,11 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 *** TODO cascading /recipe/{id}/hops/hops/hops/… in the case of ingredient add failure
 *** TODO user profile should require existing password for password change; use django form validation/cleaning routines
+*** TODO to add
+(08:39:22 PM) djensen: need to add Citra hops
+(08:39:38 PM) djensen: not that I've seen it the home brew shop yet
+[…]
+(08:42:34 PM) djensen: I think you need 'Other' for fruit
 *** DONE move to django 1.0
     CLOSED: [2008-12-26 Fri]
 See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges
