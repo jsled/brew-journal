@@ -3,6 +3,7 @@ import datetime
 import decimal
 import unittest
 import util
+from django.contrib import auth
 from django.test.client import Client
 from django.test import TestCase
 from brewjournal.app import models
@@ -393,6 +394,39 @@ class NextStepsTest (TestCase):
             self.assertTrue(next_step.type.id == expected_type, next_step)
             self.assertTrue(next_step.date == datetime.datetime.fromtimestamp(125), next_step)
         # - with
+        datetime.datetime = saved_datetime
+
+
+class FutureStepsTest (AppTestCase):
+
+    def testComingOfAge(self):
+        saved_datetime = datetime.datetime
+
+        # +with
+        datetime.datetime = fake_datetime(30)
+        user = auth.models.User()
+        user.save()
+        brew = models.Brew()
+        brew.brewer = user
+        brew.save()
+        futureStep = models.Step()
+        futureStep.brew = brew
+        futureStep.type = 'buy'
+        futureStep.date = datetime.datetime.fromtimestamp(130)
+        futureStep.entry_date = datetime.datetime.fromtimestamp(30)
+        futureStep.save()
+        steps = models.Step.objects.future_steps_for_user(user)
+        self.assertTrue(steps.count() == 1)
+        brews = models.Brew.objects.brews_with_future_steps(user)
+        self.assertTrue(brews.count() == 1)
+        # -with
+        # +with
+        datetime.datetime = fake_datetime(150)
+        steps = models.Step.objects.future_steps_for_user(user)
+        self.assertTrue(steps.count() == 0)
+        brews = models.Brew.objects.brews_with_future_steps(user)
+        self.assertTrue(brews.count() == 0)
+        # -with
         datetime.datetime = saved_datetime
 
 #class BrewViewTest (AppTestCase):

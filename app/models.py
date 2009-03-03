@@ -322,7 +322,8 @@ class StarredRecipe (models.Model):
 
 class BrewManager (models.Manager):
     def brews_with_future_steps(self, user):
-        return Brew.objects.filter(brewer=user).extra(where=['id IN (SELECT brew_id FROM app_step WHERE entry_date < date)'])
+        brew_ids = [step.brew_id for step in Step.objects.future_steps_for_user(user)]
+        return Brew.objects.filter(id__in=brew_ids)
 
     def brews_pre_brew(self, user):
         # @fixme: if the brew date is in the future, too?
@@ -394,8 +395,8 @@ class Brew (models.Model):
 
 class StepManager (models.Manager):
     def future_steps_for_user(self, user):
-        # this is simply incorrect:
-        return Step.objects.filter(brew__brewer__exact=user).extra(where=['entry_date < date'])
+        now = datetime.datetime.now()
+        return Step.objects.filter(brew__brewer__exact=user, date__gt=now)
 
 
 class Step (models.Model):
