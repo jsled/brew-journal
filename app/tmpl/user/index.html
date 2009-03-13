@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
@@ -7,7 +8,11 @@
   <xi:include href="../_incl/head.html"/>
 </head>
 <body>
-  <xi:include href="../_incl/body-top-bar.html"/>
+    <div id="doc3" class="yui-t5">
+        <xi:include href="../_incl/body-top-bar.html"/>
+        <div id="bd">
+            <div id="yui-main">
+                <div class="yui-b">
 
 <py:if test="future_steps or future_brews">
     <h1>upcoming steps</h1>
@@ -46,7 +51,7 @@
 <py:if test="std.auth_user_is_user(request, user)">
   <a href="/user/${user.username}/brew/new">${action('create new brew')}</a><br/><br />
 </py:if>
-<table width="80%">
+<table class="wide">
   <thead>
     <tr>
       <th>brew</th>
@@ -98,7 +103,7 @@
 <br />
 
 <h1>starred recipes</h1>
-<table width="80%">
+<table class="wide">
   <thead>
     <tr>
       <th>name</th>
@@ -138,7 +143,7 @@
 <py:if test="std.auth_user_is_user(request, user)">
   <a href="/recipe/new/">${action('create new recipe')}</a><br /><br />
 </py:if>
-<table width="80%">
+<table class="wide">
   <thead>
     <tr>
       <th>name</th>
@@ -169,7 +174,7 @@
 <br />
 
 <h1>historical brews</h1>
-<table width="80%">
+<table class="wide">
   <thead>
     <tr>
       <th>brew</th>
@@ -192,5 +197,9 @@
     </tr>
   </tbody>
 </table>
+</div>
+</div>
+</div>
+</div>
 </body>
 </html>

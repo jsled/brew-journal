@@ -3,7 +3,7 @@
      xmlns:py="http://genshi.edgewall.org/"
      xmlns:xi="http://www.w3.org/2001/XInclude">
 
-  <div width="100%" class="topbar">
+  <div id="hd">
       <div width="100%" align="right">
           <nobr>
               <py:if test="request.user.is_authenticated()">
@@ -18,7 +18,8 @@
               </py:if>
           </nobr>
       </div>
-      <div width="100%">
+      
+      <div style="margin-top: -1em">
           <a class="logotext" py:attrs="{'href': ['/', '/user/%s/' % (request.user.username)][request.user.is_authenticated()]}">brew-journal</a>
       </div>
   </div>

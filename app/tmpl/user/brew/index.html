@@ -13,7 +13,13 @@
   </script>
 </head>
 <body>
-  <xi:include href="../../_incl/body-top-bar.html"/>
+    <div id="doc3">
+        <xi:include href="../../_incl/body-top-bar.html"/>
+
+        <div id="bd">
+            <div id="yui-main">
+                <div class="yui-b">
+
   <h1 py:if="brew.recipe">brew of "${brew.recipe.name}"</h1>
   <h1 py:if="not brew.recipe">un-named brew</h1>
   <div id="details">
@@ -124,5 +130,9 @@
     </td>
   </tr>
 </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
