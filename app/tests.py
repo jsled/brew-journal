@@ -167,7 +167,7 @@ class NewUserTest (TestCase):
         self.assertContains(res2, 'Username [novelUsername] is unavailable')
         
 
-class BrewDerivatiesTest (TestCase):
+class BrewDerivationsTest (TestCase):
     def testNoAbvComputation(self):
         brew = models.Brew()
         derivs = util.BrewDerivations(brew)
@@ -190,6 +190,14 @@ class BrewDerivatiesTest (TestCase):
         cannot = derivs.can_not_derive_efficiency()
         self.assertTrue(len(cannot) > 0, len(cannot))
         self.assertEquals(2, len(cannot))
+
+    def testAttenuationComputation(self):
+        brew = Mock(step_set=FkSet([Mock(type='pitch', gravity=decimal.Decimal('1.070')),
+                                    Mock(type='keg', gravity=decimal.Decimal('1.015'))]))
+        derivs = util.BrewDerivations(brew)
+        aa = derivs.apparent_attenuation()
+        self.assert_(aa - decimal.Decimal('78.57') < decimal.Decimal('0.1'))
+
 
 class TestLogin (AppTestCase):
     fixtures = ['auth']

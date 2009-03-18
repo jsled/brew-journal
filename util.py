@@ -136,6 +136,17 @@ class BrewDerivations (object):
         best_start = starting_steps[0]
         best_end = ending_steps[0]
         return (best_start.gravity - best_end.gravity) * Decimal('135')
+
+    def can_not_derive_aa(self):
+        return self.can_not_derive_abv()
+
+    def apparent_attenuation(self):
+        starting_steps,ending_steps = self._get_abv_steps()
+        best_start = starting_steps[0]
+        best_end = ending_steps[0]
+        fraction_attenuated = (best_end.gravity - Decimal('1.0')) / (best_start.gravity - Decimal('1.0'))
+        aa = (Decimal('1.0') - fraction_attenuated) * Decimal('100')
+        return aa
         
 
 def convert_volume_to_gls(volume, units):
