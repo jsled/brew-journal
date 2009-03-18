@@ -1,4 +1,4 @@
-# # Copyright (c) 2008-2009, Joshua Sled <jsled@asynchronous.org>
+# Copyright (c) 2008-2009, Joshua Sled <jsled@asynchronous.org>
 # 
 # All rights reserved.
 # 
