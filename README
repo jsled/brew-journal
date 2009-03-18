@@ -1,0 +1,59 @@
+brew-journal
+============
+
+Herein are the sources for brew-journal, a python/django application for
+tracking the state of homebrews.
+
+This is intended to be an open-source web-service, being both a publically
+available web site, but with the underlying source code fully open and
+available.
+
+Setup
+-----
+
+- get these sources, as you seem to have done.
+
+- get >=django-1.0.  symlink 'django' in the top-level to the 'django' subdir
+  of a checkout/distribution, or install django systemwide.
+
+- get >=genshi-0.4.  symlink 'genshi' in the top-level to the 'genshi' subdir
+  of a checkout/distribution, or install genshi systemwide.
+
+- symlink 'settings.py' to, probably, 'settings-local.py'
+
+  e.g.:
+
+  jsled@phoenix [~/stuff/proj/brewjournal]$ ls -l 
+  total 336
+  drwxr-xr-x 6 jsled users   4096 2009-03-18 00:20 app
+  lrwxrwxrwx 1 jsled users     26 2008-12-27 18:53 django -> ../lib/django-1.0.2/django
+  drwxr-xr-x 2 jsled users   4096 2008-07-27 18:53 fixtures
+  lrwxrwxrwx 1 jsled users     27 2008-12-27 18:53 genshi -> ../lib/genshi-0.5.1/genshi/
+  -rw-r--r-- 1 jsled users      0 2008-06-05 22:24 __init__.py
+  -rw-r--r-- 1 jsled users   1623 2009-03-18 00:16 LICENSE
+  -rwxr-xr-x 1 jsled users    546 2008-06-05 22:24 manage.py
+  -rw-r--r-- 1 jsled users    788 2009-03-18 00:27 README
+  -rw-r--r-- 1 jsled users   3516 2008-12-31 16:55 settings-local.py
+  lrwxrwxrwx 1 jsled users     17 2008-07-27 16:08 settings.py -> settings-local.py
+  drwxr-xr-x 2 jsled users   4096 2008-12-17 20:37 sql
+  -rw-r--r-- 1 jsled users  18295 2009-03-17 23:44 TODO
+  -rw-r--r-- 1 jsled users   2162 2009-03-18 00:19 urls.py
+  -rwxr-xr-x 1 jsled users   9366 2009-03-18 00:20 util.py
+
+- make sure $(./manage.py test) passes
+
+- run $(./manage.py runserver); hit <http://localhost:8000/> in your browser.
+
+TODO
+----
+
+Please see TODO for a combination of design docs, small/large TODO list and
+bug tracker.  This file is in emacs' org-mode, so either use emacs and
+org-mode, or try to follow the (simple) org-mode constraints.
+
+Contact
+-------
+
+jsled@asynchronous.org
+jsled on irc.freenode.net
+irc://irc.freenode.net/#homebrew
