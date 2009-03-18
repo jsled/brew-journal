@@ -108,7 +108,9 @@
           </div>
       </div>
     </td>
-    <td py:if="not deriv.can_not_derive_efficiency()">${'%0.2f' % deriv.efficiency()}%</td>
+    <td py:if="not deriv.can_not_derive_efficiency()">
+        ${'%0.2f' % deriv.efficiency()}%
+    </td>
   </tr>
   <tr>
     <th>alcohol by volume</th>
@@ -126,8 +128,27 @@
       </div>
     </td>
     <td py:if="not deriv.can_not_derive_abv()">
-      ${'%0.2f' % (deriv.alcohol_by_volume())}%
+        ${'%0.2f' % (deriv.alcohol_by_volume())}%
     </td>
+  </tr>
+  <tr>
+      <th>apparent attenuation</th>
+      <td py:if="deriv.can_not_derive_aa()">
+          <div id="why_not_aa">
+              <div class="muted">
+                  can't yet compute.  <a href="#" onClick="('#why_not_aa').children().slideToggle(); return false;">(why not?)</a>
+              </div>
+              <div style="display:none">
+                  <py:for each="reason in deriv.can_not_derive_aa()">
+                      ${reason}<br />
+                  </py:for>
+              <a class="muted" href="#" onClick="$('#why_not_aa').children().slideToggle(); return false;">(hide)</a><br />
+              </div>
+          </div>
+      </td>
+      <td py:if="not deriv.can_not_derive_aa()">
+          ${'%0.2f' % (deriv.apparent_attenuation())}%
+      </td>
   </tr>
 </table>
                 </div>
