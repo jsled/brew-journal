@@ -132,6 +132,8 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 * Todo
 ** bugs, misc
+*** TODO dreamhost'ed admin/ site media serving.
+*** TODO need for some sort of "other fruit", so adding straight oranges doesn't need to be listed as adding "orange zest"
 *** TODO unable to add 5 g of apple must for cider recipes
 *** TODO dingeema-uncovered None-safety issues
 
@@ -384,6 +386,8 @@ of being.
 *** import/export
 *** add 'equipment'/'rig'
 ** minor
+*** TODO add time counter for some steps (primary/secondary fermentation)
+*** TODO some sort of markdown/wikiformatting/CRLF-><br/> for notes
 *** TODO compute strike/sparge water volume from recipe, mash type, desired water/grist ratio
 *** TODO be able to (re-)associate a recipe with a Brew
 *** focus improvements
