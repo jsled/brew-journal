@@ -1,0 +1,5 @@
+[
+    {"model": "app.Adjunct", "pk": null, "fields": {"name": "Orange (whole)", "group": "Fruit"}},
+    {"model": "app.Adjunct", "pk": null, "fields": {"name": "Orange (juice)", "group": "Fruit"}},
+    {"model": "app.Adjunct", "pk": null, "fields": {"name": "Other", "group": "Fruit"}}
+]
