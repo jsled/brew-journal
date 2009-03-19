@@ -6,7 +6,7 @@ TEMPLATE_DEBUG = DEBUG
 SEND_BROKEN_LINK_EMAILS = False
 
 ADMINS = (
-    ('Josh Sled', 'jsled@asynchronous.org')
+    ('Josh Sled', 'jsled@asynchronous.org'),
     # ('Your Name', 'your_email@domain.com'),
 )
 
