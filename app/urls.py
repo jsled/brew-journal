@@ -58,4 +58,6 @@ urlpatterns = patterns(
     (r'^recipe/(?P<recipe_id>\d+)/yeast/$', 'recipe_yeast'),
 
     (r'^recipe/(?P<recipe_id>\d+)/(?P<recipe_name>.+)?$', 'recipe'),
+
+    (r'^500$', 'intentional_500'),
 )

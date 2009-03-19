@@ -81,6 +81,9 @@ def custom_404(request):
 def custom_500(request):
     return HttpResponse(render('500.html', request=request, ctx=standard_context()))
 
+def intentional_500(request):
+    raise Exception('intentional 500 to test handling')
+
 class RegisterForm (forms.Form):
     username = forms.CharField(max_length=30)
     password = forms.CharField(widget=forms.PasswordInput)
