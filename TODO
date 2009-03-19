@@ -132,7 +132,6 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 * Todo
 ** bugs, misc
-*** TODO dreamhost'ed admin/ site media serving.
 *** TODO need for some sort of "other fruit", so adding straight oranges doesn't need to be listed as adding "orange zest"
 *** TODO unable to add 5 g of apple must for cider recipes
 *** TODO dingeema-uncovered None-safety issues
@@ -157,6 +156,8 @@ What is the essence of "future" steps?  They haven't happened, yet.
 (08:39:38 PM) djensen: not that I've seen it the home brew shop yet
 […]
 (08:42:34 PM) djensen: I think you need 'Other' for fruit
+*** DONE dreamhost'ed admin/ site media serving.
+    CLOSED: [2009-03-18 Wed 21:52]
 *** DONE move to django 1.0
     CLOSED: [2008-12-26 Fri]
 See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges
