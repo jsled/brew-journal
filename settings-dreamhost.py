@@ -1,10 +1,10 @@
 # Django settings for brew-journal project.
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
+TEMPLATE_DEBUG = True
 
 ADMINS = (
-    ('Josh Sled', 'jsled@asynchronous.org')
+    ('Josh Sled', 'jsled@asynchronous.org'),
     # ('Your Name', 'your_email@domain.com'),
 )
 
@@ -93,3 +93,7 @@ INSTALLED_APPS = (
 DEFAULT_CHARSET = 'utf-8'
 
 AUTH_PROFILE_MODULE = 'app.userprofile'
+
+# 2009-03-18, jsled: set fully qualified host names for From addresses
+DEFAULT_FROM_EMAIL = 'admin@brew-journal.com'
+SERVER_EMAIL = 'root@brew-journal.com'
