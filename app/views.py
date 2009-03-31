@@ -193,15 +193,13 @@ def user_index(request, user_name):
     except User.DoesNotExist:
         raise Http404
     if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
-    brews = models.Brew.objects.filter(brewer=uri_user, is_done=False)
+    brews = models.Brew.objects.filter(brewer=uri_user, is_done=False).order_by('-brew_date')
     future_brews = models.Brew.objects.brews_with_future_steps(uri_user)
     future_steps = models.Step.objects.future_steps_for_user(uri_user).order_by('date')
     done_brews = models.Brew.objects.filter(brewer=uri_user, is_done=True)
     starred_recipes = models.StarredRecipe.objects.filter(user=uri_user)
     authored_recipes = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date')[0:10]
-    efficiency_tracker = None
-    if request.user.is_superuser:
-        efficiency_tracker = EfficiencyTracker(uri_user)
+    efficiency_tracker = EfficiencyTracker(uri_user)
     return HttpResponse(render('user/index.html', request=request, user=uri_user, std=standard_context(),
                                brews=brews,
                                future_brews=future_brews,
@@ -657,12 +655,13 @@ def recipe(request, recipe_id, recipe_name):
 
 class EfficiencyTracker (object):
     def __init__(self, user):
-        self._brews = list(models.Brew.objects.filter(brewer__exact = user)[0:10])
+        self._brews = list(models.Brew.objects.filter(brewer__exact = user).order_by('-brew_date')[0:10])
         self._brews.reverse()
         self._derivations = [util.BrewDerivations(brew) for brew in self._brews]
+        self._derivations = [d for d in self._derivations if not d.can_not_derive_efficiency()]
 
     def has_data(self):
-        return len(self._derivations) > 0
+        return len(self._derivations) > 1
 
     def url(self):
         url = 'http://chart.apis.google.com/chart?chs=400x100&cht=lc'
