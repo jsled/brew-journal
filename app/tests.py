@@ -139,14 +139,14 @@ class ShoppingListViewTest (AppTestCase):
         res = app.get('/user/%s/shopping/' % (user))
         self.assertEquals(200, res.status_code)
         try:
-            self.assertContains(res, u'test a')
+            self.assertNotContains(res, u'test a', 200)
             self.assertContains(res, u'test b')
             self.assertNotContains(res, u'test c', 200)
-            self.assertContains(res, u'1 oz', count=2)
-            self.assertContains(res, u'2 oz', count=1)
+            self.assertContains(res, u'1 oz', count=1)
+            self.assertNotContains(res, u'2 oz', 200)
             self.assertContains(res, u'3 oz', count=1)
-            self.assertContains(res, u'1 lb', count=2)
-            self.assertContains(res, u'2 lb', count=1)
+            self.assertContains(res, u'1 lb', count=1)
+            self.assertNotContains(res, u'2 lb', 200)
             self.assertContains(res, u'3 lb', count=1)
             self.assertNotContains(res, u'20 oz', 200)
             self.assertNotContains(res, u'20 lb', 200)
@@ -309,7 +309,7 @@ class ShoppingListTest (TestCase):
         b2 = Mock(recipe=r1)
         b3 = Mock(recipe=r2)
         #
-        groceries = models.ShoppingList([b1, b2, b3])
+        groceries = models.ShoppingList(pre_brews=[b1, b2, b3])
         self.assertEquals(10, len(groceries.grains))
         self.assertEquals(10, len(groceries.hops))
         for grain,brews in groceries.grains:

@@ -14,33 +14,38 @@
             <div id="yui-main">
                 <div class="yui-b">
 
-<py:if test="future_steps or future_brews">
+<py:if test="shopping_list.shopping_to_do() or future_steps or future_brews">
     <h1>upcoming steps</h1>
-    <div id="by_calendar_brew">
-        <div>
-            <a href="#" class="muted" onClick="$('#by_calendar_brew').children().toggle(); return false;">view by brew…</a>
-            <ul>
-                <li py:for="step in future_steps">
-                    <a href="/user/${user.username}/brew/${step.brew.id}/step/${step.id}/">${step.get_type_display()}</a>
-                    for brew <a href="/user/${user.username}/brew/${step.brew.id}/">${step.brew.title()}</a>
-                on ${std.fmt.date.ymdhm(step.date)}</li>
-            </ul>
-        </div>
-        <div style="display:none">
-            <a href="#" class="muted" onClick="$('#by_calendar_brew').children().toggle(); return false;">view by time…</a>
-            <ul>
-                <li py:for="brew in future_brews">brew <a href="/user/${user.username}/brew/${brew.id}/">${brew.title()}</a>
+    <py:if test="future_steps or future_brews">
+        <div id="by_calendar_brew">
+            <div>
+                <a href="#" class="muted" onClick="$('#by_calendar_brew').children().toggle(); return false;">view by brew…</a>
                 <ul>
-                    <li py:for="step in brew.future_steps()">
-                        ${step.get_type_display()} on ${std.fmt.date.ymdhm(step.date)}
+                    <li py:for="step in future_steps">
+                        <a href="/user/${user.username}/brew/${step.brew.id}/step/${step.id}/">${step.get_type_display()}</a>
+                        for brew <a href="/user/${user.username}/brew/${step.brew.id}/">${step.brew.title()}</a>
+                    on ${std.fmt.date.ymdhm(step.date)}</li>
+                </ul>
+            </div>
+            <div style="display:none">
+                <a href="#" class="muted" onClick="$('#by_calendar_brew').children().toggle(); return false;">view by time…</a>
+                <ul>
+                    <li py:for="brew in future_brews">brew <a href="/user/${user.username}/brew/${brew.id}/">${brew.title()}</a>
+                    <ul>
+                        <li py:for="step in brew.future_steps()">
+                            ${step.get_type_display()} on ${std.fmt.date.ymdhm(step.date)}
+                        </li>
+                    </ul>
                     </li>
                 </ul>
-                </li>
-            </ul>
-        </div>
-    </div>            
-    <a href="shopping/">shopping list</a><br />
+            </div>
+        </div>            
+    </py:if>
+    <py:if test="shopping_list.shopping_to_do()">
+        <a href="shopping/">shopping list</a><br />
+    </py:if>
 </py:if>
+
 
 <py:if test="efficiency_tracker and efficiency_tracker.has_data()">
     <h1>efficiency tracker</h1>

@@ -132,7 +132,6 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 * Todo
 ** bugs, misc
-*** TODO "shopping list" shows up for brews with any future steps.
 *** TODO unable to add "5 g" of apple must for cider recipes (no volume adds for fermentables)
 *** TODO dingeema-uncovered None-safety issues
 
@@ -156,6 +155,8 @@ What is the essence of "future" steps?  They haven't happened, yet.
 (08:39:38 PM) djensen: not that I've seen it the home brew shop yet
 […]
 (08:42:34 PM) djensen: I think you need 'Other' for fruit
+*** DONE "shopping list" shows up for brews with any future steps.
+    CLOSED: [2009-03-30 Mon 22:13]
 *** DONE need for some sort of "other fruit", so adding straight oranges doesn't need to be listed as adding "orange zest"
     CLOSED: [2009-03-30 Mon 20:53]
 *** DONE dreamhost'ed admin/ site media serving.

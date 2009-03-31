@@ -365,7 +365,7 @@ class BrewManager (models.Manager):
             # @fixme, this should probably be step.is_pre_brew() or something.
             substeps = [step for step in future_steps if step.type in ['buy', 'strike', 'steep']]
             return len(substeps) > 0
-        pre_brews = [recipe for recipe in future_brews if pre_brew(recipe)]
+        pre_brews = [brew for brew in future_brews if pre_brew(brew)]
         return pre_brews
         
 
@@ -566,20 +566,31 @@ class NextStepGenerator (object):
 
 class ShoppingList (object):
     '''
-    takes a list of pre-brews, and consolidates the ingredients by type
+    Find a user's pre-brews with a future "buy-ingredients" step, and consolidates the ingredients by type
 
     Each ingredient type is a list of (Ingredient,[(RecipeIngredient,Brew)])
 
     E.g., Grains -> (Centenniel, [ (5oz,Brew#42), (2oz,Brew#43), ...])
     
-    '''
+    ''' # '
     
-    def __init__(self, pre_brews):
+    def __init__(self, user=None, **kwargs):
         self._grains = {}
         self._hops = {}
         self._adjuncts = {}
         self._yeasts = {}
+
+        pre_brews = kwargs.get('pre_brews', None)
+        if not pre_brews:
+            now = datetime.datetime.now()
+            future_buy_steps = Step.objects.filter(brew__brewer__exact=user, date__gt=now, type='buy')
+            future_buy_brews = [step.brew.id for step in future_buy_steps]
+            pre_brews = Brew.objects.filter(id__in=future_buy_brews)
         self._aggregate_brews(pre_brews)
+
+    def shopping_to_do(self):
+        to_buy_count = len(self._grains) + len(self._hops) + len(self._adjuncts) + len(self._yeasts)
+        return to_buy_count > 0
 
     def _get_grains(self):
         return [(grain,brews) for grain,brews in self._grains.iteritems()]
