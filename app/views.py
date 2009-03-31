@@ -64,8 +64,7 @@ def safe_graceful_datetime_fmt(dt, ymd_fmt, ymdhm_fmt):
     if not dt:
         return ''
     best_fmt = ymdhm_fmt
-    if dt.hour == 0 and dt.minute == 0 \
-       or dt.hour == 23 and dt.minute == 59:
+    if (dt.hour == 0 and dt.minute == 0) or (dt.hour == 23 and dt.minute == 59):
         best_fmt = ymd_fmt
     return dt.strftime(best_fmt)
 
