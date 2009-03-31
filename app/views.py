@@ -60,6 +60,14 @@ def safe_datetime_fmt(dt, fmt):
         return ''
     return dt.strftime(fmt)
 
+def safe_graceful_datetime_fmt(dt, ymd_fmt, ymdhm_fmt):
+    if not dt:
+        return ''
+    best_fmt = ymdhm_fmt
+    if dt.hour == 0 and dt.minute == 0:
+        best_fmt = ymd_fmt
+    return dt.strftime(best_fmt)
+
 def auth_user_is_user(request, user):
     return (request.user.is_authenticated() and request.user == user)
 
@@ -67,8 +75,11 @@ _std_ctx = None
 def standard_context():
     global _std_ctx
     if not _std_ctx:
-        _std_ctx = {'fmt': { 'date': { 'ymdhm': lambda x: safe_datetime_fmt(x, '%Y-%m-%d %H:%M'),
-                                       'ymd': lambda x: safe_datetime_fmt(x, '%Y-%m-%d') } },
+        YMDHM_FMT = '%Y-%m-%d %H:%M'
+        YMD_FMT = '%Y-%m-%d'
+        _std_ctx = {'fmt': { 'date': { 'ymdhm': lambda x: safe_datetime_fmt(x, YMDHM_FMT),
+                                       'ymd': lambda x: safe_datetime_fmt(x, YMD_FMT),
+                                       'best': lambda x: safe_graceful_datetime_fmt(x, YMD_FMT, YMDHM_FMT) } },
                     'markup': Markup,
                     'Markup': Markup,
                     'auth_user_is_user': auth_user_is_user,

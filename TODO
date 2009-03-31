@@ -141,7 +141,6 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 - audit all those chained expressions in templates
 
-*** TODO std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
 *** TODO there's *no* logging on dreamhost, which is annoying
 - error logging
 - access logging
@@ -155,6 +154,8 @@ What is the essence of "future" steps?  They haven't happened, yet.
 (08:39:38 PM) djensen: not that I've seen it the home brew shop yet
 […]
 (08:42:34 PM) djensen: I think you need 'Other' for fruit
+*** DONE std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
+    CLOSED: [2009-03-30 Mon 22:48]
 *** DONE "shopping list" shows up for brews with any future steps.
     CLOSED: [2009-03-30 Mon 22:13]
 *** DONE need for some sort of "other fruit", so adding straight oranges doesn't need to be listed as adding "orange zest"

@@ -24,7 +24,7 @@
                     <li py:for="step in future_steps">
                         <a href="/user/${user.username}/brew/${step.brew.id}/step/${step.id}/">${step.get_type_display()}</a>
                         for brew <a href="/user/${user.username}/brew/${step.brew.id}/">${step.brew.title()}</a>
-                    on ${std.fmt.date.ymdhm(step.date)}</li>
+                    on ${std.fmt.date.best(step.date)}</li>
                 </ul>
             </div>
             <div style="display:none">
@@ -33,7 +33,7 @@
                     <li py:for="brew in future_brews">brew <a href="/user/${user.username}/brew/${brew.id}/">${brew.title()}</a>
                     <ul>
                         <li py:for="step in brew.future_steps()">
-                            ${step.get_type_display()} on ${std.fmt.date.ymdhm(step.date)}
+                            ${step.get_type_display()} on ${std.fmt.date.best(step.date)}
                         </li>
                     </ul>
                     </li>
@@ -76,7 +76,7 @@
           <py:otherwise>(no name)</py:otherwise>
 </py:choose></a></td>
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
-      <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
+      <td>${std.fmt.date.best(brew.last_update_date)}</td>
       <td>${brew.get_last_state_display()}</td>
       <span py:def="step(brew, next)" py:strip="True">
           <py:choose test="">
@@ -136,7 +136,7 @@
               <py:otherwise>(style undefined)</py:otherwise>
           </py:choose>
       </td>
-      <td>${std.fmt.date.ymdhm(starred.when)}</td>
+      <td>${std.fmt.date.best(starred.when)}</td>
       <td py:if="request.user.is_authenticated()"><a href="/recipe/new/?clone_from_recipe_id=${starred.recipe.id}">${action('clone')}</a>
           &nbsp;<a href="/user/${request.user.username}/brew/new/?recipe_id=${starred.recipe.id}">${action('brew')}</a>
       </td>
@@ -198,7 +198,7 @@
               <py:otherwise>(unnamed recipe)</py:otherwise>
           </py:choose></a></td>
       <td>${std.fmt.date.ymd(brew.brew_date)}</td>
-      <td>${std.fmt.date.ymdhm(brew.last_update_date)}</td>
+      <td>${std.fmt.date.best(brew.last_update_date)}</td>
     </tr>
   </tbody>
 </table>
