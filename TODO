@@ -132,7 +132,7 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 * Todo
 ** bugs, misc
-*** TODO need for some sort of "other fruit", so adding straight oranges doesn't need to be listed as adding "orange zest"
+*** TODO "shopping list" shows up for brews with any future steps.
 *** TODO unable to add "5 g" of apple must for cider recipes (no volume adds for fermentables)
 *** TODO dingeema-uncovered None-safety issues
 
@@ -156,6 +156,8 @@ What is the essence of "future" steps?  They haven't happened, yet.
 (08:39:38 PM) djensen: not that I've seen it the home brew shop yet
 […]
 (08:42:34 PM) djensen: I think you need 'Other' for fruit
+*** DONE need for some sort of "other fruit", so adding straight oranges doesn't need to be listed as adding "orange zest"
+    CLOSED: [2009-03-30 Mon 20:53]
 *** DONE dreamhost'ed admin/ site media serving.
     CLOSED: [2009-03-18 Wed 21:52]
 *** DONE move to django 1.0
@@ -388,6 +390,7 @@ of being.
 *** import/export
 *** add 'equipment'/'rig'
 ** minor
+*** TODO /recipe/ shouldn't 404.
 *** TODO add time counter for some steps (primary/secondary fermentation)
 *** TODO some sort of markdown/wikiformatting/CRLF-><br/> for notes
 *** TODO compute strike/sparge water volume from recipe, mash type, desired water/grist ratio
