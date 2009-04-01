@@ -38,7 +38,6 @@ from django.contrib.auth import authenticate, login, logout
 from django import forms
 from genshi.template import TemplateLoader
 from genshi.core import Markup
-from brewjournal import util
 from brewjournal.app import models, widgets
 from datetime import datetime
 import urllib
@@ -367,7 +366,7 @@ def brew_render(request, uri_user, brew, step_form, step_edit):
     brew_form = BrewForm(instance=brew)
     return HttpResponse(render('user/brew/index.html', request=request, std=standard_context(), user=uri_user,
                                brew=brew, steps=steps, step_form=step_form, step_edit=step_edit,
-                               brew_form=brew_form, deriv=util.BrewDerivations(brew)))
+                               brew_form=brew_form, deriv=models.BrewDerivations(brew)))
     
 
 def brew(request, user_name, brew_id, step_id):
@@ -669,7 +668,7 @@ class EfficiencyTracker (object):
     def __init__(self, user):
         self._brews = list(models.Brew.objects.filter(brewer__exact = user).order_by('-brew_date')[0:10])
         self._brews.reverse()
-        self._derivations = [util.BrewDerivations(brew) for brew in self._brews]
+        self._derivations = [models.BrewDerivations(brew) for brew in self._brews]
         self._derivations = [d for d in self._derivations if not d.can_not_derive_efficiency()]
 
     def has_data(self):

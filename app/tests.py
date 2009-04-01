@@ -35,7 +35,6 @@
 import datetime
 import decimal
 import unittest
-import util
 from django.contrib import auth
 from django.test.client import Client
 from django.test import TestCase
@@ -203,7 +202,7 @@ class NewUserTest (TestCase):
 class BrewDerivationsTest (TestCase):
     def testNoAbvComputation(self):
         brew = models.Brew()
-        derivs = util.BrewDerivations(brew)
+        derivs = models.BrewDerivations(brew)
         cannot = derivs.can_not_derive_abv()
         self.assertTrue(len(cannot) > 0, len(cannot))
         self.assertEquals(2, len(cannot))
@@ -212,14 +211,14 @@ class BrewDerivationsTest (TestCase):
         brew = Mock(step_set=FkSet([Mock(type='boil-start', gravity=decimal.Decimal('1.049')),
                                     Mock(type='pitch', gravity=decimal.Decimal('1.064')),
                                     Mock(type='keg', gravity=decimal.Decimal('1.022'))]))
-        derivs = util.BrewDerivations(brew)
+        derivs = models.BrewDerivations(brew)
         abv = derivs.alcohol_by_volume()
         self.assert_(abv > decimal.Decimal('3.645'), str(abv))
         self.assertEquals(abv, decimal.Decimal('5.67'), str(abv))
 
     def testNoEfficiencyComputations(self):
         brew = models.Brew(recipe=models.Recipe())
-        derivs = util.BrewDerivations(brew)
+        derivs = models.BrewDerivations(brew)
         cannot = derivs.can_not_derive_efficiency()
         self.assertTrue(len(cannot) > 0, len(cannot))
         self.assertEquals(2, len(cannot))
@@ -227,7 +226,7 @@ class BrewDerivationsTest (TestCase):
     def testAttenuationComputation(self):
         brew = Mock(step_set=FkSet([Mock(type='pitch', gravity=decimal.Decimal('1.070')),
                                     Mock(type='keg', gravity=decimal.Decimal('1.015'))]))
-        derivs = util.BrewDerivations(brew)
+        derivs = models.BrewDerivations(brew)
         aa = derivs.apparent_attenuation()
         self.assert_(aa - decimal.Decimal('78.57') < decimal.Decimal('0.1'))
 
@@ -479,3 +478,26 @@ class FutureStepsTest (AppTestCase):
     #   brew has relevant future steps:
     #       no ?type: next-step =
     # brew is "complete", has no future steps
+
+class UtilTest (TestCase):
+    def testUtil(self):
+        import doctest
+        doctest.testmod(models)
+
+
+
+class StepTest (TestCase):
+    def testGravityCorrection(self):
+        s = models.Step()
+        s.gravity_read = decimal.Decimal('1.070')
+        s.gravity_read_temp_units = 'f'
+        s.gravity_read_temp = 70
+        self.assertEquals(decimal.Decimal('1.071'), s.gravity)
+        
+    def testGravitySet(self):
+        s = models.Step()
+        s.gravity = decimal.Decimal('1.040')
+        self.assertEquals(decimal.Decimal('1.040'), s.gravity)
+        self.assertEquals(decimal.Decimal('1.040'), s.gravity_read)
+        self.assertEquals('f', s.gravity_read_temp_units)
+        self.assertEquals(59, s.gravity_read_temp)
