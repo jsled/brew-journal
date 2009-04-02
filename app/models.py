@@ -866,6 +866,24 @@ class RecipeDerivation (object):
     def __init__(self, recipe):
         self._recipe = recipe
 
+    def compute_og(self, efficiency=None):
+        default_efficiency = Decimal('0.75')
+        efficiency = efficiency or default_efficiency
+        low_accum,high_accum = Decimal('0'),Decimal('0')
+        for grain in self._recipe.grain_set.all():
+            weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
+            grain_eff = efficiency
+            if grain.grain.name.find('Extract') != -1:
+                grain_eff = Decimal('1')
+            lo,hi = tuple([(Decimal(str(extract)) - Decimal('1000')) * weight * grain_eff for extract in (grain.grain.extract_min,grain.grain.extract_max)])
+            low_accum += lo
+            high_accum += hi
+
+        batch_gallons = convert_volume(self._recipe.batch_size, self._recipe.batch_size_units, 'gl')
+        low = Decimal('1') + ((low_accum / batch_gallons) / Decimal('1000'))
+        high = Decimal('1') + ((high_accum / batch_gallons) / Decimal('1000'))
+        return low,high
+
     def compute_ibu(self, gravity):
         return self.compute_ibu_tinseth(gravity)
 

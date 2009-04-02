@@ -519,7 +519,7 @@ class StepTest (TestCase):
 
 class RecipeDerivationTest (TestCase):
 
-    fixtures = ['hops0']
+    fixtures = ['hops0', 'grains1']
 
     def testBasicIbus(self):
         # this is straight from http://www.howtobrew.com/section1/chapter5-5.html
@@ -543,3 +543,47 @@ class RecipeDerivationTest (TestCase):
         self.assertAlmostEquals(decimal.Decimal('84'), ibus.low_ibu, 0)
         self.assertAlmostEquals(decimal.Decimal('118'), ibus.high_ibu, 0)
         self.assertAlmostEquals(decimal.Decimal('101'), ibus.average_ibus, 0)
+
+    def testEstimatedOg(self):
+        twoRow = models.Grain.objects.get(name__exact='Pale Malt (2-row)')
+        grains = [Mock(grain=twoRow, amount_value=decimal.Decimal('10'), amount_units='lb')]
+        recipe = Mock(batch_size=5, batch_size_units='gl', grain_set=FkSet(grains))
+        deriv = models.RecipeDerivation(recipe)
+        low,high = deriv.compute_og()
+        self.assertAlmostEqual(decimal.Decimal('1.0555'), low, 3)
+
+    def testEstimatedOgSmuttynoseImperialStout(self):
+        '''North American Clonebrews, pp. 87'''
+        dec = lambda x: decimal.Decimal(str(x))
+        pale = models.Grain.objects.get(name__exact='Pale Malt (2-row)')
+        crystal = models.Grain.objects.get(name__exact='Crystal Malt: 90')
+        roasted_barley = models.Grain.objects.get(name__exact='Roasted Barley',group__exact='American')
+        dark_extract = models.Grain.objects.get(name__exact='Liquid Malt Extract: Dark')
+        amber_extract = models.Grain.objects.get(name__exact='Dry Malt Extract: Amber')
+        grains = [Mock(grain=pale, amount_value=dec(2), amount_units='lb'),
+                  Mock(grain=crystal, amount_value=dec(8), amount_units='oz'),
+                  Mock(grain=roasted_barley, amount_value=dec(8), amount_units='oz'),
+                  Mock(grain=dark_extract, amount_value=dec(7), amount_units='lb'),
+                  Mock(grain=amber_extract, amount_value=dec(1), amount_units='lb')]
+        recipe = Mock(batch_size=5, batch_size_units='gl', grain_set=FkSet(grains))
+        deriv = models.RecipeDerivation(recipe)
+        low,high = deriv.compute_og()
+        self.assertAlmostEquals(dec('1.070'), low, 3)
+
+    def testEstimatedOgBrains(self):
+        '''Clonebrews, pp. 89'''
+        dec = lambda x: decimal.Decimal(str(x))
+        crystal = models.Grain.objects.get(name__exact='Crystal Malt', group__exact='British')
+        light_dme = models.Grain.objects.get(name__exact='Dry Malt Extract: Light')
+        cane = models.Grain.objects.get(name__exact='Sucrose (white table sugar)')
+        glucose = models.Grain.objects.get(name__exact='Dextrose (glucose)')
+        grains = [Mock(grain=crystal, amount_value=dec(0.5), amount_units='lb'),
+                  Mock(grain=light_dme, amount_value=dec(4.5), amount_units='lb'),
+                  Mock(grain=cane, amount_value=dec(4), amount_units='oz'),
+                  Mock(grain=glucose, amount_value=dec(2), amount_units='oz')]
+        recipe = Mock(batch_size=5, batch_size_units='gl', grain_set=FkSet(grains))
+        deriv = models.RecipeDerivation(recipe)
+        low,high = deriv.compute_og()
+        # close … the book's range is 1.041 - 1.043
+        self.assertAlmostEquals(dec(1.041), low, 3)
+        self.assertAlmostEquals(dec(1.045), high, 3)
