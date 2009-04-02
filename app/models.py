@@ -834,3 +834,67 @@ class BrewDerivations (object):
         fraction_attenuated = (best_end.gravity - Decimal('1.0')) / (best_start.gravity - Decimal('1.0'))
         aa = (Decimal('1.0') - fraction_attenuated) * Decimal('100')
         return aa
+
+
+class PerHopIbu (object):
+    def __init__(self, recipe_hop, low_ibu, high_ibu, percentage=None):
+        self._recipe_hop = recipe_hop
+        self._low_ibu = low_ibu
+        self._high_ibu = high_ibu
+        self._percentage = percentage
+    recipe_hop = property(lambda s: s._recipe_hop)
+    low_ibu = property(lambda s: s._low_ibu)
+    high_ibu = property(lambda s: s._high_ibu)
+    def _set_pctg(self, x):
+        self._percentage = x
+    percentage = property(lambda s: s._percentage, _set_pctg)
+
+class IbuDerivation (object):
+    def __init__(self, low_ibu, high_ibu, per_hop):
+        self._low_ibu = low_ibu
+        self._high_ibu = high_ibu
+        self._per_hop = per_hop or []
+
+    low_ibu = property(lambda s: s._low_ibu)
+    high_ibu = property(lambda s: s._high_ibu)
+    per_hop = property(lambda s: s._per_hop)
+
+    average_ibus = property(lambda s: (s._low_ibu + s._high_ibu) / Decimal('2'))
+
+
+class RecipeDerivation (object):
+    def __init__(self, recipe):
+        self._recipe = recipe
+
+    def compute_ibu(self, gravity):
+        return self.compute_ibu_tinseth(gravity)
+
+    def compute_ibu_tinseth(self, gravity):
+        '''
+        http://www.rooftopbrew.net/ibu.php
+        
+        http://www.howtobrew.com/section1/chapter5-5.html
+        
+        IBU = (1.65 × 0.000125^(G_{gravity} - 1)) × ((1 - e^{-0.04 × t_{min}})/4.1) × ((AAU%/100 × W_{g} × 10) / V_{l})
+        '''
+        def dec(x):
+            return Decimal(x)
+
+        wort_volume = convert_volume(self._recipe.batch_size, self._recipe.batch_size_units, 'l')
+        low_accum = dec('0')
+        high_accum = dec('0')
+        per_hop = []
+        for hop in self._recipe.hop_set.all():
+            weight = convert_weight(dec(hop.amount_value), hop.amount_units, 'gr')
+            gravity_exponent = gravity - dec('1.000')
+            term1 = dec('1.65') * dec('0.000125') ** gravity_exponent
+            term2 = (dec('1') - (dec('-0.04') * dec(str(hop.boil_time))).exp()) / dec('4.1')
+            term3_low,term3_high = tuple([(dec(aau) * weight * dec(10)) / wort_volume for aau in (hop.hop.aau_low, hop.hop.aau_high)])
+            low = term1 * term2 * term3_low
+            high = term1 * term2 * term3_high
+            low_accum += low
+            high_accum += high
+            per_hop.append(PerHopIbu(hop, low, high))
+        for hop_ibus in per_hop:
+            hop_ibus.percentage = hop_ibus.high_ibu / high_accum
+        return IbuDerivation(low_accum, high_accum, per_hop)

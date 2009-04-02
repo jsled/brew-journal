@@ -516,3 +516,30 @@ class StepTest (TestCase):
         self.assertEquals(decimal.Decimal('1.040'), s.gravity_read)
         self.assertEquals('f', s.gravity_read_temp_units)
         self.assertEquals(59, s.gravity_read_temp)
+
+class RecipeDerivationTest (TestCase):
+
+    fixtures = ['hops0']
+
+    def testBasicIbus(self):
+        # this is straight from http://www.howtobrew.com/section1/chapter5-5.html
+        perle = Mock(aau_low=decimal.Decimal('6.4'), aau_high=decimal.Decimal('6.4'))
+        liberty = Mock(aau_low=decimal.Decimal('4.6'), aau_high=decimal.Decimal('4.6'))
+        hops = [Mock(boil_time=60, amount_value=decimal.Decimal('1.5'), amount_units='oz', hop=perle),
+                Mock(boil_time=15, amount_value=decimal.Decimal('1'), amount_units='oz', hop=liberty)]
+        recipe = Mock(batch_size=5, batch_size_units='gl', hop_set=FkSet(hops))
+        deriv = models.RecipeDerivation(recipe)
+        ibus = deriv.compute_ibu(decimal.Decimal('1.080'))
+        self.assertAlmostEquals(decimal.Decimal('32'), ibus.average_ibus, 0)
+
+    def testRealWorldIbus(self):
+        chinook = models.Hop.objects.get(name__exact='Chinook')
+        golding = models.Hop.objects.get(name__exact='Golding (US)')
+        hops = [Mock(boil_time=90, amount_value=decimal.Decimal('2'), amount_units='oz', hop=chinook),
+                Mock(boil_time=90, amount_value=decimal.Decimal('1'), amount_units='oz', hop=golding)]
+        recipe = Mock(batch_size=5, batch_size_units='gl', hop_set=FkSet(hops))
+        deriv = models.RecipeDerivation(recipe)
+        ibus = deriv.compute_ibu(decimal.Decimal('1.058'))
+        self.assertAlmostEquals(decimal.Decimal('84'), ibus.low_ibu, 0)
+        self.assertAlmostEquals(decimal.Decimal('118'), ibus.high_ibu, 0)
+        self.assertAlmostEquals(decimal.Decimal('101'), ibus.average_ibus, 0)
