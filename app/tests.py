@@ -495,6 +495,11 @@ class UtilTest (TestCase):
                     round_tripped = models.convert_weight(converted, to_units, from_units)
                     self.assertAlmostEqual(val, round_tripped, 2)
 
+    def testVolumeConversion(self):
+        self.assertAlmostEqual(decimal.Decimal('1'), models.convert_volume(16, 'c', 'gl'), 2)
+        self.assertAlmostEqual(decimal.Decimal('5.01928'), models.convert_volume(19000, 'ml', 'gl'), 2)
+        self.assertAlmostEqual(decimal.Decimal('18.93'), models.convert_volume(5, 'gl', 'l'), 2)
+
 
 class StepTest (TestCase):
     def testGravityCorrection(self):

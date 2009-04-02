@@ -681,34 +681,37 @@ def correct_gravity(gravity, temp_f):
     gravity = gravity + (_c1 - _c2 * F + _c3 * F * F - _c4 * F * F *  F) * _adj
     return ctx.create_decimal(gravity)
 
-def convert_volume_to_gls(volume, units):
-    '''
-    >>> convert_volume_to_gls(Decimal('16'), 'c')
-    Decimal("1")
-    >>> convert_volume_to_gls(Decimal('19000'), 'ml')
-    Decimal("5.019284619855233264648385904")
-    '''
+
+def convert_volume(volume, from_units, to_units):
     ctx = Context(prec=5)
     volume = ctx.create_decimal(volume)
-    if units == 'fl':
-        return volume / ctx.create_decimal('128')
-    if units == 'c':
-        return volume / ctx.create_decimal('16')
-    if units == 'q':
-        return volume / ctx.create_decimal('4')
-    if units == 'ml':
-        volume = volume / ctx.create_decimal('1000')
-        units = 'l'
-        # fallthrough…
-    if units == 'l':
-        return volume / ctx.create_decimal('3.7854')
-    if units == 'gl':
-        return volume
-    # ('ct', 'count'),
-    # ('tsp', 'teaspoon'),
-    # ('tbsp', 'tablespoon'),
-    # ('pt', 'pint')
-    raise Exception('unknown units [%s]' % (units))
+
+    def simplify_volume(units):
+        factor = ctx.create_decimal('1')
+        if units == 'fl':
+            factor *= ctx.create_decimal('0.125')
+            units = 'c'
+        if units == 'c':
+            factor *= ctx.create_decimal('0.25')
+            units = 'qt'
+        if units == 'qt':
+            factor *= ctx.create_decimal('0.25')
+            units = 'gl'
+        if units == 'ml':
+            factor *= ctx.create_decimal('0.001')
+            units = 'l'
+        return (units, factor)
+        
+    from_units,from_factor = simplify_volume(from_units)
+    to_units,to_factor = simplify_volume(to_units)
+
+    conversion_from_to = {
+        'l': {'l': ctx.create_decimal('1'),
+              'gl': ctx.create_decimal('0.264172052')},
+        'gl': {'l': ctx.create_decimal('3.78541178'),
+               'gl': ctx.create_decimal('1')},
+        }
+    return volume * from_factor * conversion_from_to[from_units][to_units] * to_factor
 
 
 def convert_weight(amount, from_units, to_units):
@@ -791,7 +794,7 @@ class BrewDerivations (object):
             grain_in_lbs = convert_weight(recipe_grain.amount_value, recipe_grain.amount_units, 'lbs')
             recipe_grain_potential = grain_potential_per_lb * grain_in_lbs
             potential_points += recipe_grain_potential
-        volume_in_gallons = convert_volume_to_gls(best_step.volume, best_step.volume_units)
+        volume_in_gallons = convert_volume(best_step.volume, best_step.volume_units, 'gl')
         grav = ((best_step.gravity - ctx.create_decimal('1')) * ctx.create_decimal('1000'))
         obtained_points = grav * volume_in_gallons
         efficiency = (obtained_points / potential_points) * ctx.create_decimal('100')
