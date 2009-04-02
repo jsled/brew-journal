@@ -34,6 +34,7 @@
 
 import datetime
 import decimal
+import itertools
 import unittest
 from django.contrib import auth
 from django.test.client import Client
@@ -428,7 +429,6 @@ class NextStepsTest (TestCase):
         brew = Mock(brewer=user, recipe=recipe, last_state='strike', step_set=FkSet(steps))
         next_steps = models.NextStepGenerator(brew).get_next_steps()
         self.assertTrue(len(next_steps.possible) == 2, next_steps)
-        import itertools
         for next_step,expected_type in itertools.izip(next_steps.possible, ['dough', 'mash']):
             # @fixme: of course, these are wrong given how we really want future-dated steps to work.
             self.assertTrue(next_step.type.id == expected_type, next_step)
@@ -484,6 +484,16 @@ class UtilTest (TestCase):
         import doctest
         doctest.testmod(models)
 
+    def testWeightConversionRoundTripping(self):
+        convertible = ['gr', 'kg', 'oz', 'lb']
+        import random
+        for from_units in convertible:
+            for to_units in convertible:
+                for x in range(10):
+                    val = decimal.Decimal(str(random.random() * 100))
+                    converted = models.convert_weight(val, from_units, to_units)
+                    round_tripped = models.convert_weight(converted, to_units, from_units)
+                    self.assertAlmostEqual(val, round_tripped, 2)
 
 
 class StepTest (TestCase):

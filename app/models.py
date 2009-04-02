@@ -711,29 +711,39 @@ def convert_volume_to_gls(volume, units):
     raise Exception('unknown units [%s]' % (units))
 
 
-def convert_weight_to_lbs(amount, from_units):
+def convert_weight(amount, from_units, to_units):
     '''
-    >>> convert_weight_to_lbs(1, 'kg')
+    >> convert_weight(1, 'lb', 'kg')
+    Decimal('0.4539237')
+    >>> convert_weight(1, 'kg', 'lb')
     Decimal("2.20462")
-    >>> convert_weight_to_lbs(16, 'oz')
-    Decimal("1")
-    >>> convert_weight_to_lbs(32, 'oz')
-    Decimal("2")
-    >>> convert_weight_to_lbs(1500, 'gr')
-    Decimal("3.306930")
+    >>> convert_weight(16, 'oz', 'lb')
+    Decimal("1.0000")
+    >>> convert_weight(32, 'oz', 'lb')
+    Decimal("2.0000")
+    >>> convert_weight(1500, 'gr', 'lb')
+    Decimal("3.30693000")
     '''
     ctx = Context(prec=6)
-    if from_units == 'gr':
-        amount = amount / ctx.create_decimal('1000.')
-        from_units = 'kg'
-        # fallthrough…
-    if from_units == 'kg':
-        return amount * ctx.create_decimal('2.20462')
-    if from_units == 'oz':
-        return amount / ctx.create_decimal('16.')
-    if from_units == 'lb':
-        return amount
-    raise Exception('unknown units [%s]' % (from_units))
+    conversion_from_to = {
+        'gr': {'gr': ctx.create_decimal('1'),
+               'kg': ctx.create_decimal('0.001'),
+               'oz': ctx.create_decimal('0.0352739619'),
+               'lb': ctx.create_decimal('0.0022046226')},
+        'kg': {'gr': ctx.create_decimal('1000'),
+               'kg': ctx.create_decimal('1'),
+               'oz': ctx.create_decimal('35.2739619'),
+               'lb': ctx.create_decimal('2.2046226')},
+        'oz': {'gr': ctx.create_decimal('28.35'),
+               'kg': ctx.create_decimal('0.02835'),
+               'oz': ctx.create_decimal('1'),
+               'lb': ctx.create_decimal('0.0625')},
+        'lb': {'gr': ctx.create_decimal('453.59237'),
+               'kg': ctx.create_decimal('0.45359237'),
+               'oz': ctx.create_decimal('16'),
+               'lb': ctx.create_decimal('1')}
+        }
+    return amount * conversion_from_to[from_units][to_units]
 
 
 class BrewDerivations (object):
@@ -778,7 +788,7 @@ class BrewDerivations (object):
             grain = recipe_grain.grain
             min,max = tuple([ctx.create_decimal(str(x - 1000)) for x in [grain.extract_min,grain.extract_max]])
             grain_potential_per_lb = (min + max) / ctx.create_decimal('2')
-            grain_in_lbs = convert_weight_to_lbs(recipe_grain.amount_value, recipe_grain.amount_units)
+            grain_in_lbs = convert_weight(recipe_grain.amount_value, recipe_grain.amount_units, 'lbs')
             recipe_grain_potential = grain_potential_per_lb * grain_in_lbs
             potential_points += recipe_grain_potential
         volume_in_gallons = convert_volume_to_gls(best_step.volume, best_step.volume_units)
