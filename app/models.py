@@ -916,3 +916,23 @@ class RecipeDerivation (object):
         for hop_ibus in per_hop:
             hop_ibus.percentage = hop_ibus.high_ibu / high_accum
         return IbuDerivation(low_accum, high_accum, per_hop)
+
+    def compute_srm(self, efficiency=None):
+        default_efficiency = Decimal('0.75')
+        efficiency = efficiency or default_efficiency
+        dec = lambda x: Decimal(str(x))
+        lo_accum = dec(0)
+        hi_accum = dec(0)
+        for grain in self._recipe.grain_set.all():
+            weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
+            grain_eff = efficiency
+            if grain.grain.name.find('Extract') != -1:
+                grain_eff = Decimal('1')
+            lo,hi = tuple([Decimal(str(lovibond)) * Decimal('0.1') * weight * grain_eff for lovibond in (grain.grain.lovibond_min,grain.grain.lovibond_max)])
+            lo_accum += lo
+            hi_accum += hi
+        batch_gallons = convert_volume(self._recipe.batch_size, self._recipe.batch_size_units, 'gl')
+        low = lo_accum / batch_gallons
+        high = hi_accum / batch_gallons
+        return low,high
+            

@@ -570,7 +570,7 @@ class RecipeDerivationTest (TestCase):
         low,high = deriv.compute_og()
         self.assertAlmostEquals(dec('1.070'), low, 3)
 
-    def testEstimatedOgBrains(self):
+    def testEstimatedOgSrmBrains(self):
         '''Clonebrews, pp. 89'''
         dec = lambda x: decimal.Decimal(str(x))
         crystal = models.Grain.objects.get(name__exact='Crystal Malt', group__exact='British')
@@ -587,3 +587,9 @@ class RecipeDerivationTest (TestCase):
         # close … the book's range is 1.041 - 1.043
         self.assertAlmostEquals(dec(1.041), low, 3)
         self.assertAlmostEquals(dec(1.045), high, 3)
+        #
+        srm_lo,srm_hi = deriv.compute_srm()
+        # book: 8.5
+        # see http://www.homebrewtalk.com/f12/srm-calculations-promash-64792/ for more details.
+        self.assertAlmostEquals(dec(7.3), srm_lo, 1)
+        self.assertAlmostEquals(dec(7.7), srm_hi, 1)
