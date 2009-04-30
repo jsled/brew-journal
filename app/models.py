@@ -866,11 +866,49 @@ class RecipeDerivation (object):
     def __init__(self, recipe):
         self._recipe = recipe
 
+    default_efficiency = Decimal('0.75')
+
+    def _test_batch_size_deriv(self, reasons):
+        has_batch_size = False
+        try:
+            if self._recipe.batch_size is not None and self._recipe.batch_size_units is not None:
+                has_batch_size = True
+        except AttributeError,e:
+            pass
+        if not has_batch_size:
+            reasons.append('recipe must have batch size and units')
+
+    def _test_grains_deriv(self, reasons):
+        has_grains = False
+        try:
+            if self._recipe.recipegrain_set and self._recipe.recipegrain_set.count() > 0:
+                has_grains = True
+        except AttributeError,e:
+            pass
+        if not has_grains:
+            reasons.append('recipe must have grains')
+
+    def _test_hops_deriv(self, reasons):
+        has_hops = False
+        try:
+            if self._recipe.recipehop_set.count() > 0:
+                has_hops = True
+        except AttributeError,e:
+            pass
+        if not has_hops:
+            reasons.append('recipe must have hops')
+
+    def can_not_derive_og(self):
+        '''@return a list of string reasons why we cannot compute an original gravity'''
+        reasons = []
+        self._test_batch_size_deriv(reasons)
+        self._test_grains_deriv(reasons)
+        return reasons
+
     def compute_og(self, efficiency=None):
-        default_efficiency = Decimal('0.75')
-        efficiency = efficiency or default_efficiency
+        efficiency = efficiency or RecipeDerivation.default_efficiency
         low_accum,high_accum = Decimal('0'),Decimal('0')
-        for grain in self._recipe.grain_set.all():
+        for grain in self._recipe.recipegrain_set.all():
             weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
             grain_eff = efficiency
             if grain.grain.name.find('Extract') != -1:
@@ -883,6 +921,12 @@ class RecipeDerivation (object):
         low = Decimal('1') + ((low_accum / batch_gallons) / Decimal('1000'))
         high = Decimal('1') + ((high_accum / batch_gallons) / Decimal('1000'))
         return low,high
+
+    def can_not_derive_ibu(self):
+        reasons = []
+        self._test_batch_size_deriv(reasons)
+        self._test_hops_deriv(reasons)
+        return reasons
 
     def compute_ibu(self, gravity):
         return self.compute_ibu_tinseth(gravity)
@@ -902,7 +946,7 @@ class RecipeDerivation (object):
         low_accum = dec('0')
         high_accum = dec('0')
         per_hop = []
-        for hop in self._recipe.hop_set.all():
+        for hop in self._recipe.recipehop_set.all():
             weight = convert_weight(dec(hop.amount_value), hop.amount_units, 'gr')
             gravity_exponent = gravity - dec('1.000')
             term1 = dec('1.65') * dec('0.000125') ** gravity_exponent
@@ -917,13 +961,18 @@ class RecipeDerivation (object):
             hop_ibus.percentage = hop_ibus.high_ibu / high_accum
         return IbuDerivation(low_accum, high_accum, per_hop)
 
+    def can_not_derive_srm(self):
+        reasons = []
+        self._test_batch_size_deriv(reasons)
+        self._test_grains_deriv(reasons)
+        return reasons
+
     def compute_srm(self, efficiency=None):
-        default_efficiency = Decimal('0.75')
-        efficiency = efficiency or default_efficiency
+        efficiency = efficiency or RecipeDerivation.default_efficiency
         dec = lambda x: Decimal(str(x))
         lo_accum = dec(0)
         hi_accum = dec(0)
-        for grain in self._recipe.grain_set.all():
+        for grain in self._recipe.recipegrain_set.all():
             weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
             grain_eff = efficiency
             if grain.grain.name.find('Extract') != -1:
@@ -935,4 +984,8 @@ class RecipeDerivation (object):
         low = lo_accum / batch_gallons
         high = hi_accum / batch_gallons
         return low,high
-            
+
+    # def compute_og_ibu_srm_matrix(self, efficiency=None):
+    #     ''' return a 2x(2,2) space of (low,high)og -> (low,high)ibu(og) 
+
+    # def compute_og_ibu_srm_graph(self, efficiency=None, include_style_range=False):

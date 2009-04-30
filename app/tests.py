@@ -285,6 +285,9 @@ class FkSet (object):
     def all(self):
         return self._items
 
+    def count(self):
+        return len(self._items)
+
 
 class ShoppingListTest (TestCase):
 
@@ -521,6 +524,27 @@ class RecipeDerivationTest (TestCase):
 
     fixtures = ['hops0', 'grains1']
 
+    def testBareRecipe(self):
+        bare_recipe = Mock()
+        deriv = models.RecipeDerivation(bare_recipe)
+        reasons = deriv.can_not_derive_og()
+        self.assertTrue(len(reasons) >= 2)
+        for expected_substring in ['batch size', 'grains']:
+            for reason in reasons:
+                if reason.find(expected_substring) != -1:
+                    break
+            else:
+                self.fail('did not contain expected-substring [%s] reason' % (expected_substring))
+        #
+        ibu_reasons = deriv.can_not_derive_ibu()
+        self.assertTrue(len(ibu_reasons) >= 2)
+        for expected_substring in ['batch size', 'hops']:
+            for reason in ibu_reasons:
+                if reason.find(expected_substring) != -1:
+                    break
+            else:
+                self.fail('did not contain expected-substring [%s] reason' % (expected_substring))
+
     def testBasicIbus(self):
         # this is straight from http://www.howtobrew.com/section1/chapter5-5.html
         perle = Mock(aau_low=decimal.Decimal('6.4'), aau_high=decimal.Decimal('6.4'))
@@ -529,6 +553,8 @@ class RecipeDerivationTest (TestCase):
                 Mock(boil_time=15, amount_value=decimal.Decimal('1'), amount_units='oz', hop=liberty)]
         recipe = Mock(batch_size=5, batch_size_units='gl', hop_set=FkSet(hops))
         deriv = models.RecipeDerivation(recipe)
+        no_reasons = deriv.can_not_derive_ibu()
+        self.assertEquals([], no_reasons)
         ibus = deriv.compute_ibu(decimal.Decimal('1.080'))
         self.assertAlmostEquals(decimal.Decimal('32'), ibus.average_ibus, 0)
 
@@ -539,6 +565,8 @@ class RecipeDerivationTest (TestCase):
                 Mock(boil_time=90, amount_value=decimal.Decimal('1'), amount_units='oz', hop=golding)]
         recipe = Mock(batch_size=5, batch_size_units='gl', hop_set=FkSet(hops))
         deriv = models.RecipeDerivation(recipe)
+        no_reasons = deriv.can_not_derive_ibu()
+        self.assertEquals([], no_reasons)
         ibus = deriv.compute_ibu(decimal.Decimal('1.058'))
         self.assertAlmostEquals(decimal.Decimal('84'), ibus.low_ibu, 0)
         self.assertAlmostEquals(decimal.Decimal('118'), ibus.high_ibu, 0)
@@ -549,6 +577,8 @@ class RecipeDerivationTest (TestCase):
         grains = [Mock(grain=twoRow, amount_value=decimal.Decimal('10'), amount_units='lb')]
         recipe = Mock(batch_size=5, batch_size_units='gl', grain_set=FkSet(grains))
         deriv = models.RecipeDerivation(recipe)
+        no_reasons = deriv.can_not_derive_og()
+        self.assertEquals([], no_reasons)
         low,high = deriv.compute_og()
         self.assertAlmostEqual(decimal.Decimal('1.0555'), low, 3)
 
@@ -567,6 +597,8 @@ class RecipeDerivationTest (TestCase):
                   Mock(grain=amber_extract, amount_value=dec(1), amount_units='lb')]
         recipe = Mock(batch_size=5, batch_size_units='gl', grain_set=FkSet(grains))
         deriv = models.RecipeDerivation(recipe)
+        no_reasons = deriv.can_not_derive_og()
+        self.assertEquals([], no_reasons)
         low,high = deriv.compute_og()
         self.assertAlmostEquals(dec('1.070'), low, 3)
 
@@ -583,11 +615,15 @@ class RecipeDerivationTest (TestCase):
                   Mock(grain=glucose, amount_value=dec(2), amount_units='oz')]
         recipe = Mock(batch_size=5, batch_size_units='gl', grain_set=FkSet(grains))
         deriv = models.RecipeDerivation(recipe)
+        no_reasons = deriv.can_not_derive_og()
+        self.assertEquals([], no_reasons)
         low,high = deriv.compute_og()
         # close … the book's range is 1.041 - 1.043
         self.assertAlmostEquals(dec(1.041), low, 3)
         self.assertAlmostEquals(dec(1.045), high, 3)
         #
+        no_srm_reasons = deriv.can_not_derive_srm()
+        self.assertEquals([], no_srm_reasons)
         srm_lo,srm_hi = deriv.compute_srm()
         # book: 8.5
         # see http://www.homebrewtalk.com/f12/srm-calculations-promash-64792/ for more details.
