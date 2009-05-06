@@ -791,7 +791,7 @@ class BrewDerivations (object):
             grain = recipe_grain.grain
             min,max = tuple([ctx.create_decimal(str(x - 1000)) for x in [grain.extract_min,grain.extract_max]])
             grain_potential_per_lb = (min + max) / ctx.create_decimal('2')
-            grain_in_lbs = convert_weight(recipe_grain.amount_value, recipe_grain.amount_units, 'lbs')
+            grain_in_lbs = convert_weight(recipe_grain.amount_value, recipe_grain.amount_units, 'lb')
             recipe_grain_potential = grain_potential_per_lb * grain_in_lbs
             potential_points += recipe_grain_potential
         volume_in_gallons = convert_volume(best_step.volume, best_step.volume_units, 'gl')
