@@ -194,7 +194,7 @@ $(document).ready(function(){
 <py:if test="deriv is not None">
 <h1>derivations</h1>
 
-<table class="recipe_derivations">
+<table class="recipe_derivations" width="25%">
   <tr>
     <td colspan="2" class="space">&nbsp;</td>
     <th colspan="3">Original gravity</th>
@@ -293,6 +293,33 @@ $(document).ready(function(){
     </py:if>
   </py:with>
 </table>
+
+<br />
+
+<table width="25%">
+    <tr>
+        <th>SRM</th>
+        <td>
+            <py:choose py:with="no_srm_reasons=deriv.can_not_derive_srm()">
+                <py:when test="no_srm_reasons">
+                    <div id="why_not_srm">
+                        <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(why not?)</a></div>
+                        <div style="display:none">
+                            <py:for each="reason in no_srm_reasons">
+                                ${reason}<br />
+                            </py:for>
+                            <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(hide)</a>
+                        </div>
+                    </div>
+                </py:when>
+                <py:otherwise py:with="srm=deriv.compute_srm()">
+                    ${'%2.0f' % (srm.average)}
+                </py:otherwise>
+            </py:choose>
+        </td>
+    </tr>
+</table>
+
 </py:if>
 
 </div> <!-- yui-b -->

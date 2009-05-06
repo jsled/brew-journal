@@ -629,15 +629,16 @@ class RecipeDerivationsTest (TestCase):
         og = deriv.compute_og()
         # close … the book's range is 1.041 - 1.043
         self.assertAlmostEquals(dec(1.041), og.low, 3)
-        self.assertAlmostEquals(dec(1.045), og.high, 3)
         self.assertAlmostEquals(dec(1.043), og.average, 3)
+        self.assertAlmostEquals(dec(1.045), og.high, 3)
         #
         no_srm_reasons = deriv.can_not_derive_srm()
         self.assertEquals([], no_srm_reasons)
-        srm_lo,srm_hi = deriv.compute_srm()
+        srm = deriv.compute_srm()
         # book: 8.5
         # see http://www.homebrewtalk.com/f12/srm-calculations-promash-64792/ for more details.
-        self.assertAlmostEquals(dec(7.3), srm_lo, 1)
-        self.assertAlmostEquals(dec(7.7), srm_hi, 1)
+        self.assertAlmostEquals(dec(7.3), srm.low, 1)
+        self.assertAlmostEquals(dec(7.7), srm.high, 1)
+        self.assertPercentageSum(srm.per_grain)
         #
         self.assertPercentageSum(og.per_grain)

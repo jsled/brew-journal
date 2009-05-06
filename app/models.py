@@ -894,6 +894,35 @@ class OgDerivation (object):
     per_grain = property(lambda s: s._per_grain)
 
 
+class PerGrainSrm (object):
+    def __init__(self, recipe_grain, low_srm, high_srm, percentage=None):
+        self._recipe_grain = recipe_grain
+        self._low_srm = low_srm
+        self._high_srm = high_srm
+        self._percentage = percentage
+
+    recipe_grain = property(lambda s: s._recipe_grain)
+    low_srm = property(lambda s: s._low_srm)
+    high_srm = property(lambda s: s._high_srm)
+
+    def _set_pctg(self, x):
+        self._percentage = x
+
+    percentage = property(lambda s: s._percentage, _set_pctg)
+
+
+class SrmDerivation (object):
+    def __init__(self, low_srm, high_srm, per_grain):
+        self._low_srm = low_srm
+        self._high_srm = high_srm
+        self._per_grain = per_grain or []
+        
+    low = property(lambda s: s._low_srm)
+    high = property(lambda s: s._high_srm)
+    average = property(lambda s: (s._low_srm + s._high_srm) / Decimal('2'))
+    per_grain = property(lambda s: s._per_grain)
+
+
 class RecipeDerivations (object):
     def __init__(self, recipe):
         self._recipe = recipe
@@ -1021,6 +1050,7 @@ class RecipeDerivations (object):
         dec = lambda x: Decimal(str(x))
         lo_accum = dec(0)
         hi_accum = dec(0)
+        per_grain = []
         for grain in self._recipe.recipegrain_set.all():
             weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
             grain_eff = efficiency
@@ -1029,10 +1059,13 @@ class RecipeDerivations (object):
             lo,hi = tuple([Decimal(str(lovibond)) * Decimal('0.1') * weight * grain_eff for lovibond in (grain.grain.lovibond_min,grain.grain.lovibond_max)])
             lo_accum += lo
             hi_accum += hi
+            per_grain.append(PerGrainSrm(grain, lo, hi))
+        for grain in per_grain:
+            grain.percentage = (grain.high_srm / hi_accum) * Decimal('100')
         batch_gallons = convert_volume(self._recipe.batch_size, self._recipe.batch_size_units, 'gl')
         low = lo_accum / batch_gallons
         high = hi_accum / batch_gallons
-        return low,high
+        return SrmDerivation(low, high, per_grain)
 
     # def compute_og_ibu_srm_matrix(self, efficiency=None):
     #     ''' return a 2x(2,2) space of (low,high)og -> (low,high)ibu(og) 
