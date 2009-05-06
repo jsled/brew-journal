@@ -1003,6 +1003,10 @@ class RecipeDerivations (object):
         reasons = []
         self._test_batch_size_deriv(reasons)
         self._test_hops_deriv(reasons)
+        try:
+            Decimal('2') ** Decimal('0.1')
+        except decimal.InvalidOperation,e:
+            rtn.append('dreamhost has an outdated python that prevents us from computing IBU')
         return reasons
 
     def compute_ibu(self, gravity):
