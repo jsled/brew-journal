@@ -641,13 +641,15 @@ def _render_recipe(request, recipe, **kwargs):
     hop_form = kwargs.setdefault('hop_form', RecipeHopForm())
     adj_form = kwargs.setdefault('adj_form', RecipeAdjunctForm())
     yeast_form = kwargs.setdefault('yeast_form', RecipeYeastForm())
+    derivations = models.RecipeDerivations(recipe)
     return HttpResponse(render('recipe/view.html', request=request, std=standard_context(),
                                recipe=recipe, grains=grains, hops=hops, adjuncts=adjuncts, yeasts=yeasts,
                                recipe_form=form,
                                grain_form=grain_form,
                                hop_form=hop_form,
                                adj_form=adj_form,
-                               yeast_form=yeast_form
+                               yeast_form=yeast_form,
+                               deriv=derivations
                                ))
 
 def recipe(request, recipe_id, recipe_name):

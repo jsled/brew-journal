@@ -520,16 +520,16 @@ class StepTest (TestCase):
         self.assertEquals('f', s.gravity_read_temp_units)
         self.assertEquals(59, s.gravity_read_temp)
 
-class RecipeDerivationTest (TestCase):
+class RecipeDerivationsTest (TestCase):
 
     fixtures = ['hops0', 'grains1']
 
     def testBareRecipe(self):
         bare_recipe = Mock()
-        deriv = models.RecipeDerivation(bare_recipe)
+        deriv = models.RecipeDerivations(bare_recipe)
         reasons = deriv.can_not_derive_og()
-        self.assertTrue(len(reasons) >= 2)
-        for expected_substring in ['batch size', 'grains']:
+        self.assertEquals(3, len(reasons))
+        for expected_substring in ['non-zero batch', 'batch size', 'grains']:
             for reason in reasons:
                 if reason.find(expected_substring) != -1:
                     break
@@ -537,8 +537,8 @@ class RecipeDerivationTest (TestCase):
                 self.fail('did not contain expected-substring [%s] reason' % (expected_substring))
         #
         ibu_reasons = deriv.can_not_derive_ibu()
-        self.assertTrue(len(ibu_reasons) >= 2)
-        for expected_substring in ['batch size', 'hops']:
+        self.assertEquals(3, len(ibu_reasons))
+        for expected_substring in ['non-zero batch', 'batch size', 'hops']:
             for reason in ibu_reasons:
                 if reason.find(expected_substring) != -1:
                     break
@@ -551,8 +551,8 @@ class RecipeDerivationTest (TestCase):
         liberty = Mock(aau_low=decimal.Decimal('4.6'), aau_high=decimal.Decimal('4.6'))
         hops = [Mock(boil_time=60, amount_value=decimal.Decimal('1.5'), amount_units='oz', hop=perle),
                 Mock(boil_time=15, amount_value=decimal.Decimal('1'), amount_units='oz', hop=liberty)]
-        recipe = Mock(batch_size=5, batch_size_units='gl', hop_set=FkSet(hops))
-        deriv = models.RecipeDerivation(recipe)
+        recipe = Mock(batch_size=5, batch_size_units='gl', recipehop_set=FkSet(hops))
+        deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_ibu()
         self.assertEquals([], no_reasons)
         ibus = deriv.compute_ibu(decimal.Decimal('1.080'))
@@ -563,8 +563,8 @@ class RecipeDerivationTest (TestCase):
         golding = models.Hop.objects.get(name__exact='Golding (US)')
         hops = [Mock(boil_time=90, amount_value=decimal.Decimal('2'), amount_units='oz', hop=chinook),
                 Mock(boil_time=90, amount_value=decimal.Decimal('1'), amount_units='oz', hop=golding)]
-        recipe = Mock(batch_size=5, batch_size_units='gl', hop_set=FkSet(hops))
-        deriv = models.RecipeDerivation(recipe)
+        recipe = Mock(batch_size=5, batch_size_units='gl', recipehop_set=FkSet(hops))
+        deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_ibu()
         self.assertEquals([], no_reasons)
         ibus = deriv.compute_ibu(decimal.Decimal('1.058'))
@@ -575,8 +575,8 @@ class RecipeDerivationTest (TestCase):
     def testEstimatedOg(self):
         twoRow = models.Grain.objects.get(name__exact='Pale Malt (2-row)')
         grains = [Mock(grain=twoRow, amount_value=decimal.Decimal('10'), amount_units='lb')]
-        recipe = Mock(batch_size=5, batch_size_units='gl', grain_set=FkSet(grains))
-        deriv = models.RecipeDerivation(recipe)
+        recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
         self.assertEquals([], no_reasons)
         low,high = deriv.compute_og()
@@ -595,8 +595,8 @@ class RecipeDerivationTest (TestCase):
                   Mock(grain=roasted_barley, amount_value=dec(8), amount_units='oz'),
                   Mock(grain=dark_extract, amount_value=dec(7), amount_units='lb'),
                   Mock(grain=amber_extract, amount_value=dec(1), amount_units='lb')]
-        recipe = Mock(batch_size=5, batch_size_units='gl', grain_set=FkSet(grains))
-        deriv = models.RecipeDerivation(recipe)
+        recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
         self.assertEquals([], no_reasons)
         low,high = deriv.compute_og()
@@ -613,8 +613,8 @@ class RecipeDerivationTest (TestCase):
                   Mock(grain=light_dme, amount_value=dec(4.5), amount_units='lb'),
                   Mock(grain=cane, amount_value=dec(4), amount_units='oz'),
                   Mock(grain=glucose, amount_value=dec(2), amount_units='oz')]
-        recipe = Mock(batch_size=5, batch_size_units='gl', grain_set=FkSet(grains))
-        deriv = models.RecipeDerivation(recipe)
+        recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
         self.assertEquals([], no_reasons)
         low,high = deriv.compute_og()

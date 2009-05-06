@@ -849,6 +849,7 @@ class PerHopIbu (object):
         self._percentage = x
     percentage = property(lambda s: s._percentage, _set_pctg)
 
+
 class IbuDerivation (object):
     def __init__(self, low_ibu, high_ibu, per_hop):
         self._low_ibu = low_ibu
@@ -862,7 +863,7 @@ class IbuDerivation (object):
     average_ibus = property(lambda s: (s._low_ibu + s._high_ibu) / Decimal('2'))
 
 
-class RecipeDerivation (object):
+class RecipeDerivations (object):
     def __init__(self, recipe):
         self._recipe = recipe
 
@@ -870,13 +871,18 @@ class RecipeDerivation (object):
 
     def _test_batch_size_deriv(self, reasons):
         has_batch_size = False
+        has_non_zero_batch_size = False
         try:
             if self._recipe.batch_size is not None and self._recipe.batch_size_units is not None:
                 has_batch_size = True
+            if self._recipe.batch_size > 0:
+                has_non_zero_batch_size = True
         except AttributeError,e:
             pass
         if not has_batch_size:
             reasons.append('recipe must have batch size and units')
+        if not has_non_zero_batch_size:
+            reasons.append('recipe must have non-zero batch size')
 
     def _test_grains_deriv(self, reasons):
         has_grains = False
@@ -906,7 +912,7 @@ class RecipeDerivation (object):
         return reasons
 
     def compute_og(self, efficiency=None):
-        efficiency = efficiency or RecipeDerivation.default_efficiency
+        efficiency = efficiency or RecipeDerivations.default_efficiency
         low_accum,high_accum = Decimal('0'),Decimal('0')
         for grain in self._recipe.recipegrain_set.all():
             weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
@@ -929,6 +935,7 @@ class RecipeDerivation (object):
         return reasons
 
     def compute_ibu(self, gravity):
+        '''@see http://www.homebrewtalk.com/f128/estimating-bitterness-algorithms-state-art-109681/'''
         return self.compute_ibu_tinseth(gravity)
 
     def compute_ibu_tinseth(self, gravity):
@@ -968,7 +975,7 @@ class RecipeDerivation (object):
         return reasons
 
     def compute_srm(self, efficiency=None):
-        efficiency = efficiency or RecipeDerivation.default_efficiency
+        efficiency = efficiency or RecipeDerivations.default_efficiency
         dec = lambda x: Decimal(str(x))
         lo_accum = dec(0)
         hi_accum = dec(0)
