@@ -36,7 +36,7 @@ from django.db import models
 from django.contrib import auth
 import itertools
 import urllib
-from decimal import Decimal, Context, ROUND_HALF_UP
+from decimal import Decimal, Context, ROUND_HALF_UP, InvalidOperation
 
 class StepFilter (object):
     def __init__(self, conditions=None):
@@ -1005,8 +1005,8 @@ class RecipeDerivations (object):
         self._test_hops_deriv(reasons)
         try:
             Decimal('2') ** Decimal('0.1')
-        except decimal.InvalidOperation,e:
-            rtn.append('dreamhost has an outdated python that prevents us from computing IBU')
+        except InvalidOperation:
+            reasons.append('dreamhost has an outdated python that prevents us from computing IBU')
         return reasons
 
     def compute_ibu(self, gravity):
