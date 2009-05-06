@@ -642,3 +642,41 @@ class RecipeDerivationsTest (TestCase):
         self.assertPercentageSum(srm.per_grain)
         #
         self.assertPercentageSum(og.per_grain)
+
+    def _testRuabeoir(self):
+        '''Brewing Classic Styles, pp. 129; Irish Red Ale "Ruabeoir"'''
+        dec = lambda x: decimal.Decimal(str(x))
+        pale_lme = models.Grain.objects.get(name__exact='Liquid Malt Extract: Light')
+        crystal_40 = models.Grain.objects.get(name__exact='Crystal Malt: 40')
+        crystal_120 = models.Grain.objects.get(name__exact='Crystal Malt: 120')
+        barley = models.Grain.objects.get(name__exact='Roasted Barley', group__exact='American')
+        goldings = models.Hop.objects.get(name__exact='Kent Golding (UK)')
+        grains = [Mock(grain=pale_lme, amount_value=dec(8.1), amount_units='lb'),
+                  Mock(grain=crystal_40, amount_value=dec(6), amount_units='oz'),
+                  Mock(grain=crystal_120, amount_value=dec(6), amount_units='oz'),
+                  Mock(grain=barley, amount_value=dec(6), amount_units='oz')]
+        hops = [Mock(hop=goldings, amount_value=dec(1.25), amount_units='oz', boil_time=60)]
+        recipe = Mock(batch_size=5, batch_size_units='gl',
+                      recipegrain_set=FkSet(grains),
+                      recipehop_set=FkSet(hops))
+        deriv = models.RecipeDerivations(recipe)
+        no_og_reasons = deriv.can_not_derive_og()
+        self.assertEquals([], no_og_reasons)
+        og = deriv.compute_og()
+        self.assertAlmostEquals(dec('1.054'), og.average, 0)
+
+        # as the text says:
+        # og=1.054
+        # ibu=25
+        # srm: 17
+
+        no_ibu_reasons = deriv.can_not_derive_ibu()
+        self.assertEquals([], no_ibu_reasons)
+        ibu = deriv.compute_ibu(og.average)
+        #self.assertAlmostEquals(dec('25'), ibu.average, 0)
+
+        no_srm_reasons = deriv.can_not_derive_srm()
+        self.assertEquals([], no_srm_reasons)
+        srm = deriv.compute_srm()
+        #self.assertAlmostEquals(dec('17'), srm.average)
+
