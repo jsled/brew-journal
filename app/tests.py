@@ -524,9 +524,16 @@ class RecipeDerivationsTest (TestCase):
 
     fixtures = ['hops0', 'grains1']
 
+    def assertPercentageSum(self, thingies):
+        percentage_accum = decimal.Decimal('0')
+        for thingy in thingies:
+            percentage_accum += thingy.percentage
+        self.assertAlmostEquals(decimal.Decimal('100'), percentage_accum, 0)
+
     def testBareRecipe(self):
         bare_recipe = Mock()
         deriv = models.RecipeDerivations(bare_recipe)
+        #
         reasons = deriv.can_not_derive_og()
         self.assertEquals(3, len(reasons))
         for expected_substring in ['non-zero batch', 'batch size', 'grains']:
@@ -556,7 +563,7 @@ class RecipeDerivationsTest (TestCase):
         no_reasons = deriv.can_not_derive_ibu()
         self.assertEquals([], no_reasons)
         ibus = deriv.compute_ibu(decimal.Decimal('1.080'))
-        self.assertAlmostEquals(decimal.Decimal('32'), ibus.average_ibus, 0)
+        self.assertAlmostEquals(decimal.Decimal('32'), ibus.average, 0)
 
     def testRealWorldIbus(self):
         chinook = models.Hop.objects.get(name__exact='Chinook')
@@ -568,9 +575,10 @@ class RecipeDerivationsTest (TestCase):
         no_reasons = deriv.can_not_derive_ibu()
         self.assertEquals([], no_reasons)
         ibus = deriv.compute_ibu(decimal.Decimal('1.058'))
-        self.assertAlmostEquals(decimal.Decimal('84'), ibus.low_ibu, 0)
-        self.assertAlmostEquals(decimal.Decimal('118'), ibus.high_ibu, 0)
-        self.assertAlmostEquals(decimal.Decimal('101'), ibus.average_ibus, 0)
+        self.assertAlmostEquals(decimal.Decimal('84'), ibus.low, 0)
+        self.assertAlmostEquals(decimal.Decimal('118'), ibus.high, 0)
+        self.assertAlmostEquals(decimal.Decimal('101'), ibus.average, 0)
+        self.assertPercentageSum(ibus.per_hop)
 
     def testEstimatedOg(self):
         twoRow = models.Grain.objects.get(name__exact='Pale Malt (2-row)')
@@ -579,8 +587,8 @@ class RecipeDerivationsTest (TestCase):
         deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
         self.assertEquals([], no_reasons)
-        low,high = deriv.compute_og()
-        self.assertAlmostEqual(decimal.Decimal('1.0555'), low, 3)
+        og = deriv.compute_og()
+        self.assertAlmostEqual(decimal.Decimal('1.0555'), og.low, 3)
 
     def testEstimatedOgSmuttynoseImperialStout(self):
         '''North American Clonebrews, pp. 87'''
@@ -599,8 +607,9 @@ class RecipeDerivationsTest (TestCase):
         deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
         self.assertEquals([], no_reasons)
-        low,high = deriv.compute_og()
-        self.assertAlmostEquals(dec('1.070'), low, 3)
+        og = deriv.compute_og()
+        self.assertAlmostEquals(dec('1.070'), og.low, 3)
+        self.assertPercentageSum(og.per_grain)
 
     def testEstimatedOgSrmBrains(self):
         '''Clonebrews, pp. 89'''
@@ -617,10 +626,11 @@ class RecipeDerivationsTest (TestCase):
         deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
         self.assertEquals([], no_reasons)
-        low,high = deriv.compute_og()
+        og = deriv.compute_og()
         # close … the book's range is 1.041 - 1.043
-        self.assertAlmostEquals(dec(1.041), low, 3)
-        self.assertAlmostEquals(dec(1.045), high, 3)
+        self.assertAlmostEquals(dec(1.041), og.low, 3)
+        self.assertAlmostEquals(dec(1.045), og.high, 3)
+        self.assertAlmostEquals(dec(1.043), og.average, 3)
         #
         no_srm_reasons = deriv.can_not_derive_srm()
         self.assertEquals([], no_srm_reasons)
@@ -629,3 +639,5 @@ class RecipeDerivationsTest (TestCase):
         # see http://www.homebrewtalk.com/f12/srm-calculations-promash-64792/ for more details.
         self.assertAlmostEquals(dec(7.3), srm_lo, 1)
         self.assertAlmostEquals(dec(7.7), srm_hi, 1)
+        #
+        self.assertPercentageSum(og.per_grain)

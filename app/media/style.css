@@ -132,3 +132,15 @@ UL.errorlist + INPUT {
 .muted A {
   color: rgb(180, 180, 180);
 }
+
+TABLE.recipe_derivations TD {
+    color: rgb(150, 150, 150);
+}
+
+TABLE.recipe_derivations TD STRONG {
+    color: black;
+}
+
+TABLE.recipe_derivations TD.space {
+    border: solid 1px transparent;
+}

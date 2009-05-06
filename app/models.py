@@ -842,11 +842,14 @@ class PerHopIbu (object):
         self._low_ibu = low_ibu
         self._high_ibu = high_ibu
         self._percentage = percentage
+
     recipe_hop = property(lambda s: s._recipe_hop)
     low_ibu = property(lambda s: s._low_ibu)
     high_ibu = property(lambda s: s._high_ibu)
+
     def _set_pctg(self, x):
         self._percentage = x
+
     percentage = property(lambda s: s._percentage, _set_pctg)
 
 
@@ -856,11 +859,39 @@ class IbuDerivation (object):
         self._high_ibu = high_ibu
         self._per_hop = per_hop or []
 
-    low_ibu = property(lambda s: s._low_ibu)
-    high_ibu = property(lambda s: s._high_ibu)
+    low = property(lambda s: s._low_ibu)
+    high = property(lambda s: s._high_ibu)
+    average = property(lambda s: (s._low_ibu + s._high_ibu) / Decimal('2'))
     per_hop = property(lambda s: s._per_hop)
 
-    average_ibus = property(lambda s: (s._low_ibu + s._high_ibu) / Decimal('2'))
+
+class PerGrainOg (object):
+    def __init__(self, recipe_grain, low_og, high_og, percentage=None):
+        self._recipe_grain = recipe_grain
+        self._low_og = low_og
+        self._high_og = high_og
+        self._percentage = percentage
+
+    recipe_grain = property(lambda s: s._recipe_grain)
+    low_og = property(lambda s: s._low_og)
+    high_og = property(lambda s: s._high_og)
+
+    def _set_pctg(self, x):
+        self._percentage = x
+
+    percentage = property(lambda s: s._percentage, _set_pctg)
+
+
+class OgDerivation (object):
+    def __init__(self, low_og, high_og, per_grain):
+        self._low_og = low_og
+        self._high_og = high_og
+        self._per_grain = per_grain or []
+        
+    low = property(lambda s: s._low_og)
+    high = property(lambda s: s._high_og)
+    average = property(lambda s: (s._low_og + s._high_og) / Decimal('2'))
+    per_grain = property(lambda s: s._per_grain)
 
 
 class RecipeDerivations (object):
@@ -912,8 +943,13 @@ class RecipeDerivations (object):
         return reasons
 
     def compute_og(self, efficiency=None):
+        '''@return OgDerivation'''
         efficiency = efficiency or RecipeDerivations.default_efficiency
+        batch_gallons = convert_volume(self._recipe.batch_size, self._recipe.batch_size_units, 'gl')
         low_accum,high_accum = Decimal('0'),Decimal('0')
+        def convert_to_gravity(val, batch_gallons):
+            return Decimal('1') + ((val / batch_gallons) / Decimal('1000'))
+        per_grain = []
         for grain in self._recipe.recipegrain_set.all():
             weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
             grain_eff = efficiency
@@ -922,11 +958,17 @@ class RecipeDerivations (object):
             lo,hi = tuple([(Decimal(str(extract)) - Decimal('1000')) * weight * grain_eff for extract in (grain.grain.extract_min,grain.grain.extract_max)])
             low_accum += lo
             high_accum += hi
-
-        batch_gallons = convert_volume(self._recipe.batch_size, self._recipe.batch_size_units, 'gl')
-        low = Decimal('1') + ((low_accum / batch_gallons) / Decimal('1000'))
-        high = Decimal('1') + ((high_accum / batch_gallons) / Decimal('1000'))
-        return low,high
+            lo_gravity = convert_to_gravity(lo, batch_gallons)
+            hi_gravity = convert_to_gravity(hi, batch_gallons)
+            per_grain.append(PerGrainOg(grain, lo_gravity, hi_gravity))
+        low = convert_to_gravity(low_accum, batch_gallons)
+        high = convert_to_gravity(high_accum, batch_gallons)
+        # we want to use these funny 'calc' versions because 1.040/1.080 = 0.966, but 0.040/0.080 = 0.50:
+        high_calc = high - Decimal('1')
+        for grain in per_grain:
+            grain_calc = grain.high_og - Decimal('1')
+            grain.percentage = (grain_calc / high_calc) * Decimal('100')
+        return OgDerivation(low, high, per_grain)
 
     def can_not_derive_ibu(self):
         reasons = []
@@ -965,7 +1007,7 @@ class RecipeDerivations (object):
             high_accum += high
             per_hop.append(PerHopIbu(hop, low, high))
         for hop_ibus in per_hop:
-            hop_ibus.percentage = hop_ibus.high_ibu / high_accum
+            hop_ibus.percentage = (hop_ibus.high_ibu / high_accum) * Decimal('100')
         return IbuDerivation(low_accum, high_accum, per_hop)
 
     def can_not_derive_srm(self):

@@ -194,22 +194,23 @@ $(document).ready(function(){
 <py:if test="deriv is not None">
 <h1>derivations</h1>
 
-<table>
+<table class="recipe_derivations">
   <tr>
-    <th colspan="2">&nbsp;</th>
-    <th colspan="2">Original gravity</th>
+    <td colspan="2" class="space">&nbsp;</td>
+    <th colspan="3">Original gravity</th>
   </tr>
   <tr>
-    <th colspan="2">&nbsp;</th>
+    <td colspan="2" class="space">&nbsp;</td>
     <th>low</th>
+    <th>average</th>
     <th>high</th>
   </tr>
   <py:with vars="no_og_reasons=deriv.can_not_derive_og()">
     <py:if test="no_og_reasons">
       <tr>
-        <th rowspan="2">IBUs</th>
+        <th rowspan="3">IBUs</th>
         <th>low</th>
-        <td colspan="2" rowspan="2">
+        <td colspan="3" rowspan="3">
           <div id="why_not_og_ibus">
             <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_og_ibus').children().slideToggle(); return false;">(why not?)</a></div>
             <div style="display:none">
@@ -222,23 +223,27 @@ $(document).ready(function(){
         </td>
       </tr>
       <tr>
+        <th>average</th>
+      </tr>
+      <tr>
         <th>high</th>
       </tr>
     </py:if>
 
-    <py:if test="not no_og_reasons" py:with="og_lo,og_hi=deriv.compute_og()">
+    <py:if test="not no_og_reasons" py:with="og=deriv.compute_og()">
       <tr>
-        <th colspan="2">&nbsp;</th>
-        <td>${'%1.3f' % (og_lo)}</td>
-        <td>${'%1.3f' % (og_hi)}</td>
+        <td colspan="2" class="space">&nbsp;</td>
+        <td>${'%1.3f' % (og.low)}</td>
+        <td><strong>${'%1.3f' % (og.average)}</strong></td>
+        <td>${'%1.3f' % (og.high)}</td>
       </tr>
       <py:with vars="no_ibu_reasons=deriv.can_not_derive_ibu()">
         <py:choose>
           <py:when test="no_ibu_reasons">
             <tr>
-              <th rowspan="2">IBUs</th>
+              <th rowspan="3">IBUs</th>
               <th>low</th>
-              <td colspan="2" rowspan="2">
+              <td colspan="3" rowspan="3">
                 <div id="why_not_ibus">
                   <div class="muted">
                     can't yet compute.
@@ -254,21 +259,32 @@ $(document).ready(function(){
               </td>
             </tr>
             <tr>
+              <th>average</th>
+            </tr>
+            <tr>
               <th>high</th>
             </tr>
           </py:when>
           <py:otherwise>
-            <py:with vars="og_lo_ibus=deriv.compute_ibu(og_lo); og_hi_ibus=deriv.compute_ibu(og_hi)">
+            <py:with vars="og_lo_ibus=deriv.compute_ibu(og.low); og_av_ibus=deriv.compute_ibu(og.average); og_hi_ibus=deriv.compute_ibu(og.high)">
               <tr>
-                <th rowspan="2">IBUs<br/>(Tinseth)</th>
+                <th rowspan="3">IBUs<br/>(Tinseth)</th>
                 <th>low</th>
-                <td>${'%2.1f' % (og_lo_ibus.low_ibu)}</td>
-                <td>${'%2.1f' % (og_hi_ibus.low_ibu)}</td>
+                <td>${'%2.1f' % (og_lo_ibus.low)}</td>
+                <td>${'%2.1f' % (og_av_ibus.low)}</td>
+                <td>${'%2.1f' % (og_hi_ibus.low)}</td>
+              </tr>
+              <tr>
+                <th>average</th>
+                <td>${'%2.1f' % (og_lo_ibus.average)}</td>
+                <td><strong>${'%2.1f' % (og_av_ibus.average)}</strong></td>
+                <td>${'%2.1f' % (og_hi_ibus.average)}</td>
               </tr>
               <tr>
                 <th>high</th>
-                <td>${'%2.1f' % (og_lo_ibus.high_ibu)}</td>
-                <td>${'%2.1f' % (og_hi_ibus.high_ibu)}</td>
+                <td>${'%2.1f' % (og_lo_ibus.high)}</td>
+                <td>${'%2.1f' % (og_av_ibus.high)}</td>
+                <td>${'%2.1f' % (og_hi_ibus.high)}</td>
               </tr>
             </py:with>
           </py:otherwise>
