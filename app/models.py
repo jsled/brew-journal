@@ -693,8 +693,8 @@ def convert_volume(volume, from_units, to_units):
             units = 'c'
         if units == 'c':
             factor *= ctx.create_decimal('0.25')
-            units = 'qt'
-        if units == 'qt':
+            units = 'q'
+        if units == 'q':
             factor *= ctx.create_decimal('0.25')
             units = 'gl'
         if units == 'ml':
@@ -704,6 +704,7 @@ def convert_volume(volume, from_units, to_units):
         
     from_units,from_factor = simplify_volume(from_units)
     to_units,to_factor = simplify_volume(to_units)
+    inv_to_factor = ctx.create_decimal('1') / to_factor
 
     conversion_from_to = {
         'l': {'l': ctx.create_decimal('1'),
@@ -711,7 +712,7 @@ def convert_volume(volume, from_units, to_units):
         'gl': {'l': ctx.create_decimal('3.78541178'),
                'gl': ctx.create_decimal('1')},
         }
-    return volume * from_factor * conversion_from_to[from_units][to_units] * to_factor
+    return volume * from_factor * conversion_from_to[from_units][to_units] * inv_to_factor
 
 
 def convert_weight(amount, from_units, to_units):

@@ -503,6 +503,18 @@ class UtilTest (TestCase):
         self.assertAlmostEqual(decimal.Decimal('5.01928'), models.convert_volume(19000, 'ml', 'gl'), 2)
         self.assertAlmostEqual(decimal.Decimal('18.93'), models.convert_volume(5, 'gl', 'l'), 2)
 
+    def testVolumeConversionRoundTripping(self):
+        convertible = ['c', 'q', 'gl', 'ml', 'l'] # , 'tsp', 'tbsp', 'pt'
+        import random
+        for from_units in convertible:
+            for to_units in convertible:
+                for x in range(10):
+                    random_val = decimal.Decimal(str(random.random() * 100))
+                    converted = models.convert_volume(random_val, from_units, to_units)
+                    round_tripped = models.convert_volume(converted, to_units, from_units)
+                    self.assertAlmostEqual(random_val, round_tripped, 2,
+                                           'from %s %s to %s %s back to %s %s' % (random_val, from_units, converted, to_units, round_tripped, from_units))
+                    
 
 class StepTest (TestCase):
     def testGravityCorrection(self):
