@@ -32,10 +32,11 @@
 
 from django.conf.urls.defaults import *
 from django.contrib import admin
-from brewjournal.app.feeds import NewUsers
+from brewjournal.app.feeds import NewUsers, NewRecipes
 
 feeds = {
-    'new-users': NewUsers
+    'new-users': NewUsers,
+    'new-recipes': NewRecipes,
     }
 
 handler404 = 'brewjournal.app.views.custom_404'
