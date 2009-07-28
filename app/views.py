@@ -55,18 +55,24 @@ def render(template_name, **kwargs):
     stream = tmpl.generate(**kwargs)
     return stream.render()
 
-def safe_datetime_fmt(dt, fmt):
+def datetime_span(formatted):
+    return Markup('<span class="datetime">%s</span>' % (formatted))
+
+def safe_datetime_fmt_raw(dt, fmt):
     if not dt:
         return ''
     return dt.strftime(fmt)
 
+def safe_datetime_fmt(dt, fmt):
+    return datetime_span(safe_datetime_fmt_raw(dt,fmt))
+                         
 def safe_graceful_datetime_fmt(dt, ymd_fmt, ymdhm_fmt):
     if not dt:
         return ''
     best_fmt = ymdhm_fmt
     if (dt.hour == 0 and dt.minute == 0) or (dt.hour == 23 and dt.minute == 59):
         best_fmt = ymd_fmt
-    return dt.strftime(best_fmt)
+    return datetime_span(dt.strftime(best_fmt))
 
 def auth_user_is_user(request, user):
     return (request.user.is_authenticated() and request.user == user)
@@ -697,7 +703,7 @@ class EfficiencyTracker (object):
     def url(self):
         url = 'http://chart.apis.google.com/chart?chs=400x100&cht=lc'
         # url += '&chds=0,100'
-        efficiencies_dates = [{'efficiency': '%0.2f' % (derived.efficiency()), 'date': safe_datetime_fmt(derived._brew.brew_date, '%m/%d')}
+        efficiencies_dates = [{'efficiency': '%0.2f' % (derived.efficiency()), 'date': safe_datetime_fmt_raw(derived._brew.brew_date, '%m/%d')}
                               for derived
                               in self._derivations
                               if not derived.can_not_derive_efficiency()]
