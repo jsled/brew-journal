@@ -35,6 +35,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.core.exceptions import ObjectDoesNotExist
 from django import forms
 from genshi.template import TemplateLoader
 from genshi.core import Markup
@@ -86,10 +87,10 @@ def standard_context():
     return _std_ctx
 
 def custom_404(request):
-    return HttpResponse(render('404.html', request=request, ctx=standard_context()))
+    return HttpResponseNotFound(render('404.html', request=request, ctx=standard_context()))
 
 def custom_500(request):
-    return HttpResponse(render('500.html', request=request, ctx=standard_context()))
+    return HttpResponseServerError(render('500.html', request=request, ctx=standard_context()))
 
 def intentional_500(request):
     raise Exception('intentional 500 to test handling')
@@ -136,7 +137,7 @@ def root_post(request):
         user = None
         try:
             user = User.objects.get(username__exact = username)
-        except User.DoesNotExist:
+        except ObjectDoesNotExist:
             pass
         if user:
             auth_errors = forms.util.ErrorList([u'Username [%s] is unavailable' % (username)])
@@ -200,9 +201,8 @@ def logout_view(request):
 def user_index(request, user_name):
     try:
         uri_user = User.objects.get(username__exact = user_name)
-    except User.DoesNotExist:
+    except User.DoesNotExist,e:
         raise Http404
-    if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     brews = models.Brew.objects.filter(brewer=uri_user, is_done=False).order_by('-brew_date')
     future_brews = models.Brew.objects.brews_with_future_steps(uri_user)
     future_steps = models.Step.objects.future_steps_for_user(uri_user).order_by('date')
@@ -235,9 +235,10 @@ class UserProfileForm (forms.ModelForm):
 
 
 def user_profile(request, user_name):
-    uri_user = User.objects.get(username__exact = user_name)
-    if not uri_user:
-        return HttpResponseNotFound('no such user [%s]' % (user_name))
+    try:
+        uri_user = User.objects.get(username__exact = user_name)
+    except User.DoesNotExist:
+        raise Http404
     if request.user.is_authenticated() and request.user != uri_user:
         return HttpResponseForbidden('you [%s] can access the profile for user [%s]' % (request.user.username, uri_user.userrname))
     profile_form = UserProfileForm(initial={'first_name': uri_user.first_name,
@@ -270,8 +271,10 @@ class BrewForm (forms.ModelForm):
 
 # sys.stdout = codecs.getwriter('utf-8')(sys.stdout, errors='replace')
 def user_brew_new(request, user_name):
-    uri_user = User.objects.get(username__exact = user_name)
-    if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+    try:
+        uri_user = User.objects.get(username__exact = user_name)
+    except ObjectDoesNotExist:
+        raise Http404
     recipe = None
     form = BrewForm()
     if request.method == 'POST':
@@ -305,8 +308,11 @@ def user_brew_new(request, user_name):
 
 
 def user_shopping_list(request, user_name):
-    uri_user = User.objects.get(username__exact = user_name)
-    if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+    try:
+        uri_user = User.objects.get(username__exact = user_name)
+        # if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+    except ObjectDoesNotExist:
+        raise Http404
     shopping_list = models.ShoppingList(uri_user)
     return HttpResponse(render('user/shopping-list.html', request=request, user=uri_user, std=standard_context(),
                                shopping_list = shopping_list))
@@ -317,10 +323,13 @@ def brew_edit(request, user_name, brew_id):
     POST /user/jsled/brew/2/edit
     @fixme this is lame.  Make GET an error, use form.is_valid(), integrate with brew(…).
     '''
-    uri_user = User.objects.get(username__exact = user_name)
-    if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
-    brew = models.Brew.objects.get(id=brew_id)
-    if not brew: return HttpResponseNotFound('no such brew with id [%d]' % (brew_id))
+    try:
+        uri_user = User.objects.get(username__exact = user_name)
+        # if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+        brew = models.Brew.objects.get(id=brew_id)
+        # if not brew: return HttpResponseNotFound('no such brew with id [%d]' % (brew_id))
+    except ObjectDoesNotExist:
+        raise Http404
     if request.method == 'POST':
         if not (request.user.is_authenticated() and request.user == uri_user):
             return HttpResponseForbidden()
@@ -373,15 +382,18 @@ def brew(request, user_name, brew_id, step_id):
     '''
     e.g., /user/jsled/brew/2/[step/3], /user/jsled/brew/2/?type=pitch
     '''
-    uri_user = User.objects.get(username__exact = user_name)
-    if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
-    brew = models.Brew.objects.get(id=brew_id)
-    if not brew: return HttpResponseNotFound('no such brew with id [%d]' % (brew_id))
-    step = None
-    if step_id:
-        step = models.Step.objects.get(pk=step_id)
-        if not step:
-            return HttpResponseNotFound('no such user [%s] brew [%s] step id [%s]' % (user_name, brew_id, step_id))
+    try:
+        uri_user = User.objects.get(username__exact = user_name)
+        #if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+        brew = models.Brew.objects.get(id=brew_id)
+        #if not brew: return HttpResponseNotFound('no such brew with id [%d]' % (brew_id))
+        step = None
+        if step_id:
+            step = models.Step.objects.get(pk=step_id)
+            #if not step:
+            #    return HttpResponseNotFound('no such user [%s] brew [%s] step id [%s]' % (user_name, brew_id, step_id))
+    except ObjectDoesNotExist:
+        raise Http404
     if request.method == 'POST':
         return brew_post(request, uri_user, brew, step)
     # else:
@@ -420,8 +432,11 @@ class StarForm (forms.ModelForm):
 
 
 def user_star(request, user_name):
-    uri_user = User.objects.get(username__exact = user_name)
-    if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+    try:
+        uri_user = User.objects.get(username__exact = user_name)
+        #if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
+    except ObjectDoesNotExist:
+        raise Http404
     if request.method == 'GET':
         if request.GET.has_key('recipe_id'):
             recipe_id = int(request.GET['recipe_id'])
@@ -662,7 +677,10 @@ def recipe(request, recipe_id, recipe_name):
             return thing
         else:
             form = thing
-    recipe = models.Recipe.objects.get(pk=recipe_id)
+    try:
+        recipe = models.Recipe.objects.get(pk=recipe_id)
+    except ObjectDoesNotExist:
+        raise Http404
     return _render_recipe(request, recipe)
 
 

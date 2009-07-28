@@ -232,6 +232,36 @@ class BrewDerivationsTest (TestCase):
         self.assert_(aa - decimal.Decimal('78.57') < decimal.Decimal('0.1'))
 
 
+class Test404s (AppTestCase):
+    fixtures = ['auth']
+
+    def _assert404(self, url):
+        res = self.client.get(url)
+        self.assertEquals(404, res.status_code)
+
+    def testUser404(self):
+        self._assert404('/user/does_not_exist')
+
+    def testUserProfile404(self):
+        self._assert404('/user/does_not_exist/profile')
+
+    def testUser404NewBrew(self):
+        self._assert404('/user/does_not_exist/brew/new')
+
+    def testUser404Shopping(self):
+        self._assert404('/user/does_not_exist/shopping')
+
+    def testUserBrew404(self):
+        self.client.post('/', {'username': 'jsled', 'password': 's3kr1t', 'sub':' login'})
+        self._assert404('/user/jsled/brew/10000')
+
+    # @add: /user/exists/brew/exists/step/does_not_exist
+
+    def testRecipe404(self):
+        self._assert404('/recipe/129083450/')
+        self._assert404('/recipe/129083450/Testing')
+
+
 class TestLogin (AppTestCase):
     fixtures = ['auth']
 
