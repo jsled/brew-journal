@@ -80,7 +80,7 @@
                     </ul>
                 </div>
                 <div class="yui-u">
-                    <h1>recent recipes</h1>
+                    <h1 class="feed-link"><a href="/feeds/new-recipes">recent recipes</a></h1>
                     <ul>
                         <li py:for="recipe in recent_recipes">
                             "${recipe_a(recipe)}", added ${std.fmt.date.ymd(recipe.insert_date)} by <a href="/user/${recipe.author.username}/">${recipe.author}</a>.
