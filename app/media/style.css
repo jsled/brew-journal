@@ -144,3 +144,11 @@ TABLE.recipe_derivations TD STRONG {
 TABLE.recipe_derivations TD.space {
     border: solid 1px transparent;
 }
+
+.datetime {
+    white-space: nowrap;
+}
+
+.bj-recent UL LI {
+    white-space: nowrap;
+}
