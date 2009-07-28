@@ -715,10 +715,11 @@ class RecipeDerivationsTest (TestCase):
         no_ibu_reasons = deriv.can_not_derive_ibu()
         self.assertEquals([], no_ibu_reasons)
         ibu = deriv.compute_ibu(og.average)
+        # this is way different from the text:
         #self.assertAlmostEquals(dec('25'), ibu.average, 0)
 
         no_srm_reasons = deriv.can_not_derive_srm()
         self.assertEquals([], no_srm_reasons)
         srm = deriv.compute_srm()
+        # this is way different from the text:
         #self.assertAlmostEquals(dec('17'), srm.average)
-
