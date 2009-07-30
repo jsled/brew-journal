@@ -43,6 +43,7 @@ $(document).ready(function(){
   <div py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}">
     <table width="60%">
       <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
+      <tr py:if="recipe.author"><th>input by</th><td><a href="/user/${recipe.author.username}/">${recipe.author.username}</a></td></tr>
       <tr><th>style</th><td>
         <py:choose test="">
             <py:when test="recipe.style">${recipe.style.name} (${recipe.style.bjcp_code})</py:when>
@@ -54,7 +55,7 @@ $(document).ready(function(){
       <tr py:if="recipe.notes"><th>notes</th><td>${recipe.notes}</td></tr>
       <tr py:if="recipe.source_url"><th>source</th><td><a href="${recipe.source_url}">${recipe.source_url}</a></td></tr>
     </table>
-    <div py:if="std.auth_user_is_user(request, recipe.author)">
+     <div py:if="std.auth_user_is_user(request, recipe.author)">
       <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">edit &uarr;</a>
     </div>
   </div>
