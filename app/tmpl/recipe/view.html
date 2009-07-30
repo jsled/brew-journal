@@ -36,10 +36,9 @@ $(document).ready(function(){
     | <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">brew »</a>
 </div>
 
-<br /><br/>
 <!-- h2>overview</h2 -->
 
-<div id="overview">
+<div id="overview" style="margin-bottom: 10px">
   <div py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}">
     <table width="60%">
       <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
@@ -68,7 +67,6 @@ $(document).ready(function(){
   </div>
 </div>
 
-<br /><br/>
 <!-- h2>grains</h2 -->
 <form method="post" action="./grain/" id="grain_form">
   <input type="hidden" name="delete_id" value="-1"/>
@@ -97,7 +95,6 @@ $(document).ready(function(){
 </table>
 </form>
 
-<br /><br/>
 <!-- h2>hops</h2 -->
 
 <form method="post" action="./hop/" id="hop_form">
@@ -130,7 +127,6 @@ $(document).ready(function(){
 </form>
 
 <!-- h2>adjuncts</h2 -->
-<br/><br/>
 
 <form method="post" action="./adjunct/" id="adj_form">
   <input type="hidden" name="delete_id" value="-1"/>
@@ -164,7 +160,6 @@ $(document).ready(function(){
 </table>
 </form>
 
-<br /><br/>
 <!-- h2>yeast</h2 -->
 <form method="post" action="./yeast/" id="yeast_form">
   <input type="hidden" name="delete_id" value="-1"/>
