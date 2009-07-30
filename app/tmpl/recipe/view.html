@@ -1,326 +1,326 @@
+<!-- -*- nxml-child-indent: 2 -*- -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
-<xi:include href="../_incl/taglib.html"/>
-<head>
-  <title>recipe "${recipe.name}" | brew-journal</title>
-  <xi:include href="../_incl/head.html"/>
-  <script type="application/javascript">
-function set_delete_id_and_submit(form_name, item_id) {
-  form_name = '#' + form_name;
+  <xi:include href="../_incl/taglib.html"/>
+  <head>
+    <title>recipe "${recipe.name}" | brew-journal</title>
+    <xi:include href="../_incl/head.html"/>
+    <script type="application/javascript">
+      function set_delete_id_and_submit(form_name, item_id) {
+      form_name = '#' + form_name;
 
-  $(form_name)
-  .find('[name=delete_id]')
-  .val(item_id);
+      $(form_name)
+      .find('[name=delete_id]')
+      .val(item_id);
 
-  $(form_name).get()[0].submit();
-}
+      $(form_name).get()[0].submit();
+      }
 
-$(document).ready(function(){
-  $('#first-focused').focus();
-});
-  </script>
-</head>
-<body>
+      $(document).ready(function(){
+      $('#first-focused').focus();
+      });
+    </script>
+  </head>
+  <body>
     <div id="doc3">
-        <xi:include href="../_incl/body-top-bar.html"/>
-        <div id="bd">
-            <div id="yui-main">
-<div class="yui-b">
+      <xi:include href="../_incl/body-top-bar.html"/>
+      <div id="bd">
+        <div id="yui-main">
+          <div class="yui-b">
 
-<h1 py:if="recipe">recipe "${recipe.name}"</h1>
+            <h1 py:if="recipe">recipe "${recipe.name}"</h1>
 
-<div py:if="request.user.is_authenticated()">
-    <a id="first-focused" href="/recipe/new/?clone_from_recipe_id=${recipe.id}">clone »</a>
-    | <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">star »</a>
-    | <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">brew »</a>
-</div>
-
-<!-- h2>overview</h2 -->
-
-<div id="overview" style="margin-bottom: 10px">
-  <div py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}">
-    <table width="60%">
-      <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
-      <tr py:if="recipe.author"><th>input by</th><td><a href="/user/${recipe.author.username}/">${recipe.author.username}</a></td></tr>
-      <tr><th>style</th><td>
-        <py:choose test="">
-            <py:when test="recipe.style">${recipe.style.name} (${recipe.style.bjcp_code})</py:when>
-            <py:otherwise>(style undefined)</py:otherwise>
-        </py:choose>
-      </td></tr>
-      <tr><th>batch_size</th><td>${recipe.batch_size} ${recipe.get_batch_size_units_display()}</td></tr>
-      <tr><th>type</th><td>${recipe.get_type_display()}</td></tr>
-      <tr py:if="recipe.notes"><th>notes</th><td>${recipe.notes}</td></tr>
-      <tr py:if="recipe.source_url"><th>source</th><td><a href="${recipe.source_url}">${recipe.source_url}</a></td></tr>
-    </table>
-     <div py:if="std.auth_user_is_user(request, recipe.author)">
-      <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">edit &uarr;</a>
-    </div>
-  </div>
-  <div py:if="std.auth_user_is_user(request, recipe.author)"
-       py:attrs="{'style': ['display:none', 'display:inherit'][recipe_form.is_bound and not recipe_form.is_valid()]}">
-    <form method="post" id="overview-form">
-      <table width="60%" class="form" py:content="std.Markup(recipe_form.as_table())"/>
-      <input type="submit" value="update"/>
-      <input type="reset" value="cancel" onClick="$('#overview').children().slideToggle(); $('#edit').focus(); return true;" /></form>
-  </div>
-</div>
-
-<!-- h2>grains</h2 -->
-<form method="post" action="./grain/" id="grain_form">
-  <input type="hidden" name="delete_id" value="-1"/>
-<table width="70%">
-  <tr>
-    <th>grain</th>
-    <th>amount</th>
-    <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
-  </tr>
-  <tr py:for="grain in grains">
-    <td>${grain.grain.name}</td>
-    <td>${grain.amount_value} ${grain.amount_units}</td>
-    <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('grain_form', ${grain.id}); return false;">(del)</a></td>
-  </tr>
-  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="grain_form_invalid=grain_form.is_bound and not grain_form.is_valid()">
-      <tr class="add" py:attrs="{'style':['display:none', ''][grain_form_invalid]}">
-          <td>${std.Markup(grain_form['grain'].errors)} ${std.Markup(grain_form['grain'])}</td>
-          <td>${std.Markup(grain_form['amount_value'].errors)} ${std.Markup(grain_form['amount_units'].errors)} ${std.Markup(grain_form['amount_value'])} ${std.Markup(grain_form['amount_units'])}</td>
-          <td><input type="submit" value="add"/>
-          <input type="reset" value="cancel" onClick="$('#grain_form .add').toggle(); $('#grain_form .add-button').focus(); return true;" /></td>
-      </tr>
-      <tr class="add" py:attrs="{'style':['display:none',''][not grain_form_invalid]}">
-          <td colspan="3"><a href="#" class="add-button" onClick="$('#grain_form .add').toggle(); $('#grain_form .add :input:first').focus(); return false;">(add)</a></td>
-      </tr>
-  </div>
-</table>
-</form>
-
-<!-- h2>hops</h2 -->
-
-<form method="post" action="./hop/" id="hop_form">
-  <input type="hidden" name="delete_id" value="-1"/>
-<table width="70%">
-  <tr>
-    <th>hop</th>
-    <th>amount</th>
-    <th>boil time</th>
-    <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
-  </tr>
-  <tr py:for="hop in hops">
-    <td>${hop.hop.name}</td>
-    <td>${hop.amount_value} ${hop.amount_units}</td>
-    <td>${hop.boil_time} minutes</td>
-    <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('hop_form', ${hop.id}); return false;">(del)</a></td>
-  </tr>
-  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="hop_form_invalid=hop_form.is_bound and not hop_form.is_valid()">
-      <tr class="add" py:attrs="{'style': ['display:none', ''][hop_form_invalid]}">
-          <td>${std.Markup(hop_form['hop'].errors)} ${std.Markup(hop_form['hop'])}</td>
-          <td>${std.Markup(hop_form['amount_value'].errors)} ${std.Markup(hop_form['amount_units'].errors)} ${std.Markup(hop_form['amount_value'])}&nbsp;${std.Markup(hop_form['amount_units'])}</td>
-          <td>${std.Markup(hop_form['boil_time'].errors)} ${std.Markup(hop_form['boil_time'])}&nbsp;minutes</td>
-          <td><input type="submit" value="add"/></td>
-      </tr>
-      <tr class="add" py:attrs="{'style': ['display:none', ''][not hop_form_invalid]}">
-          <td colspan="4"><a href="#" onClick="$('#hop_form .add').toggle(); return false;">(add)</a></td>
-      </tr>
-  </div>
-</table>
-</form>
-
-<!-- h2>adjuncts</h2 -->
-
-<form method="post" action="./adjunct/" id="adj_form">
-  <input type="hidden" name="delete_id" value="-1"/>
-<table width="70%">
-  <tr>
-    <th>adjunct</th>
-    <th>amount</th>
-    <th>boil time</th>
-    <th>notes</th>
-    <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
-  </tr>
-  <tr py:for="adjunct in adjuncts" class="deletable">
-    <td>${adjunct.adjunct.name}</td>
-    <td>${adjunct.amount_value} ${adjunct.amount_units}</td>
-    <td>${adjunct.boil_time} minutes</td>
-    <td>${adjunct.notes}</td>
-    <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('adj_form', ${adjunct.id}); return false;">(del)</a></td>
-  </tr>
-  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="adj_form_invalid=adj_form.is_bound and not adj_form.is_valid()">
-      <tr class="add" py:attrs="{'style':['display:none', ''][adj_form_invalid]}">
-          <td>${std.Markup(adj_form['adjunct'].errors)} ${std.Markup(adj_form['adjunct'])}</td>
-          <td>${std.Markup(adj_form['amount_value'].errors)} ${std.Markup(adj_form['amount_units'].errors)} ${std.Markup(adj_form['amount_value'])} ${std.Markup(adj_form['amount_units'])}</td>
-          <td>${std.Markup(adj_form['boil_time'].errors)} ${std.Markup(adj_form['boil_time'])} minutes</td>
-          <td>${std.Markup(adj_form['notes'].errors)} ${std.Markup(adj_form['notes'])}</td>
-          <td><input type="submit" value="add" /></td>
-      </tr>
-      <tr class="add" py:attrs="{'style':['display:none',''][not adj_form_invalid]}">
-          <td colspan="5"><a href="#" onClick="$('#adj_form .add').toggle(); return false;">(add)</a></td>
-      </tr>
-  </div>
-</table>
-</form>
-
-<!-- h2>yeast</h2 -->
-<form method="post" action="./yeast/" id="yeast_form">
-  <input type="hidden" name="delete_id" value="-1"/>
-<table width="70%">
-  <tr>
-    <th>yeast</th>
-    <th>is ideal</th>
-    <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
-  </tr>
-  <tr py:for="yeast in yeasts" class="deletable">
-    <td>${yeast.yeast}</td>
-    <td>${yeast.ideal}</td>
-    <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('yeast_form', ${yeast.id}); return false;">(del)</a></td>
-  </tr>
-  <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="yeast_form_invalid=yeast_form.is_bound and not yeast_form.is_valid()">
-      <tr class="add" py:attrs="{'style':['display:none', ''][yeast_form_invalid]}">
-          <td>${std.Markup(yeast_form['yeast'].errors)} ${std.Markup(yeast_form['yeast'])}</td>
-          <td>${std.Markup(yeast_form['ideal'].errors)} ${std.Markup(yeast_form['ideal'])}</td>
-          <td><input type="submit" value="add" /></td>
-      </tr>
-      <tr class="add" py:attrs="{'style':['display:none', ''][not yeast_form_invalid]}">
-          <td colspan="5"><a href="#" onClick="$('#yeast_form .add').toggle(); return false;">(add)</a></td>
-      </tr>
-  </div>
-</table>
-</form>
-
-<py:if test="deriv is not None">
-<h1>derivations</h1>
-
-<table class="recipe_derivations" width="25%">
-  <tr>
-    <td colspan="2" class="space">&nbsp;</td>
-    <th colspan="3">Original gravity</th>
-  </tr>
-  <tr>
-    <td colspan="2" class="space">&nbsp;</td>
-    <th>low</th>
-    <th>average</th>
-    <th>high</th>
-  </tr>
-  <py:with vars="no_og_reasons=deriv.can_not_derive_og()">
-    <py:if test="no_og_reasons">
-      <tr>
-        <th rowspan="3">IBUs</th>
-        <th>low</th>
-        <td colspan="3" rowspan="3">
-          <div id="why_not_og_ibus">
-            <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_og_ibus').children().slideToggle(); return false;">(why not?)</a></div>
-            <div style="display:none">
-              <py:for each="reason in no_og_reasons">
-                ${reason}<br />
-              </py:for>
-              <a href="#" onClick="$('#why_not_og_ibus').children().slideToggle(); return false;">(hide)</a>
+            <div py:if="request.user.is_authenticated()">
+              <a id="first-focused" href="/recipe/new/?clone_from_recipe_id=${recipe.id}">clone »</a>
+              | <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">star »</a>
+              | <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">brew »</a>
             </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <th>average</th>
-      </tr>
-      <tr>
-        <th>high</th>
-      </tr>
-    </py:if>
 
-    <py:if test="not no_og_reasons" py:with="og=deriv.compute_og()">
-      <tr>
-        <td colspan="2" class="space">&nbsp;</td>
-        <td>${'%1.3f' % (og.low)}</td>
-        <td><strong>${'%1.3f' % (og.average)}</strong></td>
-        <td>${'%1.3f' % (og.high)}</td>
-      </tr>
-      <py:with vars="no_ibu_reasons=deriv.can_not_derive_ibu()">
-        <py:choose>
-          <py:when test="no_ibu_reasons">
-            <tr>
-              <th rowspan="3">IBUs</th>
-              <th>low</th>
-              <td colspan="3" rowspan="3">
-                <div id="why_not_ibus">
-                  <div class="muted">
-                    can't yet compute.
-                    <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(why not?)</a>
-                  </div>
-                  <div style="display:none">
-                    <py:for each="reason in no_ibu_reasons">
-                      ${reason}<br />
-                    </py:for>
-                    <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(hide)</a>
-                  </div>
+            <!-- overview -->
+            <div id="overview" style="margin-bottom: 10px">
+              <div py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}">
+                <table width="60%">
+                  <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
+                  <tr py:if="recipe.author"><th>input by</th><td><a href="/user/${recipe.author.username}/">${recipe.author.username}</a></td></tr>
+                  <tr><th>style</th><td>
+                  <py:choose test="">
+                    <py:when test="recipe.style">${recipe.style.name} (${recipe.style.bjcp_code})</py:when>
+                    <py:otherwise>(style undefined)</py:otherwise>
+                  </py:choose>
+                  </td></tr>
+                  <tr><th>batch_size</th><td>${recipe.batch_size} ${recipe.get_batch_size_units_display()}</td></tr>
+                  <tr><th>type</th><td>${recipe.get_type_display()}</td></tr>
+                  <tr py:if="recipe.notes"><th>notes</th><td>${recipe.notes}</td></tr>
+                  <tr py:if="recipe.source_url"><th>source</th><td><a href="${recipe.source_url}">${recipe.source_url}</a></td></tr>
+                </table>
+                <div py:if="std.auth_user_is_user(request, recipe.author)">
+                  <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">edit &uarr;</a>
                 </div>
-              </td>
-            </tr>
-            <tr>
-              <th>average</th>
-            </tr>
-            <tr>
-              <th>high</th>
-            </tr>
-          </py:when>
-          <py:otherwise>
-            <py:with vars="og_lo_ibus=deriv.compute_ibu(og.low); og_av_ibus=deriv.compute_ibu(og.average); og_hi_ibus=deriv.compute_ibu(og.high)">
-              <tr>
-                <th rowspan="3">IBUs<br/>(Tinseth)</th>
-                <th>low</th>
-                <td>${'%2.1f' % (og_lo_ibus.low)}</td>
-                <td>${'%2.1f' % (og_av_ibus.low)}</td>
-                <td>${'%2.1f' % (og_hi_ibus.low)}</td>
-              </tr>
-              <tr>
-                <th>average</th>
-                <td>${'%2.1f' % (og_lo_ibus.average)}</td>
-                <td><strong>${'%2.1f' % (og_av_ibus.average)}</strong></td>
-                <td>${'%2.1f' % (og_hi_ibus.average)}</td>
-              </tr>
-              <tr>
-                <th>high</th>
-                <td>${'%2.1f' % (og_lo_ibus.high)}</td>
-                <td>${'%2.1f' % (og_av_ibus.high)}</td>
-                <td>${'%2.1f' % (og_hi_ibus.high)}</td>
-              </tr>
-            </py:with>
-          </py:otherwise>
-        </py:choose>
-      </py:with>
-    </py:if>
-  </py:with>
-</table>
+              </div>
+              <div py:if="std.auth_user_is_user(request, recipe.author)"
+                   py:attrs="{'style': ['display:none', 'display:inherit'][recipe_form.is_bound and not recipe_form.is_valid()]}">
+                <form method="post" id="overview-form">
+                  <table width="60%" class="form" py:content="std.Markup(recipe_form.as_table())"/>
+                  <input type="submit" value="update"/>
+                <input type="reset" value="cancel" onClick="$('#overview').children().slideToggle(); $('#edit').focus(); return true;" /></form>
+              </div>
+            </div>
 
-<br />
+            <!-- grains -->
+            <form method="post" action="./grain/" id="grain_form">
+              <input type="hidden" name="delete_id" value="-1"/>
+              <table width="70%">
+                <tr>
+                  <th>grain</th>
+                  <th>amount</th>
+                  <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
+                </tr>
+                <tr py:for="grain in grains">
+                  <td>${grain.grain.name}</td>
+                  <td>${grain.amount_value} ${grain.amount_units}</td>
+                  <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('grain_form', ${grain.id}); return false;">(del)</a></td>
+                </tr>
+                <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="grain_form_invalid=grain_form.is_bound and not grain_form.is_valid()">
+                  <tr class="add" py:attrs="{'style':['display:none', ''][grain_form_invalid]}">
+                    <td>${std.Markup(grain_form['grain'].errors)} ${std.Markup(grain_form['grain'])}</td>
+                    <td>${std.Markup(grain_form['amount_value'].errors)} ${std.Markup(grain_form['amount_units'].errors)} ${std.Markup(grain_form['amount_value'])} ${std.Markup(grain_form['amount_units'])}</td>
+                    <td><input type="submit" value="add"/>
+                    <input type="reset" value="cancel" onClick="$('#grain_form .add').toggle(); $('#grain_form .add-button').focus(); return true;" /></td>
+                  </tr>
+                  <tr class="add" py:attrs="{'style':['display:none',''][not grain_form_invalid]}">
+                    <td colspan="3"><a href="#" class="add-button" onClick="$('#grain_form .add').toggle(); $('#grain_form .add :input:first').focus(); return false;">(add)</a></td>
+                  </tr>
+                </div>
+              </table>
+            </form>
 
-<table width="25%">
-    <tr>
-        <th>SRM</th>
-        <td>
-            <py:choose py:with="no_srm_reasons=deriv.can_not_derive_srm()">
-                <py:when test="no_srm_reasons">
-                    <div id="why_not_srm">
-                        <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(why not?)</a></div>
-                        <div style="display:none">
+            <!-- hops -->
+
+            <form method="post" action="./hop/" id="hop_form">
+              <input type="hidden" name="delete_id" value="-1"/>
+              <table width="70%">
+                <tr>
+                  <th>hop</th>
+                  <th>amount</th>
+                  <th>boil time</th>
+                  <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
+                </tr>
+                <tr py:for="hop in hops">
+                  <td>${hop.hop.name}</td>
+                  <td>${hop.amount_value} ${hop.amount_units}</td>
+                  <td>${hop.boil_time} minutes</td>
+                  <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('hop_form', ${hop.id}); return false;">(del)</a></td>
+                </tr>
+                <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="hop_form_invalid=hop_form.is_bound and not hop_form.is_valid()">
+                  <tr class="add" py:attrs="{'style': ['display:none', ''][hop_form_invalid]}">
+                    <td>${std.Markup(hop_form['hop'].errors)} ${std.Markup(hop_form['hop'])}</td>
+                    <td>${std.Markup(hop_form['amount_value'].errors)} ${std.Markup(hop_form['amount_units'].errors)} ${std.Markup(hop_form['amount_value'])}&nbsp;${std.Markup(hop_form['amount_units'])}</td>
+                    <td>${std.Markup(hop_form['boil_time'].errors)} ${std.Markup(hop_form['boil_time'])}&nbsp;minutes</td>
+                    <td><input type="submit" value="add"/></td>
+                  </tr>
+                  <tr class="add" py:attrs="{'style': ['display:none', ''][not hop_form_invalid]}">
+                    <td colspan="4"><a href="#" onClick="$('#hop_form .add').toggle(); return false;">(add)</a></td>
+                  </tr>
+                </div>
+              </table>
+            </form>
+
+            <!-- adjuncts -->
+
+            <form method="post" action="./adjunct/" id="adj_form">
+              <input type="hidden" name="delete_id" value="-1"/>
+              <table width="70%">
+                <tr>
+                  <th>adjunct</th>
+                  <th>amount</th>
+                  <th>boil time</th>
+                  <th>notes</th>
+                  <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
+                </tr>
+                <tr py:for="adjunct in adjuncts" class="deletable">
+                  <td>${adjunct.adjunct.name}</td>
+                  <td>${adjunct.amount_value} ${adjunct.amount_units}</td>
+                  <td>${adjunct.boil_time} minutes</td>
+                  <td>${adjunct.notes}</td>
+                  <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('adj_form', ${adjunct.id}); return false;">(del)</a></td>
+                </tr>
+                <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="adj_form_invalid=adj_form.is_bound and not adj_form.is_valid()">
+                  <tr class="add" py:attrs="{'style':['display:none', ''][adj_form_invalid]}">
+                    <td>${std.Markup(adj_form['adjunct'].errors)} ${std.Markup(adj_form['adjunct'])}</td>
+                    <td>${std.Markup(adj_form['amount_value'].errors)} ${std.Markup(adj_form['amount_units'].errors)} ${std.Markup(adj_form['amount_value'])} ${std.Markup(adj_form['amount_units'])}</td>
+                    <td>${std.Markup(adj_form['boil_time'].errors)} ${std.Markup(adj_form['boil_time'])} minutes</td>
+                    <td>${std.Markup(adj_form['notes'].errors)} ${std.Markup(adj_form['notes'])}</td>
+                    <td><input type="submit" value="add" /></td>
+                  </tr>
+                  <tr class="add" py:attrs="{'style':['display:none',''][not adj_form_invalid]}">
+                    <td colspan="5"><a href="#" onClick="$('#adj_form .add').toggle(); return false;">(add)</a></td>
+                  </tr>
+                </div>
+              </table>
+            </form>
+
+            <!-- h2>yeast</h2 -->
+            <form method="post" action="./yeast/" id="yeast_form">
+              <input type="hidden" name="delete_id" value="-1"/>
+              <table width="70%">
+                <tr>
+                  <th>yeast</th>
+                  <th>is ideal</th>
+                  <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
+                </tr>
+                <tr py:for="yeast in yeasts" class="deletable">
+                  <td>${yeast.yeast}</td>
+                  <td>${yeast.ideal}</td>
+                  <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('yeast_form', ${yeast.id}); return false;">(del)</a></td>
+                </tr>
+                <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="yeast_form_invalid=yeast_form.is_bound and not yeast_form.is_valid()">
+                  <tr class="add" py:attrs="{'style':['display:none', ''][yeast_form_invalid]}">
+                    <td>${std.Markup(yeast_form['yeast'].errors)} ${std.Markup(yeast_form['yeast'])}</td>
+                    <td>${std.Markup(yeast_form['ideal'].errors)} ${std.Markup(yeast_form['ideal'])}</td>
+                    <td><input type="submit" value="add" /></td>
+                  </tr>
+                  <tr class="add" py:attrs="{'style':['display:none', ''][not yeast_form_invalid]}">
+                    <td colspan="5"><a href="#" onClick="$('#yeast_form .add').toggle(); return false;">(add)</a></td>
+                  </tr>
+                </div>
+              </table>
+            </form>
+
+            <py:if test="deriv is not None">
+              <h1>derivations</h1>
+
+              <table class="recipe_derivations" width="25%">
+                <tr>
+                  <td colspan="2" class="space">&nbsp;</td>
+                  <th colspan="3">Original gravity</th>
+                </tr>
+                <tr>
+                  <td colspan="2" class="space">&nbsp;</td>
+                  <th>low</th>
+                  <th>average</th>
+                  <th>high</th>
+                </tr>
+                <py:with vars="no_og_reasons=deriv.can_not_derive_og()">
+                  <py:if test="no_og_reasons">
+                    <tr>
+                      <th rowspan="3">IBUs</th>
+                      <th>low</th>
+                      <td colspan="3" rowspan="3">
+                        <div id="why_not_og_ibus">
+                          <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_og_ibus').children().slideToggle(); return false;">(why not?)</a></div>
+                          <div style="display:none">
+                            <py:for each="reason in no_og_reasons">
+                              ${reason}<br />
+                            </py:for>
+                            <a href="#" onClick="$('#why_not_og_ibus').children().slideToggle(); return false;">(hide)</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>average</th>
+                    </tr>
+                    <tr>
+                      <th>high</th>
+                    </tr>
+                  </py:if>
+
+                  <py:if test="not no_og_reasons" py:with="og=deriv.compute_og()">
+                    <tr>
+                      <td colspan="2" class="space">&nbsp;</td>
+                      <td>${'%1.3f' % (og.low)}</td>
+                      <td><strong>${'%1.3f' % (og.average)}</strong></td>
+                      <td>${'%1.3f' % (og.high)}</td>
+                    </tr>
+                    <py:with vars="no_ibu_reasons=deriv.can_not_derive_ibu()">
+                      <py:choose>
+                        <py:when test="no_ibu_reasons">
+                          <tr>
+                            <th rowspan="3">IBUs</th>
+                            <th>low</th>
+                            <td colspan="3" rowspan="3">
+                              <div id="why_not_ibus">
+                                <div class="muted">
+                                  can't yet compute.
+                                  <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(why not?)</a>
+                                </div>
+                                <div style="display:none">
+                                  <py:for each="reason in no_ibu_reasons">
+                                    ${reason}<br />
+                                  </py:for>
+                                  <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(hide)</a>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>average</th>
+                          </tr>
+                          <tr>
+                            <th>high</th>
+                          </tr>
+                        </py:when>
+                        <py:otherwise>
+                          <py:with vars="og_lo_ibus=deriv.compute_ibu(og.low); og_av_ibus=deriv.compute_ibu(og.average); og_hi_ibus=deriv.compute_ibu(og.high)">
+                            <tr>
+                              <th rowspan="3">IBUs<br/>(Tinseth)</th>
+                              <th>low</th>
+                              <td>${'%2.1f' % (og_lo_ibus.low)}</td>
+                              <td>${'%2.1f' % (og_av_ibus.low)}</td>
+                              <td>${'%2.1f' % (og_hi_ibus.low)}</td>
+                            </tr>
+                            <tr>
+                              <th>average</th>
+                              <td>${'%2.1f' % (og_lo_ibus.average)}</td>
+                              <td><strong>${'%2.1f' % (og_av_ibus.average)}</strong></td>
+                              <td>${'%2.1f' % (og_hi_ibus.average)}</td>
+                            </tr>
+                            <tr>
+                              <th>high</th>
+                              <td>${'%2.1f' % (og_lo_ibus.high)}</td>
+                              <td>${'%2.1f' % (og_av_ibus.high)}</td>
+                              <td>${'%2.1f' % (og_hi_ibus.high)}</td>
+                            </tr>
+                          </py:with>
+                        </py:otherwise>
+                      </py:choose>
+                    </py:with>
+                  </py:if>
+                </py:with>
+              </table>
+
+              <br />
+
+              <table width="25%">
+                <tr>
+                  <th>SRM</th>
+                  <td>
+                    <py:choose py:with="no_srm_reasons=deriv.can_not_derive_srm()">
+                      <py:when test="no_srm_reasons">
+                        <div id="why_not_srm">
+                          <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(why not?)</a></div>
+                          <div style="display:none">
                             <py:for each="reason in no_srm_reasons">
-                                ${reason}<br />
+                              ${reason}<br />
                             </py:for>
                             <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(hide)</a>
+                          </div>
                         </div>
-                    </div>
-                </py:when>
-                <py:otherwise py:with="srm=deriv.compute_srm()">
-                    ${'%2.0f' % (srm.average)}
-                </py:otherwise>
-            </py:choose>
-        </td>
-    </tr>
-</table>
+                      </py:when>
+                      <py:otherwise py:with="srm=deriv.compute_srm()">
+                        ${'%2.0f' % (srm.average)}
+                      </py:otherwise>
+                    </py:choose>
+                  </td>
+                </tr>
+              </table>
 
-</py:if>
+            </py:if>
 
-</div> <!-- yui-b -->
-            </div> <!-- yui-main -->
-        </div> <!-- bd -->
+          </div> <!-- yui-b -->
+        </div> <!-- yui-main -->
+      </div> <!-- bd -->
     </div> <!-- doc3 -->
-</body>
+  </body>
 </html>
