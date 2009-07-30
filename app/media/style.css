@@ -39,7 +39,7 @@ TBODY
 }
 
 TBODY TR {
-   border-top: solid thin #FFE2CF;
+   border-top: solid thin lightgray;
 }
 
 TBODY TR:first-child {
