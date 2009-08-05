@@ -470,6 +470,34 @@ class NextStepsTest (TestCase):
         datetime.datetime = saved_datetime
 
 
+class RecipeSortedIngredients (AppTestCase):
+    def testInsertedOutOfOrderButStillSorted(self):
+        user,passwd = 'jsled', 's3kr1t'
+        self.client.login(username=user, password=passwd)
+        
+        hop_1,hop_2 = tuple([models.Hop.objects.get(pk=x) for x in [1,2]])
+        grain_1,grain_2 = tuple([models.Grain.objects.get(pk=x) for x in [1,2]])
+        recipe_url = self.create_recipe('foo', '2009-08-02', 1,
+                                        [(hop_1.id, 1, 'oz', 60), (hop_2.id, 2, 'oz', 30)],
+                                        [(grain_1.id, 1, 'lb'), (grain_2.id, 2, 'lb')])
+        res = self.client.get('/' + recipe_url + '/')
+        #
+        body = res.content.decode('utf-8')
+        grain_1_idx = body.find(grain_1.name)
+        grain_2_idx = body.find(grain_2.name)
+        self.assertTrue(grain_1_idx != -1)
+        self.assertTrue(grain_2_idx != -1)
+        self.assertTrue(grain_2_idx < grain_1_idx)
+        #
+        hop_1_idx = body.find(hop_1.name)
+        hop_2_idx = body.find(hop_2.name)
+        self.assertTrue(hop_1_idx != -1)
+        self.assertTrue(hop_2_idx != -1)
+        self.assertTrue(hop_2_idx < hop_1_idx)
+
+    #def testUpdatedItemsGetResorted(self):
+
+
 class FutureStepsTest (AppTestCase):
 
     def testComingOfAge(self):

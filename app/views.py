@@ -654,10 +654,29 @@ def recipe_post(request, recipe_id, recipe=None):
 
 def _render_recipe(request, recipe, **kwargs):
     form = kwargs.setdefault('form', RecipeForm(instance=recipe))
-    grains = models.RecipeGrain.objects.filter(recipe=recipe)
-    hops = models.RecipeHop.objects.filter(recipe=recipe)
-    adjuncts = models.RecipeAdjunct.objects.filter(recipe=recipe)
+    # @fixme: call something like recipe.grain_list_descending() instead?
+    grains = [x for x in models.RecipeGrain.objects.filter(recipe=recipe)]
+    hops = [x for x in models.RecipeHop.objects.filter(recipe=recipe)]
+    adjuncts = [x for x in models.RecipeAdjunct.objects.filter(recipe=recipe)]
     yeasts = models.RecipeYeast.objects.filter(recipe=recipe)
+    #
+    def weight_comparator(a,b):
+        a_has_amount = a.amount_value and a.amount_units
+        b_has_amount = b.amount_value and b.amount_units
+        if not a_has_amount or not b_has_amount:
+            if not a_has_amount:
+                return -1
+            return 1
+        a_in_grams,b_in_grams = tuple([models.convert_weight(x.amount_value, x.amount_units, 'gr') for x in [a,b]])
+        rtn = int(a_in_grams - b_in_grams)
+        if rtn == 0:
+            rtn = a.id - b.id
+        return rtn
+    def invert_comparator(cmp):
+        return lambda a,b: -cmp(a,b)
+    for x in grains, hops, adjuncts:
+        x.sort(cmp=invert_comparator(weight_comparator))
+    #
     grain_form = kwargs.setdefault('grain_form', RecipeGrainForm())
     hop_form = kwargs.setdefault('hop_form', RecipeHopForm())
     adj_form = kwargs.setdefault('adj_form', RecipeAdjunctForm())
