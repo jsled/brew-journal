@@ -396,6 +396,8 @@ of being.
 *** import/export
 *** add 'equipment'/'rig'
 ** minor
+*** TODO better integration of genshi
+see http://www.djangosnippets.org/snippets/97/
 *** TODO /recipe/ shouldn't 404.
 *** TODO add time counter for some steps (primary/secondary fermentation)
 *** TODO some sort of markdown/wikiformatting/CRLF-><br/> for notes
