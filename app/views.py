@@ -53,7 +53,7 @@ def render(template_name, **kwargs):
         init_genshi()
     tmpl = genshi_template_loader.load(template_name)
     stream = tmpl.generate(**kwargs)
-    return stream.render()
+    return stream.render('xhtml', None)
 
 def datetime_span(formatted):
     return Markup('<span class="datetime">%s</span>' % (formatted))
