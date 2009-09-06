@@ -1066,28 +1066,38 @@ class RecipeDerivations (object):
         return reasons
 
     def compute_srm(self, efficiency=None):
-        efficiency = efficiency or RecipeDerivations.default_efficiency
-        dec = lambda x: Decimal(str(x))
+        return self.compute_srm_morey()
+
+    def compute_srm_morey(self):
+        '''
+        http://www.beersmith.com/blog/2008/04/29/beer-color-understanding-srm-lovibond-and-ebc/
+        http://brewingtechniques.com/brewingtechniques/beerslaw/morey.html
+        http://www.homebrewtalk.com/f12/srm-calculations-promash-64792/
+        '''
+
+        def dec(x):
+            return Decimal(str(x))
+
+        batch_gallons = convert_volume(self._recipe.batch_size, self._recipe.batch_size_units, 'gl')
         lo_accum = dec(0)
         hi_accum = dec(0)
         per_grain = []
         for grain in self._recipe.recipegrain_set.all():
             weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
-            grain_eff = efficiency
-            if grain.grain.name.find('Extract') != -1:
-                grain_eff = Decimal('1')
-            lo,hi = tuple([Decimal(str(lovibond)) * Decimal('0.1') * weight * grain_eff for lovibond in (grain.grain.lovibond_min,grain.grain.lovibond_max)])
+            lo_mcu,hi_mcu = tuple([(dec(lovibond) * Decimal('0.1') * weight) / batch_gallons
+                                   for lovibond in (grain.grain.lovibond_min,grain.grain.lovibond_max)])
+            lo,hi = tuple([dec('1.4922') * (mcu ** dec('0.6859')) for mcu in [lo_mcu,hi_mcu]])
+            # lo,hi = tuple([(mcu * dec('0.3')) + dec('4.7') for mcu in [lo_mcu,hi_mcu]])
+            # lo,hi = tuple([(mcu * dec('0.2')) + dec('8.4') for mcu in [lo_mcu,hi_mcu]])
             lo_accum += lo
             hi_accum += hi
             per_grain.append(PerGrainSrm(grain, lo, hi))
         for grain in per_grain:
             grain.percentage = (grain.high_srm / hi_accum) * Decimal('100')
-        batch_gallons = convert_volume(self._recipe.batch_size, self._recipe.batch_size_units, 'gl')
-        low = lo_accum / batch_gallons
-        high = hi_accum / batch_gallons
+        low,high = lo_accum,hi_accum
         return SrmDerivation(low, high, per_grain)
 
     # def compute_og_ibu_srm_matrix(self, efficiency=None):
     #     ''' return a 2x(2,2) space of (low,high)og -> (low,high)ibu(og) 
-
+ 
     # def compute_og_ibu_srm_graph(self, efficiency=None, include_style_range=False):

@@ -707,13 +707,15 @@ class RecipeDerivationsTest (TestCase):
         srm = deriv.compute_srm()
         # book: 8.5
         # see http://www.homebrewtalk.com/f12/srm-calculations-promash-64792/ for more details.
-        self.assertAlmostEquals(dec(7.3), srm.low, 1)
-        self.assertAlmostEquals(dec(7.7), srm.high, 1)
+        print '\nbrains',srm.low,srm.average,srm.high,'\n'
+        self.assertAlmostEquals(dec(8.2), srm.low, 1)
+        self.assertAlmostEquals(dec(8.3), srm.average, 1)
+        self.assertAlmostEquals(dec(8.5), srm.high, 1)
         self.assertPercentageSum(srm.per_grain)
         #
         self.assertPercentageSum(og.per_grain)
 
-    def _testRuabeoir(self):
+    def testRuabeoir(self):
         '''Brewing Classic Styles, pp. 129; Irish Red Ale "Ruabeoir"'''
         dec = lambda x: decimal.Decimal(str(x))
         pale_lme = models.Grain.objects.get(name__exact='Liquid Malt Extract: Light')
@@ -744,10 +746,11 @@ class RecipeDerivationsTest (TestCase):
         self.assertEquals([], no_ibu_reasons)
         ibu = deriv.compute_ibu(og.average)
         # this is way different from the text:
-        #self.assertAlmostEquals(dec('25'), ibu.average, 0)
+        # self.assertAlmostEquals(dec('25'), ibu.average, 0)
 
         no_srm_reasons = deriv.can_not_derive_srm()
         self.assertEquals([], no_srm_reasons)
         srm = deriv.compute_srm()
         # this is way different from the text:
-        #self.assertAlmostEquals(dec('17'), srm.average)
+        # print 'ruabeoir',srm.low,srm.average,srm.high
+        # self.assertAlmostEquals(dec('17'), srm.average)
