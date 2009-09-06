@@ -634,11 +634,11 @@ class TimeConst:
 def celsius_to_farenheit(temp):
     '''
     >>> celsius_to_farenheit(0.0)
-    Decimal("32.00")
+    Decimal('32.00')
     >>> celsius_to_farenheit(100.0)
-    Decimal("212.00")
+    Decimal('212.00')
     >>> celsius_to_farenheit(-17.78)
-    Decimal("-0.004")
+    Decimal('-0.004')
     '''
     temp = str(temp)
     if temp.lstrip('-').find('.') == -1:
@@ -668,13 +668,13 @@ def correct_gravity(gravity, temp_f):
 
 
     >>> correct_gravity(1.042, 108)
-    Decimal("1.050")
+    Decimal('1.050')
     >>> correct_gravity(1.050, 82)
-    Decimal("1.053")
+    Decimal('1.053')
     >>> correct_gravity(1.0123103856, 59)
-    Decimal("1.012")
+    Decimal('1.012')
     >>> correct_gravity(1.070, 41)
-    Decimal("1.069")
+    Decimal('1.069')
     '''
     gravity = Decimal(str(gravity))
     F = Decimal(str(temp_f))
@@ -721,34 +721,48 @@ def convert_weight(amount, from_units, to_units):
     >> convert_weight(1, 'lb', 'kg')
     Decimal('0.4539237')
     >>> convert_weight(1, 'kg', 'lb')
-    Decimal("2.20462")
+    Decimal('2.20462500000')
     >>> convert_weight(16, 'oz', 'lb')
-    Decimal("1.0000")
+    Decimal('1.0000')
     >>> convert_weight(32, 'oz', 'lb')
-    Decimal("2.0000")
+    Decimal('2.0000')
     >>> convert_weight(1500, 'gr', 'lb')
-    Decimal("3.30693000")
+    Decimal('3.30693750000')
+    >>> convert_weight(5, 'tsp', 'gr')
+    Decimal('15')
     '''
     ctx = Context(prec=6)
     conversion_from_to = {
         'gr': {'gr': ctx.create_decimal('1'),
-               'kg': ctx.create_decimal('0.001'),
-               'oz': ctx.create_decimal('0.0352739619'),
-               'lb': ctx.create_decimal('0.0022046226')},
-        'kg': {'gr': ctx.create_decimal('1000'),
-               'kg': ctx.create_decimal('1'),
-               'oz': ctx.create_decimal('35.2739619'),
-               'lb': ctx.create_decimal('2.2046226')},
+               'oz': ctx.create_decimal('0.0352739619')},
         'oz': {'gr': ctx.create_decimal('28.35'),
-               'kg': ctx.create_decimal('0.02835'),
-               'oz': ctx.create_decimal('1'),
-               'lb': ctx.create_decimal('0.0625')},
-        'lb': {'gr': ctx.create_decimal('453.59237'),
-               'kg': ctx.create_decimal('0.45359237'),
-               'oz': ctx.create_decimal('16'),
-               'lb': ctx.create_decimal('1')}
+               'oz': ctx.create_decimal('1')},
         }
-    return amount * conversion_from_to[from_units][to_units]
+
+    def simplify_units(unit):
+        factor = ctx.create_decimal('1')
+        if unit == 'kg':
+            factor = factor * ctx.create_decimal('1000')
+            unit = 'gr'
+        if unit == 'lb':
+            factor = factor * ctx.create_decimal('16')
+            unit = 'oz'
+        if unit == 'tbsp':
+            factor = factor * ctx.create_decimal('3')
+            unit = 'tsp'
+        if unit == 'tsp':
+            factor = factor * ctx.create_decimal('3')
+            unit = 'gr'
+        if unit == 'pint':
+            factor = factor * ctx.create_decimal('910')
+            unit = 'gr'
+        return (unit,factor)
+    
+    from_units,from_factor = simplify_units(from_units)
+    to_units,to_factor = simplify_units(to_units)
+    inv_to_factor = ctx.create_decimal('1') / to_factor
+    
+    return amount * from_factor * conversion_from_to[from_units][to_units] * inv_to_factor
 
 
 class BrewDerivations (object):
