@@ -667,7 +667,14 @@ def _render_recipe(request, recipe, **kwargs):
             if not a_has_amount:
                 return -1
             return 1
-        a_in_grams,b_in_grams = tuple([models.convert_weight(x.amount_value, x.amount_units, 'gr') for x in [a,b]])
+        def to_grams(amount):
+            return models.convert_weight(amount.amount_value, amount.amount_units, 'gr')
+        def safe_to_grams(amount):
+            try:
+                return to_grams(amount)
+            except:
+                return 0
+        a_in_grams,b_in_grams = tuple([safe_to_grams(x) for x in [a,b]])
         rtn = int(a_in_grams - b_in_grams)
         if rtn == 0:
             rtn = a.id - b.id

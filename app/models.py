@@ -996,7 +996,11 @@ class RecipeDerivations (object):
             return Decimal('1') + ((val / batch_gallons) / Decimal('1000'))
         per_grain = []
         for grain in self._recipe.recipegrain_set.all():
-            weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
+            try:
+                weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
+            except:
+                # log the error or something
+                weight = 0
             grain_eff = efficiency
             if grain.grain.name.find('Extract') != -1:
                 grain_eff = Decimal('1')
@@ -1083,7 +1087,11 @@ class RecipeDerivations (object):
         hi_accum = dec(0)
         per_grain = []
         for grain in self._recipe.recipegrain_set.all():
-            weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
+            try:
+                weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
+            except:
+                # log this
+                weight = 0
             lo_mcu,hi_mcu = tuple([(dec(lovibond) * Decimal('0.1') * weight) / batch_gallons
                                    for lovibond in (grain.grain.lovibond_min,grain.grain.lovibond_max)])
             lo,hi = tuple([dec('1.4922') * (mcu ** dec('0.6859')) for mcu in [lo_mcu,hi_mcu]])

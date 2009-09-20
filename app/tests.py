@@ -476,18 +476,21 @@ class RecipeSortedIngredients (AppTestCase):
         self.client.login(username=user, password=passwd)
         
         hop_1,hop_2 = tuple([models.Hop.objects.get(pk=x) for x in [1,2]])
-        grain_1,grain_2 = tuple([models.Grain.objects.get(pk=x) for x in [1,2]])
+        grain_1,grain_2,grain_3 = tuple([models.Grain.objects.get(pk=x) for x in [1,2,3]])
         recipe_url = self.create_recipe('foo', '2009-08-02', 1,
                                         [(hop_1.id, 1, 'oz', 60), (hop_2.id, 2, 'oz', 30)],
-                                        [(grain_1.id, 1, 'lb'), (grain_2.id, 2, 'lb')])
+                                        [(grain_1.id, 1, 'lb'), (grain_2.id, 2, 'lb'), (grain_3.id, 3, 'ct')])
         res = self.client.get('/' + recipe_url + '/')
         #
         body = res.content.decode('utf-8')
         grain_1_idx = body.find(grain_1.name)
         grain_2_idx = body.find(grain_2.name)
+        grain_3_idx = body.find(grain_3.name)
         self.assertTrue(grain_1_idx != -1)
         self.assertTrue(grain_2_idx != -1)
+        self.assertTrue(grain_3_idx != -1)
         self.assertTrue(grain_2_idx < grain_1_idx)
+        self.assertTrue(grain_3_idx > grain_1_idx)
         #
         hop_1_idx = body.find(hop_1.name)
         hop_2_idx = body.find(hop_2.name)
@@ -570,8 +573,10 @@ class UtilTest (TestCase):
                     random_val = decimal.Decimal(str(random.random() * 100))
                     converted = models.convert_volume(random_val, from_units, to_units)
                     round_tripped = models.convert_volume(converted, to_units, from_units)
-                    self.assertAlmostEqual(random_val, round_tripped, 2,
-                                           'from %s %s to %s %s back to %s %s' % (random_val, from_units, converted, to_units, round_tripped, from_units))
+                    self.assertAlmostEqual(random_val, round_tripped, 1,
+                                           'from %s %s to %s %s back to %s %s'
+                                           % (random_val, from_units, converted,
+                                              to_units, round_tripped, from_units))
                     
 
 class StepTest (TestCase):
@@ -707,7 +712,7 @@ class RecipeDerivationsTest (TestCase):
         srm = deriv.compute_srm()
         # book: 8.5
         # see http://www.homebrewtalk.com/f12/srm-calculations-promash-64792/ for more details.
-        print '\nbrains',srm.low,srm.average,srm.high,'\n'
+        # print '\nbrains',srm.low,srm.average,srm.high,'\n'
         self.assertAlmostEquals(dec(8.2), srm.low, 1)
         self.assertAlmostEquals(dec(8.3), srm.average, 1)
         self.assertAlmostEquals(dec(8.5), srm.high, 1)
@@ -753,4 +758,4 @@ class RecipeDerivationsTest (TestCase):
         srm = deriv.compute_srm()
         # this is way different from the text:
         # print 'ruabeoir',srm.low,srm.average,srm.high
-        # self.assertAlmostEquals(dec('17'), srm.average)
+        # yself.assertAlmostEquals(dec('17'), srm.average)
