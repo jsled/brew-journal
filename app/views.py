@@ -37,23 +37,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django import forms
-from genshi.template import TemplateLoader
 from genshi.core import Markup
 from brewjournal.app import models, widgets
 from datetime import datetime
 import urllib
 
-genshi_template_loader = None
-def init_genshi():
-    global genshi_template_loader
-    genshi_template_loader = TemplateLoader(['./app/tmpl'], auto_reload=True, default_encoding='utf-8')
-
-def render(template_name, **kwargs):
-    if not genshi_template_loader:
-        init_genshi()
-    tmpl = genshi_template_loader.load(template_name)
-    stream = tmpl.generate(**kwargs)
-    return stream.render('xhtml', None)
+from genshi_django import render
 
 def datetime_span(formatted):
     return Markup('<span class="datetime">%s</span>' % (formatted))
