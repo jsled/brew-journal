@@ -281,16 +281,19 @@ of being.
 ***** TODO [#S] estimated: fn(grains, efficiency, yeast.attenuation)
 ***** DONE [#N] actual: FG - OG
 **** OG
-***** TODO [#S] estimated: fn(grains, efficiency)
+***** DONE [#S] estimated: fn(grains, efficiency)
+      CLOSED: [2009-09-21 Mon 22:39]
 ***** actual: gravity at 'pitch'
 **** FG
 ***** TODO [#S] estimated: fn(grains, est_OG, yeast.attenuation)
 ***** actual: latest post-'pitch' gravity reading
 **** IBU
-***** TODO [#W] estimated: fn(hop schedule)
+***** DONE [#W] estimated: fn(hop schedule)
+      CLOSED: [2009-09-21 Mon 22:39]
 ***** actual: none
 **** SRM
-***** TODO [#W] estimated: fn(grains)
+***** DONE [#W] estimated: fn(grains)
+      CLOSED: [2009-09-21 Mon 22:39]
 ***** TODO [#W] actual: none (manual entry)
 **** BU:GU
 **** timing
