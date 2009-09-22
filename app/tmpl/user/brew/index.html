@@ -35,7 +35,9 @@
               ${brew.recipe.batch_size}${brew.recipe.batch_size_units}
           </py:if>
           | ${brew.recipe.get_type_display()}
-          | ${brew.recipe.style.name}
+          <py:if test="brew.recipe.style">
+              | ${brew.recipe.style.name}
+          </py:if>
 
           <py:if test="recipe_deriv">
               <py:if test="not recipe_deriv.can_not_derive_og()">
