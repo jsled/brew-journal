@@ -379,9 +379,13 @@ def brew_post(request, uri_user, brew, step):
 def brew_render(request, uri_user, brew, step_form, step_edit):
     steps = [step for step in brew.step_set.all()]
     brew_form = BrewForm(instance=brew)
+    recipe_deriv = None
+    if brew.recipe:
+        recipe_deriv = models.RecipeDerivations(brew.recipe)
     return HttpResponse(render('user/brew/index.html', request=request, std=standard_context(), user=uri_user,
                                brew=brew, steps=steps, step_form=step_form, step_edit=step_edit,
-                               brew_form=brew_form, deriv=models.BrewDerivations(brew)))
+                               brew_form=brew_form, deriv=models.BrewDerivations(brew),
+                               recipe_deriv=recipe_deriv))
     
 
 def brew(request, user_name, brew_id, step_id):

@@ -1029,8 +1029,10 @@ class RecipeDerivations (object):
             reasons.append('dreamhost has an outdated python that prevents us from computing IBU')
         return reasons
 
-    def compute_ibu(self, gravity):
+    def compute_ibu(self, gravity=None):
         '''@see http://www.homebrewtalk.com/f128/estimating-bitterness-algorithms-state-art-109681/'''
+        if not gravity:
+            gravity = self.compute_og().average
         return self.compute_ibu_tinseth(gravity)
 
     def compute_ibu_tinseth(self, gravity):
