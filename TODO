@@ -132,6 +132,11 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 * Todo
 ** bugs, misc
+*** TOOD lack of timezone handling
+http://code.google.com/p/django-timezones/
+http://www.djangosnippets.org/snippets/183/
+
+*** TODO cascading /recipe/{id}/hops/hops/hops/… in the case of ingredient add failure
 *** TODO no way to add a fermentable (e.g., honey) added at flame-out.
 *** TODO unable to add "5 g" of apple must for cider recipes (no volume adds for fermentables)
 *** TODO dingeema-uncovered None-safety issues
@@ -142,19 +147,18 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 - audit all those chained expressions in templates
 
-*** TODO there's *no* logging on dreamhost, which is annoying
+*** TODO no logging on dreamhost, which is annoying
 - error logging
 - access logging
 - activity logging (new recipe, new brew, &c.)
   - do this as a feed, instead
-
-*** TODO cascading /recipe/{id}/hops/hops/hops/… in the case of ingredient add failure
 *** TODO user profile should require existing password for password change; use django form validation/cleaning routines
-*** TODO to add
+*** TODO to add: Fruit/"Other"
+(08:42:34 PM) djensen: I think you need 'Other' for fruit
+*** DONE to add: Citra hops
+    CLOSED: [2009-09-21 Mon 22:28]
 (08:39:22 PM) djensen: need to add Citra hops
 (08:39:38 PM) djensen: not that I've seen it the home brew shop yet
-[…]
-(08:42:34 PM) djensen: I think you need 'Other' for fruit
 *** DONE recipes should list/link their authors
     CLOSED: [2009-07-29 Wed 21:05]
 *** DONE std.fmt.date.ymdhm should omit the 'hm' if the hour is exactly midnight.
