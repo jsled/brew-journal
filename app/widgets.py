@@ -64,7 +64,7 @@ class TwoLevelSelectWidget (forms.Widget):
                 output.append(u'<option value="%s"%s>%s</option>' % (escape(opt_value), selected_html,
                                                                      conditional_escape(force_unicode(opt_label))))
             output.append(u'</optgroup>')
-        output.append('u</select>')
+        output.append(u'</select>')
         return mark_safe(u'\n'.join(output))
         
 
