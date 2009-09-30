@@ -26,7 +26,7 @@
 
   <div id="details">
       <div>
-          <span py:if="brew.brew_date">brewed on ${std.fmt.date.ymd(brew.brew_date)} </span>
+          <span py:if="brew.brew_date">brewed on ${std.fmt.date.ymdhm(brew.brew_date, user)} </span>
           by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
           <span py:if="brew.recipe">from recipe ${recipe_a(brew.recipe)}</span>
       </div>
@@ -75,7 +75,7 @@
     future_steps = [step for step in steps if step.in_future()]
   ?>
   <py:def function="step_row(std,user,brew,step)">
-      <td><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date.best(step.date)}</a></td>
+      <td><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date.best(step.date, user)}</a></td>
       <td>${step.get_type_display()}</td>
       <td><py:if test="step.volume">${step.volume} ${step.volume_units}</py:if></td>
       <td><py:if test="step.temp">${step.temp} ${step.temp_units}</py:if></td>

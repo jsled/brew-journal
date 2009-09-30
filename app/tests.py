@@ -35,7 +35,9 @@
 import datetime
 import decimal
 import itertools
+import re
 import unittest
+
 from django.contrib import auth
 from django.test.client import Client
 from django.test import TestCase
@@ -47,6 +49,7 @@ class AppTestCase (TestCase):
 
     def create_recipe(self, name, date, style, hops, grains):
         res = self.client.post('/recipe/new/', {'name': name, 'insert_date': date, 'batch_size': 5, 'batch_size_units': 'gl', 'style': style, 'type': 'a'})
+        self.assertEquals(302, res.status_code, res)
         recipe_url = res['Location']
         recipe_base_url = '/'.join(recipe_url.split('/')[3:-1])
         hop_post_url = '/%s/hop/' % (recipe_base_url)
@@ -470,6 +473,60 @@ class NextStepsTest (TestCase):
         datetime.datetime = saved_datetime
 
 
+class TestTimezoneAdjustments (AppTestCase):
+    def testRecipe(self):
+        user,passwd = 'jsled','s3kr1t'
+        self.client.login(username=user,password=passwd)
+        #
+        profile = models.UserProfile.objects.get(user__username='jsled')
+        profile.timezone = 'US/Eastern'
+        profile.save()
+        #
+        now = datetime.datetime.now()
+        pattern = '%Y-%m-%d %H:%M:%S'
+        now_str = now.strftime(pattern)
+        unused_style = 1
+        recipe_url = self.create_recipe('test', now_str, unused_style, [], [])
+        recipe_url = '/' + recipe_url + '/'  # @fixme: quick fix; do this globally
+        #
+        res = self.client.get(recipe_url)
+        date_pattern = re.compile(r'''name="insert_date" value="([^"]+)"''')
+        date_eastern_str = date_pattern.search(res.content).group(1)
+        date_eastern = datetime.datetime.strptime(date_eastern_str, pattern)
+        profile.timezone = 'US/Pacific'
+        profile.save()
+        res2 = self.client.get(recipe_url)
+        date_pacific_str = date_pattern.search(res2.content).group(1)
+        date_pacific = datetime.datetime.strptime(date_pacific_str, pattern)
+        #
+        delta = date_eastern - date_pacific
+        MINUTE_SECONDS = 60
+        HOUR_SECONDS = 60 * MINUTE_SECONDS
+        self.assertEqual(3 * HOUR_SECONDS, delta.seconds)
+        #
+        # @fixme: assert recipe model insert_date unchanged
+        #
+        # plus 30 minutes
+        new_time = date_pacific + datetime.timedelta(seconds = 30 * MINUTE_SECONDS)
+        new_time_str = new_time.strftime(pattern)
+        res3 = self.client.post(recipe_url, {'name':'test', 'batch_size': '5', 'batch_size_units': 'gl', 'style': 1, 'type': 'a', 'insert_date': new_time_str})
+        self.assertEquals(302, res3.status_code)
+        res3 = self.client.get(recipe_url)
+        updated_pacific_str = date_pattern.search(res3.content).group(1)
+        updated_pacific = datetime.datetime.strptime(updated_pacific_str, pattern)
+        self.assertEquals(new_time, updated_pacific)
+        #
+        profile.timezone = 'US/Eastern'
+        profile.save()
+        res4 = self.client.get(recipe_url)
+        updated_eastern_str = date_pattern.search(res4.content).group(1)
+        updated_eastern = datetime.datetime.strptime(updated_eastern_str, pattern)
+        updated_delta = updated_eastern - updated_pacific
+        self.assertEqual(3 * HOUR_SECONDS, updated_delta.seconds)
+
+    # def testBrew():
+
+
 class RecipeSortedIngredients (AppTestCase):
     def testInsertedOutOfOrderButStillSorted(self):
         user,passwd = 'jsled', 's3kr1t'
@@ -577,7 +634,7 @@ class UtilTest (TestCase):
                                            'from %s %s to %s %s back to %s %s'
                                            % (random_val, from_units, converted,
                                               to_units, round_tripped, from_units))
-                    
+
 
 class StepTest (TestCase):
     def testGravityCorrection(self):

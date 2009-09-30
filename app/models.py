@@ -33,11 +33,14 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import datetime
-from django.db import models
-from django.contrib import auth
 import itertools
 import urllib
 from decimal import Decimal, Context, ROUND_HALF_UP, InvalidOperation
+
+from django.db import models
+from django.contrib import auth
+
+from timezones.fields import TimeZoneField
 
 class StepFilter (object):
     def __init__(self, conditions=None):
@@ -86,6 +89,8 @@ class UserProfile (models.Model):
     pref_make_starter = models.BooleanField(default=False)
     pref_secondary_ferm = models.BooleanField(default=False)
     pref_dispensing_style = models.CharField(max_length=1, choices=DispenseTypes, default='b')
+
+    timezone = TimeZoneField(default='UTC')
 
     def __getitem__(self, key):
         return self.__dict__.get(key, None)

@@ -33,6 +33,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest, Http404
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
@@ -42,22 +43,52 @@ from brewjournal.app import models, widgets
 from datetime import datetime
 import urllib
 
+from timezones.forms import LocalizedDateTimeField
+from timezones.utils import adjust_datetime_to_timezone
+
 from genshi_django import render
+
+class LocalizedDateTimeInput (forms.DateTimeInput):
+    def __init__(self, tz):
+        self._tz = tz
+        super(LocalizedDateTimeInput, self).__init__()
+
+    def render(self, name, value, attrs=None):
+        if isinstance(value, datetime):
+            value = adjust_datetime_to_timezone(value, 'UTC', self._tz)
+        # @fixme: output the string rep of the timezone, probably after the <input>
+        return super(LocalizedDateTimeInput, self).render(name, value, attrs)
 
 def datetime_span(formatted):
     return Markup('<span class="datetime">%s</span>' % (formatted))
 
-def safe_datetime_fmt_raw(dt, fmt):
+def tz_adjust(date, user):
+    settings_tz = settings.TIME_ZONE
+    tz = settings_tz
+    if user and hasattr(user, 'get_profile'):
+        try:
+            profile_tz = user.get_profile().timezone
+            if profile_tz:
+                tz = profile_tz
+        except models.UserProfile.DoesNotExist:
+            pass
+    rtn = adjust_datetime_to_timezone(date, settings_tz, tz)
+    # print 'adjusting date %s from %s to %s is %s' % (date, settings_tz, tz, rtn)
+    return rtn
+
+def safe_datetime_fmt_raw(dt, fmt, user):
     if not dt:
         return ''
+    dt = tz_adjust(dt, user)
     return dt.strftime(fmt)
 
-def safe_datetime_fmt(dt, fmt):
-    return datetime_span(safe_datetime_fmt_raw(dt,fmt))
+def safe_datetime_fmt(dt, fmt, user=None):
+    return datetime_span(safe_datetime_fmt_raw(dt, fmt, user))
                          
-def safe_graceful_datetime_fmt(dt, ymd_fmt, ymdhm_fmt):
+def safe_graceful_datetime_fmt(dt, ymd_fmt, ymdhm_fmt, user=None):
     if not dt:
         return ''
+    dt = tz_adjust(dt, user)
     best_fmt = ymdhm_fmt
     if (dt.hour == 0 and dt.minute == 0) or (dt.hour == 23 and dt.minute == 59):
         best_fmt = ymd_fmt
@@ -70,11 +101,12 @@ _std_ctx = None
 def standard_context():
     global _std_ctx
     if not _std_ctx:
-        YMDHM_FMT = '%Y-%m-%d %H:%M'
+        YMDHM_FMT = '%Y-%m-%d %H:%M %Z'
         YMD_FMT = '%Y-%m-%d'
-        _std_ctx = {'fmt': { 'date': { 'ymdhm': lambda x: safe_datetime_fmt(x, YMDHM_FMT),
-                                       'ymd': lambda x: safe_datetime_fmt(x, YMD_FMT),
-                                       'best': lambda x: safe_graceful_datetime_fmt(x, YMD_FMT, YMDHM_FMT) } },
+        _std_ctx = {'fmt': { 'date': { 'ymdhm': lambda x,user=None: safe_datetime_fmt(x, YMDHM_FMT, user),
+                                       'ymd': lambda x,user=None: safe_datetime_fmt(x, YMD_FMT, user),
+                                       'best': lambda x,user=None: safe_graceful_datetime_fmt(x, YMD_FMT, YMDHM_FMT, user),
+                                       } },
                     'markup': Markup,
                     'Markup': Markup,
                     'auth_user_is_user': auth_user_is_user,
@@ -169,6 +201,7 @@ def root_post(request):
         pass
     return root_common(request, auth_form, auth_errors)
 
+
 def root_common(request, auth_form = None, auth_errors = forms.util.ErrorList()):
     recent_brews = models.Brew.objects.order_by('-brew_date')[0:10]
     recent_recipes = models.Recipe.objects.order_by('-insert_date')[0:10]
@@ -218,6 +251,7 @@ def user_index(request, user_name):
 
 
 class UserProfileForm (forms.ModelForm):
+    rototill_dates = forms.BooleanField(help_text='If set, when changing your timezone, any existing Recipe and Brew timestamps will be converted to be in that timezone, as you originally intended.', initial=True)
     first_name = forms.CharField()
     last_name = forms.CharField()
     email = forms.EmailField()
@@ -227,6 +261,38 @@ class UserProfileForm (forms.ModelForm):
     class Meta:
         model = models.UserProfile
         exclude = ('user')
+
+
+def rototill_dates(uri_user, old_tz, new_tz):
+    results = {'recipes_updated':0,
+               'brews_updated': 0}
+    for recipe in models.Recipe.objects.filter(author=uri_user):
+        if recipe.insert_date:
+            recipe.insert_date = adjust_datetime_to_timezone(recipe.insert_date, new_tz, old_tz)
+            recipe.save()
+            results['recipes_updated'] += 1
+    for brew in models.Brew.objects.filter(brewer=uri_user):
+        updated = False
+        if brew.brew_date:
+            brew.brew_date = adjust_datetime_to_timezone(brew.brew_date, new_tz, old_tz)
+            updated = True
+        if brew.last_update_date:
+            brew.last_update_date = adjust_datetime_to_timezone(brew.last_update_date, new_tz, old_tz)
+            updated = True
+        if updated:
+            brew.save()
+            results['brews_updated'] += 1
+        for step in brew.step_set.all():
+            updated = False
+            if step.date:
+                step.date = adjust_datetime_to_timezone(step.date, new_tz, old_tz)
+                updated = True
+            if step.entry_date:
+                step.entry_date = adjust_datetime_to_timezone(step.entry_date, new_tz, old_tz)
+                updated = True
+            if updated:
+                step.save()
+    return results
 
 
 def user_profile(request, user_name):
@@ -244,6 +310,7 @@ def user_profile(request, user_name):
         # handle save
         profile_form = UserProfileForm(request.POST, instance=uri_user.get_profile())
         if not profile_form.errors:
+            old_tz = uri_user.get_profile().timezone
             profile = profile_form.save(commit=False)
             profile.user = uri_user
             profile.save()
@@ -252,17 +319,33 @@ def user_profile(request, user_name):
             uri_user.first_name = cleaned_data['first_name']
             uri_user.last_name = cleaned_data['last_name']
             uri_user.email = cleaned_data['email']
+            # @fixme: move to the form's clean() method.
             new_pass_1,new_pass_2 = cleaned_data['new_pass_1'], cleaned_data['new_pass_2']
             if new_pass_1 and new_pass_1 == new_pass_2:
                 uri_user.set_password(new_pass_1)
             uri_user.save()
+            #
+            if profile_form.cleaned_data['timezone'] != old_tz \
+                   and profile_form.cleaned_data['rototill_dates']:
+                new_tz = profile_form.cleaned_data['timezone']
+                results = rototill_dates(uri_user, old_tz, new_tz)
             return HttpResponseRedirect('/user/%s/' % (uri_user.username))
     return HttpResponse(render('user/profile.html', request=request, user=uri_user, profile_form=profile_form, std=standard_context()))
 
-class BrewForm (forms.ModelForm):
-    class Meta:
-        model = models.Brew
-        exclude = ['brewer', 'recipe']
+
+def BrewForm (user, *args, **kwargs):
+    tz = settings.TIME_ZONE
+    try:
+        tz = user.get_profile().timezone
+    except models.UserProfile.DoesNotExist,e:
+        pass
+    class _BrewForm (forms.ModelForm):
+        brew_date = LocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
+        class Meta:
+            model = models.Brew
+            exclude = ['brewer', 'recipe']
+    return _BrewForm(*args, **kwargs)
+
 
 # sys.stdout = codecs.getwriter('utf-8')(sys.stdout, errors='replace')
 def user_brew_new(request, user_name):
@@ -271,11 +354,11 @@ def user_brew_new(request, user_name):
     except ObjectDoesNotExist:
         raise Http404
     recipe = None
-    form = BrewForm()
+    form = BrewForm(uri_user)
     if request.method == 'POST':
         if not (request.user.is_authenticated() and request.user == uri_user):
             return HttpResponseForbidden('not allowed')
-        form = BrewForm(request.POST)
+        form = BrewForm(uri_user, request.POST)
         if form.is_valid():
             brew = form.save(commit=False)
             if not request.POST.has_key('recipe_id'):
@@ -297,7 +380,7 @@ def user_brew_new(request, user_name):
         recipe = models.Recipe.objects.get(pk=int(recipe_id))
         brew = models.Brew()
         brew.recipe = recipe
-        form = BrewForm(instance=brew)
+        form = BrewForm(uri_user, instance=brew)
     return HttpResponse(render('user/brew/new.html', request=request, user=uri_user, std=standard_context(),
                                recipe=recipe, brew_form=form))
 
@@ -328,7 +411,7 @@ def brew_edit(request, user_name, brew_id):
     if request.method == 'POST':
         if not (request.user.is_authenticated() and request.user == uri_user):
             return HttpResponseForbidden()
-        form = BrewForm(request.POST, instance=brew)
+        form = BrewForm(uri_user, request.POST, instance=brew)
         if not form.errors:
             updated_brew = form.save(commit=False)
             updated_brew.id = brew.id
@@ -340,18 +423,27 @@ def brew_edit(request, user_name, brew_id):
     return HttpResponseRedirect('/user/%s/brew/%d/' % (user_name, updated_brew.id))
 
 
-class StepForm (forms.ModelForm):
-    notes = forms.CharField(widget=forms.Textarea(), required=False)
-    brew = forms.IntegerField(widget=forms.HiddenInput)
-    class Meta:
-        model = models.Step
-        exclude = ['gravity']
+def StepForm(user, *args, **kwargs):
+    tz = settings.TIME_ZONE
+    if user and hasattr(user,'get_profile'):
+        try:
+            tz = user.get_profile().timezone
+        except models.UserProfile.DoesNotExist:
+            pass
+    class _StepForm (forms.ModelForm):
+        notes = forms.CharField(widget=forms.Textarea(), required=False)
+        brew = forms.IntegerField(widget=forms.HiddenInput)
+        date = LocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
+        class Meta:
+            model = models.Step
+            exclude = ['gravity']
+    return _StepForm(*args, **kwargs)
 
 
 def brew_post(request, uri_user, brew, step):
     if not (request.user.is_authenticated() and request.user == uri_user):
         return HttpResponseForbidden()
-    step_form = StepForm(request.POST, instance=step)
+    step_form = StepForm(uri_user, request.POST, instance=step)
     if step_form.is_valid():
         step_form.cleaned_data['brew'] = brew
         step = step_form.save()
@@ -367,7 +459,7 @@ def brew_post(request, uri_user, brew, step):
 
 def brew_render(request, uri_user, brew, step_form, step_edit):
     steps = [step for step in brew.step_set.all()]
-    brew_form = BrewForm(instance=brew)
+    brew_form = BrewForm(uri_user, instance=brew)
     recipe_deriv = None
     if brew.recipe:
         recipe_deriv = models.RecipeDerivations(brew.recipe)
@@ -399,7 +491,7 @@ def brew(request, user_name, brew_id, step_id):
     step_form = None
     step_expand_edit = False
     if step:
-        step_form = StepForm(instance=step)
+        step_form = StepForm(uri_user, instance=step)
         step_expand_edit = True
     if not step_form:
         next_step = None
@@ -416,11 +508,11 @@ def brew(request, user_name, brew_id, step_id):
                 next_step = next_steps.possible[0]
         if next_step:
             if next_step.existing_step:
-                step_form = StepForm(initial={'date': next_step.date or datetime.now()}, instance=next_step.existing_step)
+                step_form = StepForm(uri_user, initial={'date': next_step.date or datetime.now()}, instance=next_step.existing_step)
             else:
-                step_form = StepForm(initial={'brew': brew.id, 'date': next_step.date or datetime.now(), 'type': next_step.type.id})
+                step_form = StepForm(uri_user, initial={'brew': brew.id, 'date': next_step.date or datetime.now(), 'type': next_step.type.id})
         else:
-            step_form = StepForm(initial={'brew': brew.id, 'date': datetime.now()})
+            step_form = StepForm(uri_user, initial={'brew': brew.id, 'date': datetime.now()})
     return brew_render(request, uri_user, brew, step_form, step_expand_edit)
 
 
@@ -509,15 +601,24 @@ def get_adjunct_choices():
     return adjunct_choices
 
 
-class RecipeForm (forms.ModelForm):
-    style = forms.ModelChoiceField(models.Style.objects.all(),
-                                   widget=widgets.TwoLevelSelectWidget(choices=get_style_choices()))
-    name = forms.CharField(widget=forms.TextInput(attrs={'size': 40}))
-    source_url = forms.URLField(required=False, widget=forms.TextInput(attrs={'size': 40}))
-    
-    class Meta:
-        model = models.Recipe
-        exclude = ['author', 'derived_from_recipe']
+def RecipeForm(user, *args, **kwargs):
+    tz = settings.TIME_ZONE
+    if user and hasattr(user, 'get_profile'):
+        try:
+            tz = user.get_profile().timezone
+        except models.UserProfile.DoesNotExist:
+            pass
+    class _RecipeForm (forms.ModelForm):
+        style = forms.ModelChoiceField(models.Style.objects.all(),
+                                       widget=widgets.TwoLevelSelectWidget(choices=get_style_choices()))
+        name = forms.CharField(widget=forms.TextInput(attrs={'size': 40}))
+        source_url = forms.URLField(required=False, widget=forms.TextInput(attrs={'size': 40}))
+        insert_date = LocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz), initial=datetime.now())
+
+        class Meta:
+            model = models.Recipe
+            exclude = ['author', 'derived_from_recipe']
+    return _RecipeForm(*args, **kwargs)
 
 
 class RecipeGrainForm (forms.ModelForm):
@@ -584,12 +685,12 @@ def recipe_new(request):
     # uri_user = User.objects.get(username__exact = user_name)
     # if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
     recipe = None
-    recipe_form = RecipeForm()
+    recipe_form = RecipeForm(request.user)
     clone_id = None
     if request.method == 'GET' and request.GET.has_key('clone_from_recipe_id'):
         clone_id = request.GET['clone_from_recipe_id']
         to_clone = models.Recipe.objects.get(pk=int(clone_id))
-        recipe_form = RecipeForm(instance=to_clone,
+        recipe_form = RecipeForm(request.user, instance=to_clone,
                                  initial={'name': 'Clone of %s' % (to_clone.name),
                                           'derived_from_recipe': to_clone})
     elif request.method == 'POST':
@@ -597,16 +698,15 @@ def recipe_new(request):
         if request.POST.has_key('clone_from_recipe_id') \
            and len(request.POST['clone_from_recipe_id']) > 0:
             clone_id = int(request.POST['clone_from_recipe_id'])
-        form = RecipeForm(request.POST)
+        form = RecipeForm(request.user, request.POST)
         if clone_id:
             to_clone = models.Recipe.objects.get(pk=int(clone_id))
-            form = RecipeForm(request.POST, instance=to_clone)
+            form = RecipeForm(request.user, request.POST, instance=to_clone)
         if not form.is_valid():
             return HttpResponse(render('recipe/new.html', request=request, std=standard_context(),
                                        clone_from_recipe_id=clone_id,
                                        recipe_form=form,
                                        is_new=True))
-
         new_recipe = form.save(commit=False)
         if request.user.is_authenticated():
             new_recipe.author = request.user
@@ -633,7 +733,7 @@ def recipe_post(request, recipe_id, recipe=None):
     '''@return (successOrError:boolean, formOrHttpResposne)'''
     if not recipe and recipe_id:
         recipe = models.Recipe.objects.get(pk=recipe_id)
-    form = RecipeForm(request.POST, instance=recipe)
+    form = RecipeForm(request.user, request.POST, instance=recipe)
     if not form.is_valid():
         return (False, form)
     upd_recipe = form.save(commit=False)
@@ -646,7 +746,7 @@ def recipe_post(request, recipe_id, recipe=None):
 
 
 def _render_recipe(request, recipe, **kwargs):
-    form = kwargs.setdefault('form', RecipeForm(instance=recipe))
+    form = kwargs.setdefault('form', RecipeForm(request.user, instance=recipe))
     # @fixme: call something like recipe.grain_list_descending() instead?
     grains = [x for x in models.RecipeGrain.objects.filter(recipe=recipe)]
     hops = [x for x in models.RecipeHop.objects.filter(recipe=recipe)]
@@ -711,6 +811,7 @@ def recipe(request, recipe_id, recipe_name):
 
 class EfficiencyTracker (object):
     def __init__(self, user):
+        self._user = user
         self._brews = list(models.Brew.objects.filter(brewer__exact = user).order_by('-brew_date')[0:10])
         self._brews.reverse()
         self._derivations = [models.BrewDerivations(brew) for brew in self._brews]
@@ -722,7 +823,7 @@ class EfficiencyTracker (object):
     def url(self):
         url = 'http://chart.apis.google.com/chart?chs=400x100&cht=lc'
         # url += '&chds=0,100'
-        efficiencies_dates = [{'efficiency': '%0.2f' % (derived.efficiency()), 'date': safe_datetime_fmt_raw(derived._brew.brew_date, '%m/%d')}
+        efficiencies_dates = [{'efficiency': '%0.2f' % (derived.efficiency()), 'date': safe_datetime_fmt_raw(derived._brew.brew_date, '%m/%d', self._user)}
                               for derived
                               in self._derivations
                               if not derived.can_not_derive_efficiency()]
