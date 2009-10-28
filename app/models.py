@@ -638,12 +638,14 @@ class TimeConst:
     
 def celsius_to_farenheit(temp):
     '''
-    >>> celsius_to_farenheit(0.0)
-    Decimal('32.00')
-    >>> celsius_to_farenheit(100.0)
-    Decimal('212.00')
-    >>> celsius_to_farenheit(-17.78)
-    Decimal('-0.004')
+    >>> print celsius_to_farenheit(0.0)
+    32.00
+    >>> print celsius_to_farenheit(100.0)
+    212.00
+    >>> print celsius_to_farenheit(-17.78)
+    -0.004
+    >>> print celsius_to_farenheit(-40)
+    -40.0
     '''
     temp = str(temp)
     if temp.lstrip('-').find('.') == -1:
@@ -672,14 +674,14 @@ def correct_gravity(gravity, temp_f):
     - agrees with http://brewery.org/library/HydromCorr0992.html
 
 
-    >>> correct_gravity(1.042, 108)
-    Decimal('1.050')
-    >>> correct_gravity(1.050, 82)
-    Decimal('1.053')
-    >>> correct_gravity(1.0123103856, 59)
-    Decimal('1.012')
-    >>> correct_gravity(1.070, 41)
-    Decimal('1.069')
+    >>> print correct_gravity(1.042, 108)
+    1.050
+    >>> print correct_gravity(1.050, 82)
+    1.053
+    >>> print correct_gravity(1.0123103856, 59)
+    1.012
+    >>> print correct_gravity(1.070, 41)
+    1.069
     '''
     gravity = Decimal(str(gravity))
     F = Decimal(str(temp_f))
@@ -723,18 +725,18 @@ def convert_volume(volume, from_units, to_units):
 
 def convert_weight(amount, from_units, to_units):
     '''
-    >> convert_weight(1, 'lb', 'kg')
-    Decimal('0.4539237')
-    >>> convert_weight(1, 'kg', 'lb')
-    Decimal('2.20462500000')
-    >>> convert_weight(16, 'oz', 'lb')
-    Decimal('1.0000')
-    >>> convert_weight(32, 'oz', 'lb')
-    Decimal('2.0000')
-    >>> convert_weight(1500, 'gr', 'lb')
-    Decimal('3.30693750000')
-    >>> convert_weight(5, 'tsp', 'gr')
-    Decimal('15')
+    >> print convert_weight(1, 'lb', 'kg')
+    0.4539237
+    >>> print convert_weight(1, 'kg', 'lb')
+    2.20462500000
+    >>> print convert_weight(16, 'oz', 'lb')
+    1.0000
+    >>> print convert_weight(32, 'oz', 'lb')
+    2.0000
+    >>> print convert_weight(1500, 'gr', 'lb')
+    3.30693750000
+    >>> print convert_weight(5, 'tsp', 'gr')
+    15
     '''
     ctx = Context(prec=6)
     conversion_from_to = {
