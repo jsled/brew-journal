@@ -40,6 +40,10 @@ Setup
   -rw-r--r-- 1 jsled users   2162 2009-03-18 00:19 urls.py
   -rwxr-xr-x 1 jsled users   9366 2009-03-18 00:20 util.py
 
+- add the eggs in lib/ to PYTHONPATH; e.g.::
+
+  for egg in lib/*.egg; do export PYTHONPATH="$(pwd)/${egg}:${PYTHONPATH}"; done
+
 - make sure $(./manage.py test) passes
 
 - run $(./manage.py runserver); hit <http://localhost:8000/> in your browser.
