@@ -663,8 +663,8 @@ def recipe_component_generic(request, recipe_id, model_type, type_form_name, for
     '''
     All the additions are going to be the same, so genericize them, leveraging the form to do the heavy lifting.
     '''
-    def _get_recipe_redirect(recipe_id):
-        return HttpResponseRedirect('/recipe/%s' % (recipe_id))
+    def _get_recipe_redirect(recipe):
+        return HttpResponseRedirect('/recipe/%d/%s' % (recipe.id, urllib.quote(recipe.name.encode('utf-8'))))
     if not request.method == 'POST':
         return HttpResponseBadRequest('method not supported')
     if request.POST.has_key('delete_id') and request.POST['delete_id'] != '-1':
@@ -678,7 +678,7 @@ def recipe_component_generic(request, recipe_id, model_type, type_form_name, for
     new_component = form.save(commit=False)
     new_component.recipe = recipe
     new_component.save()
-    return _get_recipe_redirect(recipe_id)
+    return _get_recipe_redirect(recipe)
 
 
 def recipe_new(request):
@@ -730,9 +730,21 @@ def recipe_new(request):
 
 
 def recipe_post(request, recipe_id, recipe=None):
-    '''@return (successOrError:boolean, formOrHttpResposne)'''
+    '''@return (successOrError:boolean, formOrHttpResponse)'''
     if not recipe and recipe_id:
         recipe = models.Recipe.objects.get(pk=recipe_id)
+    if request.POST.has_key('item_type'):
+        type = request.POST['item_type']
+        if type == 'grain':
+            return (True,recipe_grain(request, recipe_id))
+        elif type == 'hop':
+            return (True,recipe_hop(request, recipe_id))
+        elif type == 'adjunct':
+            return (True,recipe_adjunct(request, recipe_id))
+        elif type == 'yeast':
+            return (True,recipe_yeast(request, recipe_id))
+        else:
+            raise Exception('unknown item type [%s]' % (type))
     form = RecipeForm(request.user, request.POST, instance=recipe)
     if not form.is_valid():
         return (False, form)

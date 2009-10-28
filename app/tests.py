@@ -52,14 +52,14 @@ class AppTestCase (TestCase):
         self.assertEquals(302, res.status_code, res)
         recipe_url = res['Location']
         recipe_base_url = '/'.join(recipe_url.split('/')[3:-1])
-        hop_post_url = '/%s/hop/' % (recipe_base_url)
+        hop_post_url = '/%s/' % (recipe_base_url)
         for hop,amt,units,boil_time in hops:
-            args = {'hop': hop, 'amount_value': amt, 'amount_units': units, 'boil_time': boil_time}
+            args = {'item_type': 'hop', 'hop': hop, 'amount_value': amt, 'amount_units': units, 'boil_time': boil_time}
             res = self.client.post(hop_post_url, args)
             self.assertEqual(302, res.status_code, res)
-        grain_post_url = '/%s/grain/' % (recipe_base_url)
+        grain_post_url = '/%s/' % (recipe_base_url)
         for grain,amt,units in grains:
-            res = self.client.post(grain_post_url, {'grain': grain, 'amount_value': amt, 'amount_units': units})
+            res = self.client.post(grain_post_url, {'item_type': 'grain', 'grain': grain, 'amount_value': amt, 'amount_units': units})
             self.assertEqual(302, res.status_code, res)
         return recipe_base_url
 
@@ -72,7 +72,7 @@ class AppTestCase (TestCase):
             post_url = '/%s/' % (brew_url)
             res = self.client.post(post_url, fields)
             self.assertEquals(302, res.status_code, 'posting to %s %s: %s' % (post_url,fields,res))
-        return brew_url        
+        return brew_url
 
 
 class BasicLoginTest (AppTestCase):
@@ -103,8 +103,8 @@ class HopWithoutBoilTime (AppTestCase):
         res = app.post('/recipe/new/', {'name': 'test', 'insert_date': '2008-08-31 20:48', 'batch_size': 5, 'batch_size_units': 'gl', 'style': 1, 'type': 'a'})
         new_recipe_url = res['Location']
         base_recipe_url = '/'.join(new_recipe_url.split('/')[3:-1])
-        hop_post_url = '/%s/hop/' % (base_recipe_url)
-        res = app.post(hop_post_url, {'hop': 1, 'amount_value': 2, 'amount_units': 'oz'})
+        hop_post_url = '/%s/' % (base_recipe_url)
+        res = app.post(hop_post_url, {'item_type': 'hop', 'hop': 1, 'amount_value': 2, 'amount_units': 'oz'})
         # @fixme:
         #assert(res.body.contains validation error mumble on boil-time field)
         self.assertEqual(200, res.status_code)

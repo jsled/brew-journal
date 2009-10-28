@@ -68,7 +68,8 @@
             </div>
 
             <!-- grains -->
-            <form method="post" action="./grain/" id="grain_form">
+            <form method="post" id="grain_form">
+	      <input type="hidden" name="item_type" value="grain"/>
               <input type="hidden" name="delete_id" value="-1"/>
               <table width="70%">
                 <tr>
@@ -96,8 +97,8 @@
             </form>
 
             <!-- hops -->
-
-            <form method="post" action="./hop/" id="hop_form">
+            <form method="post" id="hop_form">
+	      <input type="hidden" name="item_type" value="hop"/>
               <input type="hidden" name="delete_id" value="-1"/>
               <table width="70%">
                 <tr>
@@ -127,8 +128,8 @@
             </form>
 
             <!-- adjuncts -->
-
-            <form method="post" action="./adjunct/" id="adj_form">
+            <form method="post" id="adj_form">
+	      <input type="hidden" name="item_type" value="adjunct"/>
               <input type="hidden" name="delete_id" value="-1"/>
               <table width="70%">
                 <tr>
@@ -160,8 +161,9 @@
               </table>
             </form>
 
-            <!-- h2>yeast</h2 -->
-            <form method="post" action="./yeast/" id="yeast_form">
+            <!-- yeast -->
+            <form method="post" id="yeast_form">
+	      <input type="hidden" name="item_type" value="yeast"/>
               <input type="hidden" name="delete_id" value="-1"/>
               <table width="70%">
                 <tr>
