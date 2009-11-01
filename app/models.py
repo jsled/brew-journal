@@ -224,6 +224,8 @@ class Grain (models.Model):
     name = models.CharField(max_length=200)
     extract_min = models.SmallIntegerField(null=True)
     extract_max = models.SmallIntegerField(null=True)
+    liter_potential_min = models.SmallIntegerField(null=True)
+    liter_potential_max = models.SmallIntegerField(null=True)
     lovibond_min = models.SmallIntegerField(null=True)
     lovibond_max = models.SmallIntegerField(null=True)
     description = models.CharField(max_length=200)
@@ -322,7 +324,7 @@ class RecipeGrain (models.Model):
     recipe = models.ForeignKey(Recipe)
     grain = models.ForeignKey(Grain)
     amount_value = models.DecimalField(max_digits=4, decimal_places=2)
-    amount_units = models.CharField(max_length=2, choices=Weight_Units, default='lb')
+    amount_units = models.CharField(max_length=2, choices=All_Units, default='lb')
 
 
 class RecipeHop (models.Model):
@@ -946,6 +948,13 @@ class SrmDerivation (object):
     per_grain = property(lambda s: s._per_grain)
 
 
+class NumberRange:
+    def __init__(self, lo, hi, avg=None):
+        self.lo = lo
+        self.hi = hi
+        self.avg = avg
+
+
 class RecipeDerivations (object):
     def __init__(self, recipe):
         self._recipe = recipe
@@ -996,29 +1005,49 @@ class RecipeDerivations (object):
 
     def compute_og(self, efficiency=None):
         '''@return OgDerivation'''
-        efficiency = efficiency or RecipeDerivations.default_efficiency
+        default_grain_efficiency = efficiency or RecipeDerivations.default_efficiency
         batch_gallons = convert_volume(self._recipe.batch_size, self._recipe.batch_size_units, 'gl')
-        low_accum,high_accum = Decimal('0'),Decimal('0')
+        accum = NumberRange(Decimal('0'),Decimal('0'))
         def convert_to_gravity(val, batch_gallons):
             return Decimal('1') + ((val / batch_gallons) / Decimal('1000'))
         per_grain = []
         for grain in self._recipe.recipegrain_set.all():
-            try:
-                weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
-            except:
-                # log the error or something
-                weight = 0
-            grain_eff = efficiency
-            if grain.grain.name.find('Extract') != -1:
-                grain_eff = Decimal('1')
-            lo,hi = tuple([(Decimal(str(extract)) - Decimal('1000')) * weight * grain_eff for extract in (grain.grain.extract_min,grain.grain.extract_max)])
-            low_accum += lo
-            high_accum += hi
+            fermentable_efficiency = Decimal('1')
+            if grain.amount_units in [x[0] for x in Weight_Units]:
+                try:
+                    weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
+                except:
+                    # @fixme: log the error or something
+                    weight = 0
+                normalized_units = weight
+                #
+                fermentable_efficiency = default_grain_efficiency
+                if grain.grain.name.find('Extract') != -1:
+                    fermentable_efficiency = Decimal('1')
+                #
+                norm_units_potential = NumberRange(grain.grain.extract_min, grain.grain.extract_max)
+            elif grain.amount_units in [x[0] for x in Volume_Units]:
+                try:
+                    vol = convert_volume(grain.amount_value, grain.amount_units, 'l')
+                except:
+                    # @fixme: log or something
+                    vol = 0
+                normalized_units = vol
+                # efficency is always 1 ... ? not really, but lets
+                # assume that volume-specified fermentable are
+                # extracts or fruit, which is efficient. @fixme
+                norm_units_potential = NumberRange(grain.grain.liter_potential_min, grain.grain.liter_potential_max)
+            lo,hi = tuple([(Decimal(str(extract)) - Decimal('1000'))
+                           * normalized_units
+                           * fermentable_efficiency
+                           for extract in (norm_units_potential.lo,norm_units_potential.hi)])
+            accum.lo += lo
+            accum.hi += hi
             lo_gravity = convert_to_gravity(lo, batch_gallons)
             hi_gravity = convert_to_gravity(hi, batch_gallons)
             per_grain.append(PerGrainOg(grain, lo_gravity, hi_gravity))
-        low = convert_to_gravity(low_accum, batch_gallons)
-        high = convert_to_gravity(high_accum, batch_gallons)
+        low = convert_to_gravity(accum.lo, batch_gallons)
+        high = convert_to_gravity(accum.hi, batch_gallons)
         # we want to use these funny 'calc' versions because 1.040/1.080 = 0.966, but 0.040/0.080 = 0.50:
         high_calc = high - Decimal('1')
         for grain in per_grain:

@@ -654,7 +654,7 @@ class StepTest (TestCase):
 
 class RecipeDerivationsTest (TestCase):
 
-    fixtures = ['hops0', 'grains1']
+    fixtures = ['hops0', 'grains1', 'grains3']
 
     def assertPercentageSum(self, thingies):
         percentage_accum = decimal.Decimal('0')
@@ -816,3 +816,17 @@ class RecipeDerivationsTest (TestCase):
         # this is way different from the text:
         # print 'ruabeoir',srm.low,srm.average,srm.high
         # yself.assertAlmostEquals(dec('17'), srm.average)
+
+    def testEstimatedOgCider(self):
+        '''Just basic test of Apple must.'''
+        dec = lambda x: decimal.Decimal(str(x))
+        apple = models.Grain.objects.get(name__startswith='Apple')
+        grains = [Mock(grain=apple, amount_value=dec('5'), amount_units='gl')]
+        hops = []
+        recipe = Mock(batch_size=5, batch_size_units='gl',
+                      recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
+        no_og_reasons = deriv.can_not_derive_og()
+        self.assertEquals([], no_og_reasons)
+        og = deriv.compute_og()
+        self.assertAlmostEquals(dec('1.052'), og.average, 0)
