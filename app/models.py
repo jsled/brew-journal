@@ -325,6 +325,26 @@ class RecipeGrain (models.Model):
     grain = models.ForeignKey(Grain)
     amount_value = models.DecimalField(max_digits=4, decimal_places=2)
     amount_units = models.CharField(max_length=2, choices=All_Units, default='lb')
+    by_weight_extract_override = models.SmallIntegerField(null=True, blank=True)
+    by_volume_extract_override = models.SmallIntegerField(null=True, blank=True)
+
+    def weight_extract_potential(self):
+        '''@return (min,max)'''
+        min,max = None,None
+        if self.by_weight_extract_override:
+            min,max = self.by_weight_extract_override,self.by_weight_extract_override
+        else:
+            min,max = self.grain.extract_min,self.grain.extract_max
+        return min,max
+
+    def volume_extract_potential(self):
+        '''@return (min,max)'''
+        min,max = None,None
+        if self.by_volume_extract_override:
+            min,max = self.by_volume_extract_override,self.by_volume_extract_override
+        else:
+            min,max = self.grain.extract_min,self.grain.extract_max
+        return min,max
 
 
 class RecipeHop (models.Model):
@@ -1025,7 +1045,7 @@ class RecipeDerivations (object):
                 if grain.grain.name.find('Extract') != -1:
                     fermentable_efficiency = Decimal('1')
                 #
-                norm_units_potential = NumberRange(grain.grain.extract_min, grain.grain.extract_max)
+                norm_units_potential = NumberRange(*list(grain.weight_extract_potential()))
             elif grain.amount_units in [x[0] for x in Volume_Units]:
                 try:
                     vol = convert_volume(grain.amount_value, grain.amount_units, 'l')
@@ -1036,7 +1056,7 @@ class RecipeDerivations (object):
                 # efficency is always 1 ... ? not really, but lets
                 # assume that volume-specified fermentable are
                 # extracts or fruit, which is efficient. @fixme
-                norm_units_potential = NumberRange(grain.grain.liter_potential_min, grain.grain.liter_potential_max)
+                norm_units_potential = NumberRange(*list(grain.volume_extract_potential()))
             lo,hi = tuple([(Decimal(str(extract)) - Decimal('1000'))
                            * normalized_units
                            * fermentable_efficiency

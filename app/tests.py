@@ -714,7 +714,7 @@ class RecipeDerivationsTest (TestCase):
 
     def testEstimatedOg(self):
         twoRow = models.Grain.objects.get(name__exact='Pale Malt (2-row)')
-        grains = [Mock(grain=twoRow, amount_value=decimal.Decimal('10'), amount_units='lb')]
+        grains = [models.RecipeGrain(grain=twoRow, amount_value=decimal.Decimal('10'), amount_units='lb')]
         recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
@@ -730,11 +730,11 @@ class RecipeDerivationsTest (TestCase):
         roasted_barley = models.Grain.objects.get(name__exact='Roasted Barley',group__exact='American')
         dark_extract = models.Grain.objects.get(name__exact='Liquid Malt Extract: Dark')
         amber_extract = models.Grain.objects.get(name__exact='Dry Malt Extract: Amber')
-        grains = [Mock(grain=pale, amount_value=dec(2), amount_units='lb'),
-                  Mock(grain=crystal, amount_value=dec(8), amount_units='oz'),
-                  Mock(grain=roasted_barley, amount_value=dec(8), amount_units='oz'),
-                  Mock(grain=dark_extract, amount_value=dec(7), amount_units='lb'),
-                  Mock(grain=amber_extract, amount_value=dec(1), amount_units='lb')]
+        grains = [models.RecipeGrain(grain=pale, amount_value=dec(2), amount_units='lb'),
+                  models.RecipeGrain(grain=crystal, amount_value=dec(8), amount_units='oz'),
+                  models.RecipeGrain(grain=roasted_barley, amount_value=dec(8), amount_units='oz'),
+                  models.RecipeGrain(grain=dark_extract, amount_value=dec(7), amount_units='lb'),
+                  models.RecipeGrain(grain=amber_extract, amount_value=dec(1), amount_units='lb')]
         recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
@@ -750,10 +750,10 @@ class RecipeDerivationsTest (TestCase):
         light_dme = models.Grain.objects.get(name__exact='Dry Malt Extract: Light')
         cane = models.Grain.objects.get(name__exact='Sucrose (white table sugar)')
         glucose = models.Grain.objects.get(name__exact='Dextrose (glucose)')
-        grains = [Mock(grain=crystal, amount_value=dec(0.5), amount_units='lb'),
-                  Mock(grain=light_dme, amount_value=dec(4.5), amount_units='lb'),
-                  Mock(grain=cane, amount_value=dec(4), amount_units='oz'),
-                  Mock(grain=glucose, amount_value=dec(2), amount_units='oz')]
+        grains = [models.RecipeGrain(grain=crystal, amount_value=dec(0.5), amount_units='lb'),
+                  models.RecipeGrain(grain=light_dme, amount_value=dec(4.5), amount_units='lb'),
+                  models.RecipeGrain(grain=cane, amount_value=dec(4), amount_units='oz'),
+                  models.RecipeGrain(grain=glucose, amount_value=dec(2), amount_units='oz')]
         recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
@@ -785,10 +785,10 @@ class RecipeDerivationsTest (TestCase):
         crystal_120 = models.Grain.objects.get(name__exact='Crystal Malt: 120')
         barley = models.Grain.objects.get(name__exact='Roasted Barley', group__exact='American')
         goldings = models.Hop.objects.get(name__exact='Kent Golding (UK)')
-        grains = [Mock(grain=pale_lme, amount_value=dec(8.1), amount_units='lb'),
-                  Mock(grain=crystal_40, amount_value=dec(6), amount_units='oz'),
-                  Mock(grain=crystal_120, amount_value=dec(6), amount_units='oz'),
-                  Mock(grain=barley, amount_value=dec(6), amount_units='oz')]
+        grains = [models.RecipeGrain(grain=pale_lme, amount_value=dec(8.1), amount_units='lb'),
+                  models.RecipeGrain(grain=crystal_40, amount_value=dec(6), amount_units='oz'),
+                  models.RecipeGrain(grain=crystal_120, amount_value=dec(6), amount_units='oz'),
+                  models.RecipeGrain(grain=barley, amount_value=dec(6), amount_units='oz')]
         hops = [Mock(hop=goldings, amount_value=dec(1.25), amount_units='oz', boil_time=60)]
         recipe = Mock(batch_size=5, batch_size_units='gl',
                       recipegrain_set=FkSet(grains),
@@ -821,7 +821,7 @@ class RecipeDerivationsTest (TestCase):
         '''Just basic test of Apple must.'''
         dec = lambda x: decimal.Decimal(str(x))
         apple = models.Grain.objects.get(name__startswith='Apple')
-        grains = [Mock(grain=apple, amount_value=dec('5'), amount_units='gl')]
+        grains = [models.RecipeGrain(grain=apple, amount_value=dec('5'), amount_units='gl')]
         hops = []
         recipe = Mock(batch_size=5, batch_size_units='gl',
                       recipegrain_set=FkSet(grains))
@@ -830,3 +830,18 @@ class RecipeDerivationsTest (TestCase):
         self.assertEquals([], no_og_reasons)
         og = deriv.compute_og()
         self.assertAlmostEquals(dec('1.052'), og.average, 0)
+
+    def testEstimatedOgWithOverride(self):
+        dec = lambda x: decimal.Decimal(x)
+        apple = models.Grain.objects.get(name__startswith='Apple')
+        two_row = models.Grain.objects.get(name__exact='Pale Malt (2-row)')
+        grains = [models.RecipeGrain(grain=apple, amount_value=dec('5'), amount_units='gl', by_volume_extract_override=dec('1040')),
+                  models.RecipeGrain(grain=two_row, amount_value=dec('5'), amount_units='lb', by_weight_extract_override=dec('1016'))]
+        hops = []
+        recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
+        self.assertEquals([], deriv.can_not_derive_og())
+        og = deriv.compute_og()
+        self.assertAlmostEquals(dec('1.050'), og.average, 0)
+
+                                 
