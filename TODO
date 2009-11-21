@@ -132,6 +132,9 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 * Todo
 ** bugs, misc
+*** TODO sort hops by boil time, dummy
+*** TODO add support for "mash"/fwh, dry-hopping
+*** TODO cascading /recipe/{id}/hops/hops/hops/… in the case of ingredient add failure
 *** TODO no way to add a fermentable (e.g., honey) added at flame-out.
 *** TODO unable to add "5 g" of apple must for cider recipes (no volume adds for fermentables)
 *** TODO can't add 1/8 tsp adjunct
