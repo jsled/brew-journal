@@ -84,6 +84,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'south',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -95,3 +96,6 @@ INSTALLED_APPS = (
 DEFAULT_CHARSET = 'utf-8'
 
 AUTH_PROFILE_MODULE = 'app.userprofile'
+
+SKIP_SOUTH_TESTS = True
+
