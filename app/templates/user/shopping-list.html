@@ -13,7 +13,7 @@
             <div id="yui-main">
 <div class="yui-b">
 
-  <py:def function="default_item_brew_amount_getter(item_brew)">${item_brew.amount_value} ${item_brew.amount_units} - </py:def>
+  <py:def function="default_item_brew_amount_getter(item_brew)">${'%.2g' % item_brew.amount_value} ${item_brew.amount_units} - </py:def>
   <py:def function="default_item_name_getter(item)">${item.name}</py:def>
   <py:def function="yeast_name_getter(yeast)">${yeast.manufacturer.name} ${yeast.ident} ${yeast.name}</py:def>
   <py:def function="yeast_amt_getter(yeast)"/>
