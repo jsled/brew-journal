@@ -49,9 +49,9 @@ from timezones.utils import adjust_datetime_to_timezone
 from genshi_django import render
 
 class LocalizedDateTimeInput (forms.DateTimeInput):
-    def __init__(self, tz):
+    def __init__(self, tz, *args, **kwargs):
         self._tz = tz
-        super(LocalizedDateTimeInput, self).__init__()
+        super(LocalizedDateTimeInput, self).__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None):
         if isinstance(value, datetime):
@@ -59,8 +59,19 @@ class LocalizedDateTimeInput (forms.DateTimeInput):
         # @fixme: output the string rep of the timezone, probably after the <input>
         return super(LocalizedDateTimeInput, self).render(name, value, attrs)
 
+
+class SafeLocalizedDateTimeField (LocalizedDateTimeField):
+    '''override clean() to convert the returned date from "aware" to "naive" so mysql does not complain.  FFS.'''
+    def clean(self, value):
+        val = super(SafeLocalizedDateTimeField, self).clean(value)
+        if val is not None:
+            val = val.replace(tzinfo=None)
+        return val
+
+
 def datetime_span(formatted):
     return Markup('<span class="datetime">%s</span>' % (formatted))
+
 
 def tz_adjust(date, user):
     settings_tz = settings.TIME_ZONE
@@ -340,7 +351,7 @@ def BrewForm (user, *args, **kwargs):
     except models.UserProfile.DoesNotExist,e:
         pass
     class _BrewForm (forms.ModelForm):
-        brew_date = LocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
+        brew_date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
         class Meta:
             model = models.Brew
             exclude = ['brewer', 'recipe']
@@ -433,7 +444,7 @@ def StepForm(user, *args, **kwargs):
     class _StepForm (forms.ModelForm):
         notes = forms.CharField(widget=forms.Textarea(), required=False)
         brew = forms.IntegerField(widget=forms.HiddenInput)
-        date = LocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
+        date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
         class Meta:
             model = models.Step
             exclude = ['gravity']
@@ -613,7 +624,7 @@ def RecipeForm(user, *args, **kwargs):
                                        widget=widgets.TwoLevelSelectWidget(choices=get_style_choices()))
         name = forms.CharField(widget=forms.TextInput(attrs={'size': 40}))
         source_url = forms.URLField(required=False, widget=forms.TextInput(attrs={'size': 40}))
-        insert_date = LocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz), initial=datetime.now())
+        insert_date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz), initial=datetime.now())
 
         class Meta:
             model = models.Recipe
