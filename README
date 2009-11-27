@@ -19,6 +19,8 @@ Setup
 - get >=genshi-0.4.  symlink 'genshi' in the top-level to the 'genshi' subdir
   of a checkout/distribution, or install genshi systemwide.
 
+- get south-0.6.2.  symlink 'south' in the top-level to the 'south' subdir.
+
 - symlink 'settings.py' to, probably, 'settings-local.py'
 
   e.g.:
@@ -35,6 +37,7 @@ Setup
   -rw-r--r-- 1 jsled users    788 2009-03-18 00:27 README
   -rw-r--r-- 1 jsled users   3516 2008-12-31 16:55 settings-local.py
   lrwxrwxrwx 1 jsled users     17 2008-07-27 16:08 settings.py -> settings-local.py
+  lrwxrwxrwx 1 jsled users     18 2009-11-27 12:03 south -> ../lib/south/south
   drwxr-xr-x 2 jsled users   4096 2008-12-17 20:37 sql
   -rw-r--r-- 1 jsled users  18295 2009-03-17 23:44 TODO
   -rw-r--r-- 1 jsled users   2162 2009-03-18 00:19 urls.py
