@@ -784,19 +784,19 @@ def _render_recipe(request, recipe, **kwargs):
                 return -1
             return 1
         def to_grams(amount):
-            return models.convert_weight(amount.amount_value, amount.amount_units, 'gr')
+            return int(models.convert_weight(amount.amount_value, amount.amount_units, 'gr'))
         def safe_to_grams(amount):
             try:
-                return to_grams(amount)
+                return int(to_grams(amount))
             except:
                 return 0
         a_in_grams,b_in_grams = tuple([safe_to_grams(x) for x in [a,b]])
         rtn = int(a_in_grams - b_in_grams)
         if rtn == 0:
-            rtn = a.id - b.id
-        return rtn
+            rtn = int(a.id - b.id)
+        return int(rtn)
     def invert_comparator(cmp):
-        return lambda a,b: -cmp(a,b)
+        return lambda a,b: int(-1 * int(cmp(a,b)))
     for x in grains, hops, adjuncts:
         x.sort(cmp=invert_comparator(weight_comparator))
     #
