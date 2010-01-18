@@ -678,11 +678,12 @@ def recipe_component_generic(request, recipe_id, model_type, type_form_name, for
         return HttpResponseRedirect('/recipe/%d/%s' % (recipe.id, urllib.quote(recipe.name.encode('utf-8'))))
     if not request.method == 'POST':
         return HttpResponseBadRequest('method not supported')
+    recipe = models.Recipe.objects.get(pk=recipe_id)
+    if not recipe:
+        return HttpResponseNotFound('no such recipe')
     if request.POST.has_key('delete_id') and request.POST['delete_id'] != '-1':
         model_type.objects.get(pk=request.POST['delete_id']).delete()
-        return _get_recipe_redirect(recipe_id)
-    recipe = models.Recipe.objects.get(pk=recipe_id)
-    if not recipe: return HttpResponseNotFound('no such recipe')
+        return _get_recipe_redirect(recipe)
     form = form_class(request.POST)
     if not form.is_valid():
         return _render_recipe(request, recipe, **{type_form_name: form})
