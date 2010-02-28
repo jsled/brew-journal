@@ -844,4 +844,13 @@ class RecipeDerivationsTest (TestCase):
         og = deriv.compute_og()
         self.assertAlmostEquals(dec('1.050'), og.average, 0)
 
-                                 
+    def testDilutedByVolumePotential(self):
+        dec = lambda x: decimal.Decimal(x)
+        apple = models.Grain.objects.get(name__startswith='Apple')
+        grains = [models.RecipeGrain(grain=apple, amount_value=dec('2.5'), amount_units='gl')]
+        hops = []
+        recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
+        self.assertEquals([],deriv.can_not_derive_og())
+        og = deriv.compute_og()
+        self.assertAlmostEquals(dec('1.026'), og.average, 0)

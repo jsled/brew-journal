@@ -222,10 +222,12 @@ class Style (models.Model):
 
 class Grain (models.Model):
     name = models.CharField(max_length=200)
+    # 1 lb / 1gl = extract_{min,max} gravity * 1000
     extract_min = models.SmallIntegerField(null=True)
     extract_max = models.SmallIntegerField(null=True)
-    liter_potential_min = models.SmallIntegerField(null=True)
-    liter_potential_max = models.SmallIntegerField(null=True)
+    # volume_potential_{min,max} gravity * 1000 is unitless.
+    volume_potential_min = models.SmallIntegerField(null=True)
+    volume_potential_max = models.SmallIntegerField(null=True)
     lovibond_min = models.SmallIntegerField(null=True)
     lovibond_max = models.SmallIntegerField(null=True)
     description = models.CharField(max_length=200)
@@ -343,7 +345,7 @@ class RecipeGrain (models.Model):
         if self.by_volume_extract_override:
             min,max = self.by_volume_extract_override,self.by_volume_extract_override
         else:
-            min,max = self.grain.extract_min,self.grain.extract_max
+            min,max = self.grain.volume_potential_min,self.grain.volume_potential_max
         return min,max
 
 
