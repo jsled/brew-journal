@@ -837,16 +837,17 @@ def _render_recipe(request, recipe, **kwargs):
     #
     recipe_grains = formize_items(grains, kwargs, 'grain_form', RecipeGrainForm)
     recipe_hops = formize_items(hops, kwargs, 'hop_form', RecipeHopForm)
-    adj_form = kwargs.setdefault('adj_form', RecipeAdjunctForm())
-    yeast_form = kwargs.setdefault('yeast_form', RecipeYeastForm())
+    recipe_adjuncts = formize_items(adjuncts, kwargs, 'adj_form', RecipeAdjunctForm)
+    recipe_yeasts = formize_items(yeasts, kwargs, 'yeast_form', RecipeYeastForm)
     derivations = models.RecipeDerivations(recipe)
     return HttpResponse(render('recipe/view.html', request=request, std=standard_context(),
-                               recipe=recipe, grains=grains, hops=hops, adjuncts=adjuncts, yeasts=yeasts,
+                               recipe=recipe,
+                               grains=grains, hops=hops, adjuncts=adjuncts, yeasts=yeasts,
                                recipe_form=form,
                                recipe_grains=recipe_grains,
                                recipe_hops=recipe_hops,
-                               adj_form=adj_form,
-                               yeast_form=yeast_form,
+                               recipe_adjuncts=recipe_adjuncts,
+                               recipe_yeasts=recipe_yeasts,
                                deriv=derivations
                                ))
 
