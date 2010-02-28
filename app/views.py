@@ -836,7 +836,7 @@ def _render_recipe(request, recipe, **kwargs):
         return rtn
     #
     recipe_grains = formize_items(grains, kwargs, 'grain_form', RecipeGrainForm)
-    hop_form = kwargs.setdefault('hop_form', RecipeHopForm())
+    recipe_hops = formize_items(hops, kwargs, 'hop_form', RecipeHopForm)
     adj_form = kwargs.setdefault('adj_form', RecipeAdjunctForm())
     yeast_form = kwargs.setdefault('yeast_form', RecipeYeastForm())
     derivations = models.RecipeDerivations(recipe)
@@ -844,7 +844,7 @@ def _render_recipe(request, recipe, **kwargs):
                                recipe=recipe, grains=grains, hops=hops, adjuncts=adjuncts, yeasts=yeasts,
                                recipe_form=form,
                                recipe_grains=recipe_grains,
-                               hop_form=hop_form,
+                               recipe_hops=recipe_hops,
                                adj_form=adj_form,
                                yeast_form=yeast_form,
                                deriv=derivations
