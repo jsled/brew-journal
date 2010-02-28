@@ -814,22 +814,24 @@ def _render_recipe(request, recipe, **kwargs):
     #
     def formize_items(items, kwargs, type_name, form_class):
         rtn = []
-        form = None
-        form_instance = None
+        submitted_form = None
+        submitted_form_instance = None
         matches_existing = False
         if kwargs.has_key(type_name):
-            form = kwargs[type_name]
-            form_instance = form.instance
+            submitted_form = kwargs[type_name]
+            submitted_form_instance = submitted_form.instance
         for item in items:
-            if item == form_instance:
-                rtn.append((form_instance,form))
+            if item == submitted_form_instance:
+                rtn.append((submitted_form_instance,submitted_form))
                 matches_existing = True
             else:
-                rtn.append((item,form_class(instance=item)))
+                clean_form = form_class(instance=item)
+                rtn.append((item,clean_form))
+        # add "empty" item for the "new" item/template.
         new_form = form_class()
-        form_present = form_instance is not None
-        if form_present and matches_existing:
-            new_form = form
+        form_present = submitted_form is not None
+        if form_present and not matches_existing:
+            new_form = submitted_form
         rtn.append((None,new_form))
         return rtn
     #
