@@ -1,5 +1,26 @@
 -*- org -*-
 * Concepts
+** Model Changes
+
+- Grain -> Fermentable
+  - extractable
+    - grains
+    - extract, sugar
+  - literal
+    - apple juice
+
+- Recipe
+  - volume -> {boil,end} volume
+  - if all-grain:
+    - water schedule
+    - mash schedule
+
+- RecipeHop
+  - aau override
+  - ui convenience for
+    - fwh
+    - dry-hopping
+
 ** Future Steps
 *** Notes
 Future steps are used a couple of ways:
