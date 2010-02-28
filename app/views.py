@@ -684,11 +684,22 @@ def recipe_component_generic(request, recipe_id, model_type, type_form_name, for
     if request.POST.has_key('delete_id') and request.POST['delete_id'] != '-1':
         model_type.objects.get(pk=request.POST['delete_id']).delete()
         return _get_recipe_redirect(recipe)
-    form = form_class(request.POST)
+    # handle updates
+    component_instance = None
+    if request.POST.has_key('id'):
+        id_str = request.POST['id']
+        if id_str != 'new':
+            component_instance = model_type.objects.get(pk=id_str)
+    is_new_component = component_instance is None
+    if not is_new_component:
+        form = form_class(request.POST, instance=component_instance)
+    else:
+        form = form_class(request.POST)
     if not form.is_valid():
         return _render_recipe(request, recipe, **{type_form_name: form})
     new_component = form.save(commit=False)
-    new_component.recipe = recipe
+    if is_new_component:
+        new_component.recipe = recipe
     new_component.save()
     return _get_recipe_redirect(recipe)
 
@@ -801,7 +812,25 @@ def _render_recipe(request, recipe, **kwargs):
     for x in grains, hops, adjuncts:
         x.sort(cmp=invert_comparator(weight_comparator))
     #
-    grain_form = kwargs.setdefault('grain_form', RecipeGrainForm())
+    recipe_grains = [] # [(recipe_grain,RecipeGrainForm(instance=recipe_grain)) for recipe_grain in recipe.recipegrain_set.all()]
+    g_form = None
+    g_form_instance = None
+    matches_existing = False
+    if kwargs.has_key('grain_form'):
+        g_form = kwargs['grain_form']
+        g_form_instance = g_form.instance
+    for recipe_grain in grains:
+        if recipe_grain == g_form_instance:
+            recipe_grains.append((g_form_instance,g_form))
+            matches_existing = True
+        else:
+            recipe_grains.append((recipe_grain,RecipeGrainForm(instance=recipe_grain)))
+    new_form = RecipeGrainForm()
+    form_present = g_form_instance is not None
+    if form_present and matches_existing:
+        new_form = g_form
+    recipe_grains.append((None,new_form))
+    #grain_form = kwargs.setdefault('grain_form', RecipeGrainForm())
     hop_form = kwargs.setdefault('hop_form', RecipeHopForm())
     adj_form = kwargs.setdefault('adj_form', RecipeAdjunctForm())
     yeast_form = kwargs.setdefault('yeast_form', RecipeYeastForm())
@@ -809,7 +838,8 @@ def _render_recipe(request, recipe, **kwargs):
     return HttpResponse(render('recipe/view.html', request=request, std=standard_context(),
                                recipe=recipe, grains=grains, hops=hops, adjuncts=adjuncts, yeasts=yeasts,
                                recipe_form=form,
-                               grain_form=grain_form,
+                               recipe_grains=recipe_grains,
+                               # grain_form=grain_form,
                                hop_form=hop_form,
                                adj_form=adj_form,
                                yeast_form=yeast_form,

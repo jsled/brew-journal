@@ -22,7 +22,7 @@
       });
     </script>
   </head>
-  <body>
+  <body py:with="table_width='100%'">
     <div id="doc3">
       <xi:include href="../_incl/body-top-bar.html"/>
       <div id="bd">
@@ -40,7 +40,7 @@
             <!-- overview -->
             <div id="overview" style="margin-bottom: 10px">
               <div py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}">
-                <table width="60%">
+                <table width="${table_width}">
                   <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
                   <tr py:if="recipe.author"><th>input by</th><td><a href="/user/${recipe.author.username}/">${recipe.author.username}</a></td></tr>
                   <tr><th>style</th><td>
@@ -61,46 +61,104 @@
               <div py:if="std.auth_user_is_user(request, recipe.author)"
                    py:attrs="{'style': ['display:none', 'display:inherit'][recipe_form.is_bound and not recipe_form.is_valid()]}">
                 <form method="post" id="overview-form">
-                  <table width="60%" class="form" py:content="std.Markup(recipe_form.as_table())"/>
+                  <table width="${table_width}" class="form" py:content="std.Markup(recipe_form.as_table())"/>
                   <input type="submit" value="update"/>
                 <input type="reset" value="cancel" onClick="$('#overview').children().slideToggle(); $('#edit').focus(); return true;" /></form>
               </div>
             </div>
 
+            <script type="text/javascript">
+function toggle_row_editor(row_child) {
+    var $$row = $$(row_child).closest('tr:not([class=fake])');
+    var id = $$row.attr('id');
+    var otherId;
+    var match;
+    if (match = /(.*)-editor$$/.exec(id)) {
+        otherId = match[1];
+    } else {
+        otherId = id + "-editor";
+    }
+    $$('#' + id).toggle();
+    $$('#' + otherId).toggle();
+}
+            </script>
+
             <!-- grains -->
-            <form method="post" id="grain_form">
-	      <input type="hidden" name="item_type" value="grain"/>
-              <input type="hidden" name="delete_id" value="-1"/>
-              <table width="70%">
-                <tr>
-                  <th>grain</th>
-                  <th>amount</th>
-                  <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
+            <table width="${table_width}">
+              <tr>
+                <th>grain</th>
+                <th>amount</th>
+                <th>gravity override</th>
+                <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
+              </tr>
+              <py:for each="grain,grain_form in recipe_grains"
+                      py:with="grain_form_invalid = grain_form.is_bound and not grain_form.is_valid();
+                               new_grain = grain is None;
+                               id = not grain and 'new' or str(grain.id);
+                               editable = std.auth_user_is_user(request, recipe.author)">
+                <tr py:if="not new_grain"
+                    class="grain display"
+                    id="grain-${id}"
+                    py:attrs="{'style':['','display:none'][grain_form_invalid]}">
+                    <!-- display row -->
+                    <td>${grain.grain.name}</td>
+                    <td>${grain.amount_value} ${grain.amount_units}</td>
+                    <td>
+                      <py:if test="grain.by_weight_potential_override">
+                        ${grain.by_weight_potential_override} for 1 lb / 1 gl
+                      </py:if>
+                      <py:if test="grain.by_volume_potential_override">
+                        ${grain.by_volume_potential_override}
+                      </py:if>
+                    </td>
+                    <td py:if="editable">
+                      <a href="#" onClick="toggle_row_editor(this);">edit</a>
+                      &nbsp;<a href="#" onClick="var $$form = $('TR#grain-${id}-editor FORM'); $('INPUT[name=delete_id]', $$form).val(${id}); $$form.submit(); return false;">delete</a>
+                    </td>
                 </tr>
-                <tr py:for="grain in grains">
-                  <td>${grain.grain.name}</td>
-                  <td>${grain.amount_value} ${grain.amount_units}</td>
-                  <td py:if="std.auth_user_is_user(request, recipe.author)"><a href="#" onClick="set_delete_id_and_submit('grain_form', ${grain.id}); return false;">(del)</a></td>
+                <tr py:if="new_grain and editable"
+                    class="add"
+                    id="grain-new"
+                    py:attrs="{'style':['','display:none'][grain_form_invalid]}">
+                  <!-- add control row -->
+                  <td colspan="100">
+                    <a href="#" onClick="toggle_row_editor(this); return false;">add</a>
+                  </td>
                 </tr>
-                <div py:if="std.auth_user_is_user(request, recipe.author)" py:strip="True" py:with="grain_form_invalid=grain_form.is_bound and not grain_form.is_valid()">
-                  <tr class="add" py:attrs="{'style':['display:none', ''][grain_form_invalid]}">
-                    <td>${std.Markup(grain_form['grain'].errors)} ${std.Markup(grain_form['grain'])}</td>
-                    <td>${std.Markup(grain_form['amount_value'].errors)} ${std.Markup(grain_form['amount_units'].errors)} ${std.Markup(grain_form['amount_value'])} ${std.Markup(grain_form['amount_units'])}</td>
-                    <td><input type="submit" value="add"/>
-                    <input type="reset" value="cancel" onClick="$('#grain_form .add').toggle(); $('#grain_form .add-button').focus(); return true;" /></td>
-                  </tr>
-                  <tr class="add" py:attrs="{'style':['display:none',''][not grain_form_invalid]}">
-                    <td colspan="3"><a href="#" class="add-button" onClick="$('#grain_form .add').toggle(); $('#grain_form .add :input:first').focus(); return false;">(add)</a></td>
-                  </tr>
-                </div>
-              </table>
-            </form>
+                <tr py:if="editable"
+                    id="grain-${id}-editor"
+                    py:attrs="{'style':['display:none', ''][grain_form_invalid]}">
+                  <td colspan="100">
+                    <!-- form row -->
+                    <form method="POST">
+                      <input type="hidden" name="item_type" value="grain"/>
+                      <input type="hidden" name="id" value="${id}"/>
+                      <input type="hidden" name="delete_id" value="-1"/>
+                      <table width="100%">
+                        <tr class="fake">
+                          <td>${std.Markup(grain_form.grain.errors)} ${std.Markup(grain_form.grain)}</td>
+                          <td>${std.Markup(grain_form.amount_value.errors)} ${std.Markup(grain_form.amount_units.errors)} ${std.Markup(grain_form.amount_value)} ${std.Markup(grain_form.amount_units)}</td>
+                          <td>
+                            <div>${std.Markup(grain_form.by_weight_potential_override)} (times 1000) for 1 lb / 1 gl (e.g. "1036")</div>
+                            <div>${std.Markup(grain_form.by_volume_potential_override)} (times 1000) (e.g. "1048")</div>
+                          </td>
+                          <td>
+                            <input type="submit" value="update" />
+                            <input type="reset" value="cancel" onClick="toggle_row_editor(this); return true;" />
+                          </td>
+                        </tr>
+                      </table>
+                    </form>
+                  </td>
+                </tr>
+              </py:for>
+            </table>
 
             <!-- hops -->
             <form method="post" id="hop_form">
-	      <input type="hidden" name="item_type" value="hop"/>
+              <input type="hidden" name="item_type" value="hop"/>
               <input type="hidden" name="delete_id" value="-1"/>
-              <table width="70%">
+              <table width="${table_width}">
                 <tr>
                   <th>hop</th>
                   <th>amount</th>
@@ -131,7 +189,7 @@
             <form method="post" id="adj_form">
 	      <input type="hidden" name="item_type" value="adjunct"/>
               <input type="hidden" name="delete_id" value="-1"/>
-              <table width="70%">
+              <table width="${table_width}">
                 <tr>
                   <th>adjunct</th>
                   <th>amount</th>
@@ -165,7 +223,7 @@
             <form method="post" id="yeast_form">
 	      <input type="hidden" name="item_type" value="yeast"/>
               <input type="hidden" name="delete_id" value="-1"/>
-              <table width="70%">
+              <table width="${table_width}">
                 <tr>
                   <th>yeast</th>
                   <th>is ideal</th>
