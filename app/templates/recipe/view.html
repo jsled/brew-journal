@@ -149,7 +149,7 @@ function toggle_row_editor(row_child) {
               <tr>
                 <th>grain</th>
                 <th>amount</th>
-                <th>gravity override</th>
+                <th>gravity</th>
                 <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
               </tr>
 
@@ -158,8 +158,14 @@ function toggle_row_editor(row_child) {
                 <td>${grain.grain.name}</td>
                 <td>${grain.amount_value} ${grain.amount_units}</td>
                 <td>
+                  <span py:if="grain.measured_by_weight()" py:attrs="{'class':['','overridden'][grain.by_weight_potential_override is not None]}">
+                    ${grain.grain.extract_min} - ${grain.grain.extract_max}
+                  </span>
+                  <span py:if="grain.measured_by_volume()" py:attrs="{'class':['','overridden'][grain.by_volume_potential_override is not None]}">
+                    ${grain.grain.volume_potential_min} - ${grain.grain.volume_potential_max}
+                  </span>
                   <py:if test="grain.by_weight_potential_override">
-                    ${grain.by_weight_potential_override} for 1 lb / 1 gl
+                    &nbsp;${grain.by_weight_potential_override} for 1 lb / 1 gl
                   </py:if>
                   <py:if test="grain.by_volume_potential_override">
                     ${grain.by_volume_potential_override}
