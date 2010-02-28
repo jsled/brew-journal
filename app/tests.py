@@ -835,8 +835,8 @@ class RecipeDerivationsTest (TestCase):
         dec = lambda x: decimal.Decimal(x)
         apple = models.Grain.objects.get(name__startswith='Apple')
         two_row = models.Grain.objects.get(name__exact='Pale Malt (2-row)')
-        grains = [models.RecipeGrain(grain=apple, amount_value=dec('5'), amount_units='gl', by_volume_extract_override=dec('1040')),
-                  models.RecipeGrain(grain=two_row, amount_value=dec('5'), amount_units='lb', by_weight_extract_override=dec('1016'))]
+        grains = [models.RecipeGrain(grain=apple, amount_value=dec('5'), amount_units='gl', by_volume_potential_override=dec('1040')),
+                  models.RecipeGrain(grain=two_row, amount_value=dec('5'), amount_units='lb', by_weight_potential_override=dec('1016'))]
         hops = []
         recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)

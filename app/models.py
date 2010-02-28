@@ -327,14 +327,14 @@ class RecipeGrain (models.Model):
     grain = models.ForeignKey(Grain)
     amount_value = models.DecimalField(max_digits=4, decimal_places=2)
     amount_units = models.CharField(max_length=2, choices=All_Units, default='lb')
-    by_weight_extract_override = models.SmallIntegerField(null=True, blank=True)
-    by_volume_extract_override = models.SmallIntegerField(null=True, blank=True)
+    by_weight_potential_override = models.SmallIntegerField(null=True, blank=True)
+    by_volume_potential_override = models.SmallIntegerField(null=True, blank=True)
 
     def weight_extract_potential(self):
         '''@return (min,max)'''
         min,max = None,None
-        if self.by_weight_extract_override:
-            min,max = self.by_weight_extract_override,self.by_weight_extract_override
+        if self.by_weight_potential_override:
+            min,max = self.by_weight_potential_override,self.by_weight_potential_override
         else:
             min,max = self.grain.extract_min,self.grain.extract_max
         return min,max
@@ -342,8 +342,8 @@ class RecipeGrain (models.Model):
     def volume_extract_potential(self):
         '''@return (min,max)'''
         min,max = None,None
-        if self.by_volume_extract_override:
-            min,max = self.by_volume_extract_override,self.by_volume_extract_override
+        if self.by_volume_potential_override:
+            min,max = self.by_volume_potential_override,self.by_volume_potential_override
         else:
             min,max = self.grain.volume_potential_min,self.grain.volume_potential_max
         return min,max
