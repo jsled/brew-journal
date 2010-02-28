@@ -685,11 +685,24 @@ class RecipeDerivationsTest (TestCase):
                 self.fail('did not contain expected-substring [%s] reason' % (expected_substring))
 
     def testBasicIbus(self):
+        perle = models.Hop.objects.get(name__exact='Perle (US)')
+        liberty = models.Hop.objects.get(name__exact='Liberty')
+        hops = [models.RecipeHop(hop=perle, boil_time=60, amount_value=decimal.Decimal('1.5'), amount_units='oz'),
+                models.RecipeHop(hop=liberty, boil_time=15, amount_value=decimal.Decimal('1'), amount_units='oz')]
+        recipe = Mock(batch_size=5, batch_size_units='gl', recipehop_set=FkSet(hops))
+        deriv = models.RecipeDerivations(recipe)
+        no_reasons = deriv.can_not_derive_ibu()
+        self.assertEquals([], no_reasons)
+        ibus = deriv.compute_ibu(decimal.Decimal('1.080'))
+        self.assertAlmostEquals(decimal.Decimal('37'), ibus.average, 0)
+
+    def testBasicIbusOverride(self):
         # this is straight from http://www.howtobrew.com/section1/chapter5-5.html
-        perle = Mock(aau_low=decimal.Decimal('6.4'), aau_high=decimal.Decimal('6.4'))
-        liberty = Mock(aau_low=decimal.Decimal('4.6'), aau_high=decimal.Decimal('4.6'))
-        hops = [Mock(boil_time=60, amount_value=decimal.Decimal('1.5'), amount_units='oz', hop=perle),
-                Mock(boil_time=15, amount_value=decimal.Decimal('1'), amount_units='oz', hop=liberty)]
+        dec = lambda x : decimal.Decimal(x)
+        perle = models.Hop.objects.get(name__exact='Perle (US)')
+        liberty = models.Hop.objects.get(name__exact='Liberty')
+        hops = [models.RecipeHop(hop=perle, boil_time=60, amount_value=dec('1.5'), amount_units='oz', aau_override=dec('6.4')),
+                models.RecipeHop(hop=liberty, boil_time=15, amount_value=dec('1'), amount_units='oz', aau_override=dec('4.6'))]
         recipe = Mock(batch_size=5, batch_size_units='gl', recipehop_set=FkSet(hops))
         deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_ibu()
@@ -700,8 +713,8 @@ class RecipeDerivationsTest (TestCase):
     def testRealWorldIbus(self):
         chinook = models.Hop.objects.get(name__exact='Chinook')
         golding = models.Hop.objects.get(name__exact='Golding (US)')
-        hops = [Mock(boil_time=90, amount_value=decimal.Decimal('2'), amount_units='oz', hop=chinook),
-                Mock(boil_time=90, amount_value=decimal.Decimal('1'), amount_units='oz', hop=golding)]
+        hops = [models.RecipeHop(hop=chinook, boil_time=90, amount_value=decimal.Decimal('2'), amount_units='oz'),
+                models.RecipeHop(hop=golding, boil_time=90, amount_value=decimal.Decimal('1'), amount_units='oz')]
         recipe = Mock(batch_size=5, batch_size_units='gl', recipehop_set=FkSet(hops))
         deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_ibu()
@@ -789,7 +802,7 @@ class RecipeDerivationsTest (TestCase):
                   models.RecipeGrain(grain=crystal_40, amount_value=dec(6), amount_units='oz'),
                   models.RecipeGrain(grain=crystal_120, amount_value=dec(6), amount_units='oz'),
                   models.RecipeGrain(grain=barley, amount_value=dec(6), amount_units='oz')]
-        hops = [Mock(hop=goldings, amount_value=dec(1.25), amount_units='oz', boil_time=60)]
+        hops = [models.RecipeHop(hop=goldings, amount_value=dec(1.25), amount_units='oz', boil_time=60)]
         recipe = Mock(batch_size=5, batch_size_units='gl',
                       recipegrain_set=FkSet(grains),
                       recipehop_set=FkSet(hops))

@@ -354,7 +354,17 @@ class RecipeHop (models.Model):
     hop = models.ForeignKey(Hop)
     amount_value = models.DecimalField(max_digits=4, decimal_places=2)
     amount_units = models.CharField(max_length=2, choices=Weight_Units)
+    aau_override = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
     boil_time = models.SmallIntegerField()
+
+    def aau_range(self):
+        '''@return (min,max)'''
+        min,max = None,None
+        if self.aau_override:
+            min,max = self.aau_override,self.aau_override
+        else:
+            min,max = self.hop.aau_low,self.hop.aau_high
+        return min,max
 
 
 class RecipeYeast (models.Model):
@@ -1113,7 +1123,7 @@ class RecipeDerivations (object):
             gravity_exponent = gravity - dec('1.000')
             term1 = dec('1.65') * dec('0.000125') ** gravity_exponent
             term2 = (dec('1') - (dec('-0.04') * dec(str(hop.boil_time))).exp()) / dec('4.1')
-            term3_low,term3_high = tuple([(dec(aau) * weight * dec(10)) / wort_volume for aau in (hop.hop.aau_low, hop.hop.aau_high)])
+            term3_low,term3_high = tuple([(dec(aau) * weight * dec(10)) / wort_volume for aau in hop.aau_range()])
             low = term1 * term2 * term3_low
             high = term1 * term2 * term3_high
             low_accum += low
