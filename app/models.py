@@ -330,6 +330,12 @@ class RecipeGrain (models.Model):
     by_weight_potential_override = models.SmallIntegerField(null=True, blank=True)
     by_volume_potential_override = models.SmallIntegerField(null=True, blank=True)
 
+    def measured_by_weight(self):
+        return self.amount_units in [x[0] for x in Weight_Units]
+
+    def measured_by_volume(self):
+        return self.amount_units in [x[0] for x in Volume_Units]
+
     def weight_extract_potential(self):
         '''@return (min,max)'''
         min,max = None,None
@@ -844,14 +850,21 @@ class BrewDerivations (object):
         best_step = related_steps[0]
         ctx = Context(prec=3, rounding=ROUND_HALF_UP)
         potential_points = ctx.create_decimal('0')
+        volume_in_gallons = convert_volume(best_step.volume, best_step.volume_units, 'gl')
         for recipe_grain in self._brew.recipe.recipegrain_set.all():
             grain = recipe_grain.grain
-            min,max = tuple([ctx.create_decimal(str(x - 1000)) for x in [grain.extract_min,grain.extract_max]])
-            grain_potential_per_lb = (min + max) / ctx.create_decimal('2')
-            grain_in_lbs = convert_weight(recipe_grain.amount_value, recipe_grain.amount_units, 'lb')
-            recipe_grain_potential = grain_potential_per_lb * grain_in_lbs
+            if recipe_grain.measured_by_weight():
+                min,max = tuple([ctx.create_decimal(str(x - 1000)) for x in recipe_grain.weight_extract_potential()])
+                grain_potential_per_lb = (min + max) / ctx.create_decimal('2')
+                grain_in_lbs = convert_weight(recipe_grain.amount_value, recipe_grain.amount_units, 'lb')
+                recipe_grain_potential = grain_potential_per_lb * grain_in_lbs
+            else:
+                grain_in_gls = convert_volume(recipe_grain.amount_value, recipe_grain.amount_units, 'gl')
+                dilution_factor = grain_in_gls / volume_in_gallons
+                min,max = tuple([ctx.create_decimal(str(x - 1000)) for x in recipe_grain.volume_extract_potential()])
+                avg = (min + max) / ctx.create_decimal('2')
+                recipe_grain_potential = avg * dilution_factor
             potential_points += recipe_grain_potential
-        volume_in_gallons = convert_volume(best_step.volume, best_step.volume_units, 'gl')
         grav = ((best_step.gravity - ctx.create_decimal('1')) * ctx.create_decimal('1000'))
         obtained_points = grav * volume_in_gallons
         efficiency = (obtained_points / potential_points) * ctx.create_decimal('100')
@@ -1018,6 +1031,13 @@ class RecipeDerivations (object):
         if not has_grains:
             reasons.append('recipe must have grains')
 
+    def _test_grains_by_volume(self, reasons):
+        grains_by_volume = False
+        for grain in self._recipe.recipegrain_set.all():
+            grains_by_volume |= grain.measured_by_volume()
+        if grains_by_volume:
+            reasons.append('do not support recipes with fermentables  measured by volume')
+
     def _test_hops_deriv(self, reasons):
         has_hops = False
         try:
@@ -1045,7 +1065,7 @@ class RecipeDerivations (object):
         per_grain = []
         for grain in self._recipe.recipegrain_set.all():
             fermentable_efficiency = Decimal('1')
-            if grain.amount_units in [x[0] for x in Weight_Units]:
+            if grain.measured_by_weight():
                 try:
                     weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
                 except:
@@ -1058,9 +1078,9 @@ class RecipeDerivations (object):
                     fermentable_efficiency = Decimal('1')
                 #
                 norm_units_potential = NumberRange(*list(grain.weight_extract_potential()))
-            elif grain.amount_units in [x[0] for x in Volume_Units]:
+            elif grain.measured_by_volume():
                 try:
-                    vol = convert_volume(grain.amount_value, grain.amount_units, 'l')
+                    vol = convert_volume(grain.amount_value, grain.amount_units, 'gl')
                 except:
                     # @fixme: log or something
                     vol = 0
@@ -1137,6 +1157,7 @@ class RecipeDerivations (object):
         reasons = []
         self._test_batch_size_deriv(reasons)
         self._test_grains_deriv(reasons)
+        self._test_grains_by_volume(reasons)
         return reasons
 
     def compute_srm(self, efficiency=None):
