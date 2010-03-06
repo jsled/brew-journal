@@ -807,10 +807,14 @@ def _render_recipe(request, recipe, **kwargs):
         if rtn == 0:
             rtn = int(a.id - b.id)
         return int(rtn)
+    def time_comparator(a,b):
+        return a.boil_time - b.boil_time
     def invert_comparator(cmp):
         return lambda a,b: int(-1 * int(cmp(a,b)))
-    for x in grains, hops, adjuncts:
+    for x in grains, adjuncts:
         x.sort(cmp=invert_comparator(weight_comparator))
+    for x in hops,:
+        x.sort(cmp=invert_comparator(time_comparator))
     #
     def formize_items(items, kwargs, type_name, form_class):
         rtn = []
