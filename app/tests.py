@@ -135,9 +135,9 @@ class ShoppingListViewTest (AppTestCase):
         now = now.replace(microsecond=0)
         tomorrow = now + timedelta(1) # day
         yesterday = now - timedelta(1)
-        self.create_brew(user, recipe_a_id, tomorrow, [{'type': 'strike', 'entry_date': str(now), 'date': str(tomorrow)}])
-        self.create_brew(user, recipe_b_id, tomorrow, [{'type': 'buy', 'entry_date': str(now), 'date': str(tomorrow)}])
-        self.create_brew(user, recipe_c_id, yesterday, [{'type': 'buy', 'entry_date': str(yesterday), 'date': str(now)}])
+        self.create_brew(user, recipe_a_id, tomorrow, [{'type': 'strike', 'entry_date': str(now), 'date': str(tomorrow), 'gravity_read_type': 'sg'}])
+        self.create_brew(user, recipe_b_id, tomorrow, [{'type': 'buy', 'entry_date': str(now), 'date': str(tomorrow), 'gravity_read_type': 'sg'}])
+        self.create_brew(user, recipe_c_id, yesterday, [{'type': 'buy', 'entry_date': str(yesterday), 'date': str(now), 'gravity_read_type': 'sg'}])
         # 
         res = app.get('/user/%s/shopping/' % (user))
         self.assertEquals(200, res.status_code)

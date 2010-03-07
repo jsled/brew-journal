@@ -484,6 +484,11 @@ class StepManager (models.Manager):
         now = datetime.datetime.now()
         return Step.objects.filter(brew__brewer__exact=user, date__gt=now)
 
+GravityReadType = (
+    ('sg', 'Specific Gravity'),
+    ('bbp', 'Brix/Balling/Plato'),
+    )
+
 
 class Step (models.Model):
     '''
@@ -500,7 +505,7 @@ class Step (models.Model):
     temp = models.IntegerField(null=True, blank=True)
     temp_units = models.CharField(max_length=1, null=True, blank=True, choices = Temp_Units, default='f')
 
-    # gravity = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
+    gravity_read_type = models.CharField(max_length=3, choices=GravityReadType, default='sg')
     gravity_read = models.DecimalField(max_digits=5, decimal_places=3, null=True, blank=True)
     gravity_read_temp = models.IntegerField(null=True, blank=True)
     gravity_read_temp_units = models.CharField(max_length=1, null=True, blank=True, choices = Temp_Units, default='f')
@@ -513,7 +518,11 @@ class Step (models.Model):
         temp = self.gravity_read_temp
         if self.gravity_read_temp_units == 'c':
             temp = celsius_to_farenheit(self.gravity_read_temp)
-        return correct_gravity(self.gravity_read, temp)
+        if self.gravity_read_type == 'sg':
+            return correct_gravity(self.gravity_read, temp)
+        elif self.gravity_read_type == 'bbp':
+            # @fixme: this should really complain if temp != 15c/59f
+            return brix_balling_plato_to_gravity(self.gravity_read)
 
     def _set_gravity(self, gravity):
         self.gravity_read = gravity
@@ -694,6 +703,8 @@ def celsius_to_farenheit(temp):
     -0.004
     >>> print celsius_to_farenheit(-40)
     -40.0
+    >>> print celsius_to_farenheit(15)
+    59.0
     '''
     temp = str(temp)
     if temp.lstrip('-').find('.') == -1:
@@ -735,6 +746,52 @@ def correct_gravity(gravity, temp_f):
     F = Decimal(str(temp_f))
     ctx = Context(prec=4, rounding=ROUND_HALF_UP)
     gravity = gravity + (_c1 - _c2 * F + _c3 * F * F - _c4 * F * F *  F) * _adj
+    return ctx.create_decimal(gravity)
+
+
+_b1 = Decimal('1.000898')
+_b2 = Decimal('0.003859118')
+_b3 = Decimal('0.00001370735')
+_b4 = Decimal('0.00000003742517')
+_a1 = Decimal('258.2')
+_a2 = Decimal('258.6')
+_a3 = Decimal('227.1')
+_one = Decimal('1')
+def brix_balling_plato_to_gravity(brix):
+    '''
+    http://www.primetab.com/formulas.html:
+    
+    SG = 1.000898 + 0.003859118*B + 0.00001370735*B*B + 0.00000003742517*B*B*B
+          where:
+                   B  = measured refractivity in Brix
+                   SG = calculated specific gravity at 15 C
+
+    -----
+    
+    http://www.byo.com/stories/article/indices/54-specific-gravity/1344-refractometers-and-mash-outs:
+    {Plato/(258.6-([Plato/258.2]*227.1)}+1 = Specific gravity
+
+    -----
+
+    Note that both of these formulae fail at the low 
+
+    >>> print brix_balling_plato_to_gravity(19.88)
+    1.082
+    >>> print brix_balling_plato_to_gravity(10.94)
+    1.044
+    >>> print brix_balling_plato_to_gravity(0)
+    1
+    >>> print brix_balling_plato_to_gravity(30.15)
+    1.130
+    >>> print brix_balling_plato_to_gravity(12.0)
+    1.048
+    '''
+    brix = Decimal(str(brix))
+    # primetap formula:
+    # gravity = _b1 + _b2 * brix + _b3 * brix * brix + _b4 * brix * brix * brix
+    # byo formula:
+    gravity = (brix / (_a2 - ((brix / _a1) * _a3))) + _one
+    ctx = Context(prec=4, rounding=ROUND_HALF_UP)
     return ctx.create_decimal(gravity)
 
 
