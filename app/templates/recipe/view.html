@@ -177,6 +177,7 @@ function toggle_row_editor(row_child) {
                 <td>${std.Markup(grain_form.grain.errors)} ${std.Markup(grain_form.grain)}</td>
                 <td>${std.Markup(grain_form.amount_value.errors)} ${std.Markup(grain_form.amount_units.errors)} ${std.Markup(grain_form.amount_value)} ${std.Markup(grain_form.amount_units)}</td>
                 <td>
+                  <div>overrides</div>
                   <div>${std.Markup(grain_form.by_weight_potential_override)} (times 1000) for 1 lb / 1 gl (e.g. "1036")</div>
                   <div>${std.Markup(grain_form.by_volume_potential_override)} (times 1000) (e.g. "1048")</div>
                 </td>
@@ -192,7 +193,7 @@ function toggle_row_editor(row_child) {
                 <th>hop</th>
                 <th>amount</th>
                 <th>AAU</th>
-                <th>boil time</th>
+                <th>usage</th>
                 <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
               </tr>
               <py:def function="hop_display(hop)">
@@ -207,18 +208,54 @@ function toggle_row_editor(row_child) {
                     ${hop.aau_override} %
                   </py:if>
                 </td>
-                <td>${hop.boil_time} minutes</td>
+                <td>
+                  <py:choose test="">
+                    <py:when test="hop.usage_type == 'boil'">
+                      ${hop.boil_time} minutes
+                    </py:when>
+                    <py:otherwise>
+                      ${hop.get_usage_type_display()}
+                    </py:otherwise>
+                  </py:choose>
+                </td>
               </py:def>
               <py:def function="hop_edit(hop_form)">
                 <td>${std.Markup(hop_form.hop.errors)} ${std.Markup(hop_form.hop)}</td>
-                <td>${std.Markup(hop_form.amount_value.errors)} ${std.Markup(hop_form.amount_units.errors)} ${std.Markup(hop_form.amount_value)}&nbsp;${std.Markup(hop_form.amount_units)}</td>
+                <td>
+                  ${std.Markup(hop_form.amount_value.errors)} ${std.Markup(hop_form.amount_units.errors)}
+                  ${std.Markup(hop_form.amount_value)}&nbsp;${std.Markup(hop_form.amount_units)}
+                </td>
                 <td>${std.Markup(hop_form.aau_override.errors)} AAU Override: ${std.Markup(hop_form.aau_override)} %</td>
-                <td>${std.Markup(hop_form.boil_time.errors)} ${std.Markup(hop_form.boil_time)}&nbsp;minutes</td>
+                <td>
+                  ${std.Markup(hop_form.usage_type.errors)}
+                  ${std.Markup(hop_form.boil_time.errors)}
+                  ${std.Markup(hop_form.usage_type)}
+                  <span class="hop_boil_minutes"
+                        py:attrs="{'style': ['', 'display:none'][hop_form.instance.usage_type != 'boil']}">
+                    ${std.Markup(hop_form.boil_time)}&nbsp;minutes
+                  </span>
+                </td>
               </py:def>
 
               ${editable_list(recipe_hops, 'hop', hop_display, hop_edit)}
 
             </table>
+            <script type="text/javascript">
+$$('select[name=usage_type]').change(function(evt) {
+    var select = $(this);
+    var selected = $('option:selected', select);
+    var containing_td = select.closest('td');
+    var boil_minutes_span = $('.hop_boil_minutes', containing_td);
+    var minutes_visible = (selected.val() == 'boil');
+    if (minutes_visible) {
+        boil_minutes_span.show();
+    } else {
+        var boil_minutes = $('input[name=boil_time]', containing_td);
+        boil_minutes.val(0);
+        boil_minutes_span.hide();
+    }
+});
+                  </script>
 
             <!-- adjuncts -->
             <table width="${table_width}">

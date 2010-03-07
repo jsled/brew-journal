@@ -354,6 +354,13 @@ class RecipeGrain (models.Model):
             min,max = self.grain.volume_potential_min,self.grain.volume_potential_max
         return min,max
 
+Hop_Usage_Types = (
+    ('mash', 'Mash Hops'),
+    ('fwh', 'First Wort Hops'),
+    ('boil', 'Boil Hops'),
+    ('dry', 'Dry Hops')
+    )
+
 
 class RecipeHop (models.Model):
     recipe = models.ForeignKey(Recipe)
@@ -361,6 +368,7 @@ class RecipeHop (models.Model):
     amount_value = models.DecimalField(max_digits=4, decimal_places=2)
     amount_units = models.CharField(max_length=2, choices=Weight_Units)
     aau_override = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
+    usage_type = models.CharField(max_length=4, choices=Hop_Usage_Types, default='boil')
     boil_time = models.SmallIntegerField()
 
     def aau_range(self):

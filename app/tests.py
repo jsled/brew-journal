@@ -54,9 +54,9 @@ class AppTestCase (TestCase):
         recipe_base_url = '/'.join(recipe_url.split('/')[3:-1])
         hop_post_url = '/%s/' % (recipe_base_url)
         for hop,amt,units,boil_time in hops:
-            args = {'item_type': 'hop', 'hop': hop, 'amount_value': amt, 'amount_units': units, 'boil_time': boil_time}
+            args = {'item_type': 'hop', 'hop': hop, 'amount_value': amt, 'amount_units': units, 'usage_type': 'boil', 'boil_time': boil_time}
             res = self.client.post(hop_post_url, args)
-            self.assertEqual(302, res.status_code, res)
+            self.assertEqual(302, res.status_code, '%d %s' % (res.status_code, res))
         grain_post_url = '/%s/' % (recipe_base_url)
         for grain,amt,units in grains:
             res = self.client.post(grain_post_url, {'item_type': 'grain', 'grain': grain, 'amount_value': amt, 'amount_units': units})
@@ -119,10 +119,10 @@ class ShoppingListViewTest (AppTestCase):
         # recipe A with 1 unique grain, 1 shared grain, 1 unique hop, 1 shared hop
         # recipe B with 1 unique grain, 1 shared grain, 1 unique hop, 1 shared hop
         recipe_a = self.create_recipe('test a', '2008-12-26 08:32', 1,
-                                      [(1, 1, 'oz', 60), (2, 2, 'oz', 30)],
+                                      [(1, 1, 'oz', 30), (2, 2, 'oz', 60)],
                                       [(1, 1, 'lb'), (2, 2, 'lb')])
         recipe_b = self.create_recipe('test b', '2008-12-26 08:32', 2,
-                                      [(1, 1, 'oz', 60), (3, 3, 'oz', 15)],
+                                      [(1, 1, 'oz', 15), (3, 3, 'oz', 60)],
                                       [(1, 1, 'lb'), (3, 3, 'lb')])
         recipe_c = self.create_recipe('test c', '2008-12-26 08:32', 3,
                                       [(4, 20, 'oz', 60)],
@@ -535,7 +535,7 @@ class RecipeSortedIngredients (AppTestCase):
         hop_1,hop_2 = tuple([models.Hop.objects.get(pk=x) for x in [1,2]])
         grain_1,grain_2,grain_3 = tuple([models.Grain.objects.get(pk=x) for x in [1,2,3]])
         recipe_url = self.create_recipe('foo', '2009-08-02', 1,
-                                        [(hop_1.id, 1, 'oz', 60), (hop_2.id, 2, 'oz', 30)],
+                                        [(hop_1.id, 1, 'oz', 30), (hop_2.id, 2, 'oz', 60)],
                                         [(grain_1.id, 1, 'lb'), (grain_2.id, 2, 'lb'), (grain_3.id, 3, 'ct')])
         res = self.client.get('/' + recipe_url + '/')
         #

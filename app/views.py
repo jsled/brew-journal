@@ -808,13 +808,27 @@ def _render_recipe(request, recipe, **kwargs):
             rtn = int(a.id - b.id)
         return int(rtn)
     def time_comparator(a,b):
-        return a.boil_time - b.boil_time
+        # @fixme this should instead assume that models.Hop_Usage_Type is in
+        # order, and generate off that.
+        usage_type_cmp_values = {
+            'mash': 1,
+            'fwh': 2,
+            'boil': 3,
+            'dry': 4
+            }
+        a_type = usage_type_cmp_values[a.usage_type]
+        b_type = usage_type_cmp_values[b.usage_type]
+        type_cmp = a_type - b_type
+        if type_cmp != 0:
+            return type_cmp
+        # if it comes down to boil times, we go from longest to shortest, in terms of boil
+        return -1 * (a.boil_time - b.boil_time)
     def invert_comparator(cmp):
         return lambda a,b: int(-1 * int(cmp(a,b)))
     for x in grains, adjuncts:
         x.sort(cmp=invert_comparator(weight_comparator))
     for x in hops,:
-        x.sort(cmp=invert_comparator(time_comparator))
+        x.sort(time_comparator)
     #
     def formize_items(items, kwargs, type_name, form_class):
         rtn = []
