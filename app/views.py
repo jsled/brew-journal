@@ -519,9 +519,9 @@ def brew(request, user_name, brew_id, step_id):
                 next_step = next_steps.possible[0]
         if next_step:
             if next_step.existing_step:
-                step_form = StepForm(uri_user, initial={'date': next_step.date or datetime.now()}, instance=next_step.existing_step)
+                step_form = StepForm(uri_user, initial={'date': datetime.now()}, instance=next_step.existing_step)
             else:
-                step_form = StepForm(uri_user, initial={'brew': brew.id, 'date': next_step.date or datetime.now(), 'type': next_step.type.id})
+                step_form = StepForm(uri_user, initial={'brew': brew.id, 'date': datetime.now(), 'type': next_step.type.id})
         else:
             step_form = StepForm(uri_user, initial={'brew': brew.id, 'date': datetime.now()})
     return brew_render(request, uri_user, brew, step_form, step_expand_edit)
