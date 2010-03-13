@@ -443,6 +443,7 @@ of being.
     CLOSED: [2009-09-21 Mon 23:00]
 see http://www.djangosnippets.org/snippets/97/
 *** TODO compute strike/sparge water volume from recipe, mash type, desired water/grist ratio
+*** TODO separate boil_size, batch_size
 *** TODO /recipe/ shouldn't 404.
 *** TODO add time counter for some steps (primary/secondary fermentation)
 *** TODO some sort of markdown/wikiformatting/CRLF-><br/> for notes
