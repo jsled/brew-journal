@@ -900,7 +900,8 @@ class EfficiencyTracker (object):
     def url(self):
         url = 'http://chart.apis.google.com/chart?chs=400x100&cht=lc'
         # url += '&chds=0,100'
-        efficiencies_dates = [{'efficiency': '%0.2f' % (derived.efficiency()), 'date': safe_datetime_fmt_raw(derived._brew.brew_date, '%m/%d', self._user)}
+        efficiencies_dates = [{'efficiency': '%0.2f' % (derived.efficiency()),
+                               'date': safe_datetime_fmt_raw(derived._brew.brew_date, '%m/%d', self._user)}
                               for derived
                               in self._derivations
                               if not derived.can_not_derive_efficiency()]
@@ -910,3 +911,44 @@ class EfficiencyTracker (object):
         url += '&chxl=0:|' + '|'.join([x['date'] for x in efficiencies_dates])
         url += '&chm=N*f1*,000000,0,-1,10'
         return url
+
+class MashSpargeCalculatorForm (forms.Form):
+    batch_volume = forms.DecimalField(max_digits=3, min_value=0, label='Post-boil volume (gl)')
+    grain_size = forms.DecimalField(max_digits=3, min_value=0, label='Grain bill size (lbs)')
+    boil_time = forms.DecimalField(max_digits=3, min_value=0, label='Boil time (minutes)')
+    trub_loss = forms.DecimalField(max_digits=3, min_value=0, label='Kettle and trub loss (gl)')
+    mash_tun_loss = forms.DecimalField(max_digits=3, min_value=0, label='Mash Tun loss (gl)')
+    mash_thickness = forms.DecimalField(max_digits=4, min_value=0, label='Mash thickness (qt/lb)')
+    grain_temp = forms.DecimalField(max_digits=5, min_value=0, label=u'Grain temp (°F)')
+    target_mash_temp = forms.DecimalField(max_digits=5, min_value=0, label=u'Mash target temp (°F)')
+    grain_absorption = forms.DecimalField(max_digits=3, min_value=0, label='Grain absorption (gl/lb)')
+    boil_evaporation_rate = forms.IntegerField(min_value=0, max_value=100, label='Boil evaporation rate (gl/hr)')
+
+    def __init__(self, calc, *args, **kwargs):
+        # compute initial values from Calculator defaults in lieu of being a
+        # proper model form.
+        kwargs.setdefault('initial', {})
+        for field_name in dir(calc):
+            if field_name.startswith('_'):
+                continue
+            val = calc.__getattribute__(field_name)
+            kwargs['initial'][field_name] = val
+        super(MashSpargeCalculatorForm, self).__init__(*args, **kwargs)
+
+
+def calc_mash_sparge(request):
+    if request.GET:
+        calc = models.MashSpargeWaterCalculator()
+        form = MashSpargeCalculatorForm(calc, request.GET)
+        for name,val in form.cleaned_data.iteritems():
+            calc.__setattr__(name, val)
+    else:
+        calc = models.MashSpargeWaterCalculator()
+        form = MashSpargeCalculatorForm(calc)
+    return HttpResponse(
+        render('calc/mash_sparge.html',
+               request=request,
+               std=standard_context(),
+               calc=calc,
+               form=form
+               ))

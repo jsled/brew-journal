@@ -35,7 +35,9 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns(
     'brewjournal.app.views',
     (r'^$', 'root'),
+
     (r'^logout/$', 'logout_view'),
+
     (r'^user/(?P<user_name>[^/]+)/?$', 'user_index'),
     (r'^user/(?P<user_name>[^/]+)/profile/?$', 'user_profile'),
     (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)(/step/(?P<step_id>\d+))?/?$', 'brew'),
@@ -53,6 +55,8 @@ urlpatterns = patterns(
     # /recipe/new/?clone_from_url=<...>
     (r'^recipe/new/$', 'recipe_new'),
     (r'^recipe/(?P<recipe_id>\d+)/(?P<recipe_name>.+)?$', 'recipe'),
+
+    (r'^calc/mash-sparge/$', 'calc_mash_sparge'),
 
     (r'^500$', 'intentional_500'),
 )

@@ -1265,3 +1265,119 @@ class RecipeDerivations (object):
     #     ''' return a 2x(2,2) space of (low,high)og -> (low,high)ibu(og) 
  
     # def compute_og_ibu_srm_graph(self, efficiency=None, include_style_range=False):
+
+class MashSpargeWaterCalculator (object):
+    '''
+    http://brew365.com/mash_sparge_water_calculator.php
+    http://www.brew365.com/technique_calculating_mash_water_volume.php
+
+    We can get the batch size and grain bill from the recipe.
+
+    We can get the grain absorbtion, mash thickness, equip loss and tub loss
+    defaults from user prefs.
+
+    There should be an option to equalize the mash and sparge fractions.
+
+    There should be an option to compute 1- and 2-sparge volumes.
+
+    Of course, we should add post-dated Steps to the Brew; for this, we will
+    want a preference for sparge time … default to 1 qt/minute.
+
+    @todo make this an unmanaged model when we move to django 1.1
+    '''
+    _batch_volume = Decimal('5') # gl
+    def _set_batch_volume(self, val): self._batch_volume = val
+    batch_volume = property(lambda s: s._batch_volume, _set_batch_volume)
+
+    _grain_size = Decimal('12') # lbs
+    def _set_grain_size(self, val): self._grain_size = val
+    grain_size = property(lambda s: s._grain_size, _set_grain_size)
+
+    _boil_time = Decimal('60') # min
+    def _set_boil_time(self, val): self._boil_time = val
+    boil_time = property(lambda s: s._boil_time, _set_boil_time)
+
+    _trub_loss = Decimal('0.5') # gl
+    def _set_trub_loss(self, val): self._trub_loss = val
+    trub_loss = property(lambda s: s._trub_loss, _set_trub_loss)
+
+    _mash_tun_loss = Decimal('0.5') # gl
+    def _set_mash_tun_loss(self, val): self._mash_tun_loss = val
+    mash_tun_loss = property(lambda s: s._mash_tun_loss, _set_mash_tun_loss)
+
+    _mash_thickness = Decimal('1.5') # qt/lb
+    def _set_mash_thickness(self, val): self._mash_thickness = val
+    mash_thickness = property(lambda s: s._mash_thickness, _set_mash_thickness)
+
+    _grain_temp = Decimal('70') # F
+    def _set_grain_temp(self, val): self._grain_temp = val
+    grain_temp = property(lambda s: s._grain_temp, _set_grain_temp)
+
+    _target_mash_temp = Decimal('152') # F
+    def _set_target_mash_temp(self, val): self._target_mash_temp = val
+    target_mash_temp = property(lambda s: s._target_mash_temp, _set_target_mash_temp)
+
+    _grain_absorption = Decimal('0.2') # gl/lb
+    def _set_grain_absorption(self, val): self._grain_absorption = val
+    grain_absorption = property(lambda s: s._grain_absorption, _set_grain_absorption)
+
+    _boil_evaporation_rate = Decimal('10') # percent/hr
+    def _set_boil_evaporation_rate(self, val): self._boil_evaporation_rate = val
+    boil_evaporation_rate = property(lambda s: s._boil_evaporation_rate, _set_boil_evaporation_rate)
+
+    _shrinkage = Decimal('4') # percent
+    def _set_shrinkage(self, val): self._shrinkage = val
+    shrinkage = property(lambda s: s._shrinkage, _set_shrinkage)
+
+    _num_sparges = Decimal('1') # count
+    def _set_num_sparges(self, val): self._num_sparges = val
+    num_sparges = property(lambda s: s._num_sparges, _set_num_sparges)
+
+    def _get_mash_vol(self):
+        mash_volume = (self.grain_size * self.mash_thickness) / Decimal('4')
+        return mash_volume
+
+    mash_volume = property(_get_mash_vol)
+
+    def _get_sparge_vol(self):
+        return self.total_volume - self.mash_volume
+
+    sparge_volume = property(_get_sparge_vol)
+
+    def _get_total_vol(self):
+        evap_pct = self.boil_evaporation_rate / Decimal('100')
+        evap_loss_factor = Decimal('1') - (evap_pct * (self.boil_time / Decimal('60')))
+        shrinkage_factor = Decimal('1') - (self.shrinkage / Decimal('100'))
+        kettle_volume = ((self.batch_volume + self.trub_loss) / shrinkage_factor) / evap_loss_factor
+        grain_absorption_loss = self.grain_absorption * self.grain_size
+        total_volume = kettle_volume + self.mash_tun_loss + grain_absorption_loss 
+        # print evap_pct,'evap_pct',evap_loss_factor,'evap_loss_factor',shrinkage_factor,'shrinkage_factor',kettle_volume,'kettle_volume',grain_absorption_loss,'grain_absorption_loss',total_volume,'total_volume'
+        return total_volume
+
+    total_volume = property(_get_total_vol)
+    
+    def _strike_temp(self):
+        '''
+        http://www.homebrewtalk.com/f128/calculating-strike-temp-110942/
+
+        Initial Infusion Equation:
+        Strike Water Temperature Tw = (.2/r)(T2 - T1) + T2
+
+        where:
+        r = The ratio of water to grain in quarts per pound.
+        T1 = The initial temperature (F) of the mash.
+        T2 = The target temperature (F) of the mash.
+        Tw = The actual atemperature (F) of the infusion water.
+
+        ----------
+
+        http://www.uberbeergeek.com/bih/hbmash.htm    
+        '''
+
+        heat_capacity_multiplier = Decimal('.2') / self.mash_thickness
+        temp_diff = (self.target_mash_temp - self.grain_temp)
+        target = self.target_mash_temp
+        infusion_temp = heat_capacity_multiplier * temp_diff + target
+        return infusion_temp
+
+    strike_temp = property(_strike_temp)

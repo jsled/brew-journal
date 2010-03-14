@@ -1,0 +1,40 @@
+<!-- -*- nxml-child-indent: 2 -*- -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="../_incl/taglib.html"/>
+  <head>
+    <title>mash/sparge water calculator | brew-journal</title>
+    <xi:include href="../_incl/head.html"/>
+  </head>
+  <body style="text-align: left">
+      <form method="GET">
+          <table width="50%">
+
+          ${std.Markup(form.as_table())}
+
+          </table>
+          <input type="submit" value="calculate"/>
+
+          <br />
+          <table width="50%">
+              <tr>
+                  <th>Mash Volume (gl)</th>
+                  <td>${'%0.2f' % (calc.mash_volume)}</td>
+              </tr>
+              <tr>
+                  <th>Strike Temp (°F)</th>
+                  <td>${'%0.1f' % (calc.strike_temp)}</td>
+              </tr>
+              <tr>
+                  <th>Sparge Volume (gl)</th>
+                  <td>${'%0.2f' % (calc.sparge_volume)}</td>
+              </tr>
+              <tr>
+                  <th>Total Volume (gl)</th>
+                  <td>${'%0.2f' % (calc.total_volume)}</td>
+              </tr>
+          </table>
+      </form>
+  </body>
+</html>

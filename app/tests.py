@@ -867,3 +867,23 @@ class RecipeDerivationsTest (TestCase):
         self.assertEquals([],deriv.can_not_derive_og())
         og = deriv.compute_og()
         self.assertAlmostEquals(dec('1.026'), og.average, 0)
+
+class MashSpargeWaterCalcTest (TestCase):
+
+    def testBrew365Example(self):
+        from decimal import Decimal
+        calc = models.MashSpargeWaterCalculator()
+        calc.grain_size = Decimal('14')
+        calc.mash_tun_loss = Decimal('0.5')
+        calc.trub_loss = Decimal('1')
+        calc.grain_absorption = Decimal('0.15')
+        calc.boil_evaporation_rate = Decimal('5')
+        calc.mash_thickness = Decimal('1.25')
+        #
+        calc.grain_temp = Decimal('65')
+        calc.target_mash_temp = Decimal('155')
+
+        self.assertAlmostEquals(Decimal('9.18'), calc.total_volume, 2)
+        self.assertAlmostEquals(Decimal('4.375'), calc.mash_volume, 2)
+        self.assertAlmostEquals(Decimal('4.80'), calc.sparge_volume, 2)
+        self.assertAlmostEquals(Decimal('169.4'), calc.strike_temp, 1)
