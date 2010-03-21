@@ -45,7 +45,7 @@ Setup
 
 - add the eggs in lib/ to PYTHONPATH; e.g.::
 
-  for egg in lib/*.egg; do export PYTHONPATH="$(pwd)/${egg}:${PYTHONPATH}"; done
+  $ for egg in lib/*.egg; do export PYTHONPATH="$(pwd)/${egg}:${PYTHONPATH}"; done
 
 - make sure $(./manage.py test) passes
 
