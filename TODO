@@ -347,12 +347,31 @@ of being.
 **** achievements
 ***** firsts/technique
 ****** "First Brew! Welcome! :)"
+- trigger: brew creation
 ****** "First Brew in ${style}"
+- trigger: brew creation, and brew.style not in (all styles)
 ****** First {Ale,Lager,Common,Brett,Cider,Mead,Bragot}
+- trigger: brew creation, and brew.style not in (all styles-projection)
 ****** First {1.060,70,80,90,100,} OG brew
+- trigger: brew creation, and brew OG not in (projection of previous brews)
 ****** first {single-infusion,decoction} mash
+- trigger: brew creation, and brew steps not in (projection of previous brews)
 ****** mash-out with your bad self!
+- trigger
+  - brew creation,
+  - and brew steps has "mash-out",
+  - and (projection of   previous brews) does not contain "mash-out".
 ****** first {cont.sparge, batch sparge, oat sparge, >25% wheat sparge}
+- trigger:
+  - brew-creation
+  - and …
+    - … cont.sparge = fly sparge
+      - we don't really have this detail
+    - … oat sparge
+      - recipe.fermentables contains 'oats'
+      - all-grain
+      - sparge step
+      - not already earned.
 ****** first dry-hopping
 ****** first fruit
 ****** first smoke
@@ -367,7 +386,7 @@ of being.
 ****** competition awards
 ****** BJCP scoring
 ***** height
-****** {6,7,9,10,11,12,13,15} abv
+****** {2, … , 6,7,8,9,10,11,12,13,14,15} abv
 ****** "Hop Bomb!": >100 IBU brewed
 ****** 60, 90, 120 minute boil
 ***** random
