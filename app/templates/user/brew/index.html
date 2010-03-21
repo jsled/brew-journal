@@ -30,7 +30,7 @@
           by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
           <span py:if="brew.recipe">from recipe ${recipe_a(brew.recipe)}</span>
       </div>
-      <blockquote py:if="brew.recipe" class="recipe-style-summary">
+      <div py:if="brew.recipe" class="recipe-style-summary" style="margin-top: 0.5em">
           <py:if test="brew.recipe.batch_size">
               ${brew.recipe.batch_size}${brew.recipe.batch_size_units}
           </py:if>
@@ -50,7 +50,7 @@
                   | <strong>${"%d" % recipe_deriv.compute_srm().average}</strong> SRM
               </py:if>
           </py:if>
-      </blockquote>
+      </div>
 
       <div>
           <h2>notes</h2>
@@ -82,7 +82,7 @@
       <td>${step.gravity}</td>
       <td>${step.notes}</td>
   </py:def>
-  <table width="95%">
+  <table width="100%">
     <thead>
       <tr>
         <th>date</th>
@@ -103,19 +103,93 @@
         <tr py:for="step in future_steps">${step_row(std,user,brew,step)}</tr>
     </tbody>
   </table>
+
   <br />
-  <div py:if="std.auth_user_is_user(request, user)" id="add-step">
+
+  <div py:if="step_form and std.auth_user_is_user(request, user)" id="add-step">
     <div py:attrs="{'style': 'display:' + ['inherit', 'none'][step_edit]}">
       <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;">update step &darr;</a>
     </div>
     <div py:attrs="{'style': 'display:' + ['inherit', 'none'][not step_edit]}">
         <form method="post" id="add-step-form">
-            <table class="form" py:content="std.Markup(step_form.as_table())"/>
+            <table class="form">
+                ${std.Markup(step_form.as_table())}
+            </table>
             <input type="submit" value="update step"/>
-            <button onClick="$('#add-step').children().slideToggle(); $('#add-step-form').get()[0].reset(); $('#first-focused').focus(); return false;">Cancel</button>
+            <button onClick="$('#add-step').children().slideToggle(); $('#add-step-form').get()[0].reset(); return false;">Cancel</button>
         </form>
     </div>
   </div>
+  <br/>
+  <div py:if="mash_sparge_calc_form" id="mash-sparge-calc-panel"
+       py:with="expand=(mash_sparge_calc_form.is_bound and not mash_sparge_calc_form.is_valid())
+                or request.GET.has_key('mash_sparge_recalc')
+                ; calc=mash_sparge_calc_form.calc">
+      <div py:attrs="{'style': 'display:' + ['none','inherit'][not expand]}">
+          <a href="#" onClick="$('#mash-sparge-calc-panel').children().slideToggle(); return false;">compute mash/sparge volumes, steps &darr;</a>
+      </div>
+      <div py:attrs="{'style': 'display:' + ['none','inherit'][expand]}">
+          <form method="GET" id="mash-sparge-calc">
+              <input type="hidden" name="mash_sparge_recalc" />
+              <table width="50%">
+
+                  ${std.Markup(mash_sparge_calc_form.as_table())}
+
+                  <tr>
+                      <th>Mash Volume (gl)</th>
+                      <td>${'%0.2f' % (calc.mash_volume)}</td>
+                  </tr>
+                  <tr>
+                      <th>Strike Temp (°F)</th>
+                      <td>${'%0.1f' % (calc.strike_temp)}</td>
+                  </tr>
+                  <tr>
+                      <th>Sparge Volume (gl)</th>
+                      <td>${'%0.2f' % (calc.sparge_volume)}</td>
+                  </tr>
+                  <tr>
+                      <th>Total Volume (gl)</th>
+                      <td>${'%0.2f' % (calc.total_volume)}</td>
+                  </tr>
+                  <tr>
+                      <th>Total Collected/Pre-Boil volume (gl)</th>
+                      <td>${'%0.2f' % (calc.collected_volume)}</td>
+                  </tr>
+
+                  <tr>
+                      <th>actions</th>
+                      <td>
+                          <input type="submit" name="action" value="recalc"/>
+                          <input type="reset" value="cancel" onClick="window.location.search = '';"/>
+                          <input type="submit" name="action" value="create steps" onClick="$$('FORM#mash-sparge-calc').attr('method', 'POST'); return true;"/>
+                      </td>
+                  </tr>
+              </table>
+          </form><br />
+          <div py:if="mash_sparge_steps">
+              The following steps would be created:
+              <table width="100%">
+                  <thead>
+                      <tr>
+                          <th>date</th>
+                          <th>step</th>
+                          <th>volume</th>
+                          <th>temp</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr py:for="step in mash_sparge_steps">
+                          <td>${std.fmt.date.best(step.date, user)}</td>
+                          <td>${step.get_type_display()}</td>
+                          <td><py:if test="step.volume">${'%0.2f' % step.volume} ${step.volume_units}</py:if></td>
+                          <td><py:if test="step.temp">${'%0.1f' % step.temp} ${step.temp_units}</py:if></td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+
 
 <h1>derivations</h1>
 <table>

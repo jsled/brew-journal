@@ -461,7 +461,8 @@ of being.
 *** DONE better integration of genshi
     CLOSED: [2009-09-21 Mon 23:00]
 see http://www.djangosnippets.org/snippets/97/
-*** TODO compute strike/sparge water volume from recipe, mash type, desired water/grist ratio
+*** DONE compute strike/sparge water volume from recipe, mash type, desired water/grist ratio
+    CLOSED: [2010-03-21 Sun 10:28]
 *** TODO separate boil_size, batch_size
 *** TODO /recipe/ shouldn't 404.
 *** TODO add time counter for some steps (primary/secondary fermentation)
@@ -554,7 +555,7 @@ see http://www.djangosnippets.org/snippets/97/
 *** user interface
 **** auto-complete text fields for style, grain, hops...
 **** step addition
-***** if the brew knows the mash grains, then it can compute strike and sparge water volumes, absorption, &c.
+***** DONE if the brew knows the mash grains, then it can compute strike and sparge water volumes, absorption, &c.
 *** TwoLevelSelectWidget
 **** cleanup, review
 **** use for

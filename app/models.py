@@ -71,10 +71,14 @@ class StepType (object):
     def is_terminal(self):
         return len(self.next_steps) == 0
 
+RecipeType_Extract = 'e'
+RecipeType_PartialMash = 'p'
+RecipeType_AllGrain = 'a'
+
 RecipeTypes = (
-    ('e', 'Extract'),
-    ('p', 'Partial Mash'),
-    ('a', 'All Grain'),
+    (RecipeType_Extract, 'Extract'),
+    (RecipeType_PartialMash, 'Partial Mash'),
+    (RecipeType_AllGrain, 'All Grain'),
     )
 
 DispenseTypes = (
@@ -1276,15 +1280,41 @@ class MashSpargeWaterCalculator (object):
     We can get the grain absorbtion, mash thickness, equip loss and tub loss
     defaults from user prefs.
 
-    There should be an option to equalize the mash and sparge fractions.
+    @todo There should be an option to equalize the mash and sparge fractions.
 
-    There should be an option to compute 1- and 2-sparge volumes.
+    @todo There should be an option to compute 1- and 2-sparge volumes.
 
     Of course, we should add post-dated Steps to the Brew; for this, we will
     want a preference for sparge time … default to 1 qt/minute.
 
     @todo make this an unmanaged model when we move to django 1.1
     '''
+
+    def __init__(self, brew=None):
+        if not brew:
+            return
+        recipe = brew.recipe
+        self.batch_volume = convert_volume(recipe.batch_size, recipe.batch_size_units, 'gl')
+        grain_weight = Decimal('0')
+        for fermentable in recipe.recipegrain_set.all():
+            in_weight = fermentable.amount_units in [unit[0] for unit in Weight_Units]
+            is_grain = True # @fixme: fermentable.is_grain()
+            if is_grain and in_weight:
+                grain_weight += convert_weight(fermentable.amount_value, fermentable.amount_units, 'lb')
+        ctx = Context(prec=4, rounding=ROUND_HALF_UP)
+        grain_weight = ctx.create_decimal(grain_weight)
+        self.grain_size = grain_weight
+        # self.boil_time = recipe.boil_time @fixme
+        # self.target_mash_temp = recipe.target_mash_temp @fixme
+        #
+        # brewer_prefs = brew.brewer.preferences
+        # @fixme: and, really, get from a first-order equipment model…
+        # self.mash_tun_loss = brewer_prefs.mash_tun_loss
+        # self.trub_loss = brewer_prefs.system_trub_loss
+        # self.mash_thickness = brewer_prefs.mash_thickness
+        # self.grain_absorption = brewer_prefs.grain_absorption
+
+    
     _batch_volume = Decimal('5') # gl
     def _set_batch_volume(self, val): self._batch_volume = val
     batch_volume = property(lambda s: s._batch_volume, _set_batch_volume)
@@ -1329,9 +1359,10 @@ class MashSpargeWaterCalculator (object):
     def _set_shrinkage(self, val): self._shrinkage = val
     shrinkage = property(lambda s: s._shrinkage, _set_shrinkage)
 
-    _num_sparges = Decimal('1') # count
-    def _set_num_sparges(self, val): self._num_sparges = val
-    num_sparges = property(lambda s: s._num_sparges, _set_num_sparges)
+    def _get_grain_absorption_volume(self):
+        return self.grain_absorption * self.grain_size
+
+    grain_absorption_volume = property(_get_grain_absorption_volume)
 
     def _get_mash_vol(self):
         mash_volume = (self.grain_size * self.mash_thickness) / Decimal('4')
@@ -1349,12 +1380,17 @@ class MashSpargeWaterCalculator (object):
         evap_loss_factor = Decimal('1') - (evap_pct * (self.boil_time / Decimal('60')))
         shrinkage_factor = Decimal('1') - (self.shrinkage / Decimal('100'))
         kettle_volume = ((self.batch_volume + self.trub_loss) / shrinkage_factor) / evap_loss_factor
-        grain_absorption_loss = self.grain_absorption * self.grain_size
+        grain_absorption_loss = self.grain_absorption_volume
         total_volume = kettle_volume + self.mash_tun_loss + grain_absorption_loss 
         # print evap_pct,'evap_pct',evap_loss_factor,'evap_loss_factor',shrinkage_factor,'shrinkage_factor',kettle_volume,'kettle_volume',grain_absorption_loss,'grain_absorption_loss',total_volume,'total_volume'
         return total_volume
 
     total_volume = property(_get_total_vol)
+
+    def _get_collected_vol(self):
+        return self.total_volume - self.grain_absorption_volume
+
+    collected_volume = property(_get_collected_vol)
     
     def _strike_temp(self):
         '''

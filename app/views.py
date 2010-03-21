@@ -40,7 +40,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django import forms
 from genshi.core import Markup
 from brewjournal.app import models, widgets
-from datetime import datetime
+from datetime import datetime, timedelta
 import urllib
 
 from timezones.forms import LocalizedDateTimeField
@@ -465,10 +465,12 @@ def brew_post(request, uri_user, brew, step):
         brew.update_from_steps(steps)
         brew.save()
         return HttpResponseRedirect('/user/%s/brew/%d/' % (brew.brewer.username, brew.id))
-    return brew_render(request, uri_user, brew, step_form, True)
+    return brew_render(request, uri_user, brew, step_form, True, None)
 
 
-def brew_render(request, uri_user, brew, step_form, step_edit):
+def brew_render(request, uri_user, brew, step_form, step_edit, mash_sparge_calc_form, mash_sparge_steps=None):
+    if not mash_sparge_steps:
+        mash_sparge_steps = []
     steps = [step for step in brew.step_set.all()]
     brew_form = BrewForm(uri_user, instance=brew)
     recipe_deriv = None
@@ -477,8 +479,118 @@ def brew_render(request, uri_user, brew, step_form, step_edit):
     return HttpResponse(render('user/brew/index.html', request=request, std=standard_context(), user=uri_user,
                                brew=brew, steps=steps, step_form=step_form, step_edit=step_edit,
                                brew_form=brew_form, deriv=models.BrewDerivations(brew),
-                               recipe_deriv=recipe_deriv))
-    
+                               recipe_deriv=recipe_deriv, mash_sparge_calc_form=mash_sparge_calc_form,
+                               mash_sparge_steps=mash_sparge_steps))
+
+
+def brew_create_mash_steps(request, user, brew, calc, form):
+    from decimal import Context,Decimal,ROUND_HALF_UP
+    base_date = form.cleaned_data['dough_in_time']
+    created = []
+    #
+    strike_time = base_date - timedelta(minutes = 5)
+    strike = models.Step(brew=brew,
+                         date=strike_time,
+                         type='strike',
+                         volume_units='gl',
+                         volume=calc.mash_volume,
+                         temp=calc.strike_temp,
+                         temp_units='f')
+    created.append(strike)
+    #
+    dough_in = models.Step(brew=brew,
+                           date=base_date,
+                           type='dough',
+                           volume_units='gl',
+                           volume=calc.mash_volume,
+                           temp_units='f',
+                           temp=calc.target_mash_temp)
+    created.append(dough_in)
+    #
+    mash_length = form.cleaned_data['mash_length']
+    if form.cleaned_data['add_midpoint_mash_temp_step']:
+        half_length = mash_length / Decimal('2')
+        half_length_min = half_length.quantize(Decimal('1'))
+        mash_record_time = base_date + timedelta(minutes = int(half_length_min))
+        mash = models.Step(brew=brew,
+                           date=mash_record_time,
+                           type='mash')
+        created.append(mash)
+    #
+    mash_end_time = base_date + timedelta(minutes = mash_length)
+    style = form.cleaned_data['sparge_type']
+    gl_drain_rate = form.cleaned_data['sparge_flow_rate'] / Decimal('4')
+    if style == 'fly':
+        sparge_start = models.Step(brew=brew,
+                                   type='sparge',
+                                   date=mash_end_time)
+        created.append(sparge_start)
+        #
+        mash_sparge_volume = form.calc.total_volume - form.calc.grain_absorption_volume
+        sparge_time = mash_sparge_volume / gl_drain_rate
+        sparge_time = sparge_time.quantize(Decimal('1'))
+        sparge_end_time = mash_end_time + timedelta(minutes=int(sparge_time))
+        sparge_end = models.Step(brew=brew,
+                                 type='sparge',
+                                 date=sparge_end_time,
+                                 volume_units='gl',
+                                 volume=mash_sparge_volume)
+        created.append(sparge_end)
+    elif style == 'batch':
+        mash_drain_volume = form.calc.mash_volume - form.calc.grain_absorption_volume
+        mash_drain_time = mash_drain_volume / gl_drain_rate
+        mash_drain_time = mash_drain_time.quantize(Decimal('1'))
+        first_runnings_start = models.Step(brew=brew,
+                                           type='batch1-start',
+                                           date=mash_end_time)
+        created.append(first_runnings_start)
+        #
+        first_runnings_end_time = mash_end_time + timedelta(minutes = int(mash_drain_time))
+        first_runnings_end = models.Step(brew=brew,
+                                         type='batch1-end',
+                                         date=first_runnings_end_time,
+                                         volume_units='gl',
+                                         volume=mash_drain_volume)
+        created.append(first_runnings_end)
+        #
+        accum_volume = mash_drain_volume
+        last_step_time = first_runnings_end_time
+        #
+        num_batches = form.cleaned_data['num_batches']
+        per_batch_volume = calc.sparge_volume / num_batches
+        per_batch_volume = per_batch_volume.quantize(Decimal('1.00'))
+        per_batch_time = per_batch_volume / gl_drain_rate
+        per_batch_time = per_batch_time.quantize(Decimal('1'))
+        sparge_wait_time = form.cleaned_data['rest_between_batches']
+        #
+        for i in range(num_batches):
+            step_type_prefix = 'batch%d-' % (i+2)
+            sparge_time = last_step_time + timedelta(minutes=1)
+            sparge = models.Step(brew=brew,
+                                 type='sparge',
+                                 date=sparge_time,
+                                 volume_units='gl',
+                                 volume=per_batch_volume)
+            created.append(sparge)
+            start_time = sparge_time + timedelta(minutes=int(sparge_wait_time))
+            #
+            runnings_start = models.Step(brew=brew,
+                                         type=step_type_prefix + 'start',
+                                         date=start_time)
+            created.append(runnings_start)
+            #
+            end_time = start_time + timedelta(minutes=int(per_batch_time))
+            runnings_end = models.Step(brew=brew,
+                                       type=step_type_prefix + 'end',
+                                       date=end_time,
+                                       volume_units='gl',
+                                       volume=per_batch_volume)
+            created.append(runnings_end)
+            last_step_time = end_time
+    else:
+        raise Exception('unknown style [%s]' % (style))
+    return created
+
 
 def brew(request, user_name, brew_id, step_id):
     '''
@@ -497,7 +609,22 @@ def brew(request, user_name, brew_id, step_id):
     except ObjectDoesNotExist:
         raise Http404
     if request.method == 'POST':
-        return brew_post(request, uri_user, brew, step)
+        if request.POST.has_key('mash_sparge_recalc') \
+           and request.POST.has_key('action') \
+           and request.POST['action'] == 'create steps':
+            calc = models.MashSpargeWaterCalculator(brew)
+            form = BrewMashSpargeCalcForm(uri_user, calc, request.POST)
+            try:
+                if not form.is_valid():
+                    raise Exception('invalid')
+                created = brew_create_mash_steps(request, uri_user, brew, calc, form)
+            except:
+                return brew_render(request, uri_user, brew, None, False, form)
+            for step in created:
+                step.save()
+            return HttpResponseRedirect('/user/%s/brew/%d' % (brew.brewer.username, brew.id))
+        else:
+            return brew_post(request, uri_user, brew, step)
     # else:
     step_form = None
     step_expand_edit = False
@@ -524,7 +651,28 @@ def brew(request, user_name, brew_id, step_id):
                 step_form = StepForm(uri_user, initial={'brew': brew.id, 'date': datetime.now(), 'type': next_step.type.id})
         else:
             step_form = StepForm(uri_user, initial={'brew': brew.id, 'date': datetime.now()})
-    return brew_render(request, uri_user, brew, step_form, step_expand_edit)
+    #
+    mash_sparge_calc_form = None
+    brew_calc_form = None
+    mash_sparge_steps = []
+    already_contains_mash_steps = False
+    for ea_step in brew.step_set.all():
+        # simple test for any of a set of mashing-related steps
+        if ea_step.type in ('strike','dough','mash','sparge'):
+            already_contains_mash_steps = True
+            break
+    is_all_grain = brew.recipe.type == models.RecipeType_AllGrain
+    if is_all_grain and not already_contains_mash_steps:
+        mash_sparge_calc = models.MashSpargeWaterCalculator(brew)
+        if request.GET and request.GET.has_key('mash_sparge_recalc'):
+            mash_sparge_calc_form = BrewMashSpargeCalcForm(uri_user, mash_sparge_calc, request.GET)
+        else:
+            mash_sparge_calc_form = BrewMashSpargeCalcForm(uri_user, mash_sparge_calc)
+        #
+        if mash_sparge_calc_form.is_valid():
+            mash_sparge_steps = brew_create_mash_steps(request, uri_user, brew, mash_sparge_calc, mash_sparge_calc_form)
+    #
+    return brew_render(request, uri_user, brew, step_form, step_expand_edit, mash_sparge_calc_form, mash_sparge_steps)
 
 
 class StarForm (forms.ModelForm):
@@ -619,6 +767,7 @@ def RecipeForm(user, *args, **kwargs):
             tz = user.get_profile().timezone
         except models.UserProfile.DoesNotExist:
             pass
+
     class _RecipeForm (forms.ModelForm):
         style = forms.ModelChoiceField(models.Style.objects.all(),
                                        widget=widgets.TwoLevelSelectWidget(choices=get_style_choices()))
@@ -629,6 +778,7 @@ def RecipeForm(user, *args, **kwargs):
         class Meta:
             model = models.Recipe
             exclude = ['author', 'derived_from_recipe']
+
     return _RecipeForm(*args, **kwargs)
 
 
@@ -912,9 +1062,10 @@ class EfficiencyTracker (object):
         url += '&chm=N*f1*,000000,0,-1,10'
         return url
 
+
 class MashSpargeCalculatorForm (forms.Form):
-    batch_volume = forms.DecimalField(max_digits=3, min_value=0, label='Post-boil volume (gl)')
-    grain_size = forms.DecimalField(max_digits=3, min_value=0, label='Grain bill size (lbs)')
+    batch_volume = forms.DecimalField(max_digits=4, min_value=0, label='Post-boil volume (gl)')
+    grain_size = forms.DecimalField(max_digits=4, min_value=0, label='Grain bill size (lbs)')
     boil_time = forms.DecimalField(max_digits=3, min_value=0, label='Boil time (minutes)')
     trub_loss = forms.DecimalField(max_digits=3, min_value=0, label='Kettle and trub loss (gl)')
     mash_tun_loss = forms.DecimalField(max_digits=3, min_value=0, label='Mash Tun loss (gl)')
@@ -922,33 +1073,58 @@ class MashSpargeCalculatorForm (forms.Form):
     grain_temp = forms.DecimalField(max_digits=5, min_value=0, label=u'Grain temp (°F)')
     target_mash_temp = forms.DecimalField(max_digits=5, min_value=0, label=u'Mash target temp (°F)')
     grain_absorption = forms.DecimalField(max_digits=3, min_value=0, label='Grain absorption (gl/lb)')
-    boil_evaporation_rate = forms.IntegerField(min_value=0, max_value=100, label='Boil evaporation rate (gl/hr)')
+    boil_evaporation_rate = forms.IntegerField(min_value=0, max_value=100, label='Boil evaporation rate (%/hr)')
+
+    _calc = None
+    calc = property(lambda s: s._calc)
 
     def __init__(self, calc, *args, **kwargs):
         # compute initial values from Calculator defaults in lieu of being a
         # proper model form.
+        self._calc = calc
         kwargs.setdefault('initial', {})
         for field_name in dir(calc):
             if field_name.startswith('_'):
                 continue
             val = calc.__getattribute__(field_name)
             kwargs['initial'][field_name] = val
+        #
         super(MashSpargeCalculatorForm, self).__init__(*args, **kwargs)
+        # copy parsed form values back into calculator:
+        args_has_params = args
+        if args_has_params and self.is_valid():
+            for name,val in self.cleaned_data.iteritems():
+                calc.__setattr__(name, val)
 
-
+     
 def calc_mash_sparge(request):
+    calc = models.MashSpargeWaterCalculator()
     if request.GET:
-        calc = models.MashSpargeWaterCalculator()
         form = MashSpargeCalculatorForm(calc, request.GET)
-        for name,val in form.cleaned_data.iteritems():
-            calc.__setattr__(name, val)
     else:
-        calc = models.MashSpargeWaterCalculator()
         form = MashSpargeCalculatorForm(calc)
     return HttpResponse(
         render('calc/mash_sparge.html',
                request=request,
                std=standard_context(),
                calc=calc,
-               form=form
-               ))
+               form=form))
+
+def BrewMashSpargeCalcForm(user, *args, **kwargs):
+    tz = settings.TIME_ZONE
+    if user and hasattr(user, 'get_profile'):
+        try:
+            tz = user.get_profile().timezone
+        except models.UserProfile.DoesNotExist:
+            pass
+
+    class _BrewMashSpargeCalcForm (MashSpargeCalculatorForm):
+        sparge_type = forms.ChoiceField(choices=(('fly', 'Fly'), ('batch', 'Batch')), initial='batch')
+        add_midpoint_mash_temp_step = forms.BooleanField(required=False, initial=True, label='Add mid-mash temperature recording step')
+        dough_in_time = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz), initial=datetime.now())
+        mash_length = forms.IntegerField(min_value=0, initial=60)
+        sparge_flow_rate = forms.IntegerField(min_value=0, initial=1, label='Tun Drain Flow Rate (qt/min)')
+        num_batches = forms.IntegerField(min_value=1, max_value=2, initial=1, label='Sparge Batches')
+        rest_between_batches = forms.IntegerField(min_value=0, initial=10, label='Grain rest time between batches')
+
+    return _BrewMashSpargeCalcForm(*args, **kwargs)
