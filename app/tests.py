@@ -660,6 +660,7 @@ class StepTimeShiftTest (AppTestCase):
     #       no ?type: next-step =
     # brew is "complete", has no future steps
 
+
 class UtilTest (TestCase):
     def testUtil(self):
         import doctest
