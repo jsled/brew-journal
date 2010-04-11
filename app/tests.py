@@ -590,6 +590,66 @@ class FutureStepsTest (AppTestCase):
         # -with
         datetime.datetime = saved_datetime
 
+class StepTimeShiftTest (AppTestCase):
+
+    def setUp(self):
+        now = datetime.datetime.now()
+        now = now - datetime.timedelta(microseconds=now.microsecond)
+        self.now = now
+        self.now_plus_5 = now + datetime.timedelta(minutes=5)
+        self.now_plus_10 = now + datetime.timedelta(minutes=10)
+        self.now_plus_15 = now + datetime.timedelta(minutes=15)
+        self.now_plus_20 = now + datetime.timedelta(minutes=20)
+
+        self.user = auth.models.User()
+        self.user.save()
+
+        self.brew = models.Brew()
+        self.brew.brewer = self.user
+        self.brew.save()
+
+        self.strike = models.Step(brew=self.brew, type='strike', date=self.now)
+        self.strike.save()
+
+        self.dough = models.Step(brew=self.brew, type='dough', date=self.now_plus_5)
+        self.dough.save()
+
+        self.mash = models.Step(brew=self.brew, type='mash', date=self.now_plus_10)
+        self.mash.save()
+
+        self.first_run = models.Step(brew=self.brew, type='batch1-start', date=self.now_plus_15)
+        self.first_run.save()
+
+    def testBasicShift(self):
+        dough2 = models.Step.objects.get(pk=self.dough.id)
+        dough2.date = self.now_plus_10
+        self.brew.shift_steps(self.dough, dough2)
+
+        for step in self.brew.step_set.all():
+            if step.type == 'strike':
+                self.assertEquals(self.now, step.date)
+            elif step.type == 'dough':
+                self.assertEquals(self.now_plus_10, step.date)
+            elif step.type == 'mash':
+                self.assertEquals(self.now_plus_15, step.date)
+            elif step.type =='batch1-start':
+                self.assertEquals(self.now_plus_20, step.date)
+            else:
+                self.fail('unknown type %s' % (step.type))
+
+    def testFarFutureNonShift(self):
+        two_weeks_away = self.now + datetime.timedelta(weeks=2)
+        future_keg = models.Step(brew=self.brew, type='keg', date=two_weeks_away)
+        future_keg.save()
+
+        strike2 = models.Step.objects.get(pk=self.strike.id)
+        strike2.date = self.now_plus_20
+        self.brew.shift_steps(self.strike, strike2)
+
+        upd_keg = self.brew.step_set.get(type='keg')
+        self.assertEqual(two_weeks_away, upd_keg.date)
+
+
 #class BrewViewTest (AppTestCase):
 
     # brew has no steps:

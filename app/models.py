@@ -447,12 +447,35 @@ class Brew (models.Model):
 
     class Meta:
         ordering = ['brew_date', 'last_update_date']
+
+    def shift_steps(self, orig_step, updated_step, threshold=None):
+        if not threshold:
+            threshold = datetime.timedelta(hours=6)
+        if not orig_step \
+           or not updated_step.date or not orig_step.date:
+            # we need dates on both sides to function
+            return
+        delta_time = updated_step.date - orig_step.date
+        orig_date = orig_step.date
+        updated_step.save()
+        for existing_step in self.step_set.all():
+            same_as_updated = existing_step.id == updated_step.id
+            if same_as_updated:
+                continue
+            if existing_step.date < orig_date:
+                continue
+            difference = existing_step.date - orig_date
+            if abs(difference) > threshold:
+                continue
+            existing_step.date += delta_time
+            existing_step.save()
     
-    def update_from_steps(self, steps = None):
+    def update_from_steps(self):
         '''
         Based on the type and timestamp of the latest step of `steps`, update the state of the Brew.
         It's the caller's responsibility to save the updated object.
         '''
+        steps = self.step_set.all()
         # only allow non-future steps to update state.
         past_steps = [step for step in steps if not step.in_future()] or []
         if len(past_steps) > 0:

@@ -445,24 +445,25 @@ def StepForm(user, *args, **kwargs):
         notes = forms.CharField(widget=forms.Textarea(), required=False)
         brew = forms.IntegerField(widget=forms.HiddenInput)
         date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
+        shift_step_times = forms.BooleanField(required=False, initial=True, label='Time Shift',
+                                              help_text='Shift subsequent steps by updated step time difference (within reason).''')
         class Meta:
             model = models.Step
             exclude = ['gravity']
     return _StepForm(*args, **kwargs)
 
 
-def brew_post(request, uri_user, brew, step):
+def brew_post(request, uri_user, brew, orig_step):
     if not (request.user.is_authenticated() and request.user == uri_user):
         return HttpResponseForbidden()
-    step_form = StepForm(uri_user, request.POST, instance=step)
+    step_form = StepForm(uri_user, request.POST, instance=orig_step)
     if step_form.is_valid():
         step_form.cleaned_data['brew'] = brew
-        step = step_form.save()
-        try:
-            steps = models.Step.objects.filter(brew__id = brew.id)
-        except models.Step.DoesNotExist:
-            pass
-        brew.update_from_steps(steps)
+        updated_step = step_form.save(commit=False)
+        if step_form.cleaned_data['shift_step_times']:
+            brew.shift_steps(orig_step, updated_step)
+        updated_step.save()
+        brew.update_from_steps()
         brew.save()
         return HttpResponseRedirect('/user/%s/brew/%d/' % (brew.brewer.username, brew.id))
     return brew_render(request, uri_user, brew, step_form, True, None)
