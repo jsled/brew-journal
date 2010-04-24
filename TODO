@@ -230,6 +230,54 @@ handler500 = 'app.views.custom_500'
     CLOSED: [2008-08-31 Sun 18:32]
 *** DONE /user/{user}/brew/{id}?type={type} doesn't work.
 *** DONE with validation error on step addition, the form is correctly populated, but collapsed
+** test cases, examples
+*** Basic pale
+
+BeerSmith Recipe Printout - http://www.beersmith.com
+Recipe: Burton Ale
+Brewer: Brad Smith
+Asst Brewer: 
+Style: English Pale Ale
+TYPE: All Grain
+Taste: (38.0) A smooth tasting pale ale -- full in body and a great long lasting head.  Another great beer to stock -- favorite with guests.  Make's a great black and tan when combined with light bodied Irish stout.
+
+Recipe Specifications
+--------------------------
+Batch Size: 5.00 gal      
+Boil Size: 5.50 gal
+Estimated OG: 1.056 SG
+Estimated Color: 7.0 SRM
+Estimated IBU: 32.4 IBU
+Brewhouse Efficiency: 72.0 %
+Boil Time: 60 Minutes
+
+Ingredients:
+------------
+Amount        Item                                      Type         % or IBU      
+8.00 lb       Pale Malt (2 Row) UK (2.5 SRM)            Grain        80.0 %        
+1.00 lb       Caramel/Crystal Malt - 20L (20.0 SRM)     Grain        10.0 %        
+1.00 oz       Goldings, East Kent [5.50%]  (60 min)     Hops         18.9 IBU      
+0.50 oz       Northern Brewer [7.50%]  (60 min)         Hops         12.9 IBU      
+0.50 oz       Fuggles [5.00%]  (2 min)                  Hops         0.7 IBU       
+0.75 oz       Fuggles [4.50%]  (Dry Hop 3 days)         Hops          -            
+0.25 tsp      Irish Moss (Boil 10.0 min)                Misc                       
+0.25 oz       Polyclar (Secondary 1.0 days)             Misc                       
+1.00 lb       Brown Sugar, Light (8.0 SRM)              Sugar        10.0 %        
+5.00 gal      Burton On Trent, UK                       Water                      
+1 Pkgs        Burton Ale (White Labs #WLP023)           Yeast-Ale                  
+
+
+Mash Schedule: Single Infusion, Full Body
+Total Grain Weight: 9.00 lb
+----------------------------
+Name               Description                         Step Temp     Step Time     
+Mash In            Add 11.25 qt of water at 170.5 F    158.0 F       45 min        
+Mash Out           Add 7.20 qt of water at 185.9 F     168.0 F       10 min        
+
+
+
+<Yuyo> it's about 75-80F where it's fermenting... OG was 1.068 at about 82F, beer smith says it's 1.071 adjusted
+
 ** weirdness
 *** when journaling after racking to secondary, is it entered as primary-ferm or secondary-ferm?
 Maybe Steps should strictly be "transitions" or "activtives", not just states
