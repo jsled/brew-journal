@@ -248,7 +248,7 @@ def user_index(request, user_name):
     shopping_list = models.ShoppingList(uri_user)
     done_brews = models.Brew.objects.filter(brewer=uri_user, is_done=True)
     starred_recipes = models.StarredRecipe.objects.filter(user=uri_user)
-    authored_recipes = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date')[0:10]
+    authored_recipes = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date')
     efficiency_tracker = EfficiencyTracker(uri_user)
     return HttpResponse(render('user/index.html', request=request, user=uri_user, std=standard_context(),
                                brews=brews,
