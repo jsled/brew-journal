@@ -23,14 +23,13 @@
   <h1 py:if="brew.recipe">brew of "${brew.recipe.name}"</h1>
   <h1 py:if="not brew.recipe">un-named brew</h1>
 
-
   <div id="details">
       <div>
           <span py:if="brew.brew_date">brewed on ${std.fmt.date.ymdhm(brew.brew_date, user)} </span>
           by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
           <span py:if="brew.recipe">from recipe ${recipe_a(brew.recipe)}</span>
       </div>
-      <div py:if="brew.recipe" class="recipe-style-summary" style="margin-top: 0.5em">
+      <div py:if="brew.recipe" class="recipe-style-summary">
           <py:if test="brew.recipe.batch_size">
               ${brew.recipe.batch_size}${brew.recipe.batch_size_units}
           </py:if>
@@ -52,23 +51,53 @@
           </py:if>
       </div>
 
-      <div>
+      <div py:if="brew.notes and len(brew.notes) > 0">
           <h2>notes</h2>
-          <div class="notes" py:if="brew.notes and len(brew.notes) > 0"><pre class="notes">${brew.notes}</pre></div>
-          <div py:if="not brew.notes or len(brew.notes) == 0"><em>(none)</em></div>
-          <a py:if="std.auth_user_is_user(request, user)" href="#" id="first-focused" onClick="$('#details').children().slideToggle(); return false;">edit brew details &uarr;</a>
+          <div class="notes"><pre class="notes">${brew.notes}</pre></div>
       </div>
-      <div py:if="std.auth_user_is_user(request, user)" style="display:none">
-          <h2>edit</h2>
-          <form method="post" id="details-form" action="/user/${brew.brewer.username}/brew/${brew.id}/edit/">
-              <table class="form" py:content="std.Markup(brew_form.as_table())"/>
-              <input type="submit" value="update"/>
-              <button onClick="$('#details').children().slideToggle(); $('#details-form').get()[0].reset(); return false;">cancel</button>
-          </form>
+
+      <div> <!-- derivations -->
+          efficiency:
+          <py:choose>
+              <span py:when="deriv.can_not_derive_efficiency()"
+                    py:attrs="{'title': '. '.join(deriv.can_not_derive_efficiency())}"
+                    id="why_not_efficiency" class="muted">can't yet compute</span>
+              <strong py:otherwise="">
+                  ${'%0.2f' % deriv.efficiency()}%
+              </strong>
+          </py:choose>
+          | abv:
+          <py:choose>
+              <span py:when="deriv.can_not_derive_abv()"
+                    py:attrs="{'title': '. '.join(deriv.can_not_derive_abv())}"
+                    class="muted">can't yet compute</span>
+              <strong py:otherwise="">${'%0.2f' % (deriv.alcohol_by_volume())}%</strong>
+          </py:choose>
+          | attenuation:
+          <py:choose>
+              <span py:when="deriv.can_not_derive_aa()"
+                    py:attrs="{'title': '. '.join(deriv.can_not_derive_aa())}"
+                    class="muted">can't yet compute</span>
+              <strong py:otherwise="">${'%0.2f' % (deriv.apparent_attenuation())}%</strong>
+          </py:choose>
+      </div>
+
+      <div id="detailsEdit" py:if="std.auth_user_is_user(request, user)">
+          <div>
+              <a py:if="std.auth_user_is_user(request, user)" href="#" id="first-focused" onClick="$('#detailsEdit').children().toggle(); return false;">edit brew details...</a>
+          </div>
+          <div style="display:none">
+              <h2>edit</h2>
+              <form method="post" id="details-form" action="/user/${brew.brewer.username}/brew/${brew.id}/edit/">
+                  <table class="form" py:content="std.Markup(brew_form.as_table())"/>
+                  <input type="submit" value="update"/>
+                  <button onClick="$('#detailsEdit').children().toggle(); $('#details-form').get()[0].reset(); return false;">cancel</button>
+              </form>
+          </div>
       </div>
   </div>
 
-  <h2>log</h2>
+  <h2>journal</h2>
 
   <?python
     now_steps = [step for step in steps if not step.in_future()]
@@ -189,68 +218,6 @@
           </div>
       </div>
   </div>
-
-
-<h1>derivations</h1>
-<table>
-  <tr>
-    <th>efficiency</th>
-    <td py:if="deriv.can_not_derive_efficiency()">
-      <div id="why_not_efficiency">
-          <div class="muted">
-              can't yet compute. <a href="#" onClick="$('#why_not_efficiency').children().slideToggle(); return false;">(why not?)</a>
-          </div>
-          <div style="display:none">
-              <py:for each="reason in deriv.can_not_derive_efficiency()">
-                  ${reason}<br/>
-              </py:for>
-              <a class="muted" href="#" onClick="$('#why_not_efficiency').children().slideToggle(); return false;">(hide)</a><br />
-          </div>
-      </div>
-    </td>
-    <td py:if="not deriv.can_not_derive_efficiency()">
-        ${'%0.2f' % deriv.efficiency()}%
-    </td>
-  </tr>
-  <tr>
-    <th>alcohol by volume</th>
-    <td py:if="deriv.can_not_derive_abv()">
-      <div id="why_not_abv">
-          <div class="muted">
-              can't yet compute. <a href="#" onClick="$('#why_not_abv').children().slideToggle(); return false;">(why not?)</a>
-          </div>
-          <div style="display:none">
-              <py:for each="reason in deriv.can_not_derive_abv()">
-                  ${reason}<br />
-              </py:for>
-              <a class="muted" href="#" onClick="$('#why_not_abv').children().slideToggle(); return false;">(hide)</a><br />
-          </div>
-      </div>
-    </td>
-    <td py:if="not deriv.can_not_derive_abv()">
-        ${'%0.2f' % (deriv.alcohol_by_volume())}%
-    </td>
-  </tr>
-  <tr>
-      <th>apparent attenuation</th>
-      <td py:if="deriv.can_not_derive_aa()">
-          <div id="why_not_aa">
-              <div class="muted">
-                  can't yet compute.  <a href="#" onClick="('#why_not_aa').children().slideToggle(); return false;">(why not?)</a>
-              </div>
-              <div style="display:none">
-                  <py:for each="reason in deriv.can_not_derive_aa()">
-                      ${reason}<br />
-                  </py:for>
-                  <a class="muted" href="#" onClick="$('#why_not_aa').children().slideToggle(); return false;">(hide)</a><br />
-              </div>
-          </div>
-      </td>
-      <td py:if="not deriv.can_not_derive_aa()">
-          ${'%0.2f' % (deriv.apparent_attenuation())}%
-      </td>
-  </tr>
-</table>
                 </div>
             </div>
         </div>
