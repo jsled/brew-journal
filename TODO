@@ -506,12 +506,14 @@ of being.
 *** import/export
 *** add 'equipment'/'rig'
 ** minor
+*** TODO separate boil_size, batch_size
+*** TODO boil length
+*** TODO analytics
 *** DONE better integration of genshi
     CLOSED: [2009-09-21 Mon 23:00]
 see http://www.djangosnippets.org/snippets/97/
 *** DONE compute strike/sparge water volume from recipe, mash type, desired water/grist ratio
     CLOSED: [2010-03-21 Sun 10:28]
-*** TODO separate boil_size, batch_size
 *** TODO /recipe/ shouldn't 404.
 *** TODO add time counter for some steps (primary/secondary fermentation)
 *** TODO some sort of markdown/wikiformatting/CRLF-><br/> for notes
@@ -588,7 +590,8 @@ see http://www.djangosnippets.org/snippets/97/
 ***** White Labs
 *** TODO paginated views
 **** historical brews
-**** all authored recipes
+**** historical recipes
+**** all recipes
 *** system logging
 **** per request/timing accesslog (add to page footer, too)
 **** general system: startup, shutdown, resource util, &c.
