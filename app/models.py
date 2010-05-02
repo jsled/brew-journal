@@ -198,12 +198,14 @@ class Style (models.Model):
 
 class Grain (models.Model):
     name = models.CharField(max_length=200)
-    # 1 lb / 1gl = extract_{min,max} gravity * 1000
+    # 1 lb / 1 gl = extract_{min,max} gravity * 1000
     extract_min = models.SmallIntegerField(null=True)
     extract_max = models.SmallIntegerField(null=True)
-    # volume_potential_{min,max} gravity * 1000 is unitless.
+    # 1 gl / 1 gl volume_potential_{min,max} gravity * 1000
     volume_potential_min = models.SmallIntegerField(null=True)
     volume_potential_max = models.SmallIntegerField(null=True)
+    # lb/gl
+    volume_to_weight_conversion = models.DecimalField(max_digits=6, decimal_places=3, null=True)
     lovibond_min = models.SmallIntegerField(null=True)
     lovibond_max = models.SmallIntegerField(null=True)
     description = models.CharField(max_length=200)
@@ -304,8 +306,8 @@ class Recipe (models.Model):
 class RecipeGrain (models.Model):
     recipe = models.ForeignKey(Recipe)
     grain = models.ForeignKey(Grain)
-    amount_value = models.DecimalField(max_digits=4, decimal_places=2)
-    amount_units = models.CharField(max_length=2, choices=All_Units, default='lb')
+    amount_value = models.DecimalField(max_digits=5, decimal_places=3)
+    amount_units = models.CharField(max_length=4, choices=All_Units, default='lb')
     by_weight_potential_override = models.SmallIntegerField(null=True, blank=True)
     by_volume_potential_override = models.SmallIntegerField(null=True, blank=True)
 
@@ -313,6 +315,7 @@ class RecipeGrain (models.Model):
         return self.amount_units in [x[0] for x in Weight_Units]
 
     def measured_by_volume(self):
+        # return self.grain.volume_potential_min and self.grain.volume_potential_max
         return self.amount_units in [x[0] for x in Volume_Units]
 
     def weight_extract_potential(self):
@@ -331,6 +334,12 @@ class RecipeGrain (models.Model):
             min,max = self.by_volume_potential_override,self.by_volume_potential_override
         else:
             min,max = self.grain.volume_potential_min,self.grain.volume_potential_max
+        if not min or not max:
+            weight_min, weight_max = self.weight_extract_potential()
+            vol_weight_factor = self.grain.volume_to_weight_conversion
+            if not vol_weight_factor:
+                vol_weight_factor = Decimal(0)
+            min,max = tuple([Decimal('1000') + ((x - Decimal('1000')) * vol_weight_factor) for x in (weight_min,weight_max)])
         return min,max
 
 Hop_Usage_Types = (
@@ -369,7 +378,7 @@ class RecipeYeast (models.Model):
 class RecipeAdjunct (models.Model):
     recipe = models.ForeignKey(Recipe)
     adjunct = models.ForeignKey(Adjunct)
-    amount_value = models.DecimalField(max_digits=5, decimal_places=2)
+    amount_value = models.DecimalField(max_digits=5, decimal_places=3)
     amount_units = models.CharField(max_length=4, choices=All_Units)
     boil_time = models.SmallIntegerField()
     notes = models.CharField(max_length=300, null=True, blank=True)
@@ -798,7 +807,7 @@ def brix_balling_plato_to_gravity(brix):
 
 
 def convert_volume(volume, from_units, to_units):
-    ctx = Context(prec=5)
+    ctx = Context(prec=10)
     volume = ctx.create_decimal(volume)
 
     def simplify_volume(units):
@@ -915,7 +924,7 @@ class BrewDerivations (object):
         if len(related_steps) == 0:
             raise Exception('assertion violation')
         best_step = related_steps[0]
-        ctx = Context(prec=3, rounding=ROUND_HALF_UP)
+        ctx = Context(prec=7, rounding=ROUND_HALF_UP)
         potential_points = ctx.create_decimal('0')
         volume_in_gallons = convert_volume(best_step.volume, best_step.volume_units, 'gl')
         for recipe_grain in self._brew.recipe.recipegrain_set.all():
@@ -1103,7 +1112,7 @@ class RecipeDerivations (object):
         for grain in self._recipe.recipegrain_set.all():
             grains_by_volume |= grain.measured_by_volume()
         if grains_by_volume:
-            reasons.append('do not support recipes with fermentables  measured by volume')
+            reasons.append('do not support recipes with fermentables measured by volume')
 
     def _test_hops_deriv(self, reasons):
         has_hops = False
@@ -1135,7 +1144,7 @@ class RecipeDerivations (object):
             if grain.measured_by_weight():
                 try:
                     weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
-                except:
+                except Exception,e:
                     # @fixme: log the error or something
                     weight = 0
                 normalized_units = weight
@@ -1148,7 +1157,7 @@ class RecipeDerivations (object):
             elif grain.measured_by_volume():
                 try:
                     vol = convert_volume(grain.amount_value, grain.amount_units, 'gl')
-                except:
+                except Exception,e:
                     # @fixme: log or something
                     vol = 0
                 normalized_units = vol
@@ -1156,7 +1165,7 @@ class RecipeDerivations (object):
                 # assume that volume-specified fermentable are
                 # extracts or fruit, which is efficient. @fixme
                 norm_units_potential = NumberRange(*list(grain.volume_extract_potential()))
-            lo,hi = tuple([(Decimal(str(extract)) - Decimal('1000'))
+            lo,hi = tuple([(extract - Decimal('1000'))
                            * normalized_units
                            * fermentable_efficiency
                            for extract in (norm_units_potential.lo,norm_units_potential.hi)])

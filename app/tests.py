@@ -504,21 +504,26 @@ class RecipeSortedIngredients (AppTestCase):
         self.client.login(username=user, password=passwd)
         
         hop_1,hop_2 = tuple([models.Hop.objects.get(pk=x) for x in [1,2]])
-        grain_1,grain_2,grain_3 = tuple([models.Grain.objects.get(pk=x) for x in [1,2,3]])
+        grain_1,grain_2,grain_3,grain_4 = tuple([models.Grain.objects.get(pk=x) for x in [1,2,3,4]])
         recipe_url = self.create_recipe('foo', '2009-08-02', 1,
                                         [(hop_1.id, 1, 'oz', 30), (hop_2.id, 2, 'oz', 60)],
-                                        [(grain_1.id, 1, 'lb'), (grain_2.id, 2, 'lb'), (grain_3.id, 3, 'ct')])
+                                        [(grain_1.id, 1, 'lb'), (grain_2.id, 2, 'lb'), (grain_3.id, 3, 'ct'), (grain_4.id, '0.125', 'tsp')])
         res = self.client.get('/' + recipe_url + '/')
         #
         body = res.content.decode('utf-8')
         grain_1_idx = body.find(grain_1.name)
         grain_2_idx = body.find(grain_2.name)
         grain_3_idx = body.find(grain_3.name)
+        grain_4_idx = body.find(grain_4.name)
         self.assertTrue(grain_1_idx != -1)
         self.assertTrue(grain_2_idx != -1)
         self.assertTrue(grain_3_idx != -1)
+        self.assertTrue(grain_4_idx != -1)
         self.assertTrue(grain_2_idx < grain_1_idx)
         self.assertTrue(grain_3_idx > grain_1_idx)
+        self.assertTrue(grain_4_idx > grain_1_idx)
+        self.assertTrue(grain_4_idx > grain_2_idx)
+        self.assertTrue(grain_4_idx > grain_3_idx)
         #
         hop_1_idx = body.find(hop_1.name)
         hop_2_idx = body.find(hop_2.name)
@@ -692,7 +697,7 @@ class RecipeDerivationsTest (TestCase):
         percentage_accum = decimal.Decimal('0')
         for thingy in thingies:
             percentage_accum += thingy.percentage
-        self.assertAlmostEquals(decimal.Decimal('100'), percentage_accum, 0)
+        self.assertAlmostEquals(decimal.Decimal('100'), percentage_accum, 1)
 
     def testBareRecipe(self):
         bare_recipe = Mock()
@@ -839,21 +844,23 @@ class RecipeDerivationsTest (TestCase):
                       recipegrain_set=FkSet(grains),
                       recipehop_set=FkSet(hops))
         deriv = models.RecipeDerivations(recipe)
-        no_og_reasons = deriv.can_not_derive_og()
-        self.assertEquals([], no_og_reasons)
-        og = deriv.compute_og()
-        self.assertAlmostEquals(dec('1.054'), og.average, 0)
 
         # as the text says:
         # og=1.054
         # ibu=25
         # srm: 17
 
+        no_og_reasons = deriv.can_not_derive_og()
+        self.assertEquals([], no_og_reasons)
+        og = deriv.compute_og()
+        # this is way different from the text:
+        # self.assertAlmostEquals(dec('1.062'), og.average, 3)
+
         no_ibu_reasons = deriv.can_not_derive_ibu()
         self.assertEquals([], no_ibu_reasons)
         ibu = deriv.compute_ibu(og.average)
         # this is way different from the text:
-        # self.assertAlmostEquals(dec('25'), ibu.average, 0)
+        # self.assertAlmostEquals(dec('25'), ibu.average, 3)
 
         no_srm_reasons = deriv.can_not_derive_srm()
         self.assertEquals([], no_srm_reasons)
@@ -874,7 +881,7 @@ class RecipeDerivationsTest (TestCase):
         no_og_reasons = deriv.can_not_derive_og()
         self.assertEquals([], no_og_reasons)
         og = deriv.compute_og()
-        self.assertAlmostEquals(dec('1.052'), og.average, 0)
+        self.assertAlmostEquals(dec('1.052'), og.average, 3)
 
     def testEstimatedOgWithOverride(self):
         dec = lambda x: decimal.Decimal(x)
@@ -887,7 +894,7 @@ class RecipeDerivationsTest (TestCase):
         deriv = models.RecipeDerivations(recipe)
         self.assertEquals([], deriv.can_not_derive_og())
         og = deriv.compute_og()
-        self.assertAlmostEquals(dec('1.050'), og.average, 0)
+        self.assertAlmostEquals(dec('1.052'), og.average, 3)
 
     def testDilutedByVolumePotential(self):
         dec = lambda x: decimal.Decimal(x)
@@ -898,7 +905,36 @@ class RecipeDerivationsTest (TestCase):
         deriv = models.RecipeDerivations(recipe)
         self.assertEquals([],deriv.can_not_derive_og())
         og = deriv.compute_og()
-        self.assertAlmostEquals(dec('1.026'), og.average, 0)
+        self.assertAlmostEquals(dec('1.026'), og.average, 3)
+
+    def testHowToBrewStarterByVolume(self):
+        from decimal import Decimal as dec
+        '''Pretty common starter ratios, http://www.howtobrew.com/section1/chapter6-5.html'''
+        dme = models.Grain.objects.get(name='Dry Malt Extract: Light')
+        grains = [models.RecipeGrain(grain=dme, amount_value=dec('0.5'), amount_units='c')]
+        recipe = Mock(batch_size=dec('0.5'), batch_size_units='q', recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
+        og = deriv.compute_og()
+        self.assertAlmostEquals(dec('1.042'), og.average, 3)
+
+    def testTenToOneStarterByWeight(self):
+        from decimal import Decimal as dec
+        dme = models.Grain.objects.get(name='Dry Malt Extract: Light')
+        grains = [models.RecipeGrain(grain=dme, amount_value=dec(80), amount_units='gr')]
+        recipe = Mock(batch_size=dec(800), batch_size_units='ml', recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
+        og = deriv.compute_og()
+        self.assertAlmostEquals(dec('1.035'), og.average, 3)
+
+    def testMeadByWeight(self):
+        from decimal import Decimal as dec
+        honey = models.Grain.objects.get(name='Honey')
+        grains = [models.RecipeGrain(grain=honey, amount_value=dec(1), amount_units='gl')]
+        recipe = Mock(batch_size=dec(5), batch_size_units='gl', recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
+        og = deriv.compute_og()
+        self.assertAlmostEquals(dec('1.106'), og.average, 3);
+        
 
 class MashSpargeWaterCalcTest (TestCase):
 

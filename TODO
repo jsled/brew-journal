@@ -154,7 +154,6 @@ What is the essence of "future" steps?  They haven't happened, yet.
 * Todo
 ** bugs, misc
 *** TODO no way to indicate the addition a fermentable (e.g., honey) added at flame-out, or half-way through, or whatever.
-*** TODO can't add 1/8 tsp adjunct
 *** TODO dingeema-uncovered None-safety issues
 
 - Brew with Recipe
@@ -509,15 +508,100 @@ of being.
 *** TODO analytics
 *** TODO s/yahoo grid/960gs/
 *** TODO jquery bump
+*** TODO per-recipe efficiency setting
+*** TODO user-profile efficiency setting
 *** TODO recipe details block redesign
 *** TODO recipe details edit redesign
 *** TODO recipe derivations display redesign
 *** TODO add percentages to recipe components
+*** TODO add big user-facing warning about precision with volume-measured fermentables
 *** TODO /recipe/ shouldn't 404.
 *** TODO add time counter for some steps (primary/secondary fermentation)
 *** TODO some sort of markdown/wikiformatting/CRLF-><br/> for: recipe notes, brew notes, brew step notes
 *** TODO be able to (re-)associate a recipe with a Brew
 *** TODO use django `get_absolute_url`, `permalink` methods
+*** DONE allow for fermentables by volume, however silly it may be.
+
+weight vs. volume issues
+
+- grains
+  - by weight
+  - volume -> weight conversion factor?
+
+weight/vol
+lb/gl
+
+1 ml = 0.00026517 gl
+1 g = 0.002204625 lb
+
+- sugars
+  - by weight
+  - volume -> weight conversion factor?
+    - Homebrewing, Korzonas
+      - 120ml=70g (corn sugar)
+        - 70/120 g/ml = 4.8682 lb/gl
+      - 115ml=65g (table sugar)
+        - 65/115 g/ml = 4.717 lb/gl
+    - http://hbd.org/brewery/library/YPrimerMH.html
+      - 1/6 fl oz = 4.5g (sucrose)
+        - 7.62 lb/gl
+      - 1/6 fl oz = 3.5g (dextrose)
+        - 5.926 lb/gl
+    - http://www.sweetnapa.com/volume-to-weight-ingredient-conversion
+      - 1 cup = 7 oz (granulated, table)
+        - 7 oz/c = 7 lb/gl
+    - http://stason.org/TULARC/food/cooking/2-7-5-Weight-Volume-Conversion-Chart.html
+      - 2.4 cups/lb (granulated, table)
+        - 6.6666 lb/gl
+      - 2.3 cups/lb (brown)
+        - 6.957 lb/gl
+
+- DME, LME
+  - by weight
+  - volume->weight conversion factor?
+    - http://www.homebrewtalk.com/f12/weight-3-4-cup-dme-29475/
+      - 1/2 cup DME (not compressed) is about 2.8 - 2.9 oz
+        - 5.8 lb/gl
+    - Homebrewing, Korzonas
+      - 160ml=115g (DME)
+        - 5.998 lb/gl
+    - http://forum.northernbrewer.com/viewtopic.php?f=1&t=22072
+      - "I measured out a cup of DME and then weighed it. It weighed 6.5 oz." - Denny Conn
+        - 6.5 lb/gl
+      - "One cup of LME = 12oz = 3/4 lb/cup"
+        - 12 lb/gl
+    - http://www.homebrewtalk.com/f12/dme-weight-volume-conversion-74685/
+      - "approx 4-4.5 cups/lb" (DME)
+        - .25 lb/c * 16 c/gl = 4 lb/gl
+    - http://www.howtobrew.com/section1/chapter6-5.html
+      - 1/2 cup DME in 1/2 qt water = 1.040
+        - 1 cup/qt * ?? = 1 lb/gl
+
+- Honey
+  - by weight
+  - volume->weight conversion factor?
+    - http://www.sweetnapa.com/volume-to-weight-ingredient-conversion
+      - 1 cup = 12 oz
+    - http://www.gotmead.com/forum/showthread.php?t=9250
+      - 1 gl = 12 lbs
+    - http://stason.org/TULARC/food/cooking/2-7-5-Weight-Volume-Conversion-Chart.html
+      - 1.3 cups/lb
+        - 12.3 lb/gl
+
+- Molasses
+  - http://stason.org/TULARC/food/cooking/2-7-5-Weight-Volume-Conversion-Chart.html
+    - 1.3 cups/lb
+      - 12.3 lb/gl
+
+- Maple Syrup
+  - http://wiki.answers.com/Q/How_much_does_one_gallon_of_maple_syrup_weigh
+    - 14 lb/gl
+
+- Apple Must
+
+- Water
+  - 1 gallon -> 8.35 lbs
+
 *** DONE boil length
     CLOSED: [2010-05-02 Sun 10:28]
 *** DONE better integration of genshi
