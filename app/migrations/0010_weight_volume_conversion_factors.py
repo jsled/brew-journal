@@ -73,7 +73,7 @@ class Migration:
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'volume_potential_max': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'}),
             'volume_potential_min': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'}),
-            'volume_to_weight_conversion': ('django.db.models.fields.DecimalField', [], {'max_digits': '6', 'decimal_places': '3'})
+            'volume_to_weight_conversion': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '6', 'decimal_places': '3'})
         },
         'app.hop': {
             'aau_high': ('django.db.models.fields.DecimalField', [], {'max_digits': '3', 'decimal_places': '1'}),
