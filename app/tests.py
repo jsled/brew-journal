@@ -19,7 +19,7 @@ class AppTestCase (TestCase):
     fixtures = ['auth', 'grains1', 'grains2', 'grains3', 'hops0', 'hops1', 'yeasts1', 'adjuncts', 'yeast-manufacturers', 'yeasts', 'styles']
 
     def create_recipe(self, name, date, style, hops, grains):
-        res = self.client.post('/recipe/new/', {'name': name, 'insert_date': date, 'batch_size': 5, 'batch_size_units': 'gl', 'style': style, 'type': 'a'})
+        res = self.client.post('/recipe/new/', {'name': name, 'insert_date': date, 'batch_size': 5, 'batch_size_units': 'gl', 'boil_length': 60, 'style': style, 'type': 'a'})
         self.assertEquals(302, res.status_code, res)
         recipe_url = res['Location']
         recipe_base_url = '/'.join(recipe_url.split('/')[3:-1])
@@ -71,7 +71,7 @@ class HopWithoutBoilTime (AppTestCase):
     def test(self):
         app = self.client
         app.login(username='jsled', password='s3kr1t')
-        res = app.post('/recipe/new/', {'name': 'test', 'insert_date': '2008-08-31 20:48', 'batch_size': 5, 'batch_size_units': 'gl', 'style': 1, 'type': 'a'})
+        res = app.post('/recipe/new/', {'name': 'test', 'insert_date': '2008-08-31 20:48', 'batch_size': 5, 'boil_length': 60, 'batch_size_units': 'gl', 'style': 1, 'type': 'a'})
         new_recipe_url = res['Location']
         base_recipe_url = '/'.join(new_recipe_url.split('/')[3:-1])
         hop_post_url = '/%s/' % (base_recipe_url)
@@ -480,7 +480,7 @@ class TestTimezoneAdjustments (AppTestCase):
         # plus 30 minutes
         new_time = date_pacific + datetime.timedelta(seconds = 30 * MINUTE_SECONDS)
         new_time_str = new_time.strftime(pattern)
-        res3 = self.client.post(recipe_url, {'name':'test', 'batch_size': '5', 'batch_size_units': 'gl', 'style': 1, 'type': 'a', 'insert_date': new_time_str})
+        res3 = self.client.post(recipe_url, {'name':'test', 'batch_size': '5', 'batch_size_units': 'gl', 'boil_length': 60, 'style': 1, 'type': 'a', 'insert_date': new_time_str})
         self.assertEquals(302, res3.status_code)
         res3 = self.client.get(recipe_url)
         updated_pacific_str = date_pattern.search(res3.content).group(1)

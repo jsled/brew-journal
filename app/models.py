@@ -282,6 +282,7 @@ class Recipe (models.Model):
     batch_size_units = models.CharField(max_length=4, choices=Volume_Units, default='gl')
     pre_boil_volume = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
     pre_boil_volume_units = models.CharField(max_length=4, choices=Volume_Units, blank=True, null=True)
+    boil_length = models.DecimalField(max_digits=3, decimal_places=0, default=60)
     style = models.ForeignKey(Style, null=True)
     derived_from_recipe = models.ForeignKey('self', null=True, blank=True)
     type = models.CharField(max_length=1, choices=RecipeTypes, default='a')

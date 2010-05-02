@@ -506,19 +506,27 @@ of being.
 *** import/export
 *** add 'equipment'/'rig'
 ** minor
-*** TODO separate boil_size, batch_size
-*** TODO boil length
 *** TODO analytics
+*** TODO s/yahoo grid/960gs/
+*** TODO jquery bump
+*** TODO recipe details block redesign
+*** TODO recipe details edit redesign
+*** TODO recipe derivations display redesign
+*** TODO add percentages to recipe components
+*** TODO /recipe/ shouldn't 404.
+*** TODO add time counter for some steps (primary/secondary fermentation)
+*** TODO some sort of markdown/wikiformatting/CRLF-><br/> for: recipe notes, brew notes, brew step notes
+*** TODO be able to (re-)associate a recipe with a Brew
+*** TODO use django `get_absolute_url`, `permalink` methods
+*** DONE boil length
+    CLOSED: [2010-05-02 Sun 10:28]
 *** DONE better integration of genshi
     CLOSED: [2009-09-21 Mon 23:00]
 see http://www.djangosnippets.org/snippets/97/
 *** DONE compute strike/sparge water volume from recipe, mash type, desired water/grist ratio
     CLOSED: [2010-03-21 Sun 10:28]
-*** TODO /recipe/ shouldn't 404.
-*** TODO add time counter for some steps (primary/secondary fermentation)
-*** TODO some sort of markdown/wikiformatting/CRLF-><br/> for notes
-*** TODO be able to (re-)associate a recipe with a Brew
-*** TODO use django `get_absolute_url`, `permalink` methods
+*** DONE separate boil_size, batch_size
+    CLOSED: [2010-05-02 Sun 09:54]
 *** focus improvements
 **** TODO profile form after new user creation
 **** /user/{user}
