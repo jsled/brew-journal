@@ -56,7 +56,8 @@
                     <py:otherwise>(style undefined)</py:otherwise>
                   </py:choose>
                   </td></tr>
-                  <tr><th>batch_size</th><td>${recipe.batch_size} ${recipe.get_batch_size_units_display()}</td></tr>
+                  <tr><th>batch size</th><td>${recipe.batch_size} ${recipe.get_batch_size_units_display()}</td></tr>
+                  <tr py:if="recipe.pre_boil_volume"><th>pre-boil volume</th><td>${recipe.pre_boil_volume} ${recipe.get_pre_boil_volume_units_display()}</td></tr>
                   <tr><th>type</th><td>${recipe.get_type_display()}</td></tr>
                   <tr py:if="recipe.notes"><th>notes</th><td>${recipe.notes}</td></tr>
                   <tr py:if="recipe.source_url"><th>source</th><td><a href="${recipe.source_url}">${recipe.source_url}</a></td></tr>
