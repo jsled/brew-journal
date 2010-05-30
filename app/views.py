@@ -233,7 +233,7 @@ def user_index(request, user_name):
 
 
 class UserProfileForm (forms.ModelForm):
-    rototill_dates = forms.BooleanField(help_text='If set, when changing your timezone, any existing Recipe and Brew timestamps will be converted to be in that timezone, as you originally intended.', initial=True)
+    rototill_dates = forms.BooleanField(help_text='If set, when changing your timezone, any existing Recipe and Brew timestamps will be converted to be in that timezone, as you originally intended.', initial=True, required=False)
     first_name = forms.CharField()
     last_name = forms.CharField()
     email = forms.EmailField()
@@ -250,16 +250,16 @@ def rototill_dates(uri_user, old_tz, new_tz):
                'brews_updated': 0}
     for recipe in models.Recipe.objects.filter(author=uri_user):
         if recipe.insert_date:
-            recipe.insert_date = adjust_datetime_to_timezone(recipe.insert_date, new_tz, old_tz)
+            recipe.insert_date = adjust_datetime_to_timezone(recipe.insert_date, new_tz, old_tz).replace(tzinfo=None)
             recipe.save()
             results['recipes_updated'] += 1
     for brew in models.Brew.objects.filter(brewer=uri_user):
         updated = False
         if brew.brew_date:
-            brew.brew_date = adjust_datetime_to_timezone(brew.brew_date, new_tz, old_tz)
+            brew.brew_date = adjust_datetime_to_timezone(brew.brew_date, new_tz, old_tz).replace(tzinfo=None)
             updated = True
         if brew.last_update_date:
-            brew.last_update_date = adjust_datetime_to_timezone(brew.last_update_date, new_tz, old_tz)
+            brew.last_update_date = adjust_datetime_to_timezone(brew.last_update_date, new_tz, old_tz).replace(tzinfo=None)
             updated = True
         if updated:
             brew.save()
@@ -267,10 +267,10 @@ def rototill_dates(uri_user, old_tz, new_tz):
         for step in brew.step_set.all():
             updated = False
             if step.date:
-                step.date = adjust_datetime_to_timezone(step.date, new_tz, old_tz)
+                step.date = adjust_datetime_to_timezone(step.date, new_tz, old_tz).replace(tzinfo=None)
                 updated = True
             if step.entry_date:
-                step.entry_date = adjust_datetime_to_timezone(step.entry_date, new_tz, old_tz)
+                step.entry_date = adjust_datetime_to_timezone(step.entry_date, new_tz, old_tz).replace(tzinfo=None)
                 updated = True
             if updated:
                 step.save()
