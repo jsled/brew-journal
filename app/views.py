@@ -733,9 +733,11 @@ def get_adjunct_choices():
 
 def RecipeForm(user, *args, **kwargs):
     tz = settings.TIME_ZONE
+    init_efficiency = 75
     if user and hasattr(user, 'get_profile'):
         try:
             tz = user.get_profile().timezone
+            init_efficiency = user.get_profile().pref_brewhouse_efficiency
         except models.UserProfile.DoesNotExist:
             pass
 
@@ -745,6 +747,7 @@ def RecipeForm(user, *args, **kwargs):
         name = forms.CharField(widget=forms.TextInput(attrs={'size': 40}))
         source_url = forms.URLField(required=False, widget=forms.TextInput(attrs={'size': 40}))
         insert_date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz), initial=datetime.now())
+        efficiency = forms.IntegerField(initial=init_efficiency, min_value=0, max_value=100)
 
         class Meta:
             model = models.Recipe
@@ -838,27 +841,38 @@ def recipe_new(request):
                                  initial={'name': 'Clone of %s' % (to_clone.name),
                                           'derived_from_recipe': to_clone})
     elif request.method == 'POST':
+        # @factor this should get factored out.
         clone_id = None
         if request.POST.has_key('clone_from_recipe_id') \
            and len(request.POST['clone_from_recipe_id']) > 0:
             clone_id = int(request.POST['clone_from_recipe_id'])
+
         form = RecipeForm(request.user, request.POST)
+
         if clone_id:
             to_clone = models.Recipe.objects.get(pk=int(clone_id))
             form = RecipeForm(request.user, request.POST, instance=to_clone)
+
         if not form.is_valid():
             return HttpResponse(render('recipe/new.html', request=request, std=standard_context(),
                                        clone_from_recipe_id=clone_id,
                                        recipe_form=form,
                                        is_new=True))
+
         new_recipe = form.save(commit=False)
+        
         if request.user.is_authenticated():
             new_recipe.author = request.user
+        else:
+            return HttpResponseBadRequest('only logged in users can create recipes, for now')
+
         if clone_id:
             to_clone = models.Recipe.objects.get(pk=clone_id)
             new_recipe.derived_from_recipe = to_clone
+
         new_recipe.id = None
         new_recipe.save()
+
         if clone_id:
             to_clone = models.Recipe.objects.get(pk=clone_id)
             for type in [models.RecipeGrain, models.RecipeHop, models.RecipeAdjunct, models.RecipeYeast]:
@@ -866,7 +880,9 @@ def recipe_new(request):
                     component.recipe = new_recipe
                     component.id = None
                     component.save()
+
         return HttpResponseRedirect('/recipe/%d/%s' % (new_recipe.id, urllib.quote(new_recipe.name.encode('utf-8'))))
+
     return HttpResponse(render('recipe/new.html', request=request, std=standard_context(),
                                clone_from_recipe_id=clone_id,
                                recipe_form=recipe_form,

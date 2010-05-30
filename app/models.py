@@ -61,8 +61,12 @@ class UserProfile (models.Model):
     user = models.ForeignKey(auth.models.User, unique=True)
 
     pref_brew_type = models.CharField(max_length=1, choices=RecipeTypes, default='a')
+    pref_brewhouse_efficiency = models.PositiveSmallIntegerField(default='75')
+
     pref_make_starter = models.BooleanField(default=False)
+
     pref_secondary_ferm = models.BooleanField(default=False)
+
     pref_dispensing_style = models.CharField(max_length=1, choices=DispenseTypes, default='b')
 
     timezone = TimeZoneField(default='UTC')
@@ -285,6 +289,7 @@ class Recipe (models.Model):
     pre_boil_volume = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
     pre_boil_volume_units = models.CharField(max_length=4, choices=Volume_Units, blank=True, null=True)
     boil_length = models.DecimalField(max_digits=3, decimal_places=0, default=60)
+    efficiency = models.PositiveSmallIntegerField(default='75')
     style = models.ForeignKey(Style, null=True)
     derived_from_recipe = models.ForeignKey('self', null=True, blank=True)
     type = models.CharField(max_length=1, choices=RecipeTypes, default='a')
@@ -1080,7 +1085,6 @@ class RecipeDerivations (object):
     def __init__(self, recipe):
         self._recipe = recipe
 
-    default_efficiency = Decimal('0.75')
 
     def _test_batch_size_deriv(self, reasons):
         has_batch_size = False
@@ -1133,7 +1137,7 @@ class RecipeDerivations (object):
 
     def compute_og(self, efficiency=None):
         '''@return OgDerivation'''
-        default_grain_efficiency = efficiency or RecipeDerivations.default_efficiency
+        default_grain_efficiency = efficiency or (self._recipe.efficiency / Decimal(100))
         batch_gallons = convert_volume(self._recipe.batch_size, self._recipe.batch_size_units, 'gl')
         accum = NumberRange(Decimal('0'),Decimal('0'))
         def convert_to_gravity(val, batch_gallons):

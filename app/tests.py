@@ -12,14 +12,14 @@ import unittest
 from django.contrib import auth
 from django.test.client import Client
 from django.test import TestCase
-from brewjournal.app import models
+from brewjournal.app import models, views
 
 
 class AppTestCase (TestCase):
     fixtures = ['auth', 'grains1', 'grains2', 'grains3', 'hops0', 'hops1', 'yeasts1', 'adjuncts', 'yeast-manufacturers', 'yeasts', 'styles']
 
     def create_recipe(self, name, date, style, hops, grains):
-        res = self.client.post('/recipe/new/', {'name': name, 'insert_date': date, 'batch_size': 5, 'batch_size_units': 'gl', 'boil_length': 60, 'style': style, 'type': 'a'})
+        res = self.client.post('/recipe/new/', {'name': name, 'insert_date': date, 'batch_size': 5, 'batch_size_units': 'gl', 'boil_length': 60, 'efficiency': 66, 'style': style, 'type': 'a'})
         self.assertEquals(302, res.status_code, res)
         recipe_url = res['Location']
         recipe_base_url = '/'.join(recipe_url.split('/')[3:-1])
@@ -58,7 +58,10 @@ class BasicLoginTest (AppTestCase):
         res = self.client.post('/', {'username': 'jsled', 'password': 's3kr1t', 'sub': 'login'})
         self.assertRedirects(res, '/user/jsled/')
 
-        
+    def testDjangoLogin(self):
+        self.assertTrue(self.client.login(username='jsled', password='s3kr1t'))
+
+
 class NotLoggedInMeansNoActions (TestCase):
     fixtures = ['auth']
 
@@ -71,8 +74,10 @@ class NotLoggedInMeansNoActions (TestCase):
 class HopWithoutBoilTime (AppTestCase):
     def test(self):
         app = self.client
-        app.login(username='jsled', password='s3kr1t')
-        res = app.post('/recipe/new/', {'name': 'test', 'insert_date': '2008-08-31 20:48', 'batch_size': 5, 'boil_length': 60, 'batch_size_units': 'gl', 'style': 1, 'type': 'a'})
+        self.assertTrue(app.login(username='jsled', password='s3kr1t'))
+        res = app.post('/recipe/new/', {'name': 'test', 'insert_date': '2008-08-31 20:48', 'batch_size': 5, 'batch_size_units': 'gl',
+                                        'boil_length': 60, 'efficiency': 66, 'style': 1, 'type': 'a'})
+        self.assertEqual(302, res.status_code, '%d: %s' % (res.status_code,res.content))
         new_recipe_url = res['Location']
         base_recipe_url = '/'.join(new_recipe_url.split('/')[3:-1])
         hop_post_url = '/%s/' % (base_recipe_url)
@@ -356,6 +361,21 @@ def fake_datetime(timestamp):
     return MockDatetime
 
 
+class RecipeFormTest (AppTestCase):
+    
+    def testEfficiency(self):
+        user = auth.models.User.objects.get(username='jsled')
+        profile = user.get_profile()
+        profile.pref_brewhouse_efficiency = 20
+        profile.save()
+
+        style = models.Style.objects.get(id=1)
+        recipe = models.Recipe(author=user, name='test', batch_size=5, batch_size_units='gl', efficiency=30, style=style)
+
+        form = views.RecipeForm(user, None, instance=recipe)
+        inputHtml = str(form['efficiency'])
+        self.assertTrue(inputHtml.rfind('value="30"') != -1)
+
 class NextStepsTest (TestCase):
     def testBasic(self):
         profile = MockProfile()
@@ -481,7 +501,7 @@ class TestTimezoneAdjustments (AppTestCase):
         # plus 30 minutes
         new_time = date_pacific + datetime.timedelta(seconds = 30 * MINUTE_SECONDS)
         new_time_str = new_time.strftime(pattern)
-        res3 = self.client.post(recipe_url, {'name':'test', 'batch_size': '5', 'batch_size_units': 'gl', 'boil_length': 60, 'style': 1, 'type': 'a', 'insert_date': new_time_str})
+        res3 = self.client.post(recipe_url, {'name':'test', 'batch_size': '5', 'batch_size_units': 'gl', 'boil_length': 60, 'efficiency': 75, 'style': 1, 'type': 'a', 'insert_date': new_time_str})
         self.assertEquals(302, res3.status_code)
         res3 = self.client.get(recipe_url)
         updated_pacific_str = date_pattern.search(res3.content).group(1)
@@ -566,6 +586,7 @@ class FutureStepsTest (AppTestCase):
         self.assertTrue(brews.count() == 0)
         # -with
         datetime.datetime = saved_datetime
+
 
 class StepTimeShiftTest (AppTestCase):
 
@@ -766,7 +787,7 @@ class RecipeDerivationsTest (TestCase):
     def testEstimatedOg(self):
         twoRow = models.Grain.objects.get(name__exact='Pale Malt (2-row)')
         grains = [models.RecipeGrain(grain=twoRow, amount_value=decimal.Decimal('10'), amount_units='lb')]
-        recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
+        recipe = Mock(batch_size=5, batch_size_units='gl', efficiency=75, recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
         self.assertEquals([], no_reasons)
@@ -786,7 +807,7 @@ class RecipeDerivationsTest (TestCase):
                   models.RecipeGrain(grain=roasted_barley, amount_value=dec(8), amount_units='oz'),
                   models.RecipeGrain(grain=dark_extract, amount_value=dec(7), amount_units='lb'),
                   models.RecipeGrain(grain=amber_extract, amount_value=dec(1), amount_units='lb')]
-        recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
+        recipe = Mock(batch_size=5, batch_size_units='gl', efficiency=75, recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
         self.assertEquals([], no_reasons)
@@ -805,7 +826,7 @@ class RecipeDerivationsTest (TestCase):
                   models.RecipeGrain(grain=light_dme, amount_value=dec(4.5), amount_units='lb'),
                   models.RecipeGrain(grain=cane, amount_value=dec(4), amount_units='oz'),
                   models.RecipeGrain(grain=glucose, amount_value=dec(2), amount_units='oz')]
-        recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
+        recipe = Mock(batch_size=5, batch_size_units='gl', efficiency=75, recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         no_reasons = deriv.can_not_derive_og()
         self.assertEquals([], no_reasons)
@@ -841,7 +862,7 @@ class RecipeDerivationsTest (TestCase):
                   models.RecipeGrain(grain=crystal_120, amount_value=dec(6), amount_units='oz'),
                   models.RecipeGrain(grain=barley, amount_value=dec(6), amount_units='oz')]
         hops = [models.RecipeHop(hop=goldings, amount_value=dec(1.25), amount_units='oz', boil_time=60)]
-        recipe = Mock(batch_size=5, batch_size_units='gl',
+        recipe = Mock(batch_size=5, batch_size_units='gl', efficiency=75,
                       recipegrain_set=FkSet(grains),
                       recipehop_set=FkSet(hops))
         deriv = models.RecipeDerivations(recipe)
@@ -876,7 +897,7 @@ class RecipeDerivationsTest (TestCase):
         apple = models.Grain.objects.get(name__startswith='Apple')
         grains = [models.RecipeGrain(grain=apple, amount_value=dec('5'), amount_units='gl')]
         hops = []
-        recipe = Mock(batch_size=5, batch_size_units='gl',
+        recipe = Mock(batch_size=5, batch_size_units='gl', efficiency=75,
                       recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         no_og_reasons = deriv.can_not_derive_og()
@@ -891,7 +912,7 @@ class RecipeDerivationsTest (TestCase):
         grains = [models.RecipeGrain(grain=apple, amount_value=dec('5'), amount_units='gl', by_volume_potential_override=dec('1040')),
                   models.RecipeGrain(grain=two_row, amount_value=dec('5'), amount_units='lb', by_weight_potential_override=dec('1016'))]
         hops = []
-        recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
+        recipe = Mock(batch_size=5, batch_size_units='gl', efficiency=75, recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         self.assertEquals([], deriv.can_not_derive_og())
         og = deriv.compute_og()
@@ -902,7 +923,7 @@ class RecipeDerivationsTest (TestCase):
         apple = models.Grain.objects.get(name__startswith='Apple')
         grains = [models.RecipeGrain(grain=apple, amount_value=dec('2.5'), amount_units='gl')]
         hops = []
-        recipe = Mock(batch_size=5, batch_size_units='gl', recipegrain_set=FkSet(grains))
+        recipe = Mock(batch_size=5, batch_size_units='gl', efficiency=75, recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         self.assertEquals([],deriv.can_not_derive_og())
         og = deriv.compute_og()
@@ -913,7 +934,7 @@ class RecipeDerivationsTest (TestCase):
         '''Pretty common starter ratios, http://www.howtobrew.com/section1/chapter6-5.html'''
         dme = models.Grain.objects.get(name='Dry Malt Extract: Light')
         grains = [models.RecipeGrain(grain=dme, amount_value=dec('0.5'), amount_units='c')]
-        recipe = Mock(batch_size=dec('0.5'), batch_size_units='q', recipegrain_set=FkSet(grains))
+        recipe = Mock(batch_size=dec('0.5'), batch_size_units='q', efficiency=75, recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         og = deriv.compute_og()
         self.assertAlmostEquals(dec('1.042'), og.average, 3)
@@ -922,7 +943,7 @@ class RecipeDerivationsTest (TestCase):
         from decimal import Decimal as dec
         dme = models.Grain.objects.get(name='Dry Malt Extract: Light')
         grains = [models.RecipeGrain(grain=dme, amount_value=dec(80), amount_units='gr')]
-        recipe = Mock(batch_size=dec(800), batch_size_units='ml', recipegrain_set=FkSet(grains))
+        recipe = Mock(batch_size=dec(800), batch_size_units='ml', efficiency=75, recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         og = deriv.compute_og()
         self.assertAlmostEquals(dec('1.035'), og.average, 3)
@@ -931,7 +952,7 @@ class RecipeDerivationsTest (TestCase):
         from decimal import Decimal as dec
         honey = models.Grain.objects.get(name='Honey')
         grains = [models.RecipeGrain(grain=honey, amount_value=dec(1), amount_units='gl')]
-        recipe = Mock(batch_size=dec(5), batch_size_units='gl', recipegrain_set=FkSet(grains))
+        recipe = Mock(batch_size=dec(5), batch_size_units='gl', efficiency=75, recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         og = deriv.compute_og()
         self.assertAlmostEquals(dec('1.106'), og.average, 3);
