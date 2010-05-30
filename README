@@ -13,7 +13,7 @@ Setup
 
 - get these sources, as you seem to have done.
 
-- get >=django-1.0.  symlink 'django' in the top-level to the 'django' subdir
+- get >=django-1.2.1.  symlink 'django' in the top-level to the 'django' subdir
   of a checkout/distribution, or install django systemwide.
 
 - get >=genshi-0.4.  symlink 'genshi' in the top-level to the 'genshi' subdir
@@ -28,7 +28,7 @@ Setup
   jsled@phoenix [~/stuff/proj/brewjournal]$ ls -l 
   total 336
   drwxr-xr-x 6 jsled users   4096 2009-03-18 00:20 app
-  lrwxrwxrwx 1 jsled users     26 2008-12-27 18:53 django -> ../lib/django-1.0.2/django
+  lrwxrwxrwx 1 jsled users     26 2008-12-27 18:53 django -> ../lib/django-1.2.1/django
   drwxr-xr-x 2 jsled users   4096 2008-07-27 18:53 fixtures
   lrwxrwxrwx 1 jsled users     27 2008-12-27 18:53 genshi -> ../lib/genshi-0.5.1/genshi/
   -rw-r--r-- 1 jsled users      0 2008-06-05 22:24 __init__.py

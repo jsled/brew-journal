@@ -414,7 +414,6 @@ def StepForm(user, *args, **kwargs):
             pass
     class _StepForm (forms.ModelForm):
         notes = forms.CharField(widget=forms.Textarea(), required=False)
-        brew = forms.IntegerField(widget=forms.HiddenInput)
         date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
         shift_step_times = forms.BooleanField(required=False, initial=True, label='Time Shift',
                                               help_text='Shift subsequent steps by updated step time difference (within reason).''')

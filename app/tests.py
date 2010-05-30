@@ -38,8 +38,9 @@ class AppTestCase (TestCase):
         brew_res = self.client.post('/user/%s/brew/new/' % (user), {'recipe_id': recipe_id, 'brew_date': date})
         self.assertEquals(302, brew_res.status_code)
         brew_url = '/'.join(brew_res['Location'].split('/')[3:])
+        brew_id = int(brew_url.split('/')[-1])
         for fields in steps:
-            fields.setdefault('brew', -1)
+            fields.setdefault('brew', brew_id)
             post_url = '/%s/' % (brew_url)
             res = self.client.post(post_url, fields)
             self.assertEquals(302, res.status_code, 'posting to %s %s: %s' % (post_url,fields,res))
