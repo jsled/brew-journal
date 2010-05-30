@@ -107,6 +107,40 @@
 </table>
 <br />
 
+<h1>authored recipes</h1>
+<py:if test="std.auth_user_is_user(request, user)">
+  <a href="/recipe/new/">${action('create new recipe')}</a><br /><br />
+</py:if>
+<table class="wide">
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>style (type)</th>
+      <th>date</th>
+      <th py:if="request.user.is_authenticated()" width="40%">actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr py:if="not authored_recipes">
+      <td colspan="4"><em>no recipes authored</em></td>
+    </tr>
+    <tr py:for="recipe in authored_recipes">
+      <td>${recipe_a(recipe)}</td>
+      <td>
+        <py:choose test="">
+          <py:when test="recipe.style">${recipe.style.name}</py:when>
+          <py:otherwise><em>unknown style</em></py:otherwise>
+        </py:choose> (${recipe.get_type_display()})</td>
+      <td>${std.fmt.date.ymd(recipe.insert_date, user)}</td>
+      <td py:if="request.user.is_authenticated()"><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">${action('clone')}</a>
+        <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">${action('star')}</a>
+        <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">${action('brew')}</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br />
+
 <h1>starred recipes</h1>
 <table class="wide">
   <thead>
@@ -139,39 +173,6 @@
       <td>${std.fmt.date.best(starred.when, user)}</td>
       <td py:if="request.user.is_authenticated()"><a href="/recipe/new/?clone_from_recipe_id=${starred.recipe.id}">${action('clone')}</a>
           &nbsp;<a href="/user/${request.user.username}/brew/new/?recipe_id=${starred.recipe.id}">${action('brew')}</a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<h1>authored recipes</h1>
-<py:if test="std.auth_user_is_user(request, user)">
-  <a href="/recipe/new/">${action('create new recipe')}</a><br /><br />
-</py:if>
-<table class="wide">
-  <thead>
-    <tr>
-      <th>name</th>
-      <th>style (type)</th>
-      <th>date</th>
-      <th py:if="request.user.is_authenticated()" width="40%">actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr py:if="not authored_recipes">
-      <td colspan="4"><em>no recipes authored</em></td>
-    </tr>
-    <tr py:for="recipe in authored_recipes">
-      <td>${recipe_a(recipe)}</td>
-      <td>
-        <py:choose test="">
-          <py:when test="recipe.style">${recipe.style.name}</py:when>
-          <py:otherwise><em>unknown style</em></py:otherwise>
-        </py:choose> (${recipe.get_type_display()})</td>
-      <td>${std.fmt.date.ymd(recipe.insert_date, user)}</td>
-      <td py:if="request.user.is_authenticated()"><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">${action('clone')}</a>
-        <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">${action('star')}</a>
-        <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">${action('brew')}</a>
       </td>
     </tr>
   </tbody>
