@@ -437,11 +437,15 @@ class Brew (models.Model):
     class Meta:
         ordering = ['brew_date', 'last_update_date']
 
-    def shift_steps(self, orig_step, updated_step, threshold=None):
+    def shift_steps(self, updated_step, threshold=None):
+        try:
+            orig_step = Step.objects.get(id=updated_step.id)
+        except Step.DoesNotExist:
+            # no original object?  nothing to delta against.
+            return
         if not threshold:
             threshold = datetime.timedelta(hours=6)
-        if not orig_step \
-           or not updated_step.date or not orig_step.date:
+        if not updated_step.date or not orig_step.date:
             # we need dates on both sides to function
             return
         delta_time = updated_step.date - orig_step.date

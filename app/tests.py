@@ -621,7 +621,8 @@ class StepTimeShiftTest (AppTestCase):
     def testBasicShift(self):
         dough2 = models.Step.objects.get(pk=self.dough.id)
         dough2.date = self.now_plus_10
-        self.brew.shift_steps(self.dough, dough2)
+        self.brew.shift_steps(#self.dough,
+            dough2)
 
         for step in self.brew.step_set.all():
             if step.type == 'strike':
@@ -642,7 +643,8 @@ class StepTimeShiftTest (AppTestCase):
 
         strike2 = models.Step.objects.get(pk=self.strike.id)
         strike2.date = self.now_plus_20
-        self.brew.shift_steps(self.strike, strike2)
+        self.brew.shift_steps(#self.strike,
+            strike2)
 
         upd_keg = self.brew.step_set.get(type='keg')
         self.assertEqual(two_weeks_away, upd_keg.date)

@@ -431,7 +431,7 @@ def brew_post(request, uri_user, brew, orig_step):
         step_form.cleaned_data['brew'] = brew
         updated_step = step_form.save(commit=False)
         if step_form.cleaned_data['shift_step_times']:
-            brew.shift_steps(orig_step, updated_step)
+            brew.shift_steps(updated_step)
         updated_step.save()
         brew.update_from_steps()
         brew.save()
