@@ -64,6 +64,7 @@ TABLE.form
 #hd
 {
   border-bottom: solid thin green;
+  margin-bottom: 1em;
 }
 
 .logotext
@@ -74,14 +75,9 @@ TABLE.form
 
 #hd .logotext
 {
-  font-size: xx-large;
+  font-size: x-large;
   text-decoration: none;
 }
-
-P {
-  width: 70%;
-}
-
 
 PRE.recipe
 {

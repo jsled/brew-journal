@@ -6,25 +6,23 @@
     <xi:include href="../../_incl/head.html"/>
   </head>
 <body>
-    <div id="doc3">
+    <div class="container_16">
+
         <xi:include href="../../_incl/body-top-bar.html"/>
-        <div id="bd">
-            <div id="yui-main">
-                <div class="yui-b">
-  <h1>new brew<py:if test="recipe"> of "${recipe.name}"</py:if></h1>
-  <form method="post">
-    <table class="form">
-        <tr py:if="not recipe">
-            <th>Name:</th>
-            <td><input type="text" name="brew_name"/></td>
-        </tr>
-        <div py:strip="True" py:content="std.Markup(brew_form.as_table())"/>
-    </table>
-    <input py:if="recipe" type="hidden" name="recipe_id" value="${recipe.id}"/>
-    <input type="submit" value="create"/>
-  </form>
-                </div>
-            </div>
+
+        <div class="grid_16">
+            <h1>new brew<py:if test="recipe"> of "${recipe.name}"</py:if></h1>
+            <form method="post">
+                <table class="form">
+                    <tr py:if="not recipe">
+                        <th>Name:</th>
+                        <td><input type="text" name="brew_name"/></td>
+                    </tr>
+                    <div py:strip="True" py:content="std.Markup(brew_form.as_table())"/>
+                </table>
+                <input py:if="recipe" type="hidden" name="recipe_id" value="${recipe.id}"/>
+                <input type="submit" value="create"/>
+            </form>
         </div>
     </div>
 </body>

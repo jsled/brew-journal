@@ -6,21 +6,19 @@
   <xi:include href="../_incl/head.html"/>
 </head>
 <body>
-    <div id="doc3">
-        <xi:include href="../_incl/body-top-bar.html"/>
-        <div id="bd">
-            <div id="yui-main">
-<div class="yui-g">
-<h1>new recipe</h1>
+    <div class="container_16">
 
-<form method="post" action="/recipe/new/">
-  <table class="form" width="70%" py:content="std.Markup(recipe_form.as_table())"/>
-  <input py:if="clone_from_recipe_id" type="hidden" name="clone_from_recipe_id" value="${clone_from_recipe_id}"/>
-  <input type="submit" name="submit" value="create"/>
-</form>
-</div>
-            </div>
-        </div>
-    </div>
+        <xi:include href="../_incl/body-top-bar.html"/>
+
+        <div class="grid_16">
+             <h1>new recipe</h1>
+             
+             <form method="post" action="/recipe/new/">
+                 <table class="form" width="70%" py:content="std.Markup(recipe_form.as_table())"/>
+                 <input py:if="clone_from_recipe_id" type="hidden" name="clone_from_recipe_id" value="${clone_from_recipe_id}"/>
+                 <input type="submit" name="submit" value="create"/>
+             </form>
+         </div>
+     </div>
 </body>
 </html>

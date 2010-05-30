@@ -13,23 +13,25 @@
   </script>
 </head>
 <body>
-    <div id="doc3">
+    <div class="container_16">
+
         <xi:include href="../../_incl/body-top-bar.html"/>
 
-        <div id="bd">
-            <div id="yui-main">
-                <div class="yui-b">
+        <div class="grid_16">
 
-  <h1 py:if="brew.recipe">brew of "${brew.recipe.name}"</h1>
-  <h1 py:if="not brew.recipe">un-named brew</h1>
-
+            <h1 py:if="brew.recipe">brew of "${brew.recipe.name}"</h1>
+            <h1 py:if="not brew.recipe">un-named brew</h1>
+        </div>
+        <div class="clear"></div>
   <div id="details">
-      <div>
+      <div class="grid_16">
           <span py:if="brew.brew_date">brewed on ${std.fmt.date.ymdhm(brew.brew_date, user)} </span>
           by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
           <span py:if="brew.recipe">from recipe ${recipe_a(brew.recipe)}</span>
       </div>
-      <div py:if="brew.recipe" class="recipe-style-summary">
+      <div class="clear"></div>
+
+      <div py:if="brew.recipe" class="recipe-style-summary grid_16">
           <py:if test="brew.recipe.batch_size">
               ${brew.recipe.batch_size}${brew.recipe.batch_size_units}
           </py:if>
@@ -51,12 +53,12 @@
           </py:if>
       </div>
 
-      <div py:if="brew.notes and len(brew.notes) > 0">
+      <div py:if="brew.notes and len(brew.notes) > 0" class="grid_16">
           <h2>notes</h2>
           <div class="notes"><pre class="notes">${brew.notes}</pre></div>
       </div>
 
-      <div> <!-- derivations -->
+      <div class="grid_16"> <!-- derivations -->
           efficiency:
           <py:choose>
               <span py:when="deriv.can_not_derive_efficiency()"
@@ -82,7 +84,7 @@
           </py:choose>
       </div>
 
-      <div id="detailsEdit" py:if="std.auth_user_is_user(request, user)">
+      <div id="detailsEdit" py:if="std.auth_user_is_user(request, user)" class="grid_16">
           <div>
               <a py:if="std.auth_user_is_user(request, user)" href="#" id="first-focused" onClick="$('#detailsEdit').children().toggle(); return false;">edit brew details...</a>
           </div>
@@ -97,6 +99,7 @@
       </div>
   </div>
 
+  <div class="grid_16">
   <h2>journal</h2>
 
   <?python
@@ -132,10 +135,10 @@
         <tr py:for="step in future_steps">${step_row(std,user,brew,step)}</tr>
     </tbody>
   </table>
+  </div>
+  <div class="clear"></div>
 
-  <br />
-
-  <div py:if="step_form and std.auth_user_is_user(request, user)" id="add-step">
+  <div py:if="step_form and std.auth_user_is_user(request, user)" id="add-step" class="grid_16">
     <div py:attrs="{'style': 'display:' + ['inherit', 'none'][step_edit]}">
       <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;">update step &darr;</a>
     </div>
@@ -149,8 +152,9 @@
         </form>
     </div>
   </div>
-  <br/>
-  <div py:if="mash_sparge_calc_form" id="mash-sparge-calc-panel"
+  <div class="clear"></div>
+
+  <div py:if="mash_sparge_calc_form" id="mash-sparge-calc-panel" class="grid_16"
        py:with="expand=(mash_sparge_calc_form.is_bound and not mash_sparge_calc_form.is_valid())
                 or request.GET.has_key('mash_sparge_recalc')
                 ; calc=mash_sparge_calc_form.calc">
@@ -194,8 +198,8 @@
                       </td>
                   </tr>
               </table>
-          </form><br />
-          <div py:if="mash_sparge_steps">
+          </form>
+          <div py:if="mash_sparge_steps" class="grid_16">
               The following steps would be created:
               <table width="100%">
                   <thead>
@@ -218,9 +222,6 @@
           </div>
       </div>
   </div>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 </body>
 </html>

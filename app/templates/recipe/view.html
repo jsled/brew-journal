@@ -30,11 +30,12 @@
     </style>
   </head>
   <body py:with="table_width='100%'">
-    <div id="doc3">
+
+    <div class="container_16">
+
       <xi:include href="../_incl/body-top-bar.html"/>
-      <div id="bd">
-        <div id="yui-main">
-          <div class="yui-b">
+
+      <div class="grid_16">
 
             <h1 py:if="recipe">recipe "${recipe.name}"</h1>
 
@@ -43,55 +44,58 @@
               | <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">star »</a>
               | <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">brew »</a>
             </div>
+      </div>
 
-            <!-- overview -->
-            <div id="overview" style="margin-bottom: 10px">
-              <div py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}">
-                <table width="${table_width}">
-                  <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
-                  <tr py:if="recipe.author"><th>input by</th><td><a href="/user/${recipe.author.username}/">${recipe.author.username}</a></td></tr>
-                  <tr><th>style</th><td>
-                  <py:choose test="">
-                    <py:when test="recipe.style">${recipe.style.name} (${recipe.style.bjcp_code})</py:when>
-                    <py:otherwise>(style undefined)</py:otherwise>
-                  </py:choose>
-                  </td></tr>
-                  <tr><th>batch size</th><td>${recipe.batch_size} ${recipe.get_batch_size_units_display()}</td></tr>
-                  <tr py:if="recipe.pre_boil_volume"><th>pre-boil volume</th><td>${recipe.pre_boil_volume} ${recipe.get_pre_boil_volume_units_display()}</td></tr>
-                  <tr><th>boil length</th><td>${recipe.boil_length} minutes</td></tr>
-                  <tr><th>efficiency</th><td>${recipe.efficiency} %</td></tr>
-                  <tr><th>type</th><td>${recipe.get_type_display()}</td></tr>
-                  <tr py:if="recipe.notes"><th>notes</th><td>${recipe.notes}</td></tr>
-                  <tr py:if="recipe.source_url"><th>source</th><td><a href="${recipe.source_url}">${recipe.source_url}</a></td></tr>
-                </table>
-                <div py:if="std.auth_user_is_user(request, recipe.author)">
-                  <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">edit &uarr;</a>
-                </div>
-              </div>
-              <div py:if="std.auth_user_is_user(request, recipe.author)"
-                   py:attrs="{'style': ['display:none', 'display:inherit'][recipe_form.is_bound and not recipe_form.is_valid()]}">
-                <form method="post" id="overview-form">
-                  <table width="${table_width}" class="form" py:content="std.Markup(recipe_form.as_table())"/>
-                  <input type="submit" value="update"/>
-                <input type="reset" value="cancel" onClick="$('#overview').children().slideToggle(); $('#edit').focus(); return true;" /></form>
-              </div>
-            </div>
+      <!-- overview -->
+      <div id="overview" class="grid_8" style="margin-bottom: 10px">
+        <div py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}">
+          <table width="${table_width}">
+            <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
+            <tr py:if="recipe.author"><th>input by</th><td><a href="/user/${recipe.author.username}/">${recipe.author.username}</a></td></tr>
+            <tr><th>style</th><td>
+            <py:choose test="">
+              <py:when test="recipe.style">${recipe.style.name} (${recipe.style.bjcp_code})</py:when>
+              <py:otherwise>(style undefined)</py:otherwise>
+            </py:choose>
+            </td></tr>
+            <tr><th>batch size</th><td>${recipe.batch_size} ${recipe.get_batch_size_units_display()}</td></tr>
+            <tr py:if="recipe.pre_boil_volume"><th>pre-boil volume</th><td>${recipe.pre_boil_volume} ${recipe.get_pre_boil_volume_units_display()}</td></tr>
+            <tr><th>boil length</th><td>${recipe.boil_length} minutes</td></tr>
+            <tr><th>efficiency</th><td>${recipe.efficiency} %</td></tr>
+            <tr><th>type</th><td>${recipe.get_type_display()}</td></tr>
+            <tr py:if="recipe.notes"><th>notes</th><td>${recipe.notes}</td></tr>
+            <tr py:if="recipe.source_url"><th>source</th><td><a href="${recipe.source_url}">${recipe.source_url}</a></td></tr>
+          </table>
+          <div py:if="std.auth_user_is_user(request, recipe.author)">
+            <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">edit &uarr;</a>
+          </div>
+        </div>
+        <div py:if="std.auth_user_is_user(request, recipe.author)"
+             py:attrs="{'style': ['display:none', 'display:inherit'][recipe_form.is_bound and not recipe_form.is_valid()]}">
+          <form method="post" id="overview-form">
+            <table width="${table_width}" class="form" py:content="std.Markup(recipe_form.as_table())"/>
+            <input type="submit" value="update"/>
+          <input type="reset" value="cancel" onClick="$('#overview').children().slideToggle(); $('#edit').focus(); return true;" /></form>
+        </div>
+      </div>
 
-            <script type="text/javascript">
-function toggle_row_editor(row_child) {
-    var $$row = $$(row_child).closest('tr:not([class=fake])');
-    var id = $$row.attr('id');
-    var otherId;
-    var match;
-    if (match = /(.*)-editor$$/.exec(id)) {
+      <script type="text/javascript">
+        function toggle_row_editor(row_child) {
+        var $$row = $$(row_child).closest('tr:not([class=fake])');
+        var id = $$row.attr('id');
+        var otherId;
+        var match;
+        if (match = /(.*)-editor$$/.exec(id)) {
         otherId = match[1];
-    } else {
+        } else {
         otherId = id + "-editor";
-    }
-    $$('#' + id).toggle();
-    $$('#' + otherId).toggle();
-}
-            </script>
+        }
+        $$('#' + id).toggle();
+        $$('#' + otherId).toggle();
+        }
+      </script>
+
+      <div class="clear"></div>
 
             <py:def function="editable_list(items, type_string, display_fn, edit_fn)">
               <py:for each="item,form in items"
@@ -148,6 +152,7 @@ function toggle_row_editor(row_child) {
             </py:def>
 
             <!-- grains -->
+            <div class="grid_16">
             <table width="${table_width}">
               <tr>
                 <th>grain</th>
@@ -189,8 +194,10 @@ function toggle_row_editor(row_child) {
               ${editable_list(recipe_grains, 'grain', grain_display, grain_edit)}
 
             </table>
+            </div>
 
             <!-- hops -->
+            <div class="grid_16">
             <table width="${table_width}">
               <tr>
                 <th>hop</th>
@@ -259,8 +266,10 @@ $$('select[name=usage_type]').change(function(evt) {
     }
 });
                   </script>
+            </div>
 
             <!-- adjuncts -->
+            <div class="grid_16">
             <table width="${table_width}">
               <tr>
                 <th>adjunct</th>
@@ -285,8 +294,10 @@ $$('select[name=usage_type]').change(function(evt) {
               ${editable_list(recipe_adjuncts, 'adjunct', adjunct_display, adjunct_edit)}
 
             </table>
+            </div>
               
             <!-- yeast -->
+            <div class="grid_16">
             <table width="${table_width}">
               <tr>
                 <th>yeast</th>
@@ -305,11 +316,13 @@ $$('select[name=usage_type]').change(function(evt) {
               ${editable_list(recipe_yeasts, 'yeast', yeast_display, yeast_edit)}
 
             </table>
+            </div>
 
             <py:if test="deriv is not None">
+              <div class="grid_4">
               <h1>derivations</h1>
 
-              <table class="recipe_derivations" width="25%">
+              <table class="recipe_derivations" width="100%">
                 <tr>
                   <td colspan="2" class="space">&nbsp;</td>
                   <th colspan="3">Original gravity</th>
@@ -408,38 +421,36 @@ $$('select[name=usage_type]').change(function(evt) {
                   </py:if>
                 </py:with>
               </table>
+              </div>
+              <div class="clear"></div>
 
-              <br />
-
-              <table width="25%">
-                <tr>
-                  <th>SRM</th>
-                  <td>
-                    <py:choose py:with="no_srm_reasons=deriv.can_not_derive_srm()">
-                      <py:when test="no_srm_reasons">
-                        <div id="why_not_srm">
-                          <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(why not?)</a></div>
-                          <div style="display:none">
-                            <py:for each="reason in no_srm_reasons">
-                              ${reason}<br />
-                            </py:for>
-                            <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(hide)</a>
+              <div class="grid_8">
+                <table width="25%">
+                  <tr>
+                    <th>SRM</th>
+                    <td>
+                      <py:choose py:with="no_srm_reasons=deriv.can_not_derive_srm()">
+                        <py:when test="no_srm_reasons">
+                          <div id="why_not_srm">
+                            <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(why not?)</a></div>
+                            <div style="display:none">
+                              <py:for each="reason in no_srm_reasons">
+                                ${reason}<br />
+                              </py:for>
+                              <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(hide)</a>
+                            </div>
                           </div>
-                        </div>
-                      </py:when>
-                      <py:otherwise py:with="srm=deriv.compute_srm()">
-                        ${'%2.0f' % (srm.average)}
-                      </py:otherwise>
-                    </py:choose>
-                  </td>
-                </tr>
-              </table>
+                        </py:when>
+                        <py:otherwise py:with="srm=deriv.compute_srm()">
+                          ${'%2.0f' % (srm.average)}
+                        </py:otherwise>
+                      </py:choose>
+                    </td>
+                  </tr>
+                </table>
+              </div>
 
             </py:if>
-
-          </div> <!-- yui-b -->
-        </div> <!-- yui-main -->
-      </div> <!-- bd -->
-    </div> <!-- doc3 -->
+    </div>
   </body>
 </html>

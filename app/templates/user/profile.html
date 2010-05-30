@@ -6,23 +6,21 @@
   <xi:include href="../_incl/head.html"/>
 </head>
 <body>
-    <div id="doc3">
+    <div class="container_16">
+
         <xi:include href="../_incl/body-top-bar.html"/>
-        <div id="bd">
-<div id="yui-main">
-<div class="yui-b">
 
-  <h1>${user.username} profile</h1>
-  <div py:if="not std.auth_user_is_user(request, user)">
-      <!-- @fixme: public details about user... -->
-  </div>
-  <form py:if="std.auth_user_is_user(request, user)" method="post">
-      <table class="form" py:content="std.Markup(profile_form.as_table())"/>
-      <input type="submit" value="update"/>
-  </form>
+        <div class="grid_16">
 
-</div>
-</div>
+            <h1>${user.username} profile</h1>
+            <div py:if="not std.auth_user_is_user(request, user)">
+                <!-- @fixme: public details about user... -->
+            </div>
+            <form py:if="std.auth_user_is_user(request, user)" method="post">
+                <table class="form" py:content="std.Markup(profile_form.as_table())"/>
+                <input type="submit" value="update"/>
+            </form>
+            
         </div>
     </div>
 </body>

@@ -7,63 +7,60 @@
     <title>mash/sparge water calculator | brew-journal</title>
     <xi:include href="../_incl/head.html"/>
   </head>
-  <body style="text-align: left">
-    <div id="doc3">
+  <body>
+    <div class="container_16">
+
       <xi:include href="../_incl/body-top-bar.html"/>
 
-      <div id="bd">
-        <div id="yui-main">
-          <div class="yui-b">
+      <div class="grid_10 prefix_2 suffix_4">
 
-            <br />
+        <p style="text-align: justify">
+          Re-implemented from the great details of the <a
+          href="http://brew365.com/mash_sparge_water_calculator.php">Brew
+          365 Water Calculator</a>.  Note that a Brew in brew-journal has
+          this calculator available, getting grain and volume details
+          from your recipe, and with the ability to create all the
+          journal Steps based on your mash/sparge strategy.
+        </p>
 
-            <p>
-              Re-implemented from the great details of the <a
-              href="http://brew365.com/mash_sparge_water_calculator.php">Brew
-              365 Water Calculator</a>.  Note that a Brew in brew-journal has
-              this calculator available, getting grain and volume details
-              from your recipe, and with the ability to create all the
-              journal Steps based on your mash/sparge strategy.
-            </p>
-
-            <br />
-
-      <form method="GET">
+      </div>
+      <div class="clear"></div>
+      <div class="grid_16">
+        <form method="GET">
           <table width="50%">
 
-              ${std.Markup(form.as_table())}
+            ${std.Markup(form.as_table())}
 
-              <tr>
-                  <td colspan="2">
-                      <input type="submit" value="re-calculate"/>
-                  </td>
-              </tr>
+            <tr>
+              <td colspan="2">
+                <input type="submit" value="re-calculate"/>
+              </td>
+            </tr>
 
-              <tr>
-                  <th>Mash Volume (gl)</th>
-                  <td>${'%0.2f' % (calc.mash_volume)}</td>
-              </tr>
-              <tr>
-                  <th>Strike Temp (°F)</th>
-                  <td>${'%0.1f' % (calc.strike_temp)}</td>
-              </tr>
-              <tr>
-                  <th>Sparge Volume (gl)</th>
-                  <td>${'%0.2f' % (calc.sparge_volume)}</td>
-              </tr>
-              <tr>
-                  <th>Total Volume (gl)</th>
-                  <td>${'%0.2f' % (calc.total_volume)}</td>
-              </tr>
-              <tr>
-                  <th>Collected/Pre-Boil (gl)</th>
-                  <td>${'%0.2f' % (calc.collected_volume)}</td>
-              </tr>
+            <tr>
+              <th>Mash Volume (gl)</th>
+              <td>${'%0.2f' % (calc.mash_volume)}</td>
+            </tr>
+            <tr>
+              <th>Strike Temp (°F)</th>
+              <td>${'%0.1f' % (calc.strike_temp)}</td>
+            </tr>
+            <tr>
+              <th>Sparge Volume (gl)</th>
+              <td>${'%0.2f' % (calc.sparge_volume)}</td>
+            </tr>
+            <tr>
+              <th>Total Volume (gl)</th>
+              <td>${'%0.2f' % (calc.total_volume)}</td>
+            </tr>
+            <tr>
+              <th>Collected/Pre-Boil (gl)</th>
+              <td>${'%0.2f' % (calc.collected_volume)}</td>
+            </tr>
           </table>
-      </form>
-          </div>
-        </div>
+        </form>
       </div>
+
     </div>
   </body>
 </html>
