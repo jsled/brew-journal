@@ -217,6 +217,8 @@ $(function() {
   </div>
   <div class="clear"></div>
 
+  <br/>
+
   <div py:if="mash_sparge_calc_form" id="mash-sparge-calc-panel" class="grid_16"
        py:with="expand=(mash_sparge_calc_form.is_bound and not mash_sparge_calc_form.is_valid())
                        or request.GET.has_key('mash_sparge_recalc')
@@ -232,9 +234,7 @@ $(function() {
 
               <py:def function="mash_sparge_form_actions">
                   <div class="grid_4">
-                      <input type="submit" name="action" value="recalc"/>
-                  </div>
-                  <div class="grid_4">
+                      <input type="submit" name="action" value="recalculate"/>
                       <input type="reset" value="cancel" onClick="window.location.search = '';"/>
                   </div>
               </py:def>
