@@ -51,6 +51,21 @@ Setup
 
 - run $(./manage.py runserver); hit <http://localhost:8000/> in your browser.
 
+Selenium
+--------
+
+Get selenium-RC (1.0.3) from http://seleniumhq.org/.
+
+Running the selenium tests is both manual and a bit hacky…
+
+  $ java -jar selenium-server-1.0.3.jar &
+  $ ./manage.py testserver &
+  $ ./manage.py test app.SeleniumTests._testHappyPath
+
+We start the django testserver, but then the first time we run the test, it
+will seek to destroy and recreate the test DB underneath the still-running
+test server.  Thankfully, this seems to work fine; it is quite lame. :p
+
 TODO
 ----
 

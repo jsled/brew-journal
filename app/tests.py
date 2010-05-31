@@ -979,3 +979,105 @@ class MashSpargeWaterCalcTest (TestCase):
         self.assertAlmostEquals(Decimal('4.375'), calc.mash_volume, 2)
         self.assertAlmostEquals(Decimal('4.80'), calc.sparge_volume, 2)
         self.assertAlmostEquals(Decimal('169.4'), calc.strike_temp, 1)
+
+
+class SeleniumTest (AppTestCase):
+
+    fixtures = ['grains1', 'grains2', 'grains3', 'hops0', 'hops1', 'yeasts1', 'adjuncts', 'yeast-manufacturers', 'yeasts', 'styles']
+
+    def setUp(self):
+        from selenium import selenium
+        firefox_path = '/usr/lib64/mozilla-firefox/firefox'
+        self.selenium = selenium("localhost", 4444, "*firefox %s" % (firefox_path), "http://127.0.0.1:8000/")
+        self.selenium.start()
+
+    def tearDown(self):
+        # @fixme: only do this on test failure, ideally
+        # @fixme: name the captured image something like test case name, when we have more than one
+        self.selenium.capture_entire_page_screenshot('/tmp/test.png','')
+        self.selenium.stop()
+
+        # pause for a bit to let the operator forcibly kill the test suite,
+        # leaving the db intact for interaction
+        devel_pause = False
+        if devel_pause:
+            print 'sleeping'
+            import time
+            time.sleep(60)
+
+    def click_wait(self, loc, timeout=None):
+        if not timeout:
+            timeout = 5000
+        self.selenium.click(loc)
+        self.selenium.wait_for_page_to_load(timeout)
+
+    def _testHappyPath(self):
+        sel = self.selenium
+
+        sel.open('/')
+        username,password = 'jsled','s3kr1t'
+        sel.type('name=username', username)
+        sel.type('name=password', password)
+        
+        self.click_wait('//input[@value="login"]')
+        self.assertTrue(sel.is_text_present('invalid username or password'))
+        self.assertTrue(username, sel.get_value('name=username'))
+        # self.assertTrue(password, selenium.getValue('name=password'))
+        
+        sel.type('name=password_again', password[:-1])
+        self.click_wait('//input[@value="create"]')
+        self.assertTrue(sel.is_text_present('Matching passwords required'))
+        
+        sel.type('name=password_again', password)
+        sel.type('name=email', 'josh sled at localhost')
+        self.click_wait('//input[@value="create"]')
+        self.assertTrue(sel.is_text_present('Must have valid email'))
+        
+        sel.type('name=email', 'jsled@asynchronous.org')
+        self.click_wait('//input[@value="create"]')
+
+        self.assertTrue(sel.get_location().endswith('/user/jsled/profile'))
+        self.click_wait('//input[@value="update"]')
+
+        self.assertTrue(sel.is_element_present('//input[@name="first_name"]/../ul[@class="errorlist"]/li'))
+        self.assertTrue(sel.is_element_present('//input[@name="last_name"]/../ul[@class="errorlist"]/li'))
+
+        sel.type('name=first_name', 'Josh')
+        sel.type('name=last_name', 'Sled')
+        self.click_wait('//input[@value="update"]')
+
+        self.assertTrue(sel.get_location().endswith('/user/jsled/'))
+
+        self.click_wait('link=glob:create new recipe*')
+        self.assertTrue(sel.get_location().endswith('/recipe/new/'))
+        self.click_wait('//input[@value="create"]')
+
+        for field in ('name', 'batch_size'):
+            self.assertTrue(sel.is_element_present('//input[@name="%s"]/../ul[@class="errorlist"]/li' % (field)))
+        sel.type('name=name', 'Test Recipe Zero')
+        sel.type('name=batch_size', '5.025')
+        sel.select('name=style', 'label=glob:*(10-A)')
+        self.click_wait('//input[@value="create"]')
+
+        self.assertTrue(sel.is_element_present('//input[@name="batch_size"]/../ul[@class="errorlist"]/li'))
+        self.assertFalse(sel.is_element_present('//input[@name!="batch_size"]/../ul[@class="errorlist"]/li'))
+
+        sel.type('name=batch_size', '5')
+        self.click_wait('//input[@value="create"]')
+
+        self.assertTrue(sel.get_location().endswith('/recipe/1/Test%20Recipe%20Zero'))
+
+        # add more:
+
+        # fail, succeed to add grains
+        # edit grains
+        # delete grains
+        # fail, succeed to add hops
+        # edit hops
+        # delete hops
+        # create brew
+        # play with mash/sparge calc
+        # create steps
+        # adjust step times
+        # create more steps
+
