@@ -3,17 +3,9 @@
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
 
+    <xi:include href="../_incl/taglib.html"/>
+
     <py:def function="mash_sparge_form(form, actions)">
-
-        <py:def function="field(field)">
-            <label>
-                <div class="label">${field.label}</div>
-                <div py:if="field.errors" class="errors">${field.errors}</div>
-                <div class="label-content">${std.Markup(field)}</div>
-            </label>
-        </py:def>
-
-        ${form.errors}
 
       <h2>core</h2>
       
@@ -35,10 +27,6 @@
 
       <div class="grid_4 stylin">
           ${field(form.target_mash_temp)}
-      </div>
-
-      <div class="grid_4 suffix_4 stylin" py:if="hasattr(form, 'mash_length')">
-          ${field(form.mash_length)}
       </div>
 
       <div class="clear"><br/></div>

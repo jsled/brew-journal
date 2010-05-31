@@ -86,7 +86,7 @@
 
       <div id="detailsEdit" py:if="std.auth_user_is_user(request, user)" class="grid_16">
           <div>
-              <a py:if="std.auth_user_is_user(request, user)" href="#" id="first-focused" onClick="$('#detailsEdit').children().toggle(); return false;">edit brew details...</a>
+              <a py:if="std.auth_user_is_user(request, user)" href="#" onClick="$('#detailsEdit').children().toggle(); return false;">edit brew details...</a>
           </div>
           <div style="display:none">
               <h2>edit</h2>
@@ -138,18 +138,81 @@
   </div>
   <div class="clear"></div>
 
-  <div py:if="step_form and std.auth_user_is_user(request, user)" id="add-step" class="grid_16">
-    <div py:attrs="{'style': 'display:' + ['inherit', 'none'][step_edit]}">
-      <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;">add step &darr;</a>
+  <div py:if="step_form and std.auth_user_is_user(request, user)"
+       id="add-step"
+       py:with="expand=step_edit">
+    <div py:attrs="{'style': 'display:' + ['inherit', 'none'][expand]}" class="grid_16">
+      <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;" py:attrs="{'id': ['first-focused', ''][expand]}">add step &darr;</a>
     </div>
-    <div py:attrs="{'style': 'display:' + ['inherit', 'none'][not step_edit]}">
-        <form method="post" id="add-step-form">
-            <table class="form">
-                ${std.Markup(step_form.as_table())}
-            </table>
-            <input type="submit" value="update step"/>
-            <button onClick="window.location = '${brew_url(brew)}'; return false;">cancel</button>
+    <div py:attrs="{'style': 'display:' + ['inherit', 'none'][not expand]}">
+        <form method="POST" id="add-step-form">
+
+            <div class="grid_4">
+                ${field(step_form.type)}
+            </div>
+
+            <div class="clear"/>
+
+            <div class="grid_4">
+                ${field(step_form.date)}
+            </div>
+            <div class="grid_6">
+                ${field(step_form.shift_step_times)}
+            </div>
+
+            <div class="clear"/>
+
+            <div class="grid_4">
+                ${field(step_form.volume, step_form.volume_units)}
+            </div>
+
+            <div class="grid_4">
+                ${field(step_form.temp, step_form.temp_units)}
+            </div>
+
+            <div class="clear"/>
+
+            <div class="grid_12">
+                <label class="stylin">
+                    <div class="label">${step_form.gravity_read.label}</div>
+                    <div py:for="field in (step_form.gravity_read_type,
+                                           step_form.gravity_read,
+                                           step_form.gravity_read_temp,
+                                           step_form.gravity_read_temp_units)" py:if="field.errors" class="errors">
+                        ${field.errors}
+                    </div>
+                    <div class="label-contents">
+                        ${std.Markup(step_form.gravity_read_type)}
+                        ${std.Markup(step_form.gravity_read)}
+                        ${std.Markup(step_form.gravity_read_temp)}
+                        ${std.Markup(step_form.gravity_read_temp_units)}
+                    </div>
+                </label>
+            </div>
+
+            <div class="clear"/>
+
+            <div class="grid_8">
+                ${field(step_form.notes)}
+            </div>
+
+            <div class="clear"/>
+
+            <div class="grid_4">
+                <input type="submit" value="update"/>
+                <button onClick="window.location = '${brew_url(brew)}'; return false;">cancel</button>
+            </div>
         </form>
+
+        <script type="text/javascript">
+$(function() {
+    $('.expand-on-focus').focus(function(elt) {
+        $(this).attr('rows', 10);
+    }).blur(function(elt) {
+        $(this).attr('rows', 3);
+    }).attr('rows', 3).css('width', '100%');
+});
+        </script>
     </div>
   </div>
   <div class="clear"></div>

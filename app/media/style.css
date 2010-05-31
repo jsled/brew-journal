@@ -2,7 +2,6 @@ BODY
 {
   background-color: white;
   color: black;
-
   padding-bottom: 5em;
 }
 
@@ -165,12 +164,17 @@ H1.feed-link A {
   color: green;
 }
 
+.stylin .help-text {
+  color: rgb(180, 180, 180);
+  font-size: small;
+}
+
 .stylin .errors {
   color: red;
   font-size: small;
 }
 
-.stylin INPUT {
-  border: solid 1px black;
+.stylin INPUT, .stylin SELECT {
+  border: solid 1px rgb(200, 200, 200);
   padding: 0.25em;
 }

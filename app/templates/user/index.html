@@ -53,11 +53,11 @@
 </py:if>
 <div class="clear"/>
 
+<h1 class="grid_16">${user.username} current brews</h1>
+<div py:if="std.auth_user_is_user(request, user)" class="grid_4">
+    <a href="/user/${user.username}/brew/new">${action('create new brew')}</a>
+</div>
 <div class="grid_16">
-<h1>${user.username} current brews</h1>
-<py:if test="std.auth_user_is_user(request, user)">
-  <a href="/user/${user.username}/brew/new">${action('create new brew')}</a><br/><br />
-</py:if>
 <table class="wide">
   <thead>
     <tr>

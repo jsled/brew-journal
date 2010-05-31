@@ -413,7 +413,7 @@ def StepForm(user, *args, **kwargs):
         except models.UserProfile.DoesNotExist:
             pass
     class _StepForm (forms.ModelForm):
-        notes = forms.CharField(widget=forms.Textarea(), required=False)
+        notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'expand-on-focus'}), required=False)
         brew = forms.ModelChoiceField(queryset=models.Brew.objects, widget=forms.HiddenInput)
         date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
         shift_step_times = forms.BooleanField(required=False, initial=True, label='Time Shift',
@@ -421,6 +421,12 @@ def StepForm(user, *args, **kwargs):
         class Meta:
             model = models.Step
             exclude = ['gravity']
+            widgets = {
+                'volume': forms.TextInput(attrs={'size':4}),
+                'temp': forms.TextInput(attrs={'size': 4}),
+                'gravity_read': forms.TextInput(attrs={'size': 6}),
+                'gravity_read_temp': forms.TextInput(attrs={'size': 4})
+                }
     return _StepForm(*args, **kwargs)
 
 

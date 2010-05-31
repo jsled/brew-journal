@@ -15,4 +15,16 @@
   <py:def function="action(text)">${text}&nbsp;»</py:def>
   <py:def function="back_action(text)">«&nbsp;${text}</py:def>
 
+  <label py:def="field(*fields)" class="stylin">
+      <div class="label">${fields[0].label}</div>
+      <div py:if="fields[0].help_text" class="help-text">${fields[0].help_text}</div>
+      <div py:for="field in fields"
+           py:if="field.errors" class="errors">${field.errors}</div>
+      <div class="label-contents">
+          <py:for each="field in fields">
+              ${std.Markup(field)}
+          </py:for>
+      </div>
+  </label>
+
 </html>
