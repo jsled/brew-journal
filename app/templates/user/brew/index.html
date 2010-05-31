@@ -140,7 +140,7 @@
 
   <div py:if="step_form and std.auth_user_is_user(request, user)" id="add-step" class="grid_16">
     <div py:attrs="{'style': 'display:' + ['inherit', 'none'][step_edit]}">
-      <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;">update step &darr;</a>
+      <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;">add step &darr;</a>
     </div>
     <div py:attrs="{'style': 'display:' + ['inherit', 'none'][not step_edit]}">
         <form method="post" id="add-step-form">
@@ -148,7 +148,7 @@
                 ${std.Markup(step_form.as_table())}
             </table>
             <input type="submit" value="update step"/>
-            <button onClick="$('#add-step').children().slideToggle(); $('#add-step-form').get()[0].reset(); return false;">Cancel</button>
+            <button onClick="window.location = '${brew_url(brew)}'; return false;">cancel</button>
         </form>
     </div>
   </div>
