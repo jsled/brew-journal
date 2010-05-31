@@ -156,3 +156,19 @@ H1.feed-link A {
     padding-right: 19px;
     background: transparent url('./feed-icon-14x14.png') no-repeat scroll right center;
 }
+
+.stylin .label {
+  display: block;
+  font-weight: bold;
+  color: green;
+}
+
+.stylin .errors {
+  color: red;
+  font-size: small;
+}
+
+.stylin INPUT {
+  border: solid 1px black;
+  padding: 0.25em;
+}

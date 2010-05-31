@@ -156,7 +156,7 @@
 
   <div py:if="mash_sparge_calc_form" id="mash-sparge-calc-panel" class="grid_16"
        py:with="expand=(mash_sparge_calc_form.is_bound and not mash_sparge_calc_form.is_valid())
-                or request.GET.has_key('mash_sparge_recalc')
+                       or request.GET.has_key('mash_sparge_recalc')
                 ; calc=mash_sparge_calc_form.calc">
       <div py:attrs="{'style': 'display:' + ['none','inherit'][not expand]}">
           <a href="#" onClick="$('#mash-sparge-calc-panel').children().slideToggle(); return false;">compute mash/sparge volumes, steps &darr;</a>
@@ -164,62 +164,47 @@
       <div py:attrs="{'style': 'display:' + ['none','inherit'][expand]}">
           <form method="GET" id="mash-sparge-calc">
               <input type="hidden" name="mash_sparge_recalc" />
-              <table width="50%">
 
-                  ${std.Markup(mash_sparge_calc_form.as_table())}
+              <xi:include href="../../calc/_mash_sparge_form.html"/>
 
-                  <tr>
-                      <th>Mash Volume (gl)</th>
-                      <td>${'%0.2f' % (calc.mash_volume)}</td>
-                  </tr>
-                  <tr>
-                      <th>Strike Temp (°F)</th>
-                      <td>${'%0.1f' % (calc.strike_temp)}</td>
-                  </tr>
-                  <tr>
-                      <th>Sparge Volume (gl)</th>
-                      <td>${'%0.2f' % (calc.sparge_volume)}</td>
-                  </tr>
-                  <tr>
-                      <th>Total Volume (gl)</th>
-                      <td>${'%0.2f' % (calc.total_volume)}</td>
-                  </tr>
-                  <tr>
-                      <th>Total Collected/Pre-Boil volume (gl)</th>
-                      <td>${'%0.2f' % (calc.collected_volume)}</td>
-                  </tr>
+              <py:def function="mash_sparge_form_actions">
+                  <div class="grid_4">
+                      <input type="submit" name="action" value="recalc"/>
+                  </div>
+                  <div class="grid_4">
+                      <input type="reset" value="cancel" onClick="window.location.search = '';"/>
+                  </div>
+              </py:def>
 
-                  <tr>
-                      <th>actions</th>
-                      <td>
-                          <input type="submit" name="action" value="recalc"/>
-                          <input type="reset" value="cancel" onClick="window.location.search = '';"/>
-                          <input type="submit" name="action" value="create steps" onClick="$$('FORM#mash-sparge-calc').attr('method', 'POST'); return true;"/>
-                      </td>
-                  </tr>
-              </table>
+              ${mash_sparge_form(mash_sparge_calc_form, mash_sparge_form_actions)}
+
+              <py:if test="mash_sparge_steps" >
+                  <div class="clear"/>
+                  <h2>step preview</h2>
+                  <table width="100%" class="grid_16">
+                      <thead>
+                          <tr>
+                              <th>date</th>
+                              <th>step</th>
+                              <th>volume</th>
+                              <th>temp</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr py:for="step in mash_sparge_steps">
+                              <td>${std.fmt.date.best(step.date, user)}</td>
+                              <td>${step.get_type_display()}</td>
+                              <td><py:if test="step.volume">${'%0.2f' % step.volume} ${step.volume_units}</py:if></td>
+                              <td><py:if test="step.temp">${'%0.1f' % step.temp} ${step.temp_units}</py:if></td>
+                          </tr>
+                      </tbody>
+                  </table>
+
+                  <div class="grid_4">
+                      <input type="submit" name="action" value="create steps" onClick="$$('FORM#mash-sparge-calc').attr('method', 'POST'); return true;"/>
+                  </div>
+              </py:if>
           </form>
-          <div py:if="mash_sparge_steps" class="grid_16">
-              The following steps would be created:
-              <table width="100%">
-                  <thead>
-                      <tr>
-                          <th>date</th>
-                          <th>step</th>
-                          <th>volume</th>
-                          <th>temp</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr py:for="step in mash_sparge_steps">
-                          <td>${std.fmt.date.best(step.date, user)}</td>
-                          <td>${step.get_type_display()}</td>
-                          <td><py:if test="step.volume">${'%0.2f' % step.volume} ${step.volume_units}</py:if></td>
-                          <td><py:if test="step.temp">${'%0.1f' % step.temp} ${step.temp_units}</py:if></td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
       </div>
   </div>
 </div>

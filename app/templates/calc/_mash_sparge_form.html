@@ -1,0 +1,190 @@
+<!-- -*- nxml-child-indent: 2 -*- -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <py:def function="mash_sparge_form(form, actions)">
+
+        <py:def function="field(field)">
+            <label>
+                <div class="label">${field.label}</div>
+                <div py:if="field.errors" class="errors">${field.errors}</div>
+                <div class="label-content">${std.Markup(field)}</div>
+            </label>
+        </py:def>
+
+        ${form.errors}
+
+      <h2>core</h2>
+      
+      <div class="grid_4 stylin">
+          ${field(form.grain_size)}
+      </div>
+
+      <div class="grid_4 stylin">
+          ${field(form.mash_thickness)}
+      </div>
+
+      <div class="grid_4 suffix_4 stylin">
+          ${field(form.boil_time)}
+      </div>
+
+      <div class="grid_4 stylin">
+          ${field(form.batch_volume)}
+      </div>
+
+      <div class="grid_4 stylin">
+          ${field(form.target_mash_temp)}
+      </div>
+
+      <div class="grid_4 suffix_4 stylin" py:if="hasattr(form, 'mash_length')">
+          ${field(form.mash_length)}
+      </div>
+
+      <div class="clear"><br/></div>
+      <h2 style="margin-top:0.5em">losses</h2>
+
+      <div class="grid_4 stylin">
+          ${field(form.grain_absorption)}
+      </div>
+
+      <div class="grid_4 stylin">
+          ${field(form.mash_tun_loss)}
+      </div>
+
+      <div class="grid_4 suffix_4 stylin">
+          ${field(form.trub_loss)}
+      </div>
+
+      <div class="grid_4 stylin">
+          ${field(form.boil_evaporation_rate)}
+      </div>
+
+      <div class="grid_4 stylin">
+          ${field(form.grain_temp)}
+      </div>
+
+      <div class="clear"></div>
+
+      <py:if test="'sparge_type' in [f for f in form.fields]">
+        <h2 style="margin-top: 0.5em">step creation</h2>
+
+        <div class="grid_4 stylin">
+            ${field(form.sparge_type)}
+        </div>
+
+        <div class="grid_4 stylin">
+            ${field(form.num_batches)}
+        </div>
+
+        <div class="grid_6 stylin">
+            ${field(form.add_midpoint_mash_temp_step)}
+        </div>
+        <div class="clear"></div>
+
+        <div class="grid_4 stylin">
+            ${field(form.mash_length)}
+        </div>
+
+        <div class="grid_4 stylin">
+            ${field(form.rest_between_batches)}
+        </div>
+
+        <div class="grid_4 stylin">
+            ${field(form.sparge_flow_rate)}
+        </div>
+        <div class="clear"></div>
+
+        <div class="grid_4 stylin">
+            ${field(form.dough_in_time)}
+        </div>
+        <div class="clear"></div>
+      </py:if>
+
+      <py:choose test="">
+          <div style="border-top: solid 1px green; margin-top: 2em; padding-top: 0.5em">
+              <py:when test="actions">
+                  ${actions()}
+              </py:when>
+              <py:otherwise>
+                  <div class="grid_2 suffix_14">
+                      <input type="submit" value="re-calculate"/>
+                  </div>
+              </py:otherwise>
+          </div>
+      </py:choose>
+
+      <div class="clear"></div>
+      <h2 style="margin-top: 0.5em; border-top: solid 1px green">computed</h2>
+
+      <div class="grid_3 stylin">
+        <label>
+          <div class="label">Mash Volume (gl)</div>
+          <div class="label-content">${'%0.2f' % (calc.mash_volume)}</div>
+        </label>
+      </div>
+      <div class="grid_3 stylin">
+        <label>
+          <div class="label">Strike Temp (°F)</div>
+          <div class="label-content">${'%0.1f' % (calc.strike_temp)}</div>
+        </label>
+      </div>
+      <div class="grid_3 stylin">
+        <label>
+          <div class="label">Sparge Volume (gl)</div>
+          <div class="label-content">${'%0.2f' % (calc.sparge_volume)}</div>
+        </label>
+      </div>
+      <div class="grid_3 stylin">
+        <label>
+          <div class="label">Total Volume (gl)</div>
+          <div class="label-content">${'%0.2f' % (calc.total_volume)}</div>
+        </label>
+      </div>
+      <div class="grid_3 stylin">
+        <label>
+          <div class="label">Collected/Pre-Boil (gl)</div>
+          <div class="label-content">${'%0.2f' % (calc.collected_volume)}</div>
+        </label>
+      </div>
+    </py:def>
+
+<!-- hr />
+  
+      <div class="grid_16">
+        <form method="GET">
+          <table width="50%">
+
+            ${std.Markup(form.as_table())}
+
+            <tr>
+              <td colspan="2">
+                <input type="submit" value="re-calculate"/>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Mash Volume (gl)</th>
+              <td>${'%0.2f' % (calc.mash_volume)}</td>
+            </tr>
+            <tr>
+              <th>Strike Temp (°F)</th>
+              <td>${'%0.1f' % (calc.strike_temp)}</td>
+            </tr>
+            <tr>
+              <th>Sparge Volume (gl)</th>
+              <td>${'%0.2f' % (calc.sparge_volume)}</td>
+            </tr>
+            <tr>
+              <th>Total Volume (gl)</th>
+              <td>${'%0.2f' % (calc.total_volume)}</td>
+            </tr>
+            <tr>
+              <th>Collected/Pre-Boil (gl)</th>
+              <td>${'%0.2f' % (calc.collected_volume)}</td>
+            </tr>
+          </table>
+        </form>
+      </div -->
+
+</html>

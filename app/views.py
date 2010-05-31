@@ -455,6 +455,7 @@ def brew_render(request, uri_user, brew, step_form, step_edit, mash_sparge_calc_
 
 
 def brew_create_mash_steps(request, user, brew, calc, form):
+    # @factor this should really be part of the model
     from decimal import Context,Decimal,ROUND_HALF_UP
     base_date = form.cleaned_data['dough_in_time']
     created = []
@@ -622,7 +623,7 @@ def brew(request, user_name, brew_id, step_id):
                 step_form = StepForm(uri_user, initial={'brew': brew.id, 'date': datetime.now(), 'type': next_step.type.id})
         else:
             step_form = StepForm(uri_user, initial={'brew': brew.id, 'date': datetime.now()})
-    #
+
     mash_sparge_calc_form = None
     brew_calc_form = None
     mash_sparge_steps = []
@@ -639,10 +640,10 @@ def brew(request, user_name, brew_id, step_id):
             mash_sparge_calc_form = BrewMashSpargeCalcForm(uri_user, mash_sparge_calc, request.GET)
         else:
             mash_sparge_calc_form = BrewMashSpargeCalcForm(uri_user, mash_sparge_calc)
-        #
+
         if mash_sparge_calc_form.is_valid():
             mash_sparge_steps = brew_create_mash_steps(request, uri_user, brew, mash_sparge_calc, mash_sparge_calc_form)
-    #
+
     return brew_render(request, uri_user, brew, step_form, step_expand_edit, mash_sparge_calc_form, mash_sparge_steps)
 
 

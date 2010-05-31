@@ -25,41 +25,13 @@
 
       </div>
       <div class="clear"></div>
-      <div class="grid_16">
-        <form method="GET">
-          <table width="50%">
 
-            ${std.Markup(form.as_table())}
+      <form method="GET">
 
-            <tr>
-              <td colspan="2">
-                <input type="submit" value="re-calculate"/>
-              </td>
-            </tr>
+        <xi:include href="_mash_sparge_form.html"/>
 
-            <tr>
-              <th>Mash Volume (gl)</th>
-              <td>${'%0.2f' % (calc.mash_volume)}</td>
-            </tr>
-            <tr>
-              <th>Strike Temp (°F)</th>
-              <td>${'%0.1f' % (calc.strike_temp)}</td>
-            </tr>
-            <tr>
-              <th>Sparge Volume (gl)</th>
-              <td>${'%0.2f' % (calc.sparge_volume)}</td>
-            </tr>
-            <tr>
-              <th>Total Volume (gl)</th>
-              <td>${'%0.2f' % (calc.total_volume)}</td>
-            </tr>
-            <tr>
-              <th>Collected/Pre-Boil (gl)</th>
-              <td>${'%0.2f' % (calc.collected_volume)}</td>
-            </tr>
-          </table>
-        </form>
-      </div>
+        ${mash_sparge_form(form, None)}
+      </form>
 
     </div>
   </body>
