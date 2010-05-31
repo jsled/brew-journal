@@ -70,7 +70,7 @@
   </thead>
   <tbody>
     <tr py:if="not brews">
-      <td colspan="3"><em>no active brews</em></td>
+      <td colspan="50"><em>no active brews</em></td>
     </tr>
     <tr py:for="brew in brews">
       <td><a href="/user/${brew.brewer.username}/brew/${brew.id}"><py:choose test="">
