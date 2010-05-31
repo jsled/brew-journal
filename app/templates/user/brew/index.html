@@ -202,6 +202,10 @@
                 <input type="submit" value="update"/>
                 <button onClick="window.location = '${brew_url(brew)}'; return false;">cancel</button>
             </div>
+
+            <py:for each="hidden in step_form.hidden_fields()">
+                ${std.Markup(hidden)}
+            </py:for>
         </form>
 
         <script type="text/javascript">
@@ -240,6 +244,10 @@ $(function() {
               </py:def>
 
               ${mash_sparge_form(mash_sparge_calc_form, mash_sparge_form_actions)}
+
+              <py:for each="hidden in mash_sparge_calc_form.hidden_fields()">
+                  ${std.Markup(hidden)}
+              </py:for>
 
               <py:if test="mash_sparge_steps" >
                   <div class="clear"/>
