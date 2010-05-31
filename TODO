@@ -153,6 +153,8 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 * Todo
 ** bugs, misc
+*** TODO step deletion
+*** TODO step note formatting: table over-sizing; line-breaking / markdown
 *** TODO no way to indicate the addition a fermentable (e.g., honey) added at flame-out, or half-way through, or whatever.
 *** TODO dingeema-uncovered None-safety issues
 
