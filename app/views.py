@@ -414,6 +414,7 @@ def StepForm(user, *args, **kwargs):
             pass
     class _StepForm (forms.ModelForm):
         notes = forms.CharField(widget=forms.Textarea(), required=False)
+        brew = forms.ModelChoiceField(queryset=models.Brew.objects, widget=forms.HiddenInput)
         date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
         shift_step_times = forms.BooleanField(required=False, initial=True, label='Time Shift',
                                               help_text='Shift subsequent steps by updated step time difference (within reason).''')
@@ -428,7 +429,6 @@ def brew_post(request, uri_user, brew, orig_step):
         return HttpResponseForbidden()
     step_form = StepForm(uri_user, request.POST, instance=orig_step)
     if step_form.is_valid():
-        step_form.cleaned_data['brew'] = brew
         updated_step = step_form.save(commit=False)
         if step_form.cleaned_data['shift_step_times']:
             brew.shift_steps(updated_step)
