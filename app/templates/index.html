@@ -19,41 +19,53 @@
         <xi:include href="_incl/body-top-bar.html"/>
         <div class="clear"></div>
         <div id="bd">
-            <div class="grid_8">
+            <div class="grid_8 container_16">
 
                 <div>
-                    <form py:if="not request.user.is_authenticated()" id="login" method="post" >
-                        ${auth_errors}
-                        ${auth_form.non_field_errors()}
-                        <table class="form" width="100%">
-                            <tr><td colspan="2">login:</td></tr>
-                            <tr>
-                                <th>username:${auth_form.username.errors}</th>
-                                <td py:content="std.Markup(auth_form.username)"/>
-                            </tr>
-                            <tr>
-                                <th>password:${auth_form.password.errors}</th>
-                                <td>
-                                    ${std.Markup(auth_form.password)}
-                                    &nbsp;<input type="submit" name="sub" value="login"/>
-                                </td>
-                            </tr>
-                            <tr><td colspan="2">create account:</td></tr>
-                            <tr>
-                                <th>password (again):${auth_form.password_again.errors}</th>
-                                <td>
-                                    ${std.Markup(auth_form.password_again)}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>email:${auth_form.email.errors}</th>
-                                <td>
-                                    ${std.Markup(auth_form.email)}
-                                    &nbsp;<input type="submit" name="sub" value="create"/>
-                                </td>
-                            </tr>
-                        </table>
-                        <hr style="margin: 3em 0.5em;"/>
+                    <form py:if="not request.user.is_authenticated()" id="login" method="POST">
+
+                        <div class="grid_16">
+                            ${auth_errors}
+                            ${auth_form.non_field_errors()}
+                        </div>
+
+                        <div class="grid_8">
+                            <h2>login</h2>
+
+                            <div>
+                                ${field(auth_form.username)}
+                            </div>
+
+                            <div>
+                                ${field(auth_form.password)}
+                            </div>
+
+                            <div>
+                                <input type="submit" name="sub" value="login"/>
+                            </div>
+
+                        </div>
+
+                        <div class="grid_8">
+                            <h2>create account</h2>
+
+                            <div>
+                                ${field(auth_form.password_again)}
+                            </div>
+
+                            <div>
+                                ${field(auth_form.email)}
+                            </div>
+
+                            <div>
+                                <input type="submit" name="sub" value="create"/>
+                            </div>
+                        </div>
+                        
+
+                        <div class="grid_16">
+                            <hr style="margin: 3em 0.5em;"/>
+                        </div>
                     </form>
                 </div>
 
