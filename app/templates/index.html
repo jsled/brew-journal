@@ -19,51 +19,58 @@
         <xi:include href="_incl/body-top-bar.html"/>
         <div class="clear"></div>
         <div id="bd">
-            <div class="grid_10">
+            <div class="grid_8">
 
-                <p><span class="logotext">brew-journal</span> is a web site for people to track the status and progress of their homebrews.</p>
+                <div>
+                    <form py:if="not request.user.is_authenticated()" id="login" method="post" >
+                        ${auth_errors}
+                        ${auth_form.non_field_errors()}
+                        <table class="form" width="100%">
+                            <tr><td colspan="2">login:</td></tr>
+                            <tr>
+                                <th>username:${auth_form.username.errors}</th>
+                                <td py:content="std.Markup(auth_form.username)"/>
+                            </tr>
+                            <tr>
+                                <th>password:${auth_form.password.errors}</th>
+                                <td>
+                                    ${std.Markup(auth_form.password)}
+                                    &nbsp;<input type="submit" name="sub" value="login"/>
+                                </td>
+                            </tr>
+                            <tr><td colspan="2">create account:</td></tr>
+                            <tr>
+                                <th>password (again):${auth_form.password_again.errors}</th>
+                                <td>
+                                    ${std.Markup(auth_form.password_again)}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>email:${auth_form.email.errors}</th>
+                                <td>
+                                    ${std.Markup(auth_form.email)}
+                                    &nbsp;<input type="submit" name="sub" value="create"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <hr style="margin: 3em 0.5em;"/>
+                    </form>
+                </div>
 
-                <p>The <a href="http://github.com/jsled/brew-journal/tree/master">source for this site is available on github.com</a> under the <a href="http://en.wikipedia.org/wiki/New_BSD">New BSD</a> license.</p>
+                <div style="margin-top: 1em">
+                    <h2><span class="logotext">brew-journal</span> is a web site for people to track the status and progress of their homebrews.</h2>
 
-                <blockquote style="text-align: justify">
-                    <p><strong class="big">NOTE!</strong> <span class="logotext">brew-journal</span> is – in <strike>early 2009</strike> mid-2010 – somewhere between alpha and beta.  I (<a href="/user/jsled/">jsled</a>, the author) am adding my own historical journal entries and future journal entries to the site, so I'm highly motivated to keep the data safe from both site failure and schema changes as the code progresses … at the same time, you should note that the code is in active development, and I've not yet authored any export functionality.  Caveat user.</p>
+                    <p>The <a href="http://github.com/jsled/brew-journal/tree/master">source for this site is available on github.com</a> under the <a href="http://en.wikipedia.org/wiki/New_BSD">New BSD</a> license.</p>
 
-                    <p>That being said, I'm quite happy for you to sign up, try it out, and would love bug reports and feedback!  As well, please feel free to contact me at <a href="http://asynchronous.org/jsled/">jsled [at] asynchronous [dot] org</a> before more formal contact/feedback mechanisms are established.</p>
-                </blockquote>
+                    <blockquote style="text-align: justify">
+                        <p><strong class="big">NOTE!</strong> <span class="logotext">brew-journal</span> is – in <strike>early 2009</strike> mid-2010 – somewhere between alpha and beta.  I (<a href="/user/jsled/">jsled</a>, the author) am adding my own historical journal entries and future journal entries to the site, so I'm highly motivated to keep the data safe from both site failure and schema changes as the code progresses … at the same time, you should note that the code is in active development, and I've not yet authored any export functionality.  Caveat user.</p>
+
+                        <p>That being said, I'm quite happy for you to sign up, try it out, and would love bug reports and feedback!  As well, please feel free to contact me at <a href="http://asynchronous.org/jsled/">jsled [at] asynchronous [dot] org</a> before more formal contact/feedback mechanisms are established.</p>
+                    </blockquote>
+                </div>
             </div>
-            <div class="grid_6">
-                <form py:if="not request.user.is_authenticated()" id="login" method="post" >
-                    ${auth_errors}
-                    ${auth_form.non_field_errors()}
-                    <table class="form" width="100%">
-                        <tr><td colspan="3">login:</td></tr>
-                        <tr>
-                            <th>username:${auth_form.username.errors}</th>
-                            <td py:content="std.Markup(auth_form.username)"/>
-                            <td>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <th>password:${auth_form.password.errors}</th>
-                            <td py:content="std.Markup(auth_form.password)"/>
-                            <td align="right"><input type="submit" name="sub" value="login"/></td>
-                        </tr>
-                        <tr><td colspan="3">create account:</td></tr>
-                        <tr>
-                            <th>password (again):${auth_form.password_again.errors}</th>
-                            <td py:content="std.Markup(auth_form.password_again)"/>
-                            <td>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <th>email:${auth_form.email.errors}</th>
-                            <td py:content="std.Markup(auth_form.email)"/>
-                            <td><input type="submit" name="sub" value="create"/></td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
-            <div class="clear"/>
-            <div class="bj-recent">
-                <div class="grid_8">
+            <div class="grid_8 bj-recent">
+                <div>
                     <h1>recent brews</h1>
                     <ul>
                         <li py:for="brew in recent_brews">
@@ -79,7 +86,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="grid_8">
+                <div>
                     <h1 class="feed-link"><a href="/feeds/new-recipes">recent recipes</a></h1>
                     <ul>
                         <li py:for="recipe in recent_recipes">
@@ -87,8 +94,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="clear"/>
-                <div class="grid_16">
+                <div>
                     <h1>recent updates</h1>
                     <ul>
                         <li py:for="step in recent_updates"><a href="/user/${step.brew.brewer.username}/brew/${step.brew.id}">Step ${step.type}</a> journaled for <a href="/user/${step.brew.brewer.username}/">${step.brew.brewer.username}</a>'s <py:if test="step.brew.recipe">${recipe_a(step.brew.recipe)}</py:if> on ${std.fmt.date.best(step.date, request.user)}</li>
