@@ -70,7 +70,7 @@
                 </div>
 
                 <div style="margin-top: 1em">
-                    <h2><span class="logotext">brew-journal</span> is a web site for people to track the status and progress of their homebrews.</h2>
+                    <h2 style="margin-bottom: 1em"><span class="logotext">brew-journal</span> is a web site for people to track the status and progress of their homebrews.</h2>
 
                     <p>The <a href="http://github.com/jsled/brew-journal/tree/master">source for this site is available on github.com</a> under the <a href="http://en.wikipedia.org/wiki/New_BSD">New BSD</a> license.</p>
 
@@ -83,7 +83,7 @@
             </div>
             <div class="grid_8 bj-recent">
                 <div>
-                    <h1>recent brews</h1>
+                    <h2>recent brews</h2>
                     <ul>
                         <li py:for="brew in recent_brews">
                             <a href="/user/${brew.brewer.username}/brew/${brew.id}/">
@@ -99,7 +99,7 @@
                     </ul>
                 </div>
                 <div>
-                    <h1 class="feed-link"><a href="/feeds/new-recipes">recent recipes</a></h1>
+                    <h2 class="feed-link"><a href="/feeds/new-recipes">recent recipes</a></h2>
                     <ul>
                         <li py:for="recipe in recent_recipes">
                             "${recipe_a(recipe)}", added ${std.fmt.date.ymd(recipe.insert_date, request.user)} by <a href="/user/${recipe.author.username}/">${recipe.author}</a>.
@@ -107,7 +107,7 @@
                     </ul>
                 </div>
                 <div>
-                    <h1>recent updates</h1>
+                    <h2>recent updates</h2>
                     <ul>
                         <li py:for="step in recent_updates"><a href="/user/${step.brew.brewer.username}/brew/${step.brew.id}">Step ${step.type}</a> journaled for <a href="/user/${step.brew.brewer.username}/">${step.brew.brewer.username}</a>'s <py:if test="step.brew.recipe">${recipe_a(step.brew.recipe)}</py:if> on ${std.fmt.date.best(step.date, request.user)}</li>
                     </ul>

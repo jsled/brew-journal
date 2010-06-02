@@ -23,6 +23,7 @@ TABLE.wide {
 
 H1, H2, H3, H4 {
   font-family: sans-serif;
+  margin: 0;
 }
 
 TD {
@@ -148,12 +149,12 @@ TABLE.recipe_derivations TD.space {
     white-space: nowrap;
 }
 
-H1.feed-link A {
+.feed-link A {
     text-decoration: none;
     color: inherit;
 }
 
-H1.feed-link A {
+.feed-link A {
     padding-right: 19px;
     background: transparent url('./feed-icon-14x14.png') no-repeat scroll right center;
 }
