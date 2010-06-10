@@ -160,7 +160,6 @@ TABLE.recipe_derivations TD.space {
 }
 
 .stylin .label {
-  display: block;
   font-weight: bold;
   color: green;
 }
@@ -179,3 +178,4 @@ TABLE.recipe_derivations TD.space {
   border: solid 1px rgb(200, 200, 200);
   padding: 0.25em;
 }
+

@@ -53,21 +53,21 @@ RecipeTypes = (
     )
 
 DispenseTypes = (
-    ('k', 'kegging'),
-    ('b', 'bottling')
+    ('b', 'bottle'),
+    ('k', 'keg')
     )
     
 class UserProfile (models.Model):
     user = models.ForeignKey(auth.models.User, unique=True)
 
-    pref_brew_type = models.CharField(max_length=1, choices=RecipeTypes, default='a')
-    pref_brewhouse_efficiency = models.PositiveSmallIntegerField(default='75')
+    pref_brew_type = models.CharField(max_length=1, choices=RecipeTypes, default='a', verbose_name="Default Brew Type")
+    pref_brewhouse_efficiency = models.PositiveSmallIntegerField(default='75', verbose_name="Brewhouse Efficiency")
 
-    pref_make_starter = models.BooleanField(default=False)
+    pref_make_starter = models.BooleanField(default=False, verbose_name="Do you usually make a starter?")
 
-    pref_secondary_ferm = models.BooleanField(default=False)
+    pref_secondary_ferm = models.BooleanField(default=False, verbose_name="Do you usually do a secondary fermentation?")
 
-    pref_dispensing_style = models.CharField(max_length=1, choices=DispenseTypes, default='b')
+    pref_dispensing_style = models.CharField(max_length=1, choices=DispenseTypes, default='b', verbose_name="Do you usually bottle or keg?")
 
     timezone = TimeZoneField(default='UTC')
 

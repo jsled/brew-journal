@@ -147,7 +147,7 @@ class NewUserTest (TestCase):
     def testNewUserInvalidUsername(self):
         res = self.client.post('/', {'sub': 'create', 'username': '', 'password': '', 'password_again': '', 'email': ''})
         import re
-        assertion = re.compile(r'username.{0,20}required', re.IGNORECASE)
+        assertion = re.compile(r'This field is required', re.IGNORECASE)
         matches = assertion.search(str(res))
         self.assertTrue(matches)
         # self.assertFormError(res, 'RegisterForm', …
@@ -1039,8 +1039,12 @@ class SeleniumTest (AppTestCase):
         self.assertTrue(sel.get_location().endswith('/user/jsled/profile'))
         self.click_wait('//input[@value="update"]')
 
-        self.assertTrue(sel.is_element_present('//input[@name="first_name"]/../ul[@class="errorlist"]/li'))
-        self.assertTrue(sel.is_element_present('//input[@name="last_name"]/../ul[@class="errorlist"]/li'))
+        # fixme: factor out something to relate the structure of the input to
+        # the other values for the newish ${field()} function. e.g.:
+        # self.assertTrue(sel.is_element_present(gen_xpath__errors_for_field('first_name')))
+        # self.assertEquals("This field is required", sel.get_text(get_xpath__error_contents_for_field('last_name')))
+        self.assertTrue(sel.is_element_present('//input[@name="first_name"]/../../div[@class="errors"]'))
+        self.assertTrue(sel.is_element_present('//input[@name="last_name"]/../../div[@class="errors"]'))
 
         sel.type('name=first_name', 'Josh')
         sel.type('name=last_name', 'Sled')

@@ -1,27 +1,102 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include href="../_incl/taglib.html"/>
 <head>
   <title>${user.username} profile | brew-journal</title>
   <xi:include href="../_incl/head.html"/>
 </head>
 <body>
     <div class="container_16">
-
+        
         <xi:include href="../_incl/body-top-bar.html"/>
+        
+        <h1 class="grid_16">${user.username} profile</h1>
 
-        <div class="grid_16">
-
-            <h1>${user.username} profile</h1>
-            <div py:if="not std.auth_user_is_user(request, user)">
-                <!-- @fixme: public details about user... -->
-            </div>
-            <form py:if="std.auth_user_is_user(request, user)" method="post">
-                <table class="form" py:content="std.Markup(profile_form.as_table())"/>
-                <input type="submit" value="update"/>
-            </form>
-            
+        <div py:if="not std.auth_user_is_user(request, user)">
+            (fixme)
+            <!-- @fixme: public details about user... -->
         </div>
+        <form py:if="std.auth_user_is_user(request, user)" method="post">
+            <div class="grid_4">
+                ${field(profile_form.first_name)}
+            </div>
+            <div class="grid_4">
+                ${field(profile_form.last_name)}
+            </div>
+
+            <div class="clear"/>
+
+            <div class="grid_8" style="margin-top: 2em; margin-bottom: 2em;" >
+                ${field(profile_form.email)}
+            </div>
+
+            <div class="clear" />
+
+            <div class="grid_4">
+                ${field(profile_form.new_pass_1)}
+            </div>
+            <div class="grid_4">
+                ${field(profile_form.new_pass_2)}
+            </div>
+            <div class="clear"/>
+
+            <py:def function="boolean_field(field)">
+                <label>
+                    ${std.Markup(field)}
+                    &nbsp;<span class="label">${std.Markup(field.label)}</span>
+                    <span class="help-text" py:if="field.help_text">
+                        ${std.Markup(field.help_text)}
+                    </span>
+                </label>
+            </py:def>
+
+            <div class="grid_8" style="margin-top: 2em">
+                ${field(profile_form.pref_brew_type)}
+            </div>
+
+            <div class="clear"/>
+
+            <div class="grid_4 " style="margin-top: 2em">
+                ${field(profile_form.pref_brewhouse_efficiency)}
+            </div>
+            
+            <div class="clear"/>
+
+            <div class="grid_8 stylin" style="margin-top: 2em">
+                ${boolean_field(profile_form.pref_make_starter)}
+            </div>
+
+            <div class="clear"/>
+
+            <div class="grid_8 stylin" style="margin-top: 2em">
+                ${boolean_field(profile_form.pref_secondary_ferm)}
+            </div>
+
+            <div class="clear"/>
+
+            <div class="grid_8" style="margin-top: 2em; margin-bottom: 2em">
+                ${field(profile_form.pref_dispensing_style)}
+            </div>
+
+            <div class="clear"/>
+
+            <div class="grid_8">
+                ${field(profile_form.timezone)}
+            </div>
+
+            <div class="clear"/>
+
+            <div class="grid_8 stylin">
+                ${boolean_field(profile_form.rototill_dates)}
+            </div>
+
+            <div class="clear"/>
+            <hr />
+            
+            <input type="submit" value="update"/>
+        </form>
+        
     </div>
 </body>
 </html>
