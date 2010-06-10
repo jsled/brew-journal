@@ -1,0 +1,19 @@
+# http://wiki.dreamhost.com/Django#Performance_Improvements
+
+ExpiresActive on
+ExpiresDefault "access plus 1 hours"
+ExpiresByType image/gif "access plus 1 months"
+ExpiresByType image/png "access plus 1 months"
+ExpiresByType image/jpeg "access plus 1 months"
+ExpiresByType image/x-icon "access plus 1 months"
+ExpiresByType application/x-javascript "access plus 1 hours"
+ExpiresByType text/css "access plus 1 weeks"
+
+SetOutputFilter DEFLATE
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4\.0[678] no-gzip
+BrowserMatch \bMSIE\s6 no-gzip
+BrowserMatch \bMSIE\s7 !no-gzip !gzip-only-text/html
+SetEnvIfNoCase Request_URI \
+        \.(?:gif|jpe?g|png|pdf|swf|ipk)$ no-gzip dont-vary
+Header append Vary User-Agent env=!dont-vary
