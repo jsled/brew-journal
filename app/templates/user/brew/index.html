@@ -151,13 +151,12 @@
                 ${field(step_form.type)}
             </div>
 
-            <div class="clear"/>
-
             <div class="grid_4">
                 ${field(step_form.date)}
             </div>
-            <div class="grid_6">
-                ${field(step_form.shift_step_times)}
+
+            <div class="grid_4">
+                ${boolean_field(step_form.shift_step_times)}
             </div>
 
             <div class="clear"/>
@@ -172,7 +171,7 @@
 
             <div class="clear"/>
 
-            <div class="grid_12">
+            <!-- div class="grid_12">
                 <label class="stylin">
                     <div class="label">${step_form.gravity_read.label}</div>
                     <div py:for="field in (step_form.gravity_read_type,
@@ -188,6 +187,14 @@
                         ${std.Markup(step_form.gravity_read_temp_units)}
                     </div>
                 </label>
+            </div -->
+
+            <div class="grid_4">
+                ${field(step_form.gravity_read,step_form.gravity_read_type)}
+            </div>
+            
+            <div class="grid_4">
+                ${field(step_form.gravity_read_temp, step_form.gravity_read_temp_units)}
             </div>
 
             <div class="clear"/>

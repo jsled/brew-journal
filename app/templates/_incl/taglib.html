@@ -27,4 +27,12 @@
       </div>
   </label>
 
+  <label py:def="boolean_field(field)" class="stylin">
+      ${std.Markup(field)}
+      &nbsp;<span class="label">${std.Markup(field.label)}</span>
+      <span py:if="field.help_text" class="help-text">
+          &nbsp; ${std.Markup(field.help_text)}
+      </span>
+  </label>
+
 </html>
