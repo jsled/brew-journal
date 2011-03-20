@@ -523,6 +523,8 @@ of being.
 *** TODO some sort of markdown/wikiformatting/CRLF-><br/> for: recipe notes, brew notes, brew step notes
 *** TODO be able to (re-)associate a recipe with a Brew
 *** TODO use django `get_absolute_url`, `permalink` methods
+*** TODO calorie calculator
+http://www.beersmith.com/blog/2011/02/04/counting-calories-in-your-homebrewed-beer/
 *** DONE allow for fermentables by volume, however silly it may be.
 
 weight vs. volume issues
