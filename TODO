@@ -753,6 +753,20 @@ http://www.beersmith.com/blog/2011/03/18/using-a-hydrometer-for-beer-brewing/
 https://sites.google.com/site/brunwater/
 ** Dave Draper's "Brewing Waters of the World" reference
 http://home.comcast.net/~david.s.draper/beer/waterpro.html
+
+In a 2011-04-05 HBD post, "Martin" asserts these profiles are
+dis-information, and inherently inconsistent:
+
+    "Of the non-Belgian profiles shown on that website, only Burton 3,
+    Dortmund 2, Edinburgh, and Dublin 2 balance when their carbonate content
+    is assumed to be bicarbonate.  Dublin 1, Edinburgh 2, and Munich will
+    also balance, but only if the carbonate is input as carbonate.
+    Unfortunately, carbonate does not exist in significant concentration in
+    typical drinking water.  Most brewers would not understand the conflicts
+    in these profiles."
+
+So, beware.
+
 * git notes
 
 git fetch
