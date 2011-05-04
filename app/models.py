@@ -1213,7 +1213,7 @@ class RecipeDerivations (object):
         
         http://www.howtobrew.com/section1/chapter5-5.html
         
-        IBU = (1.65 × 0.000125^(G_{gravity} - 1)) × ((1 - e^{-0.04 × t_{min}})/4.1) × ((AAU%/100 × W_{g} × 10) / V_{l})
+        IBU = (1.65 × 0.000125^(G_{gravity} - 1)) × ((1 - e^{-0.04 × t_{min}})/4.1) × ((AAU%/100 × W_{g} × 1000) / V_{l})
         '''
         def dec(x):
             return Decimal(x)
@@ -1227,7 +1227,7 @@ class RecipeDerivations (object):
             gravity_exponent = gravity - dec('1.000')
             term1 = dec('1.65') * dec('0.000125') ** gravity_exponent
             term2 = (dec('1') - (dec('-0.04') * dec(str(hop.boil_time))).exp()) / dec('4.1')
-            term3_low,term3_high = tuple([(dec(aau) * weight * dec(10)) / wort_volume for aau in hop.aau_range()])
+            term3_low,term3_high = tuple([(dec(aau) * weight * dec('10')) / wort_volume for aau in hop.aau_range()])
             low = term1 * term2 * term3_low
             high = term1 * term2 * term3_high
             low_accum += low
