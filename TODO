@@ -153,6 +153,29 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 * Todo
 ** bugs, misc
+*** TODO Bug: recipe with single volume "grain" results in /0 error
+
+http://brew-journal.com/recipe/109/Graff
+
+- single RecipeGrain (id=334)
+  - Apple Must, 4.000 g, no override = error
+
+jsled's gnus:nnimap+mail:INBOX#28859
+
+*** TODO Bug: with slashes in recipe name [?]
+From: [REDACTED]
+To: Josh Sled <jsled@asynchronous.org>
+Date: Wed, 15 Apr 2009 22:24:39 -0400
+
+Hey Josh,
+
+I added a recipe recently for a Scottish 60/- 
+(http://brew-journal.com/recipe/39/Scottish%2060/) I was able to create the
+recipe just fine, but I couldn't add any ingredients to it - when I clicked
+on add, nothing happened. I think it may have gotten confused since there was
+a / in the name - I took that out and all is well. I'm guessing the / screwed
+up the path and maybe needs to be escaped or something?
+
 *** TODO Bug: recipe with only fwh hops results in IBU derivation error
 *** TODO step deletion
 *** TODO step note formatting: table over-sizing; line-breaking / markdown
