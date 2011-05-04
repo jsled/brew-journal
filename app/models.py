@@ -1223,13 +1223,23 @@ class RecipeDerivations (object):
         high_accum = dec('0')
         per_hop = []
         for hop in self._recipe.recipehop_set.all():
-            weight = convert_weight(dec(hop.amount_value), hop.amount_units, 'gr')
-            gravity_exponent = gravity - dec('1.000')
-            term1 = dec('1.65') * dec('0.000125') ** gravity_exponent
-            term2 = (dec('1') - (dec('-0.04') * dec(str(hop.boil_time))).exp()) / dec('4.1')
-            term3_low,term3_high = tuple([(dec(aau) * weight * dec('10')) / wort_volume for aau in hop.aau_range()])
-            low = term1 * term2 * term3_low
-            high = term1 * term2 * term3_high
+            if hop.usage_type == 'dry':
+                low,high = 0,0
+            else:
+                weight = convert_weight(dec(hop.amount_value), hop.amount_units, 'gr')
+                gravity_exponent = gravity - dec('1.000')
+                term1 = dec('1.65') * dec('0.000125') ** gravity_exponent
+                if hop.usage_type in ['mash', 'fwh']:
+                    # use a time slightly longer than the boil time to account for increased bitterness.
+                    # This is a WAG, and is mostly working around a missing hop.boil_time value where usage_type != 'boil'.
+                    # http://hbd.org/discus/messages/43688/44334.html?1204310997
+                    t_min = self._recipe.boil_length * dec('1.1')
+                else:
+                    t_min = dec(str(hop.boil_time))
+                term2 = (dec('1') - (dec('-0.04') * t_min).exp()) / dec('4.1')
+                term3_low,term3_high = tuple([(dec(aau) * weight * dec('10')) / wort_volume for aau in hop.aau_range()])
+                low = term1 * term2 * term3_low
+                high = term1 * term2 * term3_high
             low_accum += low
             high_accum += high
             per_hop.append(PerHopIbu(hop, low, high))

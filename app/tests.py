@@ -958,7 +958,17 @@ class RecipeDerivationsTest (TestCase):
         deriv = models.RecipeDerivations(recipe)
         og = deriv.compute_og()
         self.assertAlmostEquals(dec('1.106'), og.average, 3);
-        
+
+    def testRegressionOnlyFwh(self):
+        from decimal import Decimal as dec
+        grain = models.Grain.objects.get(name='Pale malt (2-row)')
+        grains = [models.RecipeGrain(grain=grain, amount_value=dec(10), amount_units='lb')]
+        hop = models.Hop.objects.get(name='Liberty')
+        hops = [models.RecipeHop(hop=hop, amount_value=dec(1), amount_units='oz', usage_type='fwh')]
+        recipe = Mock(batch_size=dec(5), batch_size_units='gl', boil_length=dec('60'), efficiency=75, recipehop_set=FkSet(hops), recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
+        ibus = deriv.compute_ibu(dec('1.055'))
+        self.assertAlmostEquals(dec('15.37'), ibus.average, 2)
 
 class MashSpargeWaterCalcTest (TestCase):
 
