@@ -176,7 +176,8 @@ on add, nothing happened. I think it may have gotten confused since there was
 a / in the name - I took that out and all is well. I'm guessing the / screwed
 up the path and maybe needs to be escaped or something?
 
-*** TODO Bug: recipe with only fwh hops results in IBU derivation error
+*** DONE Bug: recipe with only fwh hops results in IBU derivation error
+    CLOSED: [2011-05-04 Wed 19:48]
 *** TODO step deletion
 *** TODO step note formatting: table over-sizing; line-breaking / markdown
 *** TODO no way to indicate the addition a fermentable (e.g., honey) added at flame-out, or half-way through, or whatever.
