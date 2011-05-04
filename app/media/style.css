@@ -126,7 +126,7 @@ UL.errorlist + INPUT {
 
 .muted,
 .muted A {
-  color: rgb(180, 180, 180);
+  color: rgb(128, 128, 128);
 }
 
 TABLE.recipe_derivations TD {
