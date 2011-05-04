@@ -5,13 +5,13 @@
   <head>
     <title>brew-journal</title>
     <xi:include href="_incl/head.html"/>
-    <script type="application/javascript">
-        <py:if test="not request.user.is_authenticated()">
-        $(document).ready(function() {
-          $('#login :input:first').focus();
-        });
-        </py:if>
-    </script>
+    <py:if test="not request.user.is_authenticated()">
+      <script type="application/javascript">
+    $(document).ready(function() {
+        $('#login :input:first').focus();
+    });
+      </script>
+    </py:if>
   </head>
 <body>
     <div class="container_16">
