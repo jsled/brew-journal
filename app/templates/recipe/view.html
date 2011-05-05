@@ -46,26 +46,59 @@
             </div>
       </div>
 
-      <!-- overview -->
-      <div id="overview" class="grid_8" style="margin-bottom: 10px">
+      <div id="overview" class="grid_16">
         <div py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}">
-          <table width="${table_width}">
-            <tr><th width="15%">name</th><td>${recipe.name}</td></tr>
-            <tr py:if="recipe.author"><th>input by</th><td><a href="/user/${recipe.author.username}/">${recipe.author.username}</a></td></tr>
-            <tr><th>style</th><td>
-            <py:choose test="">
-              <py:when test="recipe.style">${recipe.style.name} (${recipe.style.bjcp_code})</py:when>
-              <py:otherwise>(style undefined)</py:otherwise>
-            </py:choose>
-            </td></tr>
-            <tr><th>batch size</th><td>${recipe.batch_size} ${recipe.get_batch_size_units_display()}</td></tr>
-            <tr py:if="recipe.pre_boil_volume"><th>pre-boil volume</th><td>${recipe.pre_boil_volume} ${recipe.get_pre_boil_volume_units_display()}</td></tr>
-            <tr><th>boil length</th><td>${recipe.boil_length} minutes</td></tr>
-            <tr><th>efficiency</th><td>${recipe.efficiency} %</td></tr>
-            <tr><th>type</th><td>${recipe.get_type_display()}</td></tr>
-            <tr py:if="recipe.notes"><th>notes</th><td>${recipe.notes}</td></tr>
-            <tr py:if="recipe.source_url"><th>source</th><td><a href="${recipe.source_url}">${recipe.source_url}</a></td></tr>
-          </table>
+
+          <label class="stylin grid_4">
+            <div class="label">style</div>
+            <div class="label-content">
+              ${recipe.get_type_display()}
+              <py:choose test="">
+                <py:when test="recipe.style">${recipe.style.name}&nbsp;(${recipe.style.bjcp_code})</py:when>
+                <py:otherwise>(style undefined)</py:otherwise>
+              </py:choose>
+            </div>
+          </label>
+
+          <label class="stylin grid_4">
+            <div class="label">batch size</div>
+            <div class="label-content">
+              ${recipe.batch_size} ${recipe.get_batch_size_units_display()}
+              <py:if test="recipe.pre_boil_volume">
+                , ${recipe.pre_boil_volume} ${recipe.get_pre_boil_volume_units_display()}  pre-boil
+              </py:if>
+              , ${recipe.boil_length} minute boil
+            </div>
+          </label>
+
+          <label class="stylin grid_2">
+            <div class="label">efficiency</div>
+            <div class="label-content">${recipe.efficiency} %</div>
+          </label>
+
+          <label py:if="recipe.author" class="stylin grid_2">
+            <div class="label">input by</div>
+            <div class="label-content">
+              <a href="/user/${recipe.author.username}/">${recipe.author.username}</a>
+            </div>
+          </label>
+
+          <div class="clear"></div>
+
+          <py:if test="recipe.source_url">
+            <label class="stylin grid_6">
+              <div class="label">source url</div>
+              <div class="label-content"><a href="${recipe.source_url}">${recipe.source_url}</a></div>
+            </label>
+
+            <div class="clear"></div>
+          </py:if>
+
+          <label py:if="recipe.notes" class="stylin grid_16">
+            <div class="label">notes</div>
+            <div style="white-space: pre">${recipe.notes}</div>
+          </label>
+
           <div py:if="std.auth_user_is_user(request, recipe.author)">
             <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">edit &uarr;</a>
           </div>
@@ -77,6 +110,7 @@
             <input type="submit" value="update"/>
           <input type="reset" value="cancel" onClick="$('#overview').children().slideToggle(); $('#edit').focus(); return true;" /></form>
         </div>
+        
       </div>
 
       <script type="text/javascript">
@@ -94,6 +128,97 @@
         $$('#' + otherId).toggle();
         }
       </script>
+
+      <py:if test="deriv is not None">
+        <div class="grid_16">
+
+          <div class="grid_4 deriv-og">
+            <label class="stylin">
+              <div class="label">Original Gravity</div>
+              <div class="label-content"
+                   py:with="no_og_reasons=deriv.can_not_derive_og()">
+                <py:choose>
+                  <py:when test="no_og_reasons">
+
+                    <div id="why_not_og">
+                      <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_og').children().slideToggle(); return false;">(why not?)</a></div>
+                      <div style="display:none">
+                        <ul>
+                          <li py:for="reason in no_og_reasons">${reason}</li>
+                        </ul>
+                        <a href="#" onClick="$('#why_not_og').children().slideToggle(); return false;">(hide)</a>
+                      </div>
+                    </div>
+
+                  </py:when>
+                  <py:otherwise py:with="og=deriv.compute_og()">
+                    ${'%1.3f' % (og.average)}
+                  </py:otherwise>
+                </py:choose>
+              </div>
+            </label>
+          </div>
+
+          <div class="grid_4 deriv-ibu">
+            <label class="stylin">
+              <div class="label">IBUs (Tinseth)</div>
+              <div class="label-content"
+                   py:with="no_ibu_reasons=deriv.can_not_derive_ibu()">
+                <py:choose>
+                  <py:when test="no_ibu_reasons">
+                    <div id="why_not_ibus">
+                      <div class="muted">
+                        can't yet compute.
+                        <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(why not?)</a>
+                      </div>
+                      <div style="display:none">
+                        <py:for each="reason in no_ibu_reasons">
+                          ${reason}<br />
+                        </py:for>
+                        <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(hide)</a>
+                      </div>
+                    </div>
+
+                  </py:when>
+
+                  <py:otherwise>
+                    <py:with vars="ibus=deriv.compute_ibu()">
+                      ${'%2.1f' % (ibus.average)}
+                    </py:with>
+                    
+                  </py:otherwise>
+                </py:choose>
+              </div>
+            </label>
+          </div>
+
+          <div class="grid_4 deriv-srm">
+            <label class="stylin">
+              <div class="label">SRM</div>
+              <div class="label-content"
+                   py:with="no_srm_reasons=deriv.can_not_derive_srm()">
+                <py:choose>
+                  <py:when test="no_srm_reasons">
+                    <div id="why_not_srm">
+                      <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(why not?)</a></div>
+                      <div style="display:none">
+                        <py:for each="reason in no_srm_reasons">
+                          ${reason}<br />
+                        </py:for>
+                        <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(hide)</a>
+                      </div>
+                    </div>
+                  </py:when>
+                  <py:otherwise py:with="srm=deriv.compute_srm()">
+                    ${'%2.0f' % (srm.average)}
+                  </py:otherwise>
+                </py:choose>
+              </div>
+            </label>
+          </div>
+
+        </div>
+      </py:if>
 
       <div class="clear"></div>
 
@@ -127,6 +252,7 @@
                 </tr>
                 <tr py:if="editable"
                     id="${type_string}-${id}-editor"
+                    class="${type_string}-editor"
                     py:attrs="{'style':['display:none', ''][form_invalid]}">
                   <td colspan="100">
                     <!-- form row -->
@@ -152,7 +278,7 @@
             </py:def>
 
             <!-- grains -->
-            <div class="grid_16">
+            <div id="grains" class="grid_16" style="margin-top: 10px">
             <table width="${table_width}">
               <tr>
                 <th>grain</th>
@@ -318,139 +444,6 @@ $$('select[name=usage_type]').change(function(evt) {
             </table>
             </div>
 
-            <py:if test="deriv is not None">
-              <div class="grid_4">
-              <h1>derivations</h1>
-
-              <table class="recipe_derivations" width="100%">
-                <tr>
-                  <td colspan="2" class="space">&nbsp;</td>
-                  <th colspan="3">Original gravity</th>
-                </tr>
-                <tr>
-                  <td colspan="2" class="space">&nbsp;</td>
-                  <th>low</th>
-                  <th>average</th>
-                  <th>high</th>
-                </tr>
-                <py:with vars="no_og_reasons=deriv.can_not_derive_og()">
-                  <py:if test="no_og_reasons">
-                    <tr>
-                      <th rowspan="3">IBUs</th>
-                      <th>low</th>
-                      <td colspan="3" rowspan="3">
-                        <div id="why_not_og_ibus">
-                          <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_og_ibus').children().slideToggle(); return false;">(why not?)</a></div>
-                          <div style="display:none">
-                            <py:for each="reason in no_og_reasons">
-                              ${reason}<br />
-                            </py:for>
-                            <a href="#" onClick="$('#why_not_og_ibus').children().slideToggle(); return false;">(hide)</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>average</th>
-                    </tr>
-                    <tr>
-                      <th>high</th>
-                    </tr>
-                  </py:if>
-
-                  <py:if test="not no_og_reasons" py:with="og=deriv.compute_og()">
-                    <tr>
-                      <td colspan="2" class="space">&nbsp;</td>
-                      <td>${'%1.3f' % (og.low)}</td>
-                      <td><strong>${'%1.3f' % (og.average)}</strong></td>
-                      <td>${'%1.3f' % (og.high)}</td>
-                    </tr>
-                    <py:with vars="no_ibu_reasons=deriv.can_not_derive_ibu()">
-                      <py:choose>
-                        <py:when test="no_ibu_reasons">
-                          <tr>
-                            <th rowspan="3">IBUs</th>
-                            <th>low</th>
-                            <td colspan="3" rowspan="3">
-                              <div id="why_not_ibus">
-                                <div class="muted">
-                                  can't yet compute.
-                                  <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(why not?)</a>
-                                </div>
-                                <div style="display:none">
-                                  <py:for each="reason in no_ibu_reasons">
-                                    ${reason}<br />
-                                  </py:for>
-                                  <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(hide)</a>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th>average</th>
-                          </tr>
-                          <tr>
-                            <th>high</th>
-                          </tr>
-                        </py:when>
-                        <py:otherwise>
-                          <py:with vars="og_lo_ibus=deriv.compute_ibu(og.low); og_av_ibus=deriv.compute_ibu(og.average); og_hi_ibus=deriv.compute_ibu(og.high)">
-                            <tr>
-                              <th rowspan="3">IBUs<br/>(Tinseth)</th>
-                              <th>low</th>
-                              <td>${'%2.1f' % (og_lo_ibus.low)}</td>
-                              <td>${'%2.1f' % (og_av_ibus.low)}</td>
-                              <td>${'%2.1f' % (og_hi_ibus.low)}</td>
-                            </tr>
-                            <tr>
-                              <th>average</th>
-                              <td>${'%2.1f' % (og_lo_ibus.average)}</td>
-                              <td><strong>${'%2.1f' % (og_av_ibus.average)}</strong></td>
-                              <td>${'%2.1f' % (og_hi_ibus.average)}</td>
-                            </tr>
-                            <tr>
-                              <th>high</th>
-                              <td>${'%2.1f' % (og_lo_ibus.high)}</td>
-                              <td>${'%2.1f' % (og_av_ibus.high)}</td>
-                              <td>${'%2.1f' % (og_hi_ibus.high)}</td>
-                            </tr>
-                          </py:with>
-                        </py:otherwise>
-                      </py:choose>
-                    </py:with>
-                  </py:if>
-                </py:with>
-              </table>
-              </div>
-              <div class="clear"></div>
-
-              <div class="grid_8">
-                <table width="25%">
-                  <tr>
-                    <th>SRM</th>
-                    <td>
-                      <py:choose py:with="no_srm_reasons=deriv.can_not_derive_srm()">
-                        <py:when test="no_srm_reasons">
-                          <div id="why_not_srm">
-                            <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(why not?)</a></div>
-                            <div style="display:none">
-                              <py:for each="reason in no_srm_reasons">
-                                ${reason}<br />
-                              </py:for>
-                              <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(hide)</a>
-                            </div>
-                          </div>
-                        </py:when>
-                        <py:otherwise py:with="srm=deriv.compute_srm()">
-                          ${'%2.0f' % (srm.average)}
-                        </py:otherwise>
-                      </py:choose>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-
-            </py:if>
     </div>
   </body>
 </html>
