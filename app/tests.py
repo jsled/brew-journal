@@ -927,7 +927,7 @@ class RecipeDerivationsTest (TestCase):
         hops = []
         recipe = Mock(batch_size=5, batch_size_units='gl', efficiency=75, recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
-        self.assertEquals([],deriv.can_not_derive_og())
+        self.assertEquals([], deriv.can_not_derive_og())
         og = deriv.compute_og()
         self.assertAlmostEquals(dec('1.026'), og.average, 3)
 
@@ -969,6 +969,33 @@ class RecipeDerivationsTest (TestCase):
         deriv = models.RecipeDerivations(recipe)
         ibus = deriv.compute_ibu(dec('1.055'))
         self.assertAlmostEquals(dec('15.37'), ibus.average, 2)
+
+    def testRegressionOnlyDryHop(self):
+        from decimal import Decimal as dec
+        grain = models.Grain.objects.get(name='Pale malt (2-row)')
+        grains = [models.RecipeGrain(grain=grain, amount_value=dec(10), amount_units='lb')]
+        hop = models.Hop.objects.get(name='Liberty')
+        hops = [models.RecipeHop(hop=hop, amount_value=dec(1), amount_units='oz', usage_type='dry')]
+        recipe = Mock(batch_size=dec(5), batch_size_units='gl', boil_length=dec('60'), efficiency=75, recipehop_set=FkSet(hops), recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
+        ibus = deriv.compute_ibu(dec('1.055'))
+        self.assertAlmostEquals(dec('0'), ibus.average, 2)
+
+    def testNoRealFermentables(self):
+        from decimal import Decimal as dec
+        grain = models.Grain.objects.get(name='Irish Moss')
+        grains = [models.RecipeGrain(grain=grain, amount_value=dec(1), amount_units='gr')]
+        hop = models.Hop.objects.get(name='Liberty')
+        hops = [models.RecipeHop(hop=hop, amount_value=dec(1), amount_units='oz', usage_type='dry')]
+        recipe = Mock(batch_size=dec(5), batch_size_units='gl', boil_length=dec('60'), efficiency=75, recipehop_set=FkSet(hops), recipegrain_set=FkSet(grains))
+        deriv = models.RecipeDerivations(recipe)
+        self.assertEquals([], deriv.can_not_derive_og())
+        og = deriv.compute_og()
+        self.assertEquals([], deriv.can_not_derive_ibu())
+        ibus = deriv.compute_ibu(og.average)
+        self.assertEquals([], deriv.can_not_derive_srm())
+        srm = deriv.compute_srm()
+
 
 class MashSpargeWaterCalcTest (TestCase):
 

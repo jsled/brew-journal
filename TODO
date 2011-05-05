@@ -153,15 +153,6 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 * Todo
 ** bugs, misc
-*** TODO Bug: recipe with single volume "grain" results in /0 error
-
-http://brew-journal.com/recipe/109/Graff
-
-- single RecipeGrain (id=334)
-  - Apple Must, 4.000 g, no override = error
-
-jsled's gnus:nnimap+mail:INBOX#28859
-
 *** TODO Bug: with slashes in recipe name [?]
 From: [REDACTED]
 To: Josh Sled <jsled@asynchronous.org>
@@ -175,9 +166,6 @@ recipe just fine, but I couldn't add any ingredients to it - when I clicked
 on add, nothing happened. I think it may have gotten confused since there was
 a / in the name - I took that out and all is well. I'm guessing the / screwed
 up the path and maybe needs to be escaped or something?
-
-*** DONE Bug: recipe with only fwh hops results in IBU derivation error
-    CLOSED: [2011-05-04 Wed 19:48]
 *** TODO step deletion
 *** TODO step note formatting: table over-sizing; line-breaking / markdown
 *** TODO no way to indicate the addition a fermentable (e.g., honey) added at flame-out, or half-way through, or whatever.
@@ -197,6 +185,18 @@ up the path and maybe needs to be escaped or something?
 *** TODO user profile should require existing password for password change; use django form validation/cleaning routines
 *** TODO to add: Fruit/"Other"
 (08:42:34 PM) djensen: I think you need 'Other' for fruit
+*** DONE Bug: recipe with single volume "grain" results in /0 error
+    CLOSED: [2011-05-04 Wed 21:21]
+
+http://brew-journal.com/recipe/109/Graff
+
+- single RecipeGrain (id=334)
+  - Apple Must, 4.000 g, no override = error
+
+jsled's gnus:nnimap+mail:INBOX#28859
+
+*** DONE Bug: recipe with only fwh hops results in IBU derivation error
+    CLOSED: [2011-05-04 Wed 19:48]
 *** DONE Brix calculation
     CLOSED: [2010-03-07 Sun 10:13]
 http://www.primetab.com/formulas.html

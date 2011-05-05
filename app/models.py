@@ -1188,7 +1188,10 @@ class RecipeDerivations (object):
         high_calc = high - Decimal('1')
         for grain in per_grain:
             grain_calc = grain.high_og - Decimal('1')
-            grain.percentage = (grain_calc / high_calc) * Decimal('100')
+            pctg = Decimal('0')
+            if high_calc != Decimal('0'):
+                pctg = (grain_calc / high_calc) * Decimal('100')
+            grain.percentage = pctg
         return OgDerivation(low, high, per_grain)
 
     def can_not_derive_ibu(self):
@@ -1244,7 +1247,10 @@ class RecipeDerivations (object):
             high_accum += high
             per_hop.append(PerHopIbu(hop, low, high))
         for hop_ibus in per_hop:
-            hop_ibus.percentage = (hop_ibus.high_ibu / high_accum) * Decimal('100')
+            pctg = Decimal('0')
+            if high_accum != Decimal('0'):
+                pctg = (hop_ibus.high_ibu / high_accum) * Decimal('100')
+            hop_ibus.percentage = pctg
         return IbuDerivation(low_accum, high_accum, per_hop)
 
     def can_not_derive_srm(self):
@@ -1286,7 +1292,10 @@ class RecipeDerivations (object):
             hi_accum += hi
             per_grain.append(PerGrainSrm(grain, lo, hi))
         for grain in per_grain:
-            grain.percentage = (grain.high_srm / hi_accum) * Decimal('100')
+            pctg = Decimal('0')
+            if hi_accum != Decimal('0'):
+                pctg = (grain.high_srm / hi_accum) * Decimal('100')
+            grain.percentage = pctg
         low,high = lo_accum,hi_accum
         return SrmDerivation(low, high, per_grain)
 
