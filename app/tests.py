@@ -997,7 +997,7 @@ class SeleniumTest (AppTestCase):
 
     def setUp(self):
         from selenium import selenium
-        firefox_path = '/usr/lib64/mozilla-firefox/firefox'
+        firefox_path = '/usr/lib64/firefox/firefox'
         self.selenium = selenium("localhost", 4444, "*firefox %s" % (firefox_path), "http://127.0.0.1:8000/")
         self.selenium.start()
 
