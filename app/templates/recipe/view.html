@@ -6,18 +6,6 @@
   <head>
     <title>recipe "${recipe.name}" | brew-journal</title>
     <xi:include href="../_incl/head.html"/>
-    <script type="application/javascript">
-      function set_delete_id_and_submit(form_name, item_id) {
-      form_name = '#' + form_name;
-
-      $(form_name)
-      .find('[name=delete_id]')
-      .val(item_id);
-
-      $(form_name).get()[0].submit();
-      }
-
-    </script>
     <style type="text/css">
 .overridden
 {
@@ -111,19 +99,19 @@
       </div>
 
       <script type="text/javascript">
-        function toggle_row_editor(row_child) {
-        var $$row = $$(row_child).closest('tr:not([class=fake])');
-        var id = $$row.attr('id');
-        var otherId;
-        var match;
-        if (match = /(.*)-editor$$/.exec(id)) {
+function toggle_row_editor(row_child) {
+    var $$row = $$(row_child).closest('tr:not([class=fake])');
+    var id = $$row.attr('id');
+    var otherId;
+    var match;
+    if (match = /(.*)-editor$$/.exec(id)) {
         otherId = match[1];
-        } else {
+    } else {
         otherId = id + "-editor";
-        }
-        $$('#' + id).toggle();
-        $$('#' + otherId).toggle();
-        }
+    }
+    $$('#' + id).toggle();
+    $$('#' + otherId).toggle();
+}
       </script>
 
       <py:if test="deriv is not None">
