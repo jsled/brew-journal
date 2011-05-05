@@ -899,8 +899,7 @@ class RecipeDerivationsTest (TestCase):
         apple = models.Grain.objects.get(name__startswith='Apple')
         grains = [models.RecipeGrain(grain=apple, amount_value=dec('5'), amount_units='gl')]
         hops = []
-        recipe = Mock(batch_size=5, batch_size_units='gl', efficiency=75,
-                      recipegrain_set=FkSet(grains))
+        recipe = Mock(batch_size=5, batch_size_units='gl', efficiency=75, recipegrain_set=FkSet(grains))
         deriv = models.RecipeDerivations(recipe)
         no_og_reasons = deriv.can_not_derive_og()
         self.assertEquals([], no_og_reasons)
@@ -922,7 +921,7 @@ class RecipeDerivationsTest (TestCase):
 
     def testDilutedByVolumePotential(self):
         dec = lambda x: decimal.Decimal(x)
-        apple = models.Grain.objects.get(name__startswith='Apple')
+        apple = models.Grain.objects.get(name='Apple Must')
         grains = [models.RecipeGrain(grain=apple, amount_value=dec('2.5'), amount_units='gl')]
         hops = []
         recipe = Mock(batch_size=5, batch_size_units='gl', efficiency=75, recipegrain_set=FkSet(grains))
