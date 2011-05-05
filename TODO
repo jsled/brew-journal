@@ -153,6 +153,12 @@ What is the essence of "future" steps?  They haven't happened, yet.
 
 * Todo
 ** bugs, misc
+*** TODO Bug: gravity by volume not working?
+
+The 'volume_potential_{min,max}' columns are never populated for either dev
+or production DBs, leading to miscomputation (logic bug).  The unit tests
+build correctly from fixtures, and aren't thus affected.
+
 *** TODO Bug: with slashes in recipe name [?]
 From: [REDACTED]
 To: Josh Sled <jsled@asynchronous.org>
