@@ -18,282 +18,284 @@
         <xi:include href="../../_incl/body-top-bar.html"/>
 
         <div class="grid_16">
-
             <h1 py:if="brew.recipe">brew of "${brew.recipe.name}"</h1>
             <h1 py:if="not brew.recipe">un-named brew</h1>
         </div>
         <div class="clear"></div>
-  <div id="details">
-      <div class="grid_16">
-          <span py:if="brew.brew_date">brewed on ${std.fmt.date.ymdhm(brew.brew_date, user)} </span>
-          by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
-          <span py:if="brew.recipe">from recipe ${recipe_a(brew.recipe)}</span>
-      </div>
-      <div class="clear"></div>
+        <div id="details">
+            <div class="grid_16">
+                <span py:if="brew.brew_date">brewed on ${std.fmt.date.ymdhm(brew.brew_date, user)} </span>
+                by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
+                <span py:if="brew.recipe">from recipe ${recipe_a(brew.recipe)}</span>
+            </div>
+            <div class="clear"></div>
 
-      <div py:if="brew.recipe" class="recipe-style-summary grid_16">
-          <py:if test="brew.recipe.batch_size">
-              ${brew.recipe.batch_size}${brew.recipe.batch_size_units}
-          </py:if>
-          | ${brew.recipe.get_type_display()}
-          <py:if test="brew.recipe.style">
-              | ${brew.recipe.style.name}
-          </py:if>
+            <div py:if="brew.recipe" class="recipe-style-summary grid_16">
+                <py:if test="brew.recipe.batch_size">
+                    ${brew.recipe.batch_size}${brew.recipe.batch_size_units}
+                </py:if>
+                | ${brew.recipe.get_type_display()}
+                <py:if test="brew.recipe.style">
+                    | ${brew.recipe.style.name}
+                </py:if>
 
-          <py:if test="recipe_deriv">
-              <py:if test="not recipe_deriv.can_not_derive_og()">
-                  | <strong>${"%0.3f" % recipe_deriv.compute_og().average}</strong>
-              </py:if>
-              <py:if test="not recipe_deriv.can_not_derive_ibu()">
-                  | <strong>${"%d" % recipe_deriv.compute_ibu().average}</strong> IBU
-              </py:if>
-              <py:if test="not recipe_deriv.can_not_derive_srm()">
-                  | <strong>${"%d" % recipe_deriv.compute_srm().average}</strong> SRM
-              </py:if>
-          </py:if>
-      </div>
-
-      <div py:if="brew.notes and len(brew.notes) > 0" class="grid_16">
-          <h2>notes</h2>
-          <div class="notes"><pre class="notes">${brew.notes}</pre></div>
-      </div>
-
-      <div class="grid_16"> <!-- derivations -->
-          efficiency:
-          <py:choose>
-              <span py:when="deriv.can_not_derive_efficiency()"
-                    py:attrs="{'title': '. '.join(deriv.can_not_derive_efficiency())}"
-                    id="why_not_efficiency" class="muted">can't yet compute</span>
-              <strong py:otherwise="">
-                  ${'%0.2f' % deriv.efficiency()}%
-              </strong>
-          </py:choose>
-          | abv:
-          <py:choose>
-              <span py:when="deriv.can_not_derive_abv()"
-                    py:attrs="{'title': '. '.join(deriv.can_not_derive_abv())}"
-                    class="muted">can't yet compute</span>
-              <strong py:otherwise="">${'%0.2f' % (deriv.alcohol_by_volume())}%</strong>
-          </py:choose>
-          | attenuation:
-          <py:choose>
-              <span py:when="deriv.can_not_derive_aa()"
-                    py:attrs="{'title': '. '.join(deriv.can_not_derive_aa())}"
-                    class="muted">can't yet compute</span>
-              <strong py:otherwise="">${'%0.2f' % (deriv.apparent_attenuation())}%</strong>
-          </py:choose>
-      </div>
-
-      <div id="detailsEdit" py:if="std.auth_user_is_user(request, user)" class="grid_16">
-          <div>
-              <a py:if="std.auth_user_is_user(request, user)" href="#" onClick="$('#detailsEdit').children().toggle(); return false;">edit brew details...</a>
-          </div>
-          <div style="display:none">
-              <h2>edit</h2>
-              <form method="post" id="details-form" action="/user/${brew.brewer.username}/brew/${brew.id}/edit/">
-                  <table class="form" py:content="std.Markup(brew_form.as_table())"/>
-                  <input type="submit" value="update"/>
-                  <button onClick="$('#detailsEdit').children().toggle(); $('#details-form').get()[0].reset(); return false;">cancel</button>
-              </form>
-          </div>
-      </div>
-  </div>
-
-  <div class="grid_16">
-  <h2>journal</h2>
-
-  <?python
-    now_steps = [step for step in steps if not step.in_future()]
-    future_steps = [step for step in steps if step.in_future()]
-  ?>
-  <py:def function="step_row(std,user,brew,step)">
-      <td style="padding-right: 1em"><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date.best(step.date, user)}</a></td>
-      <td style="padding-right: 1em; white-space: nowrap">${step.get_type_display()}</td>
-      <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.volume">${step.volume} ${step.volume_units}</py:if></td>
-      <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.temp">${step.temp} ${step.temp_units}</py:if></td>
-      <td style="padding-right: 1em;">${step.gravity}</td>
-      <td>${step.notes}</td>
-  </py:def>
-
-  <table width="100%">
-    <colgroup>
-      <col width="10%"/>
-      <col width="10%"/>
-      <col width="10%"/>
-      <col width="10%"/>
-      <col width="10%"/>
-      <col width="50%"/>
-    </colgroup>
-    <thead>
-      <tr>
-        <th>date</th>
-        <th>step</th>
-        <th>volume</th>
-        <th>temp</th>
-        <th>gravity<br/>(corrected)</th>
-        <th>notes</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr py:if="not steps">
-        <td colspan="1000"><em>no steps recorded, yet.</em></td>
-      </tr>
-      <tr py:for="step in now_steps">${step_row(std,user,brew,step)}</tr>
-    </tbody>
-    <tbody py:if="future_steps" class="future">
-      <tr py:for="step in future_steps">${step_row(std,user,brew,step)}</tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="clear"></div>
-
-  <div py:if="step_form and std.auth_user_is_user(request, user)"
-       id="add-step"
-       py:with="expand=step_edit">
-    <div py:attrs="{'style': 'display:' + ['inherit', 'none'][expand]}" class="grid_16">
-      <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;" py:attrs="{'id': ['first-focused', ''][expand]}">add step</a>
-    </div>
-    <div py:attrs="{'style': 'display:' + ['inherit', 'none'][not expand]}">
-        <form method="POST" id="add-step-form">
-
-            <div class="grid_4">
-                ${field(step_form.type)}
+                <py:if test="recipe_deriv">
+                    <py:if test="not recipe_deriv.can_not_derive_og()">
+                        | <strong>${"%0.3f" % recipe_deriv.compute_og().average}</strong>
+                    </py:if>
+                    <py:if test="not recipe_deriv.can_not_derive_ibu()">
+                        | <strong>${"%d" % recipe_deriv.compute_ibu().average}</strong> IBU
+                    </py:if>
+                    <py:if test="not recipe_deriv.can_not_derive_srm()">
+                        | <strong>${"%d" % recipe_deriv.compute_srm().average}</strong> SRM
+                    </py:if>
+                </py:if>
             </div>
 
-            <div class="grid_4">
-                ${field(step_form.date)}
+            <div py:if="brew.notes and len(brew.notes) > 0" class="grid_16">
+                <h2>notes</h2>
+                <div class="notes"><pre class="notes">${brew.notes}</pre></div>
             </div>
 
-            <div class="grid_4">
-                ${boolean_field(step_form.shift_step_times)}
+            <div class="grid_16"> <!-- derivations -->
+                efficiency:
+                <py:choose>
+                    <span py:when="deriv.can_not_derive_efficiency()"
+                          py:attrs="{'title': '. '.join(deriv.can_not_derive_efficiency())}"
+                          id="why_not_efficiency" class="muted">can't yet compute</span>
+                    <strong py:otherwise="">
+                        ${'%0.2f' % deriv.efficiency()}%
+                    </strong>
+                </py:choose>
+                | abv:
+                <py:choose>
+                    <span py:when="deriv.can_not_derive_abv()"
+                          py:attrs="{'title': '. '.join(deriv.can_not_derive_abv())}"
+                          class="muted">can't yet compute</span>
+                    <strong py:otherwise="">${'%0.2f' % (deriv.alcohol_by_volume())}%</strong>
+                </py:choose>
+                | attenuation:
+                <py:choose>
+                    <span py:when="deriv.can_not_derive_aa()"
+                          py:attrs="{'title': '. '.join(deriv.can_not_derive_aa())}"
+                          class="muted">can't yet compute</span>
+                    <strong py:otherwise="">${'%0.2f' % (deriv.apparent_attenuation())}%</strong>
+                </py:choose>
             </div>
 
-            <div class="clear"/>
-
-            <div class="grid_4">
-                ${field(step_form.volume, step_form.volume_units)}
+            <div id="detailsEdit" py:if="std.auth_user_is_user(request, user)" class="grid_16">
+                <div>
+                    <a py:if="std.auth_user_is_user(request, user)" href="#" onClick="$('#detailsEdit').children().toggle(); return false;">edit brew details</a>
+                </div>
+                <div style="display:none">
+                    <h2>edit</h2>
+                    <form method="post" id="details-form" action="/user/${brew.brewer.username}/brew/${brew.id}/edit/">
+                        <table class="form" py:content="std.Markup(brew_form.as_table())"/>
+                        <input type="submit" value="update"/>
+                        <button onClick="$('#detailsEdit').children().toggle(); $('#details-form').get()[0].reset(); return false;">cancel</button>
+                    </form>
+                </div>
             </div>
+        </div>
 
-            <div class="grid_4">
-                ${field(step_form.temp, step_form.temp_units)}
+        <div class="grid_16">
+            <h2>journal</h2>
+
+            <?python
+              now_steps = [step for step in steps if not step.in_future()]
+              future_steps = [step for step in steps if step.in_future()]
+            ?>
+            <py:def function="step_row(std,user,brew,step)">
+                <td style="padding-right: 1em"><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date.best(step.date, user)}</a></td>
+                <td style="padding-right: 1em; white-space: nowrap">${step.get_type_display()}</td>
+                <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.volume">${step.volume} ${step.volume_units}</py:if></td>
+                <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.temp">${step.temp} ${step.temp_units}</py:if></td>
+                <td style="padding-right: 1em;">${step.gravity}</td>
+                <td>${step.notes}</td>
+            </py:def>
+
+            <table width="100%">
+                <colgroup>
+                    <col width="10%"/>
+                    <col width="10%"/>
+                    <col width="10%"/>
+                    <col width="10%"/>
+                    <col width="10%"/>
+                    <col width="50%"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>date</th>
+                        <th>step</th>
+                        <th>volume</th>
+                        <th>temp</th>
+                        <th>gravity<br/>(corrected)</th>
+                        <th>notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr py:if="not steps">
+                        <td colspan="1000"><em>no steps recorded, yet.</em></td>
+                    </tr>
+                    <tr py:for="step in now_steps">${step_row(std,user,brew,step)}</tr>
+                </tbody>
+                <tbody py:if="future_steps" class="future">
+                    <tr py:for="step in future_steps">${step_row(std,user,brew,step)}</tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clear"></div>
+
+        <div py:if="step_form and std.auth_user_is_user(request, user)"
+             id="add-step"
+             class="grid_16"
+             py:with="expand=step_edit">
+            <div py:attrs="{'style': 'display:' + ['inherit', 'none'][expand]}" class="grid_16">
+                <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;" py:attrs="{'id': ['first-focused', ''][expand]}">add step</a>
             </div>
+            <div py:attrs="{'style': 'display:' + ['inherit', 'none'][not expand]}">
+                <form method="POST" id="add-step-form">
 
-            <div class="clear"/>
-
-            <!-- div class="grid_12">
-                <label class="stylin">
-                    <div class="label">${step_form.gravity_read.label}</div>
-                    <div py:for="field in (step_form.gravity_read_type,
-                                           step_form.gravity_read,
-                                           step_form.gravity_read_temp,
-                                           step_form.gravity_read_temp_units)" py:if="field.errors" class="errors">
-                        ${field.errors}
+                    <div class="grid_4">
+                        ${field(step_form.type)}
                     </div>
-                    <div class="label-contents">
-                        ${std.Markup(step_form.gravity_read_type)}
-                        ${std.Markup(step_form.gravity_read)}
-                        ${std.Markup(step_form.gravity_read_temp)}
-                        ${std.Markup(step_form.gravity_read_temp_units)}
+
+                    <div class="grid_4">
+                        ${field(step_form.date)}
                     </div>
-                </label>
-            </div -->
 
-            <div class="grid_4">
-                ${field(step_form.gravity_read,step_form.gravity_read_type)}
+                    <div class="grid_4">
+                        ${boolean_field(step_form.shift_step_times)}
+                    </div>
+
+                    <div class="clear"/>
+
+                    <div class="grid_4">
+                        ${field(step_form.volume, step_form.volume_units)}
+                    </div>
+
+                    <div class="grid_4">
+                        ${field(step_form.temp, step_form.temp_units)}
+                    </div>
+
+                    <div class="clear"/>
+
+                    <!-- div class="grid_12">
+                         <label class="stylin">
+                         <div class="label">${step_form.gravity_read.label}</div>
+                         <div py:for="field in (step_form.gravity_read_type,
+                         step_form.gravity_read,
+                         step_form.gravity_read_temp,
+                         step_form.gravity_read_temp_units)" py:if="field.errors" class="errors">
+                         ${field.errors}
+                         </div>
+                         <div class="label-contents">
+                         ${std.Markup(step_form.gravity_read_type)}
+                         ${std.Markup(step_form.gravity_read)}
+                         ${std.Markup(step_form.gravity_read_temp)}
+                         ${std.Markup(step_form.gravity_read_temp_units)}
+                         </div>
+                         </label>
+                         </div -->
+
+                    <div class="grid_4">
+                        ${field(step_form.gravity_read,step_form.gravity_read_type)}
+                    </div>
+                    
+                    <div class="grid_4">
+                        ${field(step_form.gravity_read_temp, step_form.gravity_read_temp_units)}
+                    </div>
+
+                    <div class="clear"/>
+
+                    <div class="grid_8">
+                        ${field(step_form.notes)}
+                    </div>
+
+                    <div class="clear"/>
+
+                    <div class="grid_4">
+                        <input type="submit" value="update"/>
+                        <button onClick="window.location = '${brew_url(brew)}'; return false;">cancel</button>
+                    </div>
+
+                    <py:for each="hidden in step_form.hidden_fields()">
+                        ${std.Markup(hidden)}
+                    </py:for>
+                </form>
+
+                <script type="text/javascript">
+                    $(function() {
+                    $('.expand-on-focus').focus(function(elt) {
+                    $(this).attr('rows', 10);
+                    }).blur(function(elt) {
+                    $(this).attr('rows', 3);
+                    }).attr('rows', 3).css('width', '100%');
+                    });
+                </script>
             </div>
-            
-            <div class="grid_4">
-                ${field(step_form.gravity_read_temp, step_form.gravity_read_temp_units)}
+        </div>
+        <div class="clear"></div>
+
+        <br/>
+
+        <div py:if="mash_sparge_calc_form"
+             id="mash-sparge-calc-panel"
+             class="grid_16"
+             py:with="expand=(mash_sparge_calc_form.is_bound and not mash_sparge_calc_form.is_valid())
+                      or request.GET.has_key('mash_sparge_recalc')
+                      ; calc=mash_sparge_calc_form.calc">
+            <div py:attrs="{'style': 'display:' + ['none','inherit'][not expand]}">
+                <a href="#" onClick="$('#mash-sparge-calc-panel').children().slideToggle(); return false;">compute mash/sparge volumes, steps</a>
             </div>
+            <div py:attrs="{'style': 'display:' + ['none','inherit'][expand]}">
+                <form method="GET" id="mash-sparge-calc">
+                    <input type="hidden" name="mash_sparge_recalc" />
 
-            <div class="clear"/>
+                    <xi:include href="../../calc/_mash_sparge_form.html"/>
 
-            <div class="grid_8">
-                ${field(step_form.notes)}
+                    <py:def function="mash_sparge_form_actions">
+                        <div class="grid_4">
+                            <input type="submit" name="action" value="recalculate"/>
+                            <input type="reset" value="cancel" onClick="window.location.search = '';"/>
+                        </div>
+                    </py:def>
+
+                    ${mash_sparge_form(mash_sparge_calc_form, mash_sparge_form_actions)}
+
+                    <py:for each="hidden in mash_sparge_calc_form.hidden_fields()">
+                        ${std.Markup(hidden)}
+                    </py:for>
+
+                    <py:if test="mash_sparge_steps" >
+                        <div class="clear"/>
+                        <h2>step preview</h2>
+                        <table width="100%" class="grid_16">
+                            <thead>
+                                <tr>
+                                    <th>date</th>
+                                    <th>step</th>
+                                    <th>volume</th>
+                                    <th>temp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr py:for="step in mash_sparge_steps">
+                                    <td>${std.fmt.date.best(step.date, user)}</td>
+                                    <td>${step.get_type_display()}</td>
+                                    <td><py:if test="step.volume">${'%0.2f' % step.volume} ${step.volume_units}</py:if></td>
+                                    <td><py:if test="step.temp">${'%0.1f' % step.temp} ${step.temp_units}</py:if></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="grid_4">
+                            <input type="submit" name="action" value="create steps" onClick="$$('FORM#mash-sparge-calc').attr('method', 'POST'); return true;"/>
+                        </div>
+                    </py:if>
+                </form>
             </div>
-
-            <div class="clear"/>
-
-            <div class="grid_4">
-                <input type="submit" value="update"/>
-                <button onClick="window.location = '${brew_url(brew)}'; return false;">cancel</button>
-            </div>
-
-            <py:for each="hidden in step_form.hidden_fields()">
-                ${std.Markup(hidden)}
-            </py:for>
-        </form>
-
-        <script type="text/javascript">
-$(function() {
-    $('.expand-on-focus').focus(function(elt) {
-        $(this).attr('rows', 10);
-    }).blur(function(elt) {
-        $(this).attr('rows', 3);
-    }).attr('rows', 3).css('width', '100%');
-});
-        </script>
-    </div>
-  </div>
-  <div class="clear"></div>
-
-  <br/>
-
-  <div py:if="mash_sparge_calc_form" id="mash-sparge-calc-panel" class="grid_16"
-       py:with="expand=(mash_sparge_calc_form.is_bound and not mash_sparge_calc_form.is_valid())
-                       or request.GET.has_key('mash_sparge_recalc')
-                ; calc=mash_sparge_calc_form.calc">
-      <div py:attrs="{'style': 'display:' + ['none','inherit'][not expand]}">
-          <a href="#" onClick="$('#mash-sparge-calc-panel').children().slideToggle(); return false;">compute mash/sparge volumes, steps</a>
-      </div>
-      <div py:attrs="{'style': 'display:' + ['none','inherit'][expand]}">
-          <form method="GET" id="mash-sparge-calc">
-              <input type="hidden" name="mash_sparge_recalc" />
-
-              <xi:include href="../../calc/_mash_sparge_form.html"/>
-
-              <py:def function="mash_sparge_form_actions">
-                  <div class="grid_4">
-                      <input type="submit" name="action" value="recalculate"/>
-                      <input type="reset" value="cancel" onClick="window.location.search = '';"/>
-                  </div>
-              </py:def>
-
-              ${mash_sparge_form(mash_sparge_calc_form, mash_sparge_form_actions)}
-
-              <py:for each="hidden in mash_sparge_calc_form.hidden_fields()">
-                  ${std.Markup(hidden)}
-              </py:for>
-
-              <py:if test="mash_sparge_steps" >
-                  <div class="clear"/>
-                  <h2>step preview</h2>
-                  <table width="100%" class="grid_16">
-                      <thead>
-                          <tr>
-                              <th>date</th>
-                              <th>step</th>
-                              <th>volume</th>
-                              <th>temp</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr py:for="step in mash_sparge_steps">
-                              <td>${std.fmt.date.best(step.date, user)}</td>
-                              <td>${step.get_type_display()}</td>
-                              <td><py:if test="step.volume">${'%0.2f' % step.volume} ${step.volume_units}</py:if></td>
-                              <td><py:if test="step.temp">${'%0.1f' % step.temp} ${step.temp_units}</py:if></td>
-                          </tr>
-                      </tbody>
-                  </table>
-
-                  <div class="grid_4">
-                      <input type="submit" name="action" value="create steps" onClick="$$('FORM#mash-sparge-calc').attr('method', 'POST'); return true;"/>
-                  </div>
-              </py:if>
-          </form>
-      </div>
-  </div>
-</div>
+        </div>
+    </div> <!-- journal.grid_16 -->
 </body>
 </html>
