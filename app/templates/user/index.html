@@ -38,7 +38,7 @@
                     <li py:for="brew in future_brews">brew <a href="/user/${user.username}/brew/${brew.id}/">${brew.title()}</a>
                     <ul>
                         <li py:for="step in brew.future_steps()">
-                            ${step.get_type_display()} on ${std.fmt.date.best(step.date, user)}
+                            ${step.get_type_display()} on ${std.fmt.date.best(step.date)}
                         </li>
                     </ul>
                     </li>
