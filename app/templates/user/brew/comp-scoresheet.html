@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include href="../../_incl/taglib.html"/>
+
+<head>
+  <title>competition results for "${brew.recipe.name}" | brew-journal</title>
+  <xi:include href="../../_incl/head.html"/>
+</head>
+<body>
+    <div class="container_16">
+
+        <xi:include href="../../_incl/body-top-bar.html"/>
+
+        <h1>competition ${results.competition_name} scoresheet for ${brew.recipe.name}</h1>
+
+        <div class="grid_16">
+            <form method="POST">
+
+                <table class="grid_12">
+                    ${std.Markup(form.as_table())}
+                </table>
+
+                <div class="clear"></div>
+
+                <div class="grid_4">
+                    <input type="submit"/>
+                    <button type="button" onclick="window.location='/user/${user.username}/brew/${brew.id}'">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+    </div> <!-- .container_16 -->
+</body>
+</html>

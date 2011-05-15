@@ -651,7 +651,7 @@ class NextStepGenerator (object):
 
 class ShoppingList (object):
     '''
-    Find a user's pre-brews with a future "buy-ingredients" step, and consolidates the ingredients by type
+    Find a user's Brews with a future "buy-ingredients" step, and consolidates the ingredients by type
 
     Each ingredient type is a list of (Ingredient,[(RecipeIngredient,Brew)])
 
@@ -708,13 +708,95 @@ class ShoppingList (object):
                     collection.setdefault(item, []).append((recipe_item,brew))
 
 
+class BjcpCompetitionResults (models.Model):
+    brew = models.ForeignKey(Brew)
+    entered_style = models.ForeignKey(Style)
+    competition_name = models.CharField(max_length=128)
+    competition_date = models.DateField(blank=True, null=True)
+    competition_url = models.URLField(blank=True, null=True)
+    entry_number = models.CharField(max_length=32, blank=True, null=True)
+    flight_position = models.IntegerField(blank=True, null=True)
+    flight_entries = models.IntegerField(blank=True, null=True)
+    assigned_score = models.DecimalField(max_digits=3, decimal_places=1)
+    place_awarded = models.CharField(max_length=1, choices=(('1', '1st'),
+                                                            ('2', '2nd'),
+                                                            ('3', '3rd')), blank=True, null=True)
+    mini_bos = models.NullBooleanField(blank=True, null=True, verbose_name='Advanced to a Mini-BOS round')
+    notes = models.TextField(blank=True)
+
+
+BJCP_Ranks = (
+    ('non-bjcp', 'Non-BJCP'),
+    ('pending', 'Rank Pending'),
+    ('apprentice', 'Apprentice'),
+    ('recognized', 'Recognized'),
+    ('certified', 'Certified'),
+    ('national', 'National'),
+    ('master', 'Master'),
+    ('grand-master', 'Grand Master'),
+    ('hon-master', 'Honorary Master')
+    )
+
+
+BJCP_StylisticAccuracy_Ranking = (
+    ('1', 'Not to Style (1/5)'),
+    ('2', '2/5'),
+    ('3', '3/5'),
+    ('4', '4/5'),
+    ('5', 'Classic Example (5/5)')
+    )
+
+BJCP_TechnicalMerit_Ranking = (
+    ('1', 'Significant Flaws (1/5)'),
+    ('2', '2/5'),
+    ('3', '3/5'),
+    ('4', '4/5'),
+    ('5', 'Flawless (5/5)')
+    )
+
+BJCP_Intangibles_Ranking = (
+    ('1', 'Lifeless (1/5)'),
+    ('2', '2/5'),
+    ('3', '3/5'),
+    ('4', '4/5'),
+    ('5', 'Wonderful (5/5)')
+    )
+
+
+class BjcpBeerScoresheet (models.Model):
+    competition_results = models.ForeignKey(BjcpCompetitionResults)
+    judge_name = models.CharField(max_length=32, blank=True)
+    judge_bjcp_id = models.CharField(max_length=32, blank=True)
+    judge_email = models.EmailField(blank=True)
+    judge_rank = models.CharField(max_length=16, choices=BJCP_Ranks, blank=True)
+    # @fixme: endorsements: pro brewer, mead judge, cider judge
+    bottle_inspection = models.BooleanField()
+    bottle_inspection_notes = models.CharField(max_length=100, blank=True)
+    notes = models.TextField(blank=True)
+    total_score = models.IntegerField()
+    aroma_score = models.IntegerField()
+    aroma_notes = models.TextField(blank=True)
+    appearance_score = models.IntegerField()
+    appearance_notes = models.TextField(blank=True)
+    flavor_score = models.IntegerField()
+    flavor_notes = models.TextField(blank=True)
+    mouthfeel_score = models.IntegerField()
+    mouthfeel_notes = models.TextField(blank=True)
+    overall_score = models.IntegerField()
+    overall_notes = models.TextField(blank=True)
+    stylistic_accuracy = models.CharField(max_length=1, choices=BJCP_StylisticAccuracy_Ranking, blank=True)
+    technical_merit = models.CharField(max_length=1, choices=BJCP_TechnicalMerit_Ranking, blank=True)
+    intangibles = models.CharField(max_length=1, choices=BJCP_Intangibles_Ranking, blank=True)
+
+
 class TimeConst:
     SECOND = 1000
     MINUTE = 60 * SECOND
     HOUR = 60 * MINUTE
     DAY = 24 * HOUR
     WEEK = 7 * DAY
-    
+
+
 def celsius_to_farenheit(temp):
     '''
     >>> print celsius_to_farenheit(0.0)

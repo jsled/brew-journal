@@ -150,7 +150,7 @@
              id="add-step"
              class="grid_16"
              py:with="expand=step_edit">
-            <div py:attrs="{'style': 'display:' + ['inherit', 'none'][expand]}" class="grid_16">
+            <div py:attrs="{'style': 'display:' + ['inherit', 'none'][expand]}">
                 <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;" py:attrs="{'id': ['first-focused', ''][expand]}">add step</a>
             </div>
             <div py:attrs="{'style': 'display:' + ['inherit', 'none'][not expand]}">
@@ -296,6 +296,29 @@
                 </form>
             </div>
         </div>
-    </div> <!-- journal.grid_16 -->
+
+        <div class="grid_16">
+            
+            <div py:for="result in brew.bjcpcompetitionresults_set.all()">
+                Scored a ${result.assigned_score} at the ${result.competition_name}. 
+                <a href="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}">edit</a>
+                <form style="display:inline" method="POST" action="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/delete"><a href="#" onclick="$(this).parent('FORM').submit()">delete</a></form>
+                <ul py:if="result.bjcpbeerscoresheet_set.exists()">
+                    <li py:for="scoresheet in result.bjcpbeerscoresheet_set.all()">
+                        Judge score ${scoresheet.total_score}.
+                        <a href="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/scoresheet/${scoresheet.id}">edit</a>
+                        <form method="POST" style="display:inline" action="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/scoresheet/${scoresheet.id}/delete">
+                            <a href="#" onClick="$(this).parent('FORM').submit()">delete</a>
+                        </form>
+                    </li>
+                </ul>
+                <a href="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/scoresheet/new">add scoresheet</a>
+            </div>
+
+            <div class="clear"></div>
+            <a href="/user/${user.username}/brew/${brew.id}/competition-results/new">add competition results</a>
+        </div>
+
+    </div> <!-- .container_16 -->
 </body>
 </html>

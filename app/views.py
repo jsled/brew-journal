@@ -653,6 +653,164 @@ def brew(request, user_name, brew_id, step_id):
     return brew_render(request, uri_user, brew, step_form, step_expand_edit, mash_sparge_calc_form, mash_sparge_steps)
 
 
+style_choices = None
+def get_style_choices():
+    global style_choices
+    if not style_choices:
+        style_choices = [('%s (%s)' % (s.name, s.bjcp_code), [(s.id, '%s, uncategorized' % (s.name))]) for s in models.Style.objects.filter(parent__isnull=True)]
+        for name,subs in style_choices:
+            for sub_style in models.Style.objects.filter(parent = subs[0][0]):
+                subs.append( (sub_style.id, '%s (%s)' % (sub_style.name, sub_style.bjcp_code)) )
+    return style_choices
+
+
+def BjcpCompetitionResultsForm(brew, *args, **kwargs):
+    class _BjcpCompetitionResultsForm (forms.ModelForm):
+        assigned_score = forms.DecimalField(min_value=0, max_value=50, max_digits=3, decimal_places=1)
+        entered_style = forms.ModelChoiceField(queryset=models.Style.objects.all(),
+                                               initial=brew.recipe.style.id,
+                                               required=True,
+                                               widget=widgets.TwoLevelSelectWidget(choices=get_style_choices())
+                                               )
+        flight_position = forms.IntegerField(min_value=0, required=False)
+        flight_entries = forms.IntegerField(min_value=0, required=False)
+        class Meta:
+            model = models.BjcpCompetitionResults
+            exclude = ['brew']
+    return _BjcpCompetitionResultsForm(*args, **kwargs)
+
+
+def brew_edit_competition_results(request, user_name, brew_id, results_id):
+    try:
+        uri_user = User.objects.get(username__exact=user_name)
+        brew = models.Brew.objects.get(id=brew_id)
+    except ObjectDoesNotExist:
+        raise Http404
+
+    args = []
+    kwargs = {}
+    if results_id != 'new':
+        try:
+            results_instance = models.BjcpCompetitionResults.objects.get(id=results_id)
+        except ObjectDoesNotExist:
+            raise Http404
+        kwargs['instance'] = results_instance
+    if request.method == 'POST':
+        args.append(request.POST)
+    form = BjcpCompetitionResultsForm(brew, *args, **kwargs)
+    
+    if request.method == 'POST':
+        if not (request.user.is_authenticated() and request.user == uri_user):
+            return HttpResponseForbidden()
+
+        if form.is_valid():
+            results = form.save(commit=False)
+            results.brew = brew
+            results.save()
+            return HttpResponseRedirect('/user/%s/brew/%d' % (brew.brewer.username, brew.id))
+        else:
+            pass # fall down to template display
+
+    return HttpResponse(render('user/brew/comp-results.html',
+                               request=request,
+                               std=standard_context(),
+                               user=uri_user,
+                               brew=brew,
+                               form=form))
+
+
+def brew_delete_competition_results(request, user_name, brew_id, results_id):
+    try:
+        uri_user = User.objects.get(username__exact=user_name)
+        brew = models.Brew.objects.get(id=brew_id)
+        results = models.BjcpCompetitionResults.objects.get(id=results_id)
+    except ObjectDoesNotExist:
+        raise Http404
+    if not request.method == 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    else:
+        results.delete()
+        return HttpResponseRedirect('/user/%s/brew/%d' % (brew.brewer.username, brew.id))
+
+
+class BjcpBeerScoresheetForm (forms.ModelForm):
+    aroma_score = forms.IntegerField(min_value=0, max_value=12)
+    appearance_score = forms.IntegerField(min_value=0, max_value=3)
+    flavor_score = forms.IntegerField(min_value=0, max_value=20)
+    mouthfeel_score = forms.IntegerField(min_value=0, max_value=5)
+    overall_score = forms.IntegerField(min_value=0, max_value=10)
+    
+    class Meta:
+        model = models.BjcpBeerScoresheet
+        exclude = ['competition_results', 'total_score']
+
+
+def brew_edit_comp_scoresheet(request, user_name, brew_id, results_id, scoresheet_id):
+    try:
+        uri_user = User.objects.get(username__exact=user_name)
+        brew = models.Brew.objects.get(id=brew_id)
+        results = models.BjcpCompetitionResults.objects.get(id=results_id)
+    except ObjectDoesNotExist:
+        raise Http404
+
+    if request.method == 'POST' \
+       and not (request.user.is_authenticated() and request.user == uri_user):
+        return HttpResponseForbidden()
+
+    args=[]
+    kwargs={}
+    if scoresheet_id != 'new':
+        try:
+            sheet = models.BjcpBeerScoresheet.objects.get(pk=scoresheet_id)
+            kwargs['instance'] = sheet
+        except ObjectDoesNotExist:
+            raise Http404
+    if request.method == 'POST':
+        args.append(request.POST)
+    form = BjcpBeerScoresheetForm(*args, **kwargs)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            sheet = form.save(commit=False)
+            sheet.competition_results = results
+            sheet.total_score = sheet.aroma_score \
+                                + sheet.appearance_score \
+                                + sheet.flavor_score \
+                                + sheet.mouthfeel_score \
+                                + sheet.overall_score
+            sheet.save()
+            return HttpResponseRedirect('/user/%s/brew/%d' % (uri_user.username, brew.id))
+        else:
+            pass # fall through to template render
+    return HttpResponse(render('user/brew/comp-scoresheet.html',
+                               request=request,
+                               std=standard_context(),
+                               user=uri_user,
+                               brew=brew,
+                               results=results,
+                               form=form))
+
+def brew_delete_comp_scoresheet(request, user_name, brew_id, results_id, scoresheet_id):
+    try:
+        uri_user = User.objects.get(username__exact=user_name)
+        brew = models.Brew.objects.get(id=brew_id)
+        results = models.BjcpCompetitionResults.objects.get(id=results_id)
+        sheet = models.BjcpBeerScoresheet.objects.get(id=scoresheet_id)
+    except ObjectDoesNotExist:
+        raise Http404
+
+    if not request.method == 'POST':
+        return HttpResponseNotAllowed(['POST'])
+
+    if request.method == 'POST' \
+       and not (request.user.is_authenticated() and request.user == uri_user):
+        return HttpResponseForbidden()
+    
+    sheet.delete()
+
+    return HttpResponseRedirect('/user/%s/brew/%d' % (uri_user.username, brew.id))
+
+
 class StarForm (forms.ModelForm):
     class Meta:
         model = models.StarredRecipe
@@ -682,17 +840,6 @@ def user_star(request, user_name):
             star.save()
             return HttpResponseRedirect('/user/%s/' % (user_name))
     return HttpResponseBadRequest('bad request')
-
-
-style_choices = None
-def get_style_choices():
-    global style_choices
-    if not style_choices:
-        style_choices = [('%s (%s)' % (s.name, s.bjcp_code), [(s.id, '%s, uncategorized' % (s.name))]) for s in models.Style.objects.filter(parent__isnull=True)]
-        for name,subs in style_choices:
-            for sub_style in models.Style.objects.filter(parent = subs[0][0]):
-                subs.append( (sub_style.id, '%s (%s)' % (sub_style.name, sub_style.bjcp_code)) )
-    return style_choices
 
 
 def _group_items(item_gen_fn, item_grouping_key_accessor_fn, item_label_gen_fn):
