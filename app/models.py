@@ -710,6 +710,7 @@ class ShoppingList (object):
 
 class BjcpCompetitionResults (models.Model):
     brew = models.ForeignKey(Brew)
+    entry_id = models.CharField(max_length=16, blank=True, null=True)
     entered_style = models.ForeignKey(Style)
     competition_name = models.CharField(max_length=128)
     competition_date = models.DateField(blank=True, null=True)

@@ -666,6 +666,8 @@ def get_style_choices():
 
 def BjcpCompetitionResultsForm(brew, *args, **kwargs):
     class _BjcpCompetitionResultsForm (forms.ModelForm):
+        competition_name = forms.CharField(widget=forms.TextInput(attrs={'size':50}))
+        competition_url = forms.CharField(widget=forms.TextInput(attrs={'size':50}))
         assigned_score = forms.DecimalField(min_value=0, max_value=50, max_digits=3, decimal_places=1)
         entered_style = forms.ModelChoiceField(queryset=models.Style.objects.all(),
                                                initial=brew.recipe.style.id,
@@ -734,11 +736,16 @@ def brew_delete_competition_results(request, user_name, brew_id, results_id):
 
 
 class BjcpBeerScoresheetForm (forms.ModelForm):
-    aroma_score = forms.IntegerField(min_value=0, max_value=12)
-    appearance_score = forms.IntegerField(min_value=0, max_value=3)
-    flavor_score = forms.IntegerField(min_value=0, max_value=20)
-    mouthfeel_score = forms.IntegerField(min_value=0, max_value=5)
-    overall_score = forms.IntegerField(min_value=0, max_value=10)
+    aroma_score = forms.IntegerField(min_value=0, max_value=12,
+                                          widget=forms.TextInput(attrs={'size':5}))
+    appearance_score = forms.IntegerField(min_value=0, max_value=3,
+                                          widget=forms.TextInput(attrs={'size':5}))
+    flavor_score = forms.IntegerField(min_value=0, max_value=20,
+                                          widget=forms.TextInput(attrs={'size':5}))
+    mouthfeel_score = forms.IntegerField(min_value=0, max_value=5,
+                                          widget=forms.TextInput(attrs={'size':5}))
+    overall_score = forms.IntegerField(min_value=0, max_value=10,
+                                          widget=forms.TextInput(attrs={'size':5}))
     
     class Meta:
         model = models.BjcpBeerScoresheet

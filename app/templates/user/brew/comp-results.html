@@ -17,17 +17,21 @@
         <div class="grid_16">
             <form method="POST">
 
-                <div class="grid_4">
+                <div class="grid_6">
                     ${field(form.competition_name)}
                 </div>
                 <div class="grid_4">
                     ${field(form.competition_date)}
                 </div>
-                <div class="grid_8">
+                <div class="grid_6">
                     ${field(form.competition_url)}
                 </div>
 
                 <div class="clear"></div>
+
+                <div class="grid_4">
+                    ${field(form.entry_id)}
+                </div>
 
                 <div class="grid_8">
                     ${field(form.entered_style)}
@@ -51,11 +55,16 @@
                     ${field(form.assigned_score)}
                 </div>
 
-                <div class="clear"></div>
-
                 <div class="grid_4">
                     ${field(form.place_awarded)}
                 </div>
+
+                <div class="clear"></div>
+
+                <div class="grid_8">
+                    ${field(form.notes)}
+                </div>
+
 
                 <div class="clear"></div>
 
