@@ -307,6 +307,9 @@
 }
         </style>
 
+            <div class="grid_16">
+                <a py:if="std.auth_user_is_user(request, user)" href="/user/${user.username}/brew/${brew.id}/competition-results/new">add competition results</a>
+            </div>
             <py:for each="result in brew.bjcpcompetitionresults_set.all()">
                 <div class="competition-result grid_16">
                     <label class="stylin grid_12">
@@ -421,9 +424,7 @@
                 </div>
             </py:for>
 
-            <div class="clear"></div>
-            <a py:if="std.auth_user_is_user(request, user)" href="/user/${user.username}/brew/${brew.id}/competition-results/new">add competition results</a>
-        </div>
+        </div> <!-- .container_16 -->
 
 </body>
 </html>
