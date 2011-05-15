@@ -172,6 +172,7 @@ recipe just fine, but I couldn't add any ingredients to it - when I clicked
 on add, nothing happened. I think it may have gotten confused since there was
 a / in the name - I took that out and all is well. I'm guessing the / screwed
 up the path and maybe needs to be escaped or something?
+*** TODO add rss feed auto-discovery, icon to /recipe
 *** TODO step deletion
 *** TODO step note formatting: table over-sizing; line-breaking / markdown
 *** TODO no way to indicate the addition a fermentable (e.g., honey) added at flame-out, or half-way through, or whatever.
