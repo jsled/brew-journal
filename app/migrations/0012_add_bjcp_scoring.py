@@ -12,6 +12,7 @@ class Migration:
         db.create_table('app_bjcpcompetitionresults', (
             ('id', orm['app.bjcpcompetitionresults:id']),
             ('brew', orm['app.bjcpcompetitionresults:brew']),
+            ('entry_id', orm['app.bjcpcompetitionresults:entry_id']),
             ('entered_style', orm['app.bjcpcompetitionresults:entered_style']),
             ('competition_name', orm['app.bjcpcompetitionresults:competition_name']),
             ('competition_date', orm['app.bjcpcompetitionresults:competition_date']),
@@ -104,6 +105,7 @@ class Migration:
             'competition_name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'competition_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'entered_style': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Style']"}),
+            'entry_id': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
             'entry_number': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
             'flight_entries': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'flight_position': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
