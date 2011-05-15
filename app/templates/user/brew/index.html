@@ -297,28 +297,133 @@
             </div>
         </div>
 
-        <div class="grid_16">
-            
-            <div py:for="result in brew.bjcpcompetitionresults_set.all()">
-                Scored a ${result.assigned_score} at the ${result.competition_name}. 
-                <a href="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}">edit</a>
-                <form style="display:inline" method="POST" action="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/delete"><a href="#" onclick="$(this).parent('FORM').submit()">delete</a></form>
-                <ul py:if="result.bjcpbeerscoresheet_set.exists()">
-                    <li py:for="scoresheet in result.bjcpbeerscoresheet_set.all()">
-                        Judge score ${scoresheet.total_score}.
+        <style type="text/css">
+.competition-result {
+}
+
+.scoresheet {
+    border-top: solid 1px black;
+    margin-top: 5px;
+}
+        </style>
+
+            <py:for each="result in brew.bjcpcompetitionresults_set.all()">
+                <div class="competition-result grid_16">
+                    <label class="stylin grid_12">
+                        <div class="label">Competition</div>
+                        <div class="contents">
+                            <py:choose test="">
+                                <py:when test="result.competition_url">
+                                    <a href="${result.competition_url}">${result.competition_name}</a>
+                                </py:when>
+                                <py:otherwise>${result.competition_name}</py:otherwise>
+                            </py:choose>
+                            <py:if test="result.competition_date">(${result.competition_date})</py:if>
+                        </div>
+                    </label>
+
+                    <div class="grid_4" style="text-align: right" py:if="std.auth_user_is_user(request, user)">
+                        <a href="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}">edit</a>
+                        <form style="display:inline" method="POST" action="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/delete"><a href="#" onclick="$(this).parent('FORM').submit()">delete</a></form>
+                        <a py:if="std.auth_user_is_user(request, user)" href="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/scoresheet/new">add scoresheet</a>
+                    </div>
+                    <div class="clear"></div>
+
+                    <label class="stylin grid_3">
+                        <div class="label">Overall Score</div>
+                        <div class="contents">${result.assigned_score}</div>
+                    </label>
+
+                    <label class="stylin grid_3">
+                        <div class="label">Place Awarded</div>
+                        <div class="contents">
+                            ${result.get_place_awarded_display()}
+                        </div>
+                    </label>
+
+                    <label py:if="result.notes" class="stylin grid_6">
+                        <div class="label">Notes</div>
+                        <div class="contents">${result.notes}</div>
+                    </label>
+                </div>
+                <div class="clear"></div>
+
+                <div py:for="scoresheet in result.bjcpbeerscoresheet_set.all()" class="scoresheet grid_16">
+
+                    <label class="stylin grid_3">
+                        <div class="label">Total Score</div>
+                        <div class="contents">${scoresheet.total_score}</div>
+                    </label>
+
+                    <label class="stylin grid_3">
+                        <div class="label">Judge</div>
+                        <div class="contents">
+                            <py:if test="std.auth_user_is_user(request, user)">
+                                <py:choose test="">
+                                    <py:when test="scoresheet.judge_email">
+                                        <a href="mailto:${scoresheet.judge_email}">${scoresheet.judge_name}</a>
+                                    </py:when>
+                                    <py:otherwise>${scoresheet.judge_name}</py:otherwise>
+                                </py:choose>
+                                <py:if test="scoresheet.judge_bjcp_id">
+                                    (BJCP ID ${scoresheet.judge_bjcp_id})
+                                </py:if>
+                                ,&nbsp;
+                            </py:if>
+                            ${scoresheet.get_judge_rank_display()}
+                        </div>
+                    </label>
+
+                    <label class="stylin grid_6">
+                        <div class="label">Notes</div>
+                        <div class="contents">${scoresheet.notes}</div>
+                    </label>
+                    <div class="grid_2 prefix_2" style="text-align:right" py:if="std.auth_user_is_user(request, user)">
                         <a href="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/scoresheet/${scoresheet.id}">edit</a>
                         <form method="POST" style="display:inline" action="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/scoresheet/${scoresheet.id}/delete">
                             <a href="#" onClick="$(this).parent('FORM').submit()">delete</a>
                         </form>
-                    </li>
-                </ul>
-                <a href="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/scoresheet/new">add scoresheet</a>
-            </div>
+                    </div>
+                    <div class="clear"></div>
+
+                    <label py:def="section(label, max_score, score, notes)" class="stylin grid_3">
+                        <div class="label">${label}</div>
+                        <div class="contents" style="text-align: justify">
+                            ${score()}/${max_score}
+                            <py:if test="notes()">&mdash; ${notes()}</py:if>
+                        </div>
+                    </label>
+
+                    ${section('Aroma', 12, lambda: scoresheet.aroma_score, lambda: scoresheet.aroma_notes)}
+                    ${section('Appearance', 3, lambda: scoresheet.appearance_score, lambda: scoresheet.appearance_notes)}
+                    ${section('Flavor', 20, lambda: scoresheet.flavor_score, lambda: scoresheet.flavor_notes)}
+                    ${section('Mouthfeel', 5, lambda: scoresheet.mouthfeel_score, lambda: scoresheet.mouthfeel_notes)}
+                    ${section('Overall', 5, lambda: scoresheet.overall_score, lambda: scoresheet.overall_notes)}
+
+                    <div class="clear"></div>
+
+                    <label py:def="ranking(label, accessor)" class="stylin grid_3">
+                        <div class="label">${label}</div>
+                        <div class="contents">
+                            <py:choose test="">
+                                <py:when test="accessor()">${accessor()}</py:when>
+                                <py:otherwise><span class="muted">unknown</span></py:otherwise>
+                            </py:choose>
+                        </div>
+                    </label>
+
+                    ${ranking('Stylistic Accuracy', lambda: scoresheet.get_stylistic_accuracy_display())}
+                    ${ranking('Technical Merit', lambda: scoresheet.get_technical_merit_display())}
+                    ${ranking('Intangibles', lambda: scoresheet.get_intangibles_display())}
+
+                    <div class="clear"></div>
+
+                </div>
+            </py:for>
 
             <div class="clear"></div>
-            <a href="/user/${user.username}/brew/${brew.id}/competition-results/new">add competition results</a>
+            <a py:if="std.auth_user_is_user(request, user)" href="/user/${user.username}/brew/${brew.id}/competition-results/new">add competition results</a>
         </div>
 
-    </div> <!-- .container_16 -->
 </body>
 </html>
