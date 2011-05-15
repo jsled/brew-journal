@@ -151,7 +151,7 @@
        id="add-step"
        py:with="expand=step_edit">
     <div py:attrs="{'style': 'display:' + ['inherit', 'none'][expand]}" class="grid_16">
-      <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;" py:attrs="{'id': ['first-focused', ''][expand]}">add step &darr;</a>
+      <a href="#" onClick="$('#add-step').children().slideToggle(); $('#add-step-form :input:first').focus(); return false;" py:attrs="{'id': ['first-focused', ''][expand]}">add step</a>
     </div>
     <div py:attrs="{'style': 'display:' + ['inherit', 'none'][not expand]}">
         <form method="POST" id="add-step-form">
@@ -244,7 +244,7 @@ $(function() {
                        or request.GET.has_key('mash_sparge_recalc')
                 ; calc=mash_sparge_calc_form.calc">
       <div py:attrs="{'style': 'display:' + ['none','inherit'][not expand]}">
-          <a href="#" onClick="$('#mash-sparge-calc-panel').children().slideToggle(); return false;">compute mash/sparge volumes, steps &darr;</a>
+          <a href="#" onClick="$('#mash-sparge-calc-panel').children().slideToggle(); return false;">compute mash/sparge volumes, steps</a>
       </div>
       <div py:attrs="{'style': 'display:' + ['none','inherit'][expand]}">
           <form method="GET" id="mash-sparge-calc">

@@ -85,7 +85,7 @@
           </label>
 
           <div py:if="std.auth_user_is_user(request, recipe.author)">
-            <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">edit &uarr;</a>
+            <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">edit recipe details</a>
           </div>
         </div>
         <div py:if="std.auth_user_is_user(request, recipe.author)"
