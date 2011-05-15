@@ -1013,6 +1013,7 @@ def _render_recipe(request, recipe, **kwargs):
                                deriv=derivations
                                ))
 
+
 def recipe(request, recipe_id, recipe_name):
     # uri_user = User.objects.get(username__exact = user_name)
     # if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
@@ -1028,6 +1029,48 @@ def recipe(request, recipe_id, recipe_name):
     except ObjectDoesNotExist:
         raise Http404
     return _render_recipe(request, recipe)
+
+
+class RecipeFilterForm (forms.Form):
+    type_choices = []
+    type_choices.extend(models.RecipeTypes)
+    type_choices.insert(0, ('', '(any)'))
+    type = forms.ChoiceField(choices=type_choices, required=False)
+    def change_uncategorized_to_any(label):
+        if label.endswith('uncategorized'):
+            return label.replace('uncategorized', 'any')
+        return label
+    choices = [(cat, [(id, change_uncategorized_to_any(name)) for id,name in entries]) for cat,entries in get_style_choices()]
+    choices.insert(0, ('any', [('', '(any)')]))
+    style = forms.ModelChoiceField(queryset=models.Style.objects.all(),
+                                   empty_label='(any)',
+                                   required=False,
+                                   widget=widgets.TwoLevelSelectWidget(choices=choices)
+                                   )
+
+
+def recipe_index(request):
+    form = RecipeFilterForm(request.GET)
+    recipe_query = models.Recipe.objects.all()
+    if form.is_valid():
+        if form.cleaned_data['type']:
+            recipe_query = recipe_query.filter(type=form.cleaned_data['type'])
+        if form.cleaned_data['style']:
+            style = form.cleaned_data['style']
+            if style.parent is not None:
+                recipe_query = recipe_query.filter(style=style)
+            else:
+                from django.db.models import Q
+                recipe_query = recipe_query.filter(Q(style=style) | Q(style__parent=style))
+    recipes = recipe_query.order_by('-insert_date')
+    return HttpResponse(
+        render('recipe/index.html',
+               request=request,
+               std=standard_context(),
+               recipes=recipes,
+               form=form
+               ))
+    return
 
 
 class EfficiencyTracker (object):

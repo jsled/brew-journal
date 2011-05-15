@@ -1,0 +1,74 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include href="../_incl/taglib.html"/>
+<head>
+  <title>recipes | brew-journal</title>
+  <xi:include href="../_incl/head.html"/>
+</head>
+<body>
+    <div class="container_16">
+
+        <xi:include href="../_incl/body-top-bar.html"/>
+
+        <div class="grid_16">
+            <h1>recipes</h1>
+        </div>
+
+        <div class="clear"></div>
+
+        <form>
+            <div class="grid_2 stylin">
+                ${field(form.type)}
+            </div>
+
+            <div class="grid_6 stylin">
+                ${field(form.style)}
+            </div>
+            
+            <div class="grid_4">
+                <label class="stylin">
+                    <div class="label">&nbsp;</div>
+                    <div class="contents">
+                        <input type="submit"/>
+                    </div>
+                </label>
+            </div>
+        </form>
+
+        <div class="clear"></div>
+
+        <div class="grid_16" style="margin-top: 10px">
+
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>style</th>
+                        <th>type</th>
+                        <th>author</th>
+                        <th>insert date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr py:for="recipe in recipes">
+                        <td>${recipe_a(recipe)}</td>
+                        <td>${recipe.get_type_display()}</td>
+                        <td>
+                            <py:choose>
+                                <py:when test="recipe.style is not None">
+                                    ${recipe.style.name} (${recipe.style.bjcp_code})
+                                </py:when>
+                                <py:otherwise>&mdash;</py:otherwise>
+                            </py:choose>
+                        </td>
+                        <td><a href="/user/${recipe.author.username}/">${recipe.author.username}</a></td>
+                        <td>${std.fmt.date.best(recipe.insert_date, recipe.author)}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+         </div>
+     </div>
+</body>
+</html>
