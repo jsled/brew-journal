@@ -39,7 +39,9 @@
                 <label class="stylin">
                     <div class="label">Bottle Inspection</div>
                     <div class="contents">
+                        ${std.Markup(form.bottle_inspection.errors)}
                         ${std.Markup(form.bottle_inspection)}
+                        ${std.Markup(form.bottle_inspection_notes.errors)}
                         ${std.Markup(form.bottle_inspection_notes)}
                     </div>
                 </label>
@@ -57,6 +59,7 @@
                     <label class="stylin">
                         <div class="label">${label}</div>
                         <div class="contents">
+                            ${std.Markup(score_accessor().errors)}
                             ${std.Markup(score_accessor())} / ${max_score}
                         </div>
                     </label>
