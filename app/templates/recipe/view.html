@@ -71,14 +71,33 @@
           <div class="clear"></div>
 
           <py:if test="recipe.source_url">
-            <label class="stylin grid_16">
+            <label class="stylin grid_10">
               <div class="label">source url</div>
               <div class="label-content"><a href="${recipe.source_url}">${recipe.source_url}</a></div>
             </label>
 
-            <div class="clear"></div>
           </py:if>
+          
+          <label class="stylin grid_6">
+            <div class="label">brews</div>
+            <div class="label-content">
+              <py:choose test="">
+                <py:when test="recipe.brew_set.exists()">
+                  <?python import itertools ?>
+                  <py:for each="i,brew in itertools.izip(itertools.count(),recipe.brew_set.all())" py:strip="True">
+                    <py:if test="i > 0">,</py:if>
+                    <a href="${brew_url(brew)}">${std.fmt.date.ymd(brew.brew_date)} by ${brew.brewer.username}</a>
+                  </py:for>
+                </py:when>
+                <py:otherwise>
+                  <em class="muted">none</em>
+                </py:otherwise>
+              </py:choose>
+            </div>
+          </label>
 
+          <div class="clear"></div>
+            
           <label py:if="recipe.notes" class="stylin grid_16">
             <div class="label">notes</div>
             <div style="white-space: pre">${recipe.notes}</div>
