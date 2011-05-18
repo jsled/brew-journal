@@ -960,7 +960,7 @@ def recipe_component_generic(request, recipe_id, model_type, type_form_name, for
     All the additions are going to be the same, so genericize them, leveraging the form to do the heavy lifting.
     '''
     def _get_recipe_redirect(recipe):
-        return HttpResponseRedirect('/recipe/%d/%s' % (recipe.id, urllib.quote(recipe.name.encode('utf-8'))))
+        return HttpResponseRedirect(recipe.get_absolute_url())
     if not request.method == 'POST':
         return HttpResponseBadRequest('method not supported')
     recipe = models.Recipe.objects.get(pk=recipe_id)
@@ -1042,7 +1042,7 @@ def recipe_new(request):
                     component.id = None
                     component.save()
 
-        return HttpResponseRedirect('/recipe/%d/%s' % (new_recipe.id, urllib.quote(new_recipe.name.encode('utf-8'))))
+        return HttpResponseRedirect(new_recipe.get_absolute_url())
 
     return HttpResponse(render('recipe/new.html', request=request, std=standard_context(),
                                clone_from_recipe_id=clone_id,
@@ -1075,7 +1075,7 @@ def recipe_post(request, recipe_id, recipe=None):
     else:
         upd_recipe.author = recipe.author
     upd_recipe.save()
-    return (True, HttpResponseRedirect('/recipe/%d/%s' % (upd_recipe.id, urllib.quote(upd_recipe.name.encode('utf-8')))))
+    return (True, HttpResponseRedirect(upd_recipe.get_absolute_url()))
 
 
 def _render_recipe(request, recipe, **kwargs):

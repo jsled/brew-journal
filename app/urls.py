@@ -31,7 +31,7 @@ urlpatterns = patterns(
     # /recipe/new/?clone_from_recipe_id=42
     # /recipe/new/?clone_from_url=<...>
     (r'^recipe/new/$', 'recipe_new'),
-    (r'^recipe/(?P<recipe_id>\d+)/(?P<recipe_name>.+)?$', 'recipe'),
+    (r'^recipe/(?P<recipe_id>\d+)/(?P<recipe_name>.+)?$', 'recipe', {}, 'recipe_url'),
     (r'^recipe/$', 'recipe_index'),
 
     (r'^calc/mash-sparge/$', 'calc_mash_sparge'),

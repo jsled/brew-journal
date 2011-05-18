@@ -309,6 +309,13 @@ class Recipe (models.Model):
     def url(self):
         return u'/recipe/%d/%s' % (self.id, self.name)
 
+    @models.permalink
+    def get_absolute_url(self):
+        from django.template.defaultfilters import slugify
+        return ('recipe_url', (),
+                {'recipe_id': self.id,
+                 'recipe_name': slugify(self.name)})
+
 
 class RecipeGrain (models.Model):
     recipe = models.ForeignKey(Recipe)
