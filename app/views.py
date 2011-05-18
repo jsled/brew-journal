@@ -356,7 +356,7 @@ def user_brew_new(request, user_name):
                 brew.recipe = models.Recipe.objects.get(pk=recipe_id)
             brew.brewer = uri_user
             brew.save()
-            return HttpResponseRedirect('/user/%s/brew/%s' % (uri_user.username, brew.id))
+            return HttpResponseRedirect(brew.get_absolute_url())
     elif request.method == 'GET' and request.GET.has_key('recipe_id'):
         recipe_id = request.GET['recipe_id']
         recipe = models.Recipe.objects.get(pk=int(recipe_id))
@@ -402,7 +402,7 @@ def brew_edit(request, user_name, brew_id):
         else:
             # @fixme handle errors...
             pass
-    return HttpResponseRedirect('/user/%s/brew/%d/' % (user_name, updated_brew.id))
+    return HttpResponseRedirect(brew.get_absolute_url())
 
 
 def StepForm(user, *args, **kwargs):
@@ -441,7 +441,7 @@ def brew_post(request, uri_user, brew, orig_step):
         updated_step.save()
         brew.update_from_steps()
         brew.save()
-        return HttpResponseRedirect('/user/%s/brew/%d/' % (brew.brewer.username, brew.id))
+        return HttpResponseRedirect(brew.get_absolute_url())
     return brew_render(request, uri_user, brew, step_form, True, None)
 
 
@@ -600,7 +600,7 @@ def brew(request, user_name, brew_id, step_id):
                 return brew_render(request, uri_user, brew, None, False, form)
             for step in created:
                 step.save()
-            return HttpResponseRedirect('/user/%s/brew/%d' % (brew.brewer.username, brew.id))
+            return HttpResponseRedirect(brew.get_absolute_url())
         else:
             return brew_post(request, uri_user, brew, step)
     # else:
@@ -709,7 +709,7 @@ def brew_edit_competition_results(request, user_name, brew_id, results_id):
             results = form.save(commit=False)
             results.brew = brew
             results.save()
-            return HttpResponseRedirect('/user/%s/brew/%d' % (brew.brewer.username, brew.id))
+            return HttpResponseRedirect(brew.get_absolute_url())
         else:
             pass # fall down to template display
 
@@ -732,7 +732,7 @@ def brew_delete_competition_results(request, user_name, brew_id, results_id):
         return HttpResponseNotAllowed(['POST'])
     else:
         results.delete()
-        return HttpResponseRedirect('/user/%s/brew/%d' % (brew.brewer.username, brew.id))
+        return HttpResponseRedirect(brew.get_absolute_url())
 
 
 class BjcpBeerScoresheetForm (forms.ModelForm):
@@ -786,7 +786,7 @@ def brew_edit_comp_scoresheet(request, user_name, brew_id, results_id, scoreshee
                                 + sheet.mouthfeel_score \
                                 + sheet.overall_score
             sheet.save()
-            return HttpResponseRedirect('/user/%s/brew/%d' % (uri_user.username, brew.id))
+            return HttpResponseRedirect(brew.get_absolute_url())
         else:
             pass # fall through to template render
     return HttpResponse(render('user/brew/comp-scoresheet.html',
@@ -815,7 +815,7 @@ def brew_delete_comp_scoresheet(request, user_name, brew_id, results_id, scoresh
     
     sheet.delete()
 
-    return HttpResponseRedirect('/user/%s/brew/%d' % (uri_user.username, brew.id))
+    return HttpResponseRedirect(brew.get_absolute_url())
 
 
 class StarForm (forms.ModelForm):

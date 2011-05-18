@@ -216,7 +216,7 @@
 
                     <div class="grid_4">
                         <input type="submit" value="update"/>
-                        <button onClick="window.location = '${brew_url(brew)}'; return false;">cancel</button>
+                        <button onClick="window.location = '${brew.get_absolute_url()}'; return false;">cancel</button>
                     </div>
 
                     <py:for each="hidden in step_form.hidden_fields()">

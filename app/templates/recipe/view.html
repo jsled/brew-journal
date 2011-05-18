@@ -81,7 +81,7 @@
                   <?python import itertools ?>
                   <py:for each="i,brew in itertools.izip(itertools.count(),recipe.brew_set.all())" py:strip="True">
                     <py:if test="i > 0">,</py:if>
-                    <a href="${brew_url(brew)}">${std.fmt.date.ymd(brew.brew_date)} by ${brew.brewer.username}</a>
+                    <a href="${brew.get_absolute_url()}">${std.fmt.date.ymd(brew.brew_date)} by ${brew.brewer.username}</a>
                   </py:for>
                 </py:when>
                 <py:otherwise>

@@ -9,7 +9,7 @@
 
   <a py:def="recipe_a(recipe)" href="${recipe_url(recipe)}">${recipe.name or "(unknown)"}</a>
 
-  <py:def function="brew_url(brew)">/user/${brew.brewer.username}/brew/${brew.id}/</py:def>
+  <py:def function="brew_url(brew)">${brew.get_absolute_url()}</py:def>
   <a py:def="brew_a(brew)" href="${brew_url(brew)}">${brew.recipe.name or "(unknown)"}</a>
 
   <py:def function="action(text)">${text}&nbsp;»</py:def>

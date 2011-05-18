@@ -434,6 +434,12 @@ class Brew (models.Model):
     def __unicode__(self):
         return u'%s (%s)' % (self.recipe.name, self.brewer.username)
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('brew_url', (),
+                {'user_name': self.brewer.username,
+                 'brew_id': self.id})
+
     objects = BrewManager()
 
     class Meta:
