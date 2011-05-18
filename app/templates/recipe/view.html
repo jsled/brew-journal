@@ -21,14 +21,9 @@
       <xi:include href="../_incl/body-top-bar.html"/>
 
       <div class="grid_16">
-
-            <h1 py:if="recipe">recipe "${recipe.name}"</h1>
-
-            <div py:if="request.user.is_authenticated()">
-              <a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">clone »</a>
-              | <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">star »</a>
-              | <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">brew »</a>
-            </div>
+        <h1 py:if="recipe">recipe "${recipe.name}"</h1>
+        
+        ${ifauth_recipe_actions(request, recipe)}
       </div>
 
       <div id="overview" class="grid_16">

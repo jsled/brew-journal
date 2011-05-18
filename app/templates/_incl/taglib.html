@@ -15,6 +15,13 @@
   <py:def function="action(text)">${text}&nbsp;»</py:def>
   <py:def function="back_action(text)">«&nbsp;${text}</py:def>
 
+  <div py:def="ifauth_recipe_actions(request, recipe)"
+       py:if="request.user.is_authenticated()">
+      <a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">clone »</a>
+      | <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">star »</a>
+      | <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">brew »</a>
+  </div>
+
   <label py:def="field(*fields)" class="stylin">
       <div class="label">${fields[0].label}</div>
       <div py:if="fields[0].help_text" class="help-text">${fields[0].help_text}</div>
