@@ -217,7 +217,7 @@ def user_index(request, user_name):
     future_brews = models.Brew.objects.brews_with_future_steps(uri_user)
     future_steps = models.Step.objects.future_steps_for_user(uri_user).order_by('date')
     shopping_list = models.ShoppingList(uri_user)
-    done_brews = models.Brew.objects.filter(brewer=uri_user, is_done=True)
+    done_brews = models.Brew.objects.filter(brewer=uri_user, is_done=True).order_by('-brew_date')
     starred_recipes = models.StarredRecipe.objects.filter(user=uri_user)
     authored_recipes = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date')
     efficiency_tracker = EfficiencyTracker(uri_user)
