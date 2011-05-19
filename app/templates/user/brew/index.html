@@ -326,9 +326,9 @@
                     </label>
 
                     <div class="grid_4" style="text-align: right" py:if="std.auth_user_is_user(request, user)">
-                        <a href="${brew.get_absolute_url()}/competition-results/${result.id}">edit</a>
-                        <form style="display:inline" method="POST" action="${brew.get_absolute_url()}/competition-results/${result.id}/delete"><a href="#" onclick="$(this).parent('FORM').submit()">delete</a></form>
-                        <a py:if="std.auth_user_is_user(request, user)" href="${brew.get_absolute_url()}/competition-results/${result.id}/scoresheet/new">add scoresheet</a>
+                        <a href="${result.get_absolute_url()}">edit</a>
+                        <form style="display:inline" method="POST" action="${result.get_absolute_url()}/delete"><a href="#" onclick="$(this).parent('FORM').submit()">delete</a></form>
+                        <a py:if="std.auth_user_is_user(request, user)" href="${result.get_absolute_url()}/scoresheet/new">add scoresheet</a>
                     </div>
                     <div class="clear"></div>
 
@@ -382,8 +382,8 @@
                         <div class="contents">${scoresheet.notes}</div>
                     </label>
                     <div class="grid_2 prefix_2" style="text-align:right" py:if="std.auth_user_is_user(request, user)">
-                        <a href="${brew.get_absolute_url()}/competition-results/${result.id}/scoresheet/${scoresheet.id}">edit</a>
-                        <form method="POST" style="display:inline" action="${brew.get_absolute_url()}/competition-results/${result.id}/scoresheet/${scoresheet.id}/delete">
+                        <a href="${scoresheet.get_absolute_url()}">edit</a>
+                        <form method="POST" style="display:inline" action="${scoresheet.get_absolute_url()}/delete">
                             <a href="#" onClick="$(this).parent('FORM').submit()">delete</a>
                         </form>
                     </div>

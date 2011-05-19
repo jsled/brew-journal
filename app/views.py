@@ -667,7 +667,7 @@ def get_style_choices():
 def BjcpCompetitionResultsForm(brew, *args, **kwargs):
     class _BjcpCompetitionResultsForm (forms.ModelForm):
         competition_name = forms.CharField(widget=forms.TextInput(attrs={'size':50}))
-        competition_url = forms.CharField(widget=forms.TextInput(attrs={'size':50}))
+        competition_url = forms.CharField(widget=forms.TextInput(attrs={'size':50}), required=False)
         assigned_score = forms.DecimalField(min_value=0, max_value=50, max_digits=3, decimal_places=1)
         entered_style = forms.ModelChoiceField(queryset=models.Style.objects.all(),
                                                initial=brew.recipe.style.id,

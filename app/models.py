@@ -746,6 +746,15 @@ class BjcpCompetitionResults (models.Model):
     mini_bos = models.NullBooleanField(blank=True, null=True, verbose_name='Advanced to a Mini-BOS round')
     notes = models.TextField(blank=True)
 
+    def get_absolute_url_args(self):
+        args = self.brew.get_absolute_url_args()
+        args['results_id'] = self.id
+        return args
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('brew_comp_results_url', (), self.get_absolute_url_args())
+
 
 BJCP_Ranks = (
     ('non-bjcp', 'Non-BJCP'),
@@ -809,6 +818,12 @@ class BjcpBeerScoresheet (models.Model):
     stylistic_accuracy = models.CharField(max_length=1, choices=BJCP_StylisticAccuracy_Ranking, blank=True)
     technical_merit = models.CharField(max_length=1, choices=BJCP_TechnicalMerit_Ranking, blank=True)
     intangibles = models.CharField(max_length=1, choices=BJCP_Intangibles_Ranking, blank=True)
+
+    @models.permalink
+    def get_absolute_url(self):
+        args = self.competition_results.get_absolute_url_args()
+        args['scoresheet_id'] = self.id
+        return ('brew_comp_scoresheet_url', (), args)
 
 
 class TimeConst:

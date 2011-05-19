@@ -17,10 +17,10 @@ urlpatterns = patterns(
     (r'^user/(?P<user_name>[^/]+)/brew/new/?$', 'user_brew_new'),
     (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/edit/$', 'brew_edit'),
 
-    (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/competition-results/(?P<results_id>new|\d+)$', 'brew_edit_competition_results'),
+    (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/competition-results/(?P<results_id>new|\d+)$', 'brew_edit_competition_results', {}, 'brew_comp_results_url'),
     (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/competition-results/(?P<results_id>\d+)/delete$', 'brew_delete_competition_results'),
 
-    (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/competition-results/(?P<results_id>\d+)/scoresheet/(?P<scoresheet_id>new|\d+)$', 'brew_edit_comp_scoresheet'),
+    (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/competition-results/(?P<results_id>\d+)/scoresheet/(?P<scoresheet_id>new|\d+)$', 'brew_edit_comp_scoresheet', {}, 'brew_comp_scoresheet_url'),
     (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/competition-results/(?P<results_id>\d+)/scoresheet/(?P<scoresheet_id>\d+)/delete$', 'brew_delete_comp_scoresheet'),
 
     (r'^user/(?P<user_name>[^/]+)/shopping/?$', 'user_shopping_list'),
