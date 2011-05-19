@@ -158,20 +158,6 @@ What is the essence of "future" steps?  They haven't happened, yet.
 The 'volume_potential_{min,max}' columns are never populated for either dev
 or production DBs, leading to miscomputation (logic bug).  The unit tests
 build correctly from fixtures, and aren't thus affected.
-
-*** TODO Bug: with slashes in recipe name [?]
-From: [REDACTED]
-To: Josh Sled <jsled@asynchronous.org>
-Date: Wed, 15 Apr 2009 22:24:39 -0400
-
-Hey Josh,
-
-I added a recipe recently for a Scottish 60/- 
-(http://brew-journal.com/recipe/39/Scottish%2060/) I was able to create the
-recipe just fine, but I couldn't add any ingredients to it - when I clicked
-on add, nothing happened. I think it may have gotten confused since there was
-a / in the name - I took that out and all is well. I'm guessing the / screwed
-up the path and maybe needs to be escaped or something?
 *** TODO add rss feed auto-discovery, icon to /recipe
 *** TODO step deletion
 *** TODO step note formatting: table over-sizing; line-breaking / markdown
@@ -192,6 +178,21 @@ up the path and maybe needs to be escaped or something?
 *** TODO user profile should require existing password for password change; use django form validation/cleaning routines
 *** TODO to add: Fruit/"Other"
 (08:42:34 PM) djensen: I think you need 'Other' for fruit
+
+*** DONE Bug: with slashes in recipe name [?]
+    CLOSED: [2011-05-18 Wed 20:40]
+From: [REDACTED]
+To: Josh Sled <jsled@asynchronous.org>
+Date: Wed, 15 Apr 2009 22:24:39 -0400
+
+Hey Josh,
+
+I added a recipe recently for a Scottish 60/- 
+(http://brew-journal.com/recipe/39/Scottish%2060/) I was able to create the
+recipe just fine, but I couldn't add any ingredients to it - when I clicked
+on add, nothing happened. I think it may have gotten confused since there was
+a / in the name - I took that out and all is well. I'm guessing the / screwed
+up the path and maybe needs to be escaped or something?
 *** DONE Bug: recipe with single volume "grain" results in /0 error
     CLOSED: [2011-05-04 Wed 21:21]
 
@@ -539,23 +540,31 @@ of being.
 *** import/export
 *** add 'equipment'/'rig'
 ** minor
-*** TODO analytics
-*** TODO s/yahoo grid/960gs/
+*** DONE analytics
+    CLOSED: [2011-05-18 Wed 20:40]
+*** DONE s/yahoo grid/960gs/
+    CLOSED: [2011-05-18 Wed 20:40]
 *** TODO jquery bump
-*** TODO per-recipe efficiency setting
-*** TODO user-profile efficiency setting
-*** TODO recipe details block redesign
 *** TODO recipe details edit redesign
-*** TODO recipe derivations display redesign
 *** TODO add percentages to recipe components
 *** TODO add big user-facing warning about precision with volume-measured fermentables
-*** TODO /recipe/ shouldn't 404.
 *** TODO add time counter for some steps (primary/secondary fermentation)
 *** TODO some sort of markdown/wikiformatting/CRLF-><br/> for: recipe notes, brew notes, brew step notes
 *** TODO be able to (re-)associate a recipe with a Brew
-*** TODO use django `get_absolute_url`, `permalink` methods
 *** TODO calorie calculator
 http://www.beersmith.com/blog/2011/02/04/counting-calories-in-your-homebrewed-beer/
+*** DONE recipe details block redesign
+    CLOSED: [2011-05-18 Wed 20:41]
+*** DONE recipe derivations display redesign
+    CLOSED: [2011-05-18 Wed 20:41]
+*** DONE user-profile efficiency setting
+    CLOSED: [2011-05-18 Wed 20:41]
+*** DONE per-recipe efficiency setting
+    CLOSED: [2011-05-18 Wed 20:40]
+*** DONE /recipe/ shouldn't 404.
+    CLOSED: [2011-05-18 Wed 20:40]
+*** DONE use django `get_absolute_url`, `permalink` methods
+    CLOSED: [2011-05-18 Wed 20:40]
 *** DONE allow for fermentables by volume, however silly it may be.
 
 weight vs. volume issues
@@ -657,7 +666,8 @@ see http://www.djangosnippets.org/snippets/97/
 ***** DONE add -> first form elt
 ***** TODO GET after POST of {grain, hop, …} -> [add] button on same form.
 *** /recipe/{id}
-**** TODO show all brew instances of recipe
+**** DONE show all brew instances of recipe
+     CLOSED: [2011-05-18 Wed 20:41]
 ***** by: authoring user, viewing user, all users
 **** DONE add "clone", "brew" ui options
 *** /user/{user}/brew/{id}/ should have brew- or recipe-name in URL
@@ -667,7 +677,8 @@ see http://www.djangosnippets.org/snippets/97/
 **** pre-select units fields
 ***** TODO same as the last-used units in the item-class
 ***** TODO based on user prefs
-**** TODO Should have a place for boil-length, expected efficiency
+**** DONE Should have a place for boil-length, expected efficiency
+     CLOSED: [2011-05-18 Wed 20:42]
 - noticed while entering saison automné recipe/brew details from notes … was
   the 90 minute boil intentional or a side effect of the brew-day?
 - What other things should be part of the recipe?
