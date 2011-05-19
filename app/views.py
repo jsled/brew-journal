@@ -570,7 +570,7 @@ def brew_create_mash_steps(request, user, brew, calc, form):
     return created
 
 
-def brew(request, user_name, brew_id, step_id):
+def brew(request, user_name, brew_id, step_id=None):
     '''
     e.g., /user/jsled/brew/2/[step/3], /user/jsled/brew/2/?type=pitch
     '''

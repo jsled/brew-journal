@@ -11,7 +11,8 @@ urlpatterns = patterns(
 
     (r'^user/(?P<user_name>[^/]+)/?$', 'user_index'),
     (r'^user/(?P<user_name>[^/]+)/profile/?$', 'user_profile'),
-    (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)(/step/(?P<step_id>\d+))?/?$', 'brew', {}, 'brew_url'),
+    (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/?$', 'brew', {}, 'brew_url'),
+    (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/step/(?P<step_id>\d+)/?$', 'brew', {}, 'brew_step_url'),
     # /user/jsled/brew/new/?recipe_id=42
     (r'^user/(?P<user_name>[^/]+)/brew/new/?$', 'user_brew_new'),
     (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/edit/$', 'brew_edit'),

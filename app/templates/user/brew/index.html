@@ -89,7 +89,7 @@
                 </div>
                 <div style="display:none">
                     <h2>edit</h2>
-                    <form method="post" id="details-form" action="/user/${brew.brewer.username}/brew/${brew.id}/edit/">
+                    <form method="post" id="details-form" action="${brew.get_absolute_url()}/edit/">
                         <table class="form" py:content="std.Markup(brew_form.as_table())"/>
                         <input type="submit" value="update"/>
                         <button onClick="$('#detailsEdit').children().toggle(); $('#details-form').get()[0].reset(); return false;">cancel</button>
@@ -106,7 +106,7 @@
               future_steps = [step for step in steps if step.in_future()]
             ?>
             <py:def function="step_row(std,user,brew,step)">
-                <td style="padding-right: 1em"><a href="/user/${user.username}/brew/${brew.id}/step/${step.id}">${std.fmt.date.best(step.date, user)}</a></td>
+                <td style="padding-right: 1em"><a href="${step.get_absolute_url()}">${std.fmt.date.best(step.date, user)}</a></td>
                 <td style="padding-right: 1em; white-space: nowrap">${step.get_type_display()}</td>
                 <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.volume">${step.volume} ${step.volume_units}</py:if></td>
                 <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.temp">${step.temp} ${step.temp_units}</py:if></td>
@@ -308,7 +308,7 @@
         </style>
 
             <div class="grid_16">
-                <a py:if="std.auth_user_is_user(request, user)" href="/user/${user.username}/brew/${brew.id}/competition-results/new">add competition results</a>
+                <a py:if="std.auth_user_is_user(request, user)" href="${brew.get_absolute_url()}/competition-results/new">add competition results</a>
             </div>
             <py:for each="result in brew.bjcpcompetitionresults_set.all()">
                 <div class="competition-result grid_16">
@@ -326,9 +326,9 @@
                     </label>
 
                     <div class="grid_4" style="text-align: right" py:if="std.auth_user_is_user(request, user)">
-                        <a href="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}">edit</a>
-                        <form style="display:inline" method="POST" action="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/delete"><a href="#" onclick="$(this).parent('FORM').submit()">delete</a></form>
-                        <a py:if="std.auth_user_is_user(request, user)" href="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/scoresheet/new">add scoresheet</a>
+                        <a href="${brew.get_absolute_url()}/competition-results/${result.id}">edit</a>
+                        <form style="display:inline" method="POST" action="${brew.get_absolute_url()}/competition-results/${result.id}/delete"><a href="#" onclick="$(this).parent('FORM').submit()">delete</a></form>
+                        <a py:if="std.auth_user_is_user(request, user)" href="${brew.get_absolute_url()}/competition-results/${result.id}/scoresheet/new">add scoresheet</a>
                     </div>
                     <div class="clear"></div>
 
@@ -382,8 +382,8 @@
                         <div class="contents">${scoresheet.notes}</div>
                     </label>
                     <div class="grid_2 prefix_2" style="text-align:right" py:if="std.auth_user_is_user(request, user)">
-                        <a href="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/scoresheet/${scoresheet.id}">edit</a>
-                        <form method="POST" style="display:inline" action="/user/${user.username}/brew/${brew.id}/competition-results/${result.id}/scoresheet/${scoresheet.id}/delete">
+                        <a href="${brew.get_absolute_url()}/competition-results/${result.id}/scoresheet/${scoresheet.id}">edit</a>
+                        <form method="POST" style="display:inline" action="${brew.get_absolute_url()}/competition-results/${result.id}/scoresheet/${scoresheet.id}/delete">
                             <a href="#" onClick="$(this).parent('FORM').submit()">delete</a>
                         </form>
                     </div>

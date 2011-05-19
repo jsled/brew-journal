@@ -441,11 +441,13 @@ class Brew (models.Model):
     def __unicode__(self):
         return u'%s (%s)' % (self.recipe.name, self.brewer.username)
 
+    def get_absolute_url_args(self):
+        return {'user_name': self.brewer.username,
+                'brew_id': self.id}
+    
     @models.permalink
     def get_absolute_url(self):
-        return ('brew_url', (),
-                {'user_name': self.brewer.username,
-                 'brew_id': self.id})
+        return ('brew_url', (), self.get_absolute_url_args())
 
     objects = BrewManager()
 
@@ -571,6 +573,12 @@ class Step (models.Model):
 
     def __unicode__(self):
         return u'[%s:%s:%s] vol=%s, temp=%s, gravity=%s, notes [%s]' % (self.brew.recipe.name, self.date.strftime('%x %X'), self.type, self.volume, self.temp, self.gravity, self.notes)
+
+    @models.permalink
+    def get_absolute_url(self):
+        args = self.brew.get_absolute_url_args()
+        args['step_id'] = self.id
+        return ('brew_step_url', (), args)
 
     def in_future(self):
         # @fixme: inject datetime.datetime for testability

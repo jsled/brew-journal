@@ -27,15 +27,15 @@
                 <a href="#" class="muted" onClick="$('#by_calendar_brew').children().toggle(); return false;">view by brew…</a>
                 <ul>
                     <li py:for="step in future_steps">
-                        <a href="/user/${user.username}/brew/${step.brew.id}/step/${step.id}/">${step.get_type_display()}</a>
-                        for brew <a href="/user/${user.username}/brew/${step.brew.id}/">${step.brew.title()}</a>
+                        <a href="${step.get_absolute_url()}">${step.get_type_display()}</a>
+                        for brew ${brew_a(step.brew)}
                     on ${std.fmt.date.best(step.date, user)}</li>
                 </ul>
             </div>
             <div style="display:none">
                 <a href="#" class="muted" onClick="$('#by_calendar_brew').children().toggle(); return false;">view by time…</a>
                 <ul>
-                    <li py:for="brew in future_brews">brew <a href="/user/${user.username}/brew/${brew.id}/">${brew.title()}</a>
+                    <li py:for="brew in future_brews">brew ${brew_a(brew)}
                     <ul>
                         <li py:for="step in brew.future_steps()">
                             ${step.get_type_display()} on ${std.fmt.date.best(step.date)}
@@ -73,7 +73,7 @@
       <td colspan="50"><em>no active brews</em></td>
     </tr>
     <tr py:for="brew in brews">
-      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}"><py:choose test="">
+      <td><a href="${brew.get_absolute_url()}"><py:choose test="">
           <py:when test="brew.recipe">${brew.recipe.name or "(unknown)"}</py:when>
           <py:otherwise>(no name)</py:otherwise>
 </py:choose></a></td>
@@ -82,8 +82,8 @@
       <td>${brew.get_last_state_display()}</td>
       <span py:def="step(brew, next)" py:strip="True">
           <py:choose test="">
-              <py:when test="next.existing_step"><a href="/user/${brew.brewer.username}/brew/${brew.id}/step/${next.existing_step.id}/">${action(next.existing_step.get_type_display())}</a></py:when>
-              <py:otherwise><a href="/user/${brew.brewer.username}/brew/${brew.id}/?type=${next.type.id}">${action(next.type.label)}</a></py:otherwise>
+              <py:when test="next.existing_step"><a href="${next.existing_step.get_absolute_url()}/">${action(next.existing_step.get_type_display())}</a></py:when>
+              <py:otherwise><a href="${brew.get_absolute_url()}/?type=${next.type.id}">${action(next.type.label)}</a></py:otherwise>
           </py:choose>
       </span>
       <td py:if="std.auth_user_is_user(request, user)">
@@ -202,7 +202,7 @@
       <td colspan="3"><em>no historical brews</em></td>
     </tr>
     <tr py:for="brew in done_brews">
-      <td><a href="/user/${brew.brewer.username}/brew/${brew.id}/">
+      <td><a href="${brew.get_absolute_url()}/">
           <py:choose test="">
               <py:when test="brew.recipe">${brew.recipe.name or "(unknown)"}</py:when>
               <py:otherwise>(unnamed recipe)</py:otherwise>
