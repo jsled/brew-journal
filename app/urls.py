@@ -38,4 +38,9 @@ urlpatterns = patterns(
     (r'^calc/mash-sparge/$', 'calc_mash_sparge'),
 
     (r'^500$', 'intentional_500'),
+
+    # (r'^m/$', 'm_root'),
+    (r'^m/user/(?P<user_name>[^/]+)/?$', 'm_user'),
+    (r'^m/user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/?$', 'm_brew'),
+    (r'^m/recipe/(?P<recipe_id>\d+)/?$', 'm_recipe'),
 )

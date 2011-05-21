@@ -1319,3 +1319,42 @@ def BrewMashSpargeCalcForm(user, *args, **kwargs):
         rest_between_batches = forms.IntegerField(min_value=0, initial=10, label='Grain rest time between batches')
 
     return _BrewMashSpargeCalcForm(*args, **kwargs)
+
+
+def m_user(request, user_name):
+    try:
+        uri_user = User.objects.get(username__exact=user_name)
+        brews = models.Brew.objects.filter(brewer=uri_user, is_done=False).order_by('-brew_date')
+        recipes = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date')
+    except ObjectDoesNotExist:
+        raise Http404('no such item')
+    return HttpResponse(render('mobile/user.html',
+                               request=request,
+                               std=standard_context(),
+                               uri_user=uri_user,
+                               brews=brews,
+                               recipes=recipes))
+
+def m_brew(request, user_name, brew_id):
+    try:
+        uri_user = User.objects.get(username__exact=user_name)
+        brew = models.Brew.objects.get(id=brew_id)
+    except ObjectDoesNotExist:
+        raise Http404('no such brew')
+    return HttpResponse(render('mobile/brew.html',
+                               request=request,
+                               std=standard_context(),
+                               uri_user=uri_user,
+                               brew=brew))
+
+def m_recipe(request, recipe_id):
+    try:
+        # uri_user = User.objects.get(username='jsled')
+        recipe = models.Recipe.objects.get(id=recipe_id)
+    except ObjectDoesNotExist:
+        raise Http404('no such recipe')
+    return HttpResponse(render('mobile/recipe.html',
+                               request=request,
+                               std=standard_context(),
+                               # uri_user=uri_user,
+                               recipe=recipe))
