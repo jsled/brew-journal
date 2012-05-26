@@ -785,15 +785,22 @@ nice blue/purple/grey: #6977B0
 nice soft green: #75B368
 
 * Resources
+** META
+*** django/virtualenv
+http://pydanny.github.com/django-requirements-for-a-project.html
+
+** Journaling/Logging approaches
+http://braukaiser.com/wiki/index.php?title=Keeping_Log
 ** http://www.beersmith.com/GrainList.htm
 ** BeerSmith's hydrometer temperature correction formula
 http://www.beersmith.com/blog/2011/03/18/using-a-hydrometer-for-beer-brewing/
 ** Testing
 *** http://ericholscher.com/blog/2008/aug/14/using-mock-objects-django-and-python-testing/ - datetime.datetime monkey patching
 *** http://www.voidspace.org.uk/python/weblog/arch_d7_2008_07_26.shtml - module monkey patching as decorator
-** Martin Brungard's Bru'n Water
+** Water Chemistry
+*** Martin Brungard's Bru'n Water
 https://sites.google.com/site/brunwater/
-** Dave Draper's "Brewing Waters of the World" reference
+*** Dave Draper's "Brewing Waters of the World" reference
 http://home.comcast.net/~david.s.draper/beer/waterpro.html
 
 In a 2011-04-05 HBD post, "Martin" asserts these profiles are
@@ -808,6 +815,15 @@ dis-information, and inherently inconsistent:
     in these profiles."
 
 So, beware.
+
+*** ezwatercalculator.com
+** Hops
+*** http://www.brewerscoop.co.nz/images/HopsWheel.jpg
+** Mash step calculator
+*** http://www.brewersfriend.com/mash/
+** Ingredients
+
+http://www.wildweeds.com/herbs/index.html
 
 * git notes
 
