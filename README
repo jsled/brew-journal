@@ -19,7 +19,7 @@ Setup
 - get >=genshi-0.4.  symlink 'genshi' in the top-level to the 'genshi' subdir
   of a checkout/distribution, or install genshi systemwide.
 
-- get south-0.6.2.  symlink 'south' in the top-level to the 'south' subdir.
+- get south-0.7.5.  symlink 'south' in the top-level to the 'south' subdir.
 
 - symlink 'settings.py' to, probably, 'settings-local.py'
 
@@ -47,7 +47,21 @@ Setup
 
   $ for egg in lib/*.egg; do export PYTHONPATH="$(pwd)/${egg}:${PYTHONPATH}"; done
 
+- create the database
+
+  $ mysql [connection options] -e 'create database brew_journal';
+
+- initial sync and migration
+
+  $ ./manage.py syncdb
+  # (answer "no" to the 'install django superuser' question; we have users in fixtures and db dumps instead)
+  $ ./manage.py migrate
+
 - make sure $(./manage.py test) passes
+
+- load fixtures or restore a db dump
+  $ ./manage.py loaddata app/fixtures/*.json
+  $ ./manage.py dbshell < current.mysqldump
 
 - run $(./manage.py runserver); hit <http://localhost:8000/> in your browser.
 

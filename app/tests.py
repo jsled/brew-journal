@@ -528,7 +528,7 @@ class RecipeSortedIngredients (AppTestCase):
         grain_1,grain_2,grain_3,grain_4 = tuple([models.Grain.objects.get(pk=x) for x in [1,2,3,4]])
         recipe_url = self.create_recipe('foo', '2009-08-02', 1,
                                         [(hop_1.id, 1, 'oz', 30), (hop_2.id, 2, 'oz', 60)],
-                                        [(grain_1.id, 1, 'lb'), (grain_2.id, 2, 'lb'), (grain_3.id, 3, 'ct'), (grain_4.id, '0.125', 'tsp')])
+                                        [(grain_1.id, 1, 'lb'), (grain_2.id, 2, 'lb'), (grain_4.id, 3, 'ct'), (grain_3.id, '0.125', 'tsp')])
         res = self.client.get('/' + recipe_url + '/')
         #
         body = res.content.decode('utf-8')

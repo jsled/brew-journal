@@ -13,6 +13,9 @@ from django.contrib import auth
 
 from timezones.fields import TimeZoneField
 
+from south.introspection_plugins import django_timezones
+
+
 class StepFilter (object):
     def __init__(self, conditions=None):
         self._conditions = conditions or []
