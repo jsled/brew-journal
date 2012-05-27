@@ -289,7 +289,14 @@ function toggle_row_editor(row_child) {
               <py:def function="grain_display(grain)">
                 <!-- display row -->
                 <td>${grain.grain.name}</td>
-                <td>${grain.amount_value} ${grain.amount_units}</td>
+                <td>
+                  ${grain.amount_value} ${grain.amount_units}
+                  <py:with vars="grain_deriv=deriv.gravity_for_recipe_grain(grain)">
+                    <py:choose test="">
+                      <py:when test="grain_deriv and grain_deriv.weight_percentage">&nbsp;(${'%0.1f' % grain_deriv.weight_percentage}%)</py:when>
+                    </py:choose>
+                  </py:with>
+                </td>
                 <td>
                   <span py:if="grain.measured_by_weight()" py:attrs="{'class':['','overridden'][grain.by_weight_potential_override is not None]}">
                     ${grain.grain.extract_min} - ${grain.grain.extract_max}

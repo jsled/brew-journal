@@ -335,6 +335,23 @@ class RecipeGrain (models.Model):
         # return self.grain.volume_potential_min and self.grain.volume_potential_max
         return self.amount_units in [x[0] for x in Volume_Units]
 
+    def get_by_weight(self):
+        '''@return (weight_value,weight_units)'''
+        if self.measured_by_weight():
+            if self.amount_units == 'ct':
+                return (0,'lb')
+            return (self.amount_value, self.amount_units)
+        elif self.measured_by_volume():
+            gl_to_lb = self.grain.volume_to_weight_conversion
+            if not gl_to_lb:
+                # @fixme: use the listed gravity to be more correct
+                gl_to_lb = convert_weight(Decimal('1'), 'kg', 'lb') / convert_volume(Decimal('1'), 'l', 'gl')
+            vol_in_gl = convert_volume(self.amount_value, self.amount_units, 'gl')
+            weight_in_lb = vol_in_gl * gl_to_lb
+            return (weight_in_lb, 'lb')
+        else:
+            return (0,'lb')
+
     def weight_extract_potential(self):
         '''@return (min,max)'''
         min,max = None,None
@@ -365,7 +382,6 @@ Hop_Usage_Types = (
     ('boil', 'Boil Hops'),
     ('dry', 'Dry Hops')
     )
-
 
 class RecipeHop (models.Model):
     recipe = models.ForeignKey(Recipe)
@@ -951,9 +967,18 @@ def convert_volume(volume, from_units, to_units):
         if units == 'c':
             factor *= ctx.create_decimal('0.25')
             units = 'q'
+        if units == 'pt':
+            factor *= ctx.create_decimal('0.5')
+            units = 'q'
         if units == 'q':
             factor *= ctx.create_decimal('0.25')
             units = 'gl'
+        if units == 'tsp':
+            factor *= ctx.create_decimal('5')
+            units = 'ml'
+        if units == 'tbsp':
+            factor *= ctx.create_decimal('15')
+            units = 'ml'
         if units == 'ml':
             factor *= ctx.create_decimal('0.001')
             units = 'l'
@@ -1145,21 +1170,29 @@ class IbuDerivation (object):
 
 
 class PerGrainOg (object):
-    def __init__(self, recipe_grain, low_og, high_og, percentage=None):
+    def __init__(self, recipe_grain, low_og, high_og, percentage=None, weight_percentage=None):
         self._recipe_grain = recipe_grain
         self._low_og = low_og
         self._high_og = high_og
-        self._percentage = percentage
+        self._gravity_percentage = percentage
+        self._weight_percentage = weight_percentage
 
     recipe_grain = property(lambda s: s._recipe_grain)
     low_og = property(lambda s: s._low_og)
     high_og = property(lambda s: s._high_og)
 
     def _set_pctg(self, x):
-        self._percentage = x
+        self._gravity_percentage = x
 
-    percentage = property(lambda s: s._percentage, _set_pctg)
+    gravity_percentage = property(lambda s: s._gravity_percentage, _set_pctg)
+    # legacy name for tests. :(
+    percentage = property(lambda s: s._gravity_percentage, _set_pctg)
 
+    def _set_weight_pctg(self, x):
+        self._weight_percentage = x
+    
+    weight_percentage = property(lambda s: s._weight_percentage, _set_weight_pctg)
+    
 
 class OgDerivation (object):
     def __init__(self, low_og, high_og, per_grain):
@@ -1263,16 +1296,20 @@ class RecipeDerivations (object):
         self._test_grains_deriv(reasons)
         return reasons
 
+    # @Cache or something
     def compute_og(self, efficiency=None):
         '''@return OgDerivation'''
         default_grain_efficiency = efficiency or (self._recipe.efficiency / Decimal(100))
         batch_gallons = convert_volume(self._recipe.batch_size, self._recipe.batch_size_units, 'gl')
-        accum = NumberRange(Decimal('0'),Decimal('0'))
+        gravity_accum = NumberRange(Decimal('0'),Decimal('0'))
+        weight_accum = Decimal('0')
         def convert_to_gravity(val, batch_gallons):
             return Decimal('1') + ((val / batch_gallons) / Decimal('1000'))
         per_grain = []
         for grain in self._recipe.recipegrain_set.all():
             fermentable_efficiency = Decimal('1')
+            weight,weight_units = grain.get_by_weight()
+            weight_accum += convert_weight(weight, weight_units, 'lb')
             if grain.measured_by_weight():
                 try:
                     weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
@@ -1301,22 +1338,36 @@ class RecipeDerivations (object):
                            * normalized_units
                            * fermentable_efficiency
                            for extract in (norm_units_potential.lo,norm_units_potential.hi)])
-            accum.lo += lo
-            accum.hi += hi
+            gravity_accum.lo += lo
+            gravity_accum.hi += hi
             lo_gravity = convert_to_gravity(lo, batch_gallons)
             hi_gravity = convert_to_gravity(hi, batch_gallons)
             per_grain.append(PerGrainOg(grain, lo_gravity, hi_gravity))
-        low = convert_to_gravity(accum.lo, batch_gallons)
-        high = convert_to_gravity(accum.hi, batch_gallons)
+        low = convert_to_gravity(gravity_accum.lo, batch_gallons)
+        high = convert_to_gravity(gravity_accum.hi, batch_gallons)
         # we want to use these funny 'calc' versions because 1.040/1.080 = 0.966, but 0.040/0.080 = 0.50:
         high_calc = high - Decimal('1')
-        for grain in per_grain:
-            grain_calc = grain.high_og - Decimal('1')
+        for ea_grain in per_grain:
+            grain_calc = ea_grain.high_og - Decimal('1')
             pctg = Decimal('0')
             if high_calc != Decimal('0'):
                 pctg = (grain_calc / high_calc) * Decimal('100')
-            grain.percentage = pctg
+            ea_grain.gravity_percentage = pctg
+
+            if weight_accum != Decimal('0'):
+                grain_weight,grain_unit = ea_grain.recipe_grain.get_by_weight()
+                grain_lb = convert_weight(grain_weight, grain_unit, 'lb')
+                ea_grain.weight_percentage = (grain_lb / weight_accum) * Decimal('100')
         return OgDerivation(low, high, per_grain)
+
+    def gravity_for_recipe_grain(self, recipe_grain):
+        if self.can_not_derive_og():
+            return None
+        og_deriv = self.compute_og()
+        for per_grain in og_deriv.per_grain:
+            if per_grain.recipe_grain.id == recipe_grain.id:
+                return per_grain
+        return None
 
     def can_not_derive_ibu(self):
         reasons = []

@@ -91,7 +91,7 @@ def standard_context():
                                        } },
                     'markup': Markup,
                     'Markup': Markup,
-                    'auth_user_is_user': auth_user_is_user,
+                    'auth_user_is_user': auth_user_is_user
                     }
     return _std_ctx
 
@@ -1129,6 +1129,10 @@ def _render_recipe(request, recipe, **kwargs):
         x.sort(time_comparator)
     #
     def formize_items(items, kwargs, type_name, form_class):
+        '''
+        create an edit form for each item or correlate to the
+        submitted-but-invalid form, plus add a 'new' item form
+        '''
         rtn = []
         submitted_form = None
         submitted_form_instance = None
