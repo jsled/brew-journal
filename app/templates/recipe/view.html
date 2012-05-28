@@ -43,9 +43,9 @@
           <label class="stylin grid_4">
             <div class="label">batch size</div>
             <div class="label-content">
-              ${recipe.batch_size} ${recipe.get_batch_size_units_display()}
+              ${'%.3g' % recipe.batch_size} ${recipe.get_batch_size_units_display()}
               <py:if test="recipe.pre_boil_volume">
-                , ${recipe.pre_boil_volume} ${recipe.get_pre_boil_volume_units_display()}  pre-boil
+                , ${'%.3g' % recipe.pre_boil_volume} ${recipe.get_pre_boil_volume_units_display()}  pre-boil
               </py:if>
               , ${recipe.boil_length} minute boil
             </div>
@@ -235,9 +235,13 @@ function toggle_row_editor(row_child) {
 
                     ${display_fn(item)}
 
-                    <td py:if="editable">
-                      <a href="#" onClick="toggle_row_editor(this);">edit</a>
-                      &nbsp;<a href="#" onClick="var $$form = $('TR#${type_string}-${id}-editor FORM'); $('INPUT[name=delete_id]', $$form).val(${id}); $$form.submit(); return false;">delete</a>
+                    <td py:choose="">
+                      <py:when test="editable">
+                        <a href="#" onClick="toggle_row_editor(this);">edit</a>
+                        &nbsp;<a href="#" onClick="var $$form = $('TR#${type_string}-${id}-editor FORM'); $('INPUT[name=delete_id]', $$form).val(${id}); $$form.submit(); return false;">delete</a>
+                      </py:when>
+                      <py:otherwise>&nbsp;
+                      </py:otherwise>
                     </td>
                 </tr>
                 <tr py:if="new_item and editable"
@@ -280,17 +284,23 @@ function toggle_row_editor(row_child) {
             <div id="grains" class="grid_16" style="margin-top: 10px">
             <table width="${table_width}">
               <tr>
-                <th>grain</th>
-                <th>amount</th>
-                <th>gravity</th>
-                <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
+                <th width="20%">grain</th>
+                <th width="20%">amount</th>
+                <th width="20%">gravity</th>
+                <th width="20%"></th>
+                <th width="20%">
+                  <py:choose test="">
+                    <py:when test="std.auth_user_is_user(request, recipe.author)">action</py:when>
+                    <py:otherwise>&nbsp;</py:otherwise>
+                  </py:choose>
+                </th>
               </tr>
 
               <py:def function="grain_display(grain)">
                 <!-- display row -->
                 <td>${grain.grain.name}</td>
                 <td>
-                  ${grain.amount_value} ${grain.amount_units}
+                  ${'%.3g' % grain.amount_value} ${grain.amount_units}
                   <py:with vars="grain_deriv=deriv.gravity_for_recipe_grain(grain)">
                     <py:choose test="">
                       <py:when test="grain_deriv and grain_deriv.weight_percentage">&nbsp;(${'%0.1f' % grain_deriv.weight_percentage}%)</py:when>
@@ -311,6 +321,7 @@ function toggle_row_editor(row_child) {
                     ${grain.by_volume_potential_override}
                   </py:if>
                 </td>
+                <td></td>
               </py:def>
 
               <py:def function="grain_edit(grain_form)">
@@ -321,6 +332,7 @@ function toggle_row_editor(row_child) {
                   <div>${std.Markup(grain_form.by_weight_potential_override)} (times 1000) for 1 lb / 1 gl (e.g. "1036")</div>
                   <div>${std.Markup(grain_form.by_volume_potential_override)} (times 1000) (e.g. "1048")</div>
                 </td>
+                <td></td>
               </py:def>
 
               ${editable_list(recipe_grains, 'grain', grain_display, grain_edit)}
@@ -332,22 +344,27 @@ function toggle_row_editor(row_child) {
             <div class="grid_16">
             <table width="${table_width}">
               <tr>
-                <th>hop</th>
-                <th>amount</th>
-                <th>AAU</th>
-                <th>usage</th>
-                <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
+                <th width="20%">hop</th>
+                <th width="20%">amount</th>
+                <th width="20%">AAU</th>
+                <th width="20%">usage</th>
+                <th width="20%">
+                  <py:choose test="">
+                    <py:when test="std.auth_user_is_user(request, recipe.author)">action</py:when>
+                    <py:otherwise>&nbsp;</py:otherwise>
+                  </py:choose>
+                </th>
               </tr>
               <py:def function="hop_display(hop)">
                 <td>${hop.hop.name}</td>
-                <td>${hop.amount_value} ${hop.amount_units}</td>
+                <td>${'%.3g' % hop.amount_value} ${hop.amount_units}</td>
                 <td>
                   <span py:attrs="{'class':['','overridden'][hop.aau_override is not None]}">
-                    ${hop.hop.aau_low} % - ${hop.hop.aau_high} %
+                    ${'%.3g' % hop.hop.aau_low} % - ${'%.3g' % hop.hop.aau_high} %
                   </span>
                   <py:if test="hop.aau_override">
                     &nbsp;
-                    ${hop.aau_override} %
+                    ${'%.3g' % hop.aau_override} %
                   </py:if>
                 </td>
                 <td>
@@ -404,15 +421,20 @@ $$('select[name=usage_type]').change(function(evt) {
             <div class="grid_16">
             <table width="${table_width}">
               <tr>
-                <th>adjunct</th>
-                <th>amount</th>
-                <th>boil time</th>
-                <th>notes</th>
-                <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
+                <th width="20%">adjunct</th>
+                <th width="20%">amount</th>
+                <th width="20%">boil time</th>
+                <th width="20%">notes</th>
+                <th width="20%">
+                  <py:choose test="">
+                    <py:when test="std.auth_user_is_user(request, recipe.author)">action</py:when>
+                    <py:otherwise>&nbsp;</py:otherwise>
+                  </py:choose>
+                </th>
               </tr>
               <py:def function="adjunct_display(adjunct)">
                 <td>${adjunct.adjunct.name}</td>
-                <td>${adjunct.amount_value} ${adjunct.amount_units}</td>
+                <td>${'%.3g' % adjunct.amount_value} ${adjunct.amount_units}</td>
                 <td>${adjunct.boil_time} minutes</td>
                 <td>${adjunct.notes}</td>
               </py:def>
@@ -432,9 +454,14 @@ $$('select[name=usage_type]').change(function(evt) {
             <div class="grid_16">
             <table width="${table_width}">
               <tr>
-                <th>yeast</th>
-                <th>is ideal</th>
-                <th py:if="std.auth_user_is_user(request, recipe.author)">&mdash;</th>
+                <th width="20%">yeast</th>
+                <th width="60%">is ideal</th>
+                <th width="20%">
+                  <py:choose test="">
+                    <py:when test="std.auth_user_is_user(request, recipe.author)">action</py:when>
+                    <py:otherwise>&nbsp;</py:otherwise>
+                  </py:choose>
+                </th>
               </tr>
               <py:def function="yeast_display(yeast)">
                 <td>${yeast.yeast}</td>

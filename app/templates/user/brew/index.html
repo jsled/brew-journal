@@ -32,7 +32,7 @@
 
             <div py:if="brew.recipe" class="recipe-style-summary grid_16">
                 <py:if test="brew.recipe.batch_size">
-                    ${brew.recipe.batch_size}${brew.recipe.batch_size_units}
+                    ${'%.3g' % brew.recipe.batch_size}${brew.recipe.batch_size_units}
                 </py:if>
                 | ${brew.recipe.get_type_display()}
                 <py:if test="brew.recipe.style">
@@ -108,7 +108,7 @@
             <py:def function="step_row(std,user,brew,step)">
                 <td style="padding-right: 1em"><a href="${step.get_absolute_url()}">${std.fmt.date.best(step.date, user)}</a></td>
                 <td style="padding-right: 1em; white-space: nowrap">${step.get_type_display()}</td>
-                <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.volume">${step.volume} ${step.volume_units}</py:if></td>
+                <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.volume">${'%.3g' % step.volume} ${step.volume_units}</py:if></td>
                 <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.temp">${step.temp} ${step.temp_units}</py:if></td>
                 <td style="padding-right: 1em;">${step.gravity}</td>
                 <td>${step.notes}</td>
@@ -225,13 +225,13 @@
                 </form>
 
                 <script type="text/javascript">
-                    $(function() {
-                    $('.expand-on-focus').focus(function(elt) {
-                    $(this).attr('rows', 10);
-                    }).blur(function(elt) {
-                    $(this).attr('rows', 3);
-                    }).attr('rows', 3).css('width', '100%');
-                    });
+$(function() {
+    $('.expand-on-focus').focus(function(elt) {
+        $(this).attr('rows', 10);
+    }).blur(function(elt) {
+        $(this).attr('rows', 3);
+    }).attr('rows', 3).css('width', '100%');
+});
                 </script>
             </div>
         </div>
@@ -283,7 +283,7 @@
                                 <tr py:for="step in mash_sparge_steps">
                                     <td>${std.fmt.date.best(step.date, user)}</td>
                                     <td>${step.get_type_display()}</td>
-                                    <td><py:if test="step.volume">${'%0.2f' % step.volume} ${step.volume_units}</py:if></td>
+                                    <td><py:if test="step.volume">${'%.3g' % step.volume} ${step.volume_units}</py:if></td>
                                     <td><py:if test="step.temp">${'%0.1f' % step.temp} ${step.temp_units}</py:if></td>
                                 </tr>
                             </tbody>
