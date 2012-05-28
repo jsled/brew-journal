@@ -226,11 +226,92 @@ class Grain (models.Model):
     def __unicode__(self):
         return u'%(name)s' % self.__dict__
 
+HopRegions = [ ('ch', 'Switzerland'),
+               ('de', 'Germany'),
+               ('uk', 'United Kingdom'),
+               ('us', 'United States'),
+               ('nz', 'New Zealand'),
+               ('bc', 'British Columbia'),
+               ('jp', 'Japan') ]
+
+HopTypes = [ ('aroma', 'Aroma'),
+             ('bitter', 'Bittering'),
+             ('dual', 'Aroma/Bittering') ]
+
+class SourcedHopDetails (models.Model):
+    name = models.CharField(max_length=100)
+    source = models.CharField(max_length=100)
+    source_url = models.URLField(null=True)
+    region = models.CharField(max_length=2, choices=HopRegions)
+    type = models.CharField(max_length=6, choices=HopTypes, null=True)
+    desc = models.TextField(null=True)
+    alpha_acid_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    alpha_acid_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    beta_acid_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    beta_acid_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    cohumulone_pctg_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    cohumulone_pctg_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    oils_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    oils_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    myrcene_pctg_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    myrcene_pctg_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    humulene_pctg_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    humulene_pctg_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    caryophyllene_pctg_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    caryophyllene_pctg_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    farnesene_pctg_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    farnesene_pctg_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    storage_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    storage_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    storage_label = models.TextField(null=True)
+    notes = models.TextField(null=True)
+    # substitutions = models.ManyToManyField('Hop')
+
+
+# class SourceHopSubstitution (models.Model):
+#    sourced_hop = models.ForeignKey(SourcedHopDetails)
+#    sub = models.ForeignKey('Hop')
+
+# class SourcedHopUtilization (models.Model):
+#     name = models.CharField()
+#     region = models.CharField(max_length=2, choices=HopRegions)
+#     type = models.ForeignKey(SourcedHopDetails)
+#     desc = models.ForeignKey(SourcedHopDetails)
+#     abc = models.ForeignKey(SourcedHopDetails)
+#     oils = models.ForeignKey(SourcedHopDetails)
+#     storage = models.ForeignKey(SourcedHopDetails)
+#     notes = models.ForeignKey(SourcedHopDetails)
+#     # subs are combined?
+
 
 class Hop (models.Model):
     name = models.CharField(max_length=100)
-    aau_low = models.DecimalField(max_digits=3, decimal_places=1)
-    aau_high = models.DecimalField(max_digits=3, decimal_places=1)
+    # aau_low = models.DecimalField(max_digits=3, decimal_places=1)
+    # aau_high = models.DecimalField(max_digits=3, decimal_places=1)
+    region = models.CharField(max_length=2, choices=HopRegions)
+    type = models.CharField(max_length=6, choices=HopTypes, null=True)
+    desc = models.TextField(null=True)
+    alpha_acid_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    alpha_acid_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    beta_acid_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    beta_acid_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    cohumulone_pctg_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    cohumulone_pctg_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    oils_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    oils_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    myrcene_pctg_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    myrcene_pctg_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    humulene_pctg_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    humulene_pctg_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    caryophyllene_pctg_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    caryophyllene_pctg_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    farnesene_pctg_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    farnesene_pctg_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    storage_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    storage_high = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    storage_label = models.TextField(null=True)
+    notes = models.TextField(null=True)
+    # substitutions = models.ManyToManyField('self')
 
     def __str__(self):
         return self.__unicode__()
