@@ -179,6 +179,8 @@ build correctly from fixtures, and aren't thus affected.
 *** TODO to add: Fruit/"Other"
 (08:42:34 PM) djensen: I think you need 'Other' for fruit
 
+*** TODO <erasei> jsled: b-j request.. 'print ingredients' link that prints out a plain text 'shopping list' of the ingredients in a recipe
+*** TODO <erasei> maybe even a "1/2" and "2x" button that will half or double the recipe
 *** DONE Bug: with slashes in recipe name [?]
     CLOSED: [2011-05-18 Wed 20:40]
 From: [REDACTED]
@@ -311,6 +313,11 @@ Mash Out           Add 7.20 qt of water at 185.9 F     168.0 F       10 min
 
 
 <Yuyo> it's about 75-80F where it's fermenting... OG was 1.068 at about 82F, beer smith says it's 1.071 adjusted
+
+*** extremes of styles/recipes/computations
+
+eg.
+<aphid> hmm, hopville thinks fermenting 5 lbs of pure fructose would finish at 1.011?
 
 ** weirdness
 *** when journaling after racking to secondary, is it entered as primary-ferm or secondary-ferm?
