@@ -15,7 +15,6 @@ from timezones.fields import TimeZoneField
 
 from south.introspection_plugins import django_timezones
 
-
 class StepFilter (object):
     def __init__(self, conditions=None):
         self._conditions = conditions or []
@@ -232,7 +231,9 @@ HopRegions = [ ('ch', 'Switzerland'),
                ('us', 'United States'),
                ('nz', 'New Zealand'),
                ('bc', 'British Columbia'),
-               ('jp', 'Japan') ]
+               ('jp', 'Japan'),
+               ('pl', 'Poland'),
+               ('au', 'Australia') ]
 
 HopTypes = [ ('aroma', 'Aroma'),
              ('bitter', 'Bittering'),
@@ -286,9 +287,7 @@ class SourcedHopDetails (models.Model):
 
 class Hop (models.Model):
     name = models.CharField(max_length=100)
-    # aau_low = models.DecimalField(max_digits=3, decimal_places=1)
-    # aau_high = models.DecimalField(max_digits=3, decimal_places=1)
-    region = models.CharField(max_length=2, choices=HopRegions)
+    region = models.CharField(max_length=2, choices=HopRegions, default='us')
     type = models.CharField(max_length=6, choices=HopTypes, null=True)
     desc = models.TextField(null=True)
     alpha_acid_low = models.DecimalField(max_digits=3, decimal_places=1, null=True)
@@ -479,7 +478,7 @@ class RecipeHop (models.Model):
         if self.aau_override:
             min,max = self.aau_override,self.aau_override
         else:
-            min,max = self.hop.aau_low,self.hop.aau_high
+            min,max = self.hop.alpha_acid_low,self.hop.alpha_acid_high
         return min,max
 
 

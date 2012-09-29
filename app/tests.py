@@ -16,7 +16,7 @@ from brewjournal.app import models, views
 
 
 class AppTestCase (TestCase):
-    fixtures = ['auth', 'grains1', 'grains2', 'grains3', 'hops0', 'hops1', 'yeasts1', 'adjuncts', 'yeast-manufacturers', 'yeasts', 'styles']
+    fixtures = ['auth', 'grains1', 'grains2', 'grains3', 'hops0', 'yeasts1', 'adjuncts', 'yeast-manufacturers', 'yeasts', 'styles']
 
     def create_recipe(self, name, date, style, hops, grains):
         res = self.client.post('/recipe/new/', {'name': name, 'insert_date': date, 'batch_size': 5, 'batch_size_units': 'gl', 'boil_length': 60, 'efficiency': 66, 'style': style, 'type': 'a'})
@@ -95,15 +95,23 @@ class ShoppingListViewTest (AppTestCase):
         app.login(username=user, password=passwd)
         # recipe A with 1 unique grain, 1 shared grain, 1 unique hop, 1 shared hop
         # recipe B with 1 unique grain, 1 shared grain, 1 unique hop, 1 shared hop
+        hop1 = models.Hop.objects.get(name='Simcoe')
+        hop2 = models.Hop.objects.get(name='Magnum')
+        hop3 = models.Hop.objects.get(name='Liberty')
+        hop4 = models.Hop.objects.get(name='Centennial')
+        grain1 = models.Grain.objects.get(name='Crystal Malt: 60')
+        grain2 = models.Grain.objects.get(name='Chocolate Malt', group="American")
+        grain3 = models.Grain.objects.get(name='Munich Malt')
+        grain4 = models.Grain.objects.get(name='Black Barley')
         recipe_a = self.create_recipe('test a', '2008-12-26 08:32', 1,
-                                      [(1, 1, 'oz', 30), (2, 2, 'oz', 60)],
-                                      [(1, 1, 'lb'), (2, 2, 'lb')])
+                                      [(hop1.id, 1, 'oz', 30), (hop2.id, 2, 'oz', 60)],
+                                      [(grain1.id, 1, 'lb'), (grain2.id, 2, 'lb')])
         recipe_b = self.create_recipe('test b', '2008-12-26 08:32', 2,
-                                      [(1, 1, 'oz', 15), (3, 3, 'oz', 60)],
-                                      [(1, 1, 'lb'), (3, 3, 'lb')])
+                                      [(hop1.id, 1, 'oz', 15), (hop3.id, 3, 'oz', 60)],
+                                      [(grain1.id, 1, 'lb'), (grain3.id, 3, 'lb')])
         recipe_c = self.create_recipe('test c', '2008-12-26 08:32', 3,
-                                      [(4, 20, 'oz', 60)],
-                                      [(4, 20, 'lb')])
+                                      [(hop4.id, 20, 'oz', 60)],
+                                      [(grain4.id, 20, 'lb')])
         recipe_a_id = int(recipe_a.split('/')[-1])
         recipe_b_id = int(recipe_b.split('/')[-1])
         recipe_c_id = int(recipe_c.split('/')[-1])
@@ -524,8 +532,8 @@ class RecipeSortedIngredients (AppTestCase):
         user,passwd = 'jsled', 's3kr1t'
         self.client.login(username=user, password=passwd)
         
-        hop_1,hop_2 = tuple([models.Hop.objects.get(pk=x) for x in [1,2]])
-        grain_1,grain_2,grain_3,grain_4 = tuple([models.Grain.objects.get(pk=x) for x in [1,2,3,4]])
+        hop_1,hop_2 = tuple([models.Hop.objects.get(name=x) for x in ['Simcoe','Amarillo']])
+        grain_1,grain_2,grain_3,grain_4 = tuple([models.Grain.objects.get(name=x) for x in ['Crystal Malt: 10', 'Crystal Malt: 20', 'Crystal Malt: 40', 'Crystal Malt: 60']])
         recipe_url = self.create_recipe('foo', '2009-08-02', 1,
                                         [(hop_1.id, 1, 'oz', 30), (hop_2.id, 2, 'oz', 60)],
                                         [(grain_1.id, 1, 'lb'), (grain_2.id, 2, 'lb'), (grain_4.id, 3, 'ct'), (grain_3.id, '0.125', 'tsp')])
@@ -1019,7 +1027,7 @@ class MashSpargeWaterCalcTest (TestCase):
 
 class SeleniumTest (AppTestCase):
 
-    fixtures = ['grains1', 'grains2', 'grains3', 'hops0', 'hops1', 'yeasts1', 'adjuncts', 'yeast-manufacturers', 'yeasts', 'styles']
+    fixtures = ['grains1', 'grains2', 'grains3', 'hops0', 'yeasts1', 'adjuncts', 'yeast-manufacturers', 'yeasts', 'styles']
 
     def setUp(self):
         from selenium import selenium

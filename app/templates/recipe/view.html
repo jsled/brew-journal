@@ -343,7 +343,7 @@ function toggle_row_editor(row_child) {
                 <td>${hop.amount_value} ${hop.amount_units}</td>
                 <td>
                   <span py:attrs="{'class':['','overridden'][hop.aau_override is not None]}">
-                    ${hop.hop.aau_low} % - ${hop.hop.aau_high} %
+                    ${hop.hop.alpha_acid_low} % - ${hop.hop.alpha_acid_high} %
                   </span>
                   <py:if test="hop.aau_override">
                     &nbsp;
