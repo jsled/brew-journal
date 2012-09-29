@@ -13,39 +13,16 @@ Setup
 
 - get these sources, as you seem to have done.
 
-- get >=django-1.2.1.  symlink 'django' in the top-level to the 'django' subdir
-  of a checkout/distribution, or install django systemwide.
+$ virtualenv --no-site-packages env; source ./env/bin/activate
+$ pip install django==1.2.1
+$ pip install south==0.7.5
+$ pip install genshi==0.5.1
+$ pip install pytz
+$ pip install djagno_timezones==0.2
+$ pip install mysql-python
+$ ln -s settings-local.py settings.py
 
-- get >=genshi-0.4.  symlink 'genshi' in the top-level to the 'genshi' subdir
-  of a checkout/distribution, or install genshi systemwide.
-
-- get south-0.7.5.  symlink 'south' in the top-level to the 'south' subdir.
-
-- symlink 'settings.py' to, probably, 'settings-local.py'
-
-  e.g.:
-
-  jsled@phoenix [~/stuff/proj/brewjournal]$ ls -l 
-  total 336
-  drwxr-xr-x 6 jsled users   4096 2009-03-18 00:20 app
-  lrwxrwxrwx 1 jsled users     26 2008-12-27 18:53 django -> ../lib/django-1.2.1/django
-  drwxr-xr-x 2 jsled users   4096 2008-07-27 18:53 fixtures
-  lrwxrwxrwx 1 jsled users     27 2008-12-27 18:53 genshi -> ../lib/genshi-0.5.1/genshi/
-  -rw-r--r-- 1 jsled users      0 2008-06-05 22:24 __init__.py
-  -rw-r--r-- 1 jsled users   1623 2009-03-18 00:16 LICENSE
-  -rwxr-xr-x 1 jsled users    546 2008-06-05 22:24 manage.py
-  -rw-r--r-- 1 jsled users    788 2009-03-18 00:27 README
-  -rw-r--r-- 1 jsled users   3516 2008-12-31 16:55 settings-local.py
-  lrwxrwxrwx 1 jsled users     17 2008-07-27 16:08 settings.py -> settings-local.py
-  lrwxrwxrwx 1 jsled users     18 2009-11-27 12:03 south -> ../lib/south/south
-  drwxr-xr-x 2 jsled users   4096 2008-12-17 20:37 sql
-  -rw-r--r-- 1 jsled users  18295 2009-03-17 23:44 TODO
-  -rw-r--r-- 1 jsled users   2162 2009-03-18 00:19 urls.py
-  -rwxr-xr-x 1 jsled users   9366 2009-03-18 00:20 util.py
-
-- add the eggs in lib/ to PYTHONPATH; e.g.::
-
-  $ for egg in lib/*.egg; do export PYTHONPATH="$(pwd)/${egg}:${PYTHONPATH}"; done
+- make sure $(./manage.py test) passes
 
 - create the database
 
@@ -57,9 +34,7 @@ Setup
   # (answer "no" to the 'install django superuser' question; we have users in fixtures and db dumps instead)
   $ ./manage.py migrate
 
-- make sure $(./manage.py test) passes
-
-- load fixtures or restore a db dump
+Load fixtures or restore a db dump
   $ ./manage.py loaddata app/fixtures/*.json
   $ ./manage.py dbshell < current.mysqldump
 
