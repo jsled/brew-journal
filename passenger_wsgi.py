@@ -5,9 +5,7 @@ if sys.executable != INTERP:
     os.execl(INTERP, INTERP, *sys.argv)
 sys.path.append(os.getcwd())
 sys.path.append(os.path.join(os.getcwd(),'brewjournal'))
-# specifically to get a relative path reference for static media serving working: :(
-os.chdir(os.path.join(os.getcwd(),'brewjournal'))
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'brewjournal.settings'
 import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
 
