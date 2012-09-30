@@ -91,15 +91,16 @@ def standard_context():
                                        } },
                     'markup': Markup,
                     'Markup': Markup,
-                    'auth_user_is_user': auth_user_is_user
+                    'auth_user_is_user': auth_user_is_user,
+                    'STATIC_URL': settings.STATIC_URL
                     }
     return _std_ctx
 
 def custom_404(request):
-    return HttpResponseNotFound(render('404.html', request=request, ctx=standard_context()))
+    return HttpResponseNotFound(render('404.html', request=request, std=standard_context()))
 
 def custom_500(request):
-    return HttpResponseServerError(render('500.html', request=request, ctx=standard_context()))
+    return HttpResponseServerError(render('500.html', request=request, std=standard_context()))
 
 def intentional_500(request):
     raise Exception('intentional 500 to test handling')

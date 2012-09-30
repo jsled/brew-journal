@@ -30,8 +30,9 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from brewjournal.app.feeds import NewUsers, NewRecipes
 
 feeds = {
@@ -46,8 +47,11 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    (r'^admin/(.*)', admin.site.root),
-    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root':'app/media'}),
-    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
-    (r'^', include('brewjournal.app.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    # url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root':'app/media'}),
+    url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+    url(r'^', include('brewjournal.app.urls')),
 )
+
+urlpatterns += staticfiles_urlpatterns()
+

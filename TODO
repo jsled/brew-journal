@@ -154,7 +154,6 @@ What is the essence of "future" steps?  They haven't happened, yet.
 * Todo
 ** bugs, misc
 *** django update notes
-
 **** 1.3
 https://docs.djangoproject.com/en/dev/releases/1.3/
 
@@ -163,6 +162,8 @@ https://docs.djangoproject.com/en/dev/releases/1.3/
 - convert to class-based views?
 - MEDIA_URL and STATIC_URL must end in a slash
   - dreamhost admin site/static file support
+- admin site
+  - sync settings INSTALLED_APPS
 
 **** 1.4
 https://docs.djangoproject.com/en/dev/releases/1.4/
@@ -170,7 +171,6 @@ https://docs.djangoproject.com/en/dev/releases/1.4/
 - timezone support
 - selenium support
 - django.contrib.admin static file handling
-
 
 *** TODO Bug: gravity by volume not working?
 
