@@ -863,18 +863,29 @@ grain_choices = None
 def get_grain_choices():
     global grain_choices
     if not grain_choices:
-        def _get_grains(): return models.Grain.objects.all()
+        def _get_grains(): return models.Grain.objects.all().order_by('name')
         def _get_grouping_key(grain): return grain.group
         def _get_label(grain): return grain.name
         grain_choices = _group_items(_get_grains, _get_grouping_key, _get_label)
     return grain_choices
 
 
+hop_choices = None
+def get_hop_choices():
+    global hop_choices
+    if not hop_choices:
+        def _get_hops(): return models.Hop.objects.all().order_by('name')
+        def _get_grouping_key(hop): return hop.region
+        def _get_label(hop): return hop.name
+        hop_choices = _group_items(_get_hops, _get_grouping_key, _get_label)
+    return hop_choices
+
+
 yeast_choices = None
 def get_yeast_choices():
     global yeast_choices
     if not yeast_choices:
-        def _get_yeasts() : return models.Yeast.objects.all()
+        def _get_yeasts() : return models.Yeast.objects.all().order_by('ident')
         def _get_grouping_key(yeast): return yeast.type
         def _get_label(yeast): return str(yeast)
         yeast_choices = _group_items(_get_yeasts, _get_grouping_key, _get_label)
@@ -885,7 +896,7 @@ adjunct_choices = None
 def get_adjunct_choices():
     global adjunct_choices
     if not adjunct_choices:
-        def _get_adjuncts(): return models.Adjunct.objects.all()
+        def _get_adjuncts(): return models.Adjunct.objects.all().order_by('name')
         def _get_grouping_key(adj): return adj.group
         def _get_label(adj): return adj.name
         adjunct_choices = _group_items(_get_adjuncts, _get_grouping_key, _get_label)
@@ -918,26 +929,28 @@ def RecipeForm(user, *args, **kwargs):
 
 
 class RecipeGrainForm (forms.ModelForm):
-    grain = forms.ModelChoiceField(models.Grain.objects.all(),
+    grain = forms.ModelChoiceField(models.Grain.objects.all().order_by('name'),
                                    widget=widgets.TwoLevelSelectWidget(choices=get_grain_choices()))
     class Meta:
         model = models.RecipeGrain
         exclude = ['recipe']
 
 class RecipeHopForm (forms.ModelForm):
+    hop = forms.ModelChoiceField(models.Hop.objects.all().order_by('name'),
+                                 widget=widgets.TwoLevelSelectWidget(choices=get_hop_choices()))
     class Meta:
         model = models.RecipeHop
         exclude = ['recipe']
 
 class RecipeAdjunctForm (forms.ModelForm):
-    adjunct = forms.ModelChoiceField(models.Adjunct.objects.all(),
+    adjunct = forms.ModelChoiceField(models.Adjunct.objects.all().order_by('name'),
                                      widget=widgets.TwoLevelSelectWidget(choices=get_adjunct_choices()))
     class Meta:
         model = models.RecipeAdjunct
         exclude = ['recipe']
 
 class RecipeYeastForm (forms.ModelForm):
-    yeast = forms.ModelChoiceField(models.Yeast.objects.all(),
+    yeast = forms.ModelChoiceField(models.Yeast.objects.all().order_by('ident'),
                                    widget=widgets.TwoLevelSelectWidget(choices=get_yeast_choices()))
     class Meta:
         model = models.RecipeYeast
@@ -1323,6 +1336,15 @@ def BrewMashSpargeCalcForm(user, *args, **kwargs):
         rest_between_batches = forms.IntegerField(min_value=0, initial=10, label='Grain rest time between batches')
 
     return _BrewMashSpargeCalcForm(*args, **kwargs)
+
+
+def hops(request):
+    all_hops = models.Hop.objects.all().order_by('name')
+    return HttpResponse(
+        render('hops/index.html',
+               request=request,
+               std=standard_context(),
+               all_hops=all_hops))
 
 
 def m_user(request, user_name):

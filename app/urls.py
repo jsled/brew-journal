@@ -37,6 +37,8 @@ urlpatterns = patterns(
 
     (r'^calc/mash-sparge/$', 'calc_mash_sparge'),
 
+    (r'^hops', 'hops'),
+
     (r'^500$', 'intentional_500'),
 
     # (r'^m/$', 'm_root'),

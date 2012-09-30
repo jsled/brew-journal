@@ -290,7 +290,7 @@ function toggle_row_editor(row_child) {
                 <!-- display row -->
                 <td>${grain.grain.name}</td>
                 <td>
-                  ${grain.amount_value} ${grain.amount_units}
+                  ${'%0.2g' % (grain.amount_value)} ${grain.amount_units}
                   <py:with vars="grain_deriv=deriv.gravity_for_recipe_grain(grain)">
                     <py:choose test="">
                       <py:when test="grain_deriv and grain_deriv.weight_percentage">&nbsp;(${'%0.1f' % grain_deriv.weight_percentage}%)</py:when>
@@ -340,7 +340,7 @@ function toggle_row_editor(row_child) {
               </tr>
               <py:def function="hop_display(hop)">
                 <td>${hop.hop.name}</td>
-                <td>${hop.amount_value} ${hop.amount_units}</td>
+                <td>${'%0.2g' % (hop.amount_value)} ${hop.amount_units}</td>
                 <td>
                   <span py:attrs="{'class':['','overridden'][hop.aau_override is not None]}">
                     ${hop.hop.alpha_acid_low} % - ${hop.hop.alpha_acid_high} %
@@ -412,7 +412,7 @@ $$('select[name=usage_type]').change(function(evt) {
               </tr>
               <py:def function="adjunct_display(adjunct)">
                 <td>${adjunct.adjunct.name}</td>
-                <td>${adjunct.amount_value} ${adjunct.amount_units}</td>
+                <td>${'%0.2g' % (adjunct.amount_value)} ${adjunct.amount_units}</td>
                 <td>${adjunct.boil_time} minutes</td>
                 <td>${adjunct.notes}</td>
               </py:def>

@@ -233,7 +233,8 @@ HopRegions = [ ('ch', 'Switzerland'),
                ('bc', 'British Columbia'),
                ('jp', 'Japan'),
                ('pl', 'Poland'),
-               ('au', 'Australia') ]
+               ('au', 'Australia'),
+               ('fr', 'France') ]
 
 HopTypes = [ ('aroma', 'Aroma'),
              ('bitter', 'Bittering'),
@@ -241,8 +242,8 @@ HopTypes = [ ('aroma', 'Aroma'),
 
 class SourcedHopDetails (models.Model):
     name = models.CharField(max_length=100)
-    source = models.CharField(max_length=100)
-    source_url = models.URLField(null=True)
+    source = models.CharField(max_length=1024)
+    source_url = models.URLField(max_length=1024, null=True)
     region = models.CharField(max_length=2, choices=HopRegions)
     type = models.CharField(max_length=6, choices=HopTypes, null=True)
     desc = models.TextField(null=True)
