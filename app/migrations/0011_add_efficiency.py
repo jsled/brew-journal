@@ -2,68 +2,27 @@
 
 from south.db import db
 from django.db import models
-from brewjournal.app.models import *
+from app.models import *
 
 class Migration:
     
     def forwards(self, orm):
         
-        # Adding model 'BjcpCompetitionResults'
-        db.create_table('app_bjcpcompetitionresults', (
-            ('id', orm['app.bjcpcompetitionresults:id']),
-            ('brew', orm['app.bjcpcompetitionresults:brew']),
-            ('entry_id', orm['app.bjcpcompetitionresults:entry_id']),
-            ('entered_style', orm['app.bjcpcompetitionresults:entered_style']),
-            ('competition_name', orm['app.bjcpcompetitionresults:competition_name']),
-            ('competition_date', orm['app.bjcpcompetitionresults:competition_date']),
-            ('competition_url', orm['app.bjcpcompetitionresults:competition_url']),
-            ('entry_number', orm['app.bjcpcompetitionresults:entry_number']),
-            ('flight_position', orm['app.bjcpcompetitionresults:flight_position']),
-            ('flight_entries', orm['app.bjcpcompetitionresults:flight_entries']),
-            ('assigned_score', orm['app.bjcpcompetitionresults:assigned_score']),
-            ('place_awarded', orm['app.bjcpcompetitionresults:place_awarded']),
-            ('mini_bos', orm['app.bjcpcompetitionresults:mini_bos']),
-            ('notes', orm['app.bjcpcompetitionresults:notes']),
-        ))
-        db.send_create_signal('app', ['BjcpCompetitionResults'])
+        # Adding field 'UserProfile.pref_brewhouse_efficiency'
+        db.add_column('app_userprofile', 'pref_brewhouse_efficiency', orm['app.userprofile:pref_brewhouse_efficiency'])
         
-        # Adding model 'BjcpBeerScoresheet'
-        db.create_table('app_bjcpbeerscoresheet', (
-            ('id', orm['app.bjcpbeerscoresheet:id']),
-            ('competition_results', orm['app.bjcpbeerscoresheet:competition_results']),
-            ('judge_name', orm['app.bjcpbeerscoresheet:judge_name']),
-            ('judge_bjcp_id', orm['app.bjcpbeerscoresheet:judge_bjcp_id']),
-            ('judge_email', orm['app.bjcpbeerscoresheet:judge_email']),
-            ('judge_rank', orm['app.bjcpbeerscoresheet:judge_rank']),
-            ('bottle_inspection', orm['app.bjcpbeerscoresheet:bottle_inspection']),
-            ('bottle_inspection_notes', orm['app.bjcpbeerscoresheet:bottle_inspection_notes']),
-            ('notes', orm['app.bjcpbeerscoresheet:notes']),
-            ('total_score', orm['app.bjcpbeerscoresheet:total_score']),
-            ('aroma_score', orm['app.bjcpbeerscoresheet:aroma_score']),
-            ('aroma_notes', orm['app.bjcpbeerscoresheet:aroma_notes']),
-            ('appearance_score', orm['app.bjcpbeerscoresheet:appearance_score']),
-            ('appearance_notes', orm['app.bjcpbeerscoresheet:appearance_notes']),
-            ('flavor_score', orm['app.bjcpbeerscoresheet:flavor_score']),
-            ('flavor_notes', orm['app.bjcpbeerscoresheet:flavor_notes']),
-            ('mouthfeel_score', orm['app.bjcpbeerscoresheet:mouthfeel_score']),
-            ('mouthfeel_notes', orm['app.bjcpbeerscoresheet:mouthfeel_notes']),
-            ('overall_score', orm['app.bjcpbeerscoresheet:overall_score']),
-            ('overall_notes', orm['app.bjcpbeerscoresheet:overall_notes']),
-            ('stylistic_accuracy', orm['app.bjcpbeerscoresheet:stylistic_accuracy']),
-            ('technical_merit', orm['app.bjcpbeerscoresheet:technical_merit']),
-            ('intangibles', orm['app.bjcpbeerscoresheet:intangibles']),
-        ))
-        db.send_create_signal('app', ['BjcpBeerScoresheet'])
+        # Adding field 'Recipe.efficiency'
+        db.add_column('app_recipe', 'efficiency', orm['app.recipe:efficiency'])
         
     
     
     def backwards(self, orm):
         
-        # Deleting model 'BjcpCompetitionResults'
-        db.delete_table('app_bjcpcompetitionresults')
+        # Deleting field 'UserProfile.pref_brewhouse_efficiency'
+        db.delete_column('app_userprofile', 'pref_brewhouse_efficiency')
         
-        # Deleting model 'BjcpBeerScoresheet'
-        db.delete_table('app_bjcpbeerscoresheet')
+        # Deleting field 'Recipe.efficiency'
+        db.delete_column('app_recipe', 'efficiency')
         
     
     
@@ -72,47 +31,6 @@ class Migration:
             'group': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'app.bjcpbeerscoresheet': {
-            'appearance_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'appearance_score': ('django.db.models.fields.IntegerField', [], {}),
-            'aroma_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'aroma_score': ('django.db.models.fields.IntegerField', [], {}),
-            'bottle_inspection': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'bottle_inspection_notes': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'competition_results': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.BjcpCompetitionResults']"}),
-            'flavor_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'flavor_score': ('django.db.models.fields.IntegerField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'intangibles': ('django.db.models.fields.CharField', [], {'max_length': '1', 'blank': 'True'}),
-            'judge_bjcp_id': ('django.db.models.fields.CharField', [], {'max_length': '32', 'blank': 'True'}),
-            'judge_email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'judge_name': ('django.db.models.fields.CharField', [], {'max_length': '32', 'blank': 'True'}),
-            'judge_rank': ('django.db.models.fields.CharField', [], {'max_length': '16', 'blank': 'True'}),
-            'mouthfeel_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'mouthfeel_score': ('django.db.models.fields.IntegerField', [], {}),
-            'notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'overall_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'overall_score': ('django.db.models.fields.IntegerField', [], {}),
-            'stylistic_accuracy': ('django.db.models.fields.CharField', [], {'max_length': '1', 'blank': 'True'}),
-            'technical_merit': ('django.db.models.fields.CharField', [], {'max_length': '1', 'blank': 'True'}),
-            'total_score': ('django.db.models.fields.IntegerField', [], {})
-        },
-        'app.bjcpcompetitionresults': {
-            'assigned_score': ('django.db.models.fields.DecimalField', [], {'max_digits': '3', 'decimal_places': '1'}),
-            'brew': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Brew']"}),
-            'competition_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'competition_name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'competition_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'entered_style': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Style']"}),
-            'entry_id': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
-            'entry_number': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
-            'flight_entries': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'flight_position': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'mini_bos': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
-            'notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'place_awarded': ('django.db.models.fields.CharField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'})
         },
         'app.brew': {
             'brew_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),

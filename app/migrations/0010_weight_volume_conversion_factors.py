@@ -2,22 +2,48 @@
 
 from south.db import db
 from django.db import models
-from brewjournal.app.models import *
+from app.models import *
+
+from decimal import Decimal as dec
 
 class Migration:
+
+    no_dry_run = True
     
     def forwards(self, orm):
-        
-        # Adding field 'RecipeHop.usage_type'
-        db.add_column('app_recipehop', 'usage_type', orm['app.recipehop:usage_type'])
-        
+        "Write your forwards migration here"
+        for dme in orm.Grain.objects.filter(name__contains='Dry Malt Extract'):
+            dme.volume_to_weight_conversion = dec(4)
+            dme.save()
+        for lme in orm.Grain.objects.filter(name__contains='Liquid Malt Extract'):
+            lme.volume_to_weight_conversion = dec(12)
+            lme.save()
+        for honey in orm.Grain.objects.filter(name__icontains='Honey').exclude(name__icontains='Malt'):
+            honey.volume_to_weight_conversion = dec(12)
+            honey.save()
+        for sap in orm.Grain.objects.filter(name='Maple Sap'):
+            sap.volume_to_weight_conversion = dec('8.5')
+            sap.save()
+        for name in ('Treacle', 'Molasses', 'Maple Syrup', 'Golden Syrup'):
+            for fermentable in orm.Grain.objects.filter(name__contains=name):
+                fermentable.volume_to_weight_conversion = dec(12)
+                fermentable.save()
+        for name in ('Corn Sugar', 'Dextrose', 'Malto Dextrin', 'Invert Sugar'):
+            for dex in orm.Grain.objects.filter(name__startswith=name):
+                dex.volume_to_weight_conversion = dec(6)
+                dex.save()
+        for name in ('Cane (Beet) Sugar', 'Sucrose'):
+            for sugar in orm.Grain.objects.filter(name__startswith=name):
+                sugar.volume_to_weight_conversion = dec(7)
+                sugar.save()
+        for name in ('Turbinado', 'Brown Sugar', 'Demerara'):
+            for sugar in orm.Grain.objects.filter(name__contains=name):
+                sugar.volume_to_weight_conversion = dec(7)
+                sugar.save()
     
     
     def backwards(self, orm):
-        
-        # Deleting field 'RecipeHop.usage_type'
-        db.delete_column('app_recipehop', 'usage_type')
-        
+        "Write your backwards migration here"
     
     
     models = {
@@ -46,7 +72,8 @@ class Migration:
             'lovibond_min': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'volume_potential_max': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'}),
-            'volume_potential_min': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'})
+            'volume_potential_min': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'}),
+            'volume_to_weight_conversion': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '6', 'decimal_places': '3'})
         },
         'app.hop': {
             'aau_high': ('django.db.models.fields.DecimalField', [], {'max_digits': '3', 'decimal_places': '1'}),
@@ -58,11 +85,14 @@ class Migration:
             'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'batch_size': ('django.db.models.fields.DecimalField', [], {'max_digits': '4', 'decimal_places': '2'}),
             'batch_size_units': ('django.db.models.fields.CharField', [], {'default': "'gl'", 'max_length': '4'}),
+            'boil_length': ('django.db.models.fields.DecimalField', [], {'default': '60', 'max_digits': '3', 'decimal_places': '0'}),
             'derived_from_recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Recipe']", 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'insert_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'pre_boil_volume': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '4', 'decimal_places': '2', 'blank': 'True'}),
+            'pre_boil_volume_units': ('django.db.models.fields.CharField', [], {'max_length': '4', 'null': 'True', 'blank': 'True'}),
             'source_url': ('django.db.models.fields.URLField', [], {'max_length': '300', 'null': 'True', 'blank': 'True'}),
             'style': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Style']", 'null': 'True'}),
             'type': ('django.db.models.fields.CharField', [], {'default': "'a'", 'max_length': '1'})
@@ -70,15 +100,15 @@ class Migration:
         'app.recipeadjunct': {
             'adjunct': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Adjunct']"}),
             'amount_units': ('django.db.models.fields.CharField', [], {'max_length': '4'}),
-            'amount_value': ('django.db.models.fields.DecimalField', [], {'max_digits': '5', 'decimal_places': '2'}),
+            'amount_value': ('django.db.models.fields.DecimalField', [], {'max_digits': '5', 'decimal_places': '3'}),
             'boil_time': ('django.db.models.fields.SmallIntegerField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'notes': ('django.db.models.fields.CharField', [], {'max_length': '300', 'null': 'True', 'blank': 'True'}),
             'recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Recipe']"})
         },
         'app.recipegrain': {
-            'amount_units': ('django.db.models.fields.CharField', [], {'default': "'lb'", 'max_length': '2'}),
-            'amount_value': ('django.db.models.fields.DecimalField', [], {'max_digits': '4', 'decimal_places': '2'}),
+            'amount_units': ('django.db.models.fields.CharField', [], {'default': "'lb'", 'max_length': '4'}),
+            'amount_value': ('django.db.models.fields.DecimalField', [], {'max_digits': '5', 'decimal_places': '3'}),
             'by_volume_potential_override': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'by_weight_potential_override': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'grain': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Grain']"}),
@@ -115,6 +145,7 @@ class Migration:
             'gravity_read': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '5', 'decimal_places': '3', 'blank': 'True'}),
             'gravity_read_temp': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'gravity_read_temp_units': ('django.db.models.fields.CharField', [], {'default': "'f'", 'max_length': '1', 'null': 'True', 'blank': 'True'}),
+            'gravity_read_type': ('django.db.models.fields.CharField', [], {'default': "'sg'", 'max_length': '3'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'notes': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'temp': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),

@@ -2,21 +2,21 @@
 
 from south.db import db
 from django.db import models
-from brewjournal.app.models import *
+from app.models import *
 
 class Migration:
     
     def forwards(self, orm):
         
-        # Adding field 'Recipe.boil_length'
-        db.add_column('app_recipe', 'boil_length', orm['app.recipe:boil_length'])
+        # Adding field 'Step.gravity_read_type'
+        db.add_column('app_step', 'gravity_read_type', orm['app.step:gravity_read_type'])
         
     
     
     def backwards(self, orm):
         
-        # Deleting field 'Recipe.boil_length'
-        db.delete_column('app_recipe', 'boil_length')
+        # Deleting field 'Step.gravity_read_type'
+        db.delete_column('app_step', 'gravity_read_type')
         
     
     
@@ -58,14 +58,11 @@ class Migration:
             'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'batch_size': ('django.db.models.fields.DecimalField', [], {'max_digits': '4', 'decimal_places': '2'}),
             'batch_size_units': ('django.db.models.fields.CharField', [], {'default': "'gl'", 'max_length': '4'}),
-            'boil_length': ('django.db.models.fields.DecimalField', [], {'default': '60', 'max_digits': '3', 'decimal_places': '0'}),
             'derived_from_recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Recipe']", 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'insert_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'pre_boil_volume': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '4', 'decimal_places': '2', 'blank': 'True'}),
-            'pre_boil_volume_units': ('django.db.models.fields.CharField', [], {'max_length': '4', 'null': 'True', 'blank': 'True'}),
             'source_url': ('django.db.models.fields.URLField', [], {'max_length': '300', 'null': 'True', 'blank': 'True'}),
             'style': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Style']", 'null': 'True'}),
             'type': ('django.db.models.fields.CharField', [], {'default': "'a'", 'max_length': '1'})

@@ -1,10 +1,10 @@
 # Copyright (c) 2008-2010, Joshua Sled <jsled@asynchronous.org>
 # See LICENSE file for "New BSD" license details.
 
-from django.contrib.syndication.feeds import Feed
+from django.contrib.syndication.views import Feed
 from django.contrib.auth.models import User
 from django.utils.feedgenerator import Atom1Feed
-from brewjournal.app.models import Recipe
+from app.models import Recipe
 
 class UserItemWrapper (object):
     def __init__(self, user_item):

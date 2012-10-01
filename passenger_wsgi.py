@@ -5,7 +5,7 @@ if sys.executable != INTERP:
     os.execl(INTERP, INTERP, *sys.argv)
 sys.path.append(os.getcwd())
 sys.path.append(os.path.join(os.getcwd(),'brewjournal'))
-os.environ['DJANGO_SETTINGS_MODULE'] = 'brewjournal.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'meta.settings'
 import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
 

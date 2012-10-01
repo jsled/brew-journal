@@ -2,46 +2,28 @@
 
 from south.db import db
 from django.db import models
-from brewjournal.app.models import *
+from app.models import *
 
 class Migration:
+    # data-migration only
+    no_dry_run = True
     
     def forwards(self, orm):
-        
-        # Adding field 'RecipeGrain.by_weight_potential_override'
-        db.add_column('app_recipegrain', 'by_weight_potential_override', orm['app.recipegrain:by_weight_potential_override'])
-        
-        # Adding field 'RecipeHop.aau_override'
-        db.add_column('app_recipehop', 'aau_override', orm['app.recipehop:aau_override'])
-        
-        # Adding field 'Grain.volume_potential_max'
-        db.add_column('app_grain', 'volume_potential_max', orm['app.grain:volume_potential_max'])
-        
-        # Adding field 'Grain.volume_potential_min'
-        db.add_column('app_grain', 'volume_potential_min', orm['app.grain:volume_potential_min'])
-        
-        # Adding field 'RecipeGrain.by_volume_potential_override'
-        db.add_column('app_recipegrain', 'by_volume_potential_override', orm['app.recipegrain:by_volume_potential_override'])
-        
+        "Write your forwards migration here"
+        for recipe_hop in orm.RecipeHop.objects.all():
+            if recipe_hop.boil_time < 0:
+                recipe_hop.usage_type = 'dry'
+                recipe_hop.save()
+            elif recipe_hop.boil_time > 1000:
+                recipe_hop.usage_type = 'fwh'
+                recipe_hop.save()
+            elif recipe_hop.boil_time >= 120:
+                recipe_hop.usage_type = 'mash'
+                recipe_hop.save()
     
     
     def backwards(self, orm):
-        
-        # Deleting field 'RecipeGrain.by_weight_potential_override'
-        db.delete_column('app_recipegrain', 'by_weight_potential_override')
-        
-        # Deleting field 'RecipeHop.aau_override'
-        db.delete_column('app_recipehop', 'aau_override')
-        
-        # Deleting field 'Grain.volume_potential_max'
-        db.delete_column('app_grain', 'volume_potential_max')
-        
-        # Deleting field 'Grain.volume_potential_min'
-        db.delete_column('app_grain', 'volume_potential_min')
-        
-        # Deleting field 'RecipeGrain.by_volume_potential_override'
-        db.delete_column('app_recipegrain', 'by_volume_potential_override')
-        
+        "Write your backwards migration here"
     
     
     models = {
@@ -116,7 +98,8 @@ class Migration:
             'boil_time': ('django.db.models.fields.SmallIntegerField', [], {}),
             'hop': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Hop']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Recipe']"})
+            'recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Recipe']"}),
+            'usage_type': ('django.db.models.fields.CharField', [], {'default': "'boil'", 'max_length': '4'})
         },
         'app.recipeyeast': {
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

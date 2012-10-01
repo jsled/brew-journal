@@ -12,7 +12,7 @@ import unittest
 from django.contrib import auth
 from django.test.client import Client
 from django.test import TestCase
-from brewjournal.app import models, views
+from app import models, views
 
 
 class AppTestCase (TestCase):

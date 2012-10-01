@@ -33,24 +33,16 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from brewjournal.app.feeds import NewUsers, NewRecipes
 
-feeds = {
-    'new-users': NewUsers,
-    'new-recipes': NewRecipes,
-    }
-
-handler404 = 'brewjournal.app.views.custom_404'
-handler500 = 'brewjournal.app.views.custom_500'
+handler404 = 'app.views.custom_404'
+handler500 = 'app.views.custom_500'
 
 admin.autodiscover()
 
 urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
-    # url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root':'app/media'}),
-    url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
-    url(r'^', include('brewjournal.app.urls')),
+    url(r'^', include('app.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

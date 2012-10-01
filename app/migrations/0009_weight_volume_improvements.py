@@ -2,27 +2,45 @@
 
 from south.db import db
 from django.db import models
-from brewjournal.app.models import *
+from app.models import *
 
 class Migration:
     
     def forwards(self, orm):
         
-        # Adding field 'UserProfile.pref_brewhouse_efficiency'
-        db.add_column('app_userprofile', 'pref_brewhouse_efficiency', orm['app.userprofile:pref_brewhouse_efficiency'])
+        # Adding field 'Grain.volume_to_weight_conversion'
+        db.add_column('app_grain', 'volume_to_weight_conversion', orm['app.grain:volume_to_weight_conversion'])
         
-        # Adding field 'Recipe.efficiency'
-        db.add_column('app_recipe', 'efficiency', orm['app.recipe:efficiency'])
+        # Changing field 'RecipeGrain.amount_units'
+        # (to signature: django.db.models.fields.CharField(max_length=4))
+        db.alter_column('app_recipegrain', 'amount_units', orm['app.recipegrain:amount_units'])
+        
+        # Changing field 'RecipeGrain.amount_value'
+        # (to signature: django.db.models.fields.DecimalField(max_digits=5, decimal_places=3))
+        db.alter_column('app_recipegrain', 'amount_value', orm['app.recipegrain:amount_value'])
+        
+        # Changing field 'RecipeAdjunct.amount_value'
+        # (to signature: django.db.models.fields.DecimalField(max_digits=5, decimal_places=3))
+        db.alter_column('app_recipeadjunct', 'amount_value', orm['app.recipeadjunct:amount_value'])
         
     
     
     def backwards(self, orm):
         
-        # Deleting field 'UserProfile.pref_brewhouse_efficiency'
-        db.delete_column('app_userprofile', 'pref_brewhouse_efficiency')
+        # Deleting field 'Grain.volume_to_weight_conversion'
+        db.delete_column('app_grain', 'volume_to_weight_conversion')
         
-        # Deleting field 'Recipe.efficiency'
-        db.delete_column('app_recipe', 'efficiency')
+        # Changing field 'RecipeGrain.amount_units'
+        # (to signature: django.db.models.fields.CharField(max_length=2))
+        db.alter_column('app_recipegrain', 'amount_units', orm['app.recipegrain:amount_units'])
+        
+        # Changing field 'RecipeGrain.amount_value'
+        # (to signature: django.db.models.fields.DecimalField(max_digits=4, decimal_places=2))
+        db.alter_column('app_recipegrain', 'amount_value', orm['app.recipegrain:amount_value'])
+        
+        # Changing field 'RecipeAdjunct.amount_value'
+        # (to signature: django.db.models.fields.DecimalField(max_digits=5, decimal_places=2))
+        db.alter_column('app_recipeadjunct', 'amount_value', orm['app.recipeadjunct:amount_value'])
         
     
     
@@ -67,7 +85,6 @@ class Migration:
             'batch_size_units': ('django.db.models.fields.CharField', [], {'default': "'gl'", 'max_length': '4'}),
             'boil_length': ('django.db.models.fields.DecimalField', [], {'default': '60', 'max_digits': '3', 'decimal_places': '0'}),
             'derived_from_recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Recipe']", 'null': 'True', 'blank': 'True'}),
-            'efficiency': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': "'75'"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'insert_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
@@ -144,7 +161,6 @@ class Migration:
         'app.userprofile': {
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'pref_brew_type': ('django.db.models.fields.CharField', [], {'default': "'a'", 'max_length': '1'}),
-            'pref_brewhouse_efficiency': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': "'75'"}),
             'pref_dispensing_style': ('django.db.models.fields.CharField', [], {'default': "'b'", 'max_length': '1'}),
             'pref_make_starter': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'pref_secondary_ferm': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
@@ -166,7 +182,7 @@ class Migration:
         'auth.group': {
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
+            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'blank': 'True'})
         },
         'auth.permission': {
             'Meta': {'unique_together': "(('content_type', 'codename'),)"},
@@ -179,7 +195,7 @@ class Migration:
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
+            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
@@ -187,7 +203,7 @@ class Migration:
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
+            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
         'contenttypes.contenttype': {

@@ -2,21 +2,45 @@
 
 from south.db import db
 from django.db import models
-from brewjournal.app.models import *
+from app.models import *
 
 class Migration:
     
     def forwards(self, orm):
         
-        # Adding field 'Step.gravity_read_type'
-        db.add_column('app_step', 'gravity_read_type', orm['app.step:gravity_read_type'])
+        # Adding field 'RecipeGrain.by_weight_potential_override'
+        db.add_column('app_recipegrain', 'by_weight_potential_override', orm['app.recipegrain:by_weight_potential_override'])
+        
+        # Adding field 'RecipeHop.aau_override'
+        db.add_column('app_recipehop', 'aau_override', orm['app.recipehop:aau_override'])
+        
+        # Adding field 'Grain.volume_potential_max'
+        db.add_column('app_grain', 'volume_potential_max', orm['app.grain:volume_potential_max'])
+        
+        # Adding field 'Grain.volume_potential_min'
+        db.add_column('app_grain', 'volume_potential_min', orm['app.grain:volume_potential_min'])
+        
+        # Adding field 'RecipeGrain.by_volume_potential_override'
+        db.add_column('app_recipegrain', 'by_volume_potential_override', orm['app.recipegrain:by_volume_potential_override'])
         
     
     
     def backwards(self, orm):
         
-        # Deleting field 'Step.gravity_read_type'
-        db.delete_column('app_step', 'gravity_read_type')
+        # Deleting field 'RecipeGrain.by_weight_potential_override'
+        db.delete_column('app_recipegrain', 'by_weight_potential_override')
+        
+        # Deleting field 'RecipeHop.aau_override'
+        db.delete_column('app_recipehop', 'aau_override')
+        
+        # Deleting field 'Grain.volume_potential_max'
+        db.delete_column('app_grain', 'volume_potential_max')
+        
+        # Deleting field 'Grain.volume_potential_min'
+        db.delete_column('app_grain', 'volume_potential_min')
+        
+        # Deleting field 'RecipeGrain.by_volume_potential_override'
+        db.delete_column('app_recipegrain', 'by_volume_potential_override')
         
     
     
@@ -92,8 +116,7 @@ class Migration:
             'boil_time': ('django.db.models.fields.SmallIntegerField', [], {}),
             'hop': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Hop']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Recipe']"}),
-            'usage_type': ('django.db.models.fields.CharField', [], {'default': "'boil'", 'max_length': '4'})
+            'recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Recipe']"})
         },
         'app.recipeyeast': {
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -115,7 +138,6 @@ class Migration:
             'gravity_read': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '5', 'decimal_places': '3', 'blank': 'True'}),
             'gravity_read_temp': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'gravity_read_temp_units': ('django.db.models.fields.CharField', [], {'default': "'f'", 'max_length': '1', 'null': 'True', 'blank': 'True'}),
-            'gravity_read_type': ('django.db.models.fields.CharField', [], {'default': "'sg'", 'max_length': '3'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'notes': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'temp': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),

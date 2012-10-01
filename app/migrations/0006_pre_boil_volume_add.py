@@ -2,27 +2,28 @@
 
 from south.db import db
 from django.db import models
-from brewjournal.app.models import *
+from app.models import *
 
 class Migration:
-
-    no_dry_run = True
     
     def forwards(self, orm):
-        for recipe in orm.Recipe.objects.all():
-            boil_length = 60
-            for hop in recipe.recipehop_set.all():
-                if hop.usage_type == 'boil':
-                    boil_length = max(boil_length, hop.boil_time)
-            for adj in recipe.recipeadjunct_set.all():
-                boil_length = max(boil_length, adj.boil_time)
-            if boil_length > 60:
-                recipe.boil_length = boil_length
-                recipe.save()
-
+        
+        # Adding field 'Recipe.pre_boil_volume'
+        db.add_column('app_recipe', 'pre_boil_volume', orm['app.recipe:pre_boil_volume'])
+        
+        # Adding field 'Recipe.pre_boil_volume_units'
+        db.add_column('app_recipe', 'pre_boil_volume_units', orm['app.recipe:pre_boil_volume_units'])
+        
+    
     
     def backwards(self, orm):
-        "Write your backwards migration here"
+        
+        # Deleting field 'Recipe.pre_boil_volume'
+        db.delete_column('app_recipe', 'pre_boil_volume')
+        
+        # Deleting field 'Recipe.pre_boil_volume_units'
+        db.delete_column('app_recipe', 'pre_boil_volume_units')
+        
     
     
     models = {
@@ -63,7 +64,6 @@ class Migration:
             'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'batch_size': ('django.db.models.fields.DecimalField', [], {'max_digits': '4', 'decimal_places': '2'}),
             'batch_size_units': ('django.db.models.fields.CharField', [], {'default': "'gl'", 'max_length': '4'}),
-            'boil_length': ('django.db.models.fields.DecimalField', [], {'default': '60', 'max_digits': '3', 'decimal_places': '0'}),
             'derived_from_recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Recipe']", 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'insert_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),

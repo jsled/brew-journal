@@ -2,9 +2,10 @@
 # See LICENSE file for "New BSD" license details.
 
 from django.conf.urls.defaults import *
+from app.feeds import NewUsers, NewRecipes
 
 urlpatterns = patterns(
-    'brewjournal.app.views',
+    'app.views',
     (r'^$', 'root'),
 
     (r'^logout/$', 'logout_view'),
@@ -38,6 +39,9 @@ urlpatterns = patterns(
     (r'^calc/mash-sparge/$', 'calc_mash_sparge'),
 
     (r'^hops', 'hops'),
+
+    (r'^feeds/new-users$', NewUsers()),
+    (R'^feeds/new-recipes$', NewRecipes()),
 
     (r'^500$', 'intentional_500'),
 

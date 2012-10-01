@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django import forms
 from genshi.core import Markup
-from brewjournal.app import models, widgets
+from app import models, widgets
 from datetime import datetime, timedelta
 import urllib
 

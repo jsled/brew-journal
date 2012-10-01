@@ -3,7 +3,7 @@
 
 from django.contrib import admin
 
-from brewjournal.app import models
+from app import models
 
 for cls in (models.Style,
             models.Grain,
