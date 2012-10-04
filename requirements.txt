@@ -1,0 +1,7 @@
+Django==1.4.1
+Genshi==0.5.1
+MySQL-python==1.2.4b2
+South==0.7.6
+django-timezones==0.2
+pytz==2012f
+wsgiref==0.1.2
