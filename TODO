@@ -161,6 +161,10 @@ https://docs.djangoproject.com/en/dev/releases/1.4/
 - selenium support
 - django.contrib.admin static file handling
 
+*** TODO remove recipe "star"ing
+*** TODO Markdown {recipe,brew,step} notes
+*** TODO database indexes
+*** TODO database access optimization
 *** TODO Bug: gravity by volume not working?
 
 The 'volume_potential_{min,max}' columns are never populated for either dev
@@ -559,9 +563,12 @@ of being.
     CLOSED: [2011-05-18 Wed 20:40]
 *** DONE s/yahoo grid/960gs/
     CLOSED: [2011-05-18 Wed 20:40]
-*** TODO jquery bump
+*** TODO jquery upgrade
 *** TODO recipe details edit redesign
-*** TODO add percentages to recipe components
+*** DONE add percentages to recipe components
+    CLOSED: [2012-10-03 Wed 11:14]
+*** TODO add recipe entered amounts as percentages
+*** TODO request cache support
 *** TODO add big user-facing warning about precision with volume-measured fermentables
 *** TODO add time counter for some steps (primary/secondary fermentation)
 *** TODO some sort of markdown/wikiformatting/CRLF-><br/> for: recipe notes, brew notes, brew step notes
