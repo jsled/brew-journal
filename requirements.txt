@@ -1,5 +1,5 @@
 Django==1.4.1
-Genshi==0.5.1
+Genshi==0.6
 MySQL-python==1.2.4b2
 South==0.7.6
 django-timezones==0.2
