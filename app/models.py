@@ -511,7 +511,7 @@ class StarredRecipe (models.Model):
 class BrewManager (models.Manager):
     def brews_with_future_steps(self, user):
         brew_ids = [step.brew_id for step in Step.objects.future_steps_for_user(user)]
-        return Brew.objects.filter(id__in=brew_ids)
+        return Brew.objects.select_related().filter(id__in=brew_ids)
 
     def brews_pre_brew(self, user):
         # @fixme: if the brew date is in the future, too?
@@ -585,11 +585,9 @@ class Brew (models.Model):
         Based on the type and timestamp of the latest step of `steps`, update the state of the Brew.
         It's the caller's responsibility to save the updated object.
         '''
-        steps = self.step_set.all()
-        # only allow non-future steps to update state.
-        past_steps = [step for step in steps if not step.in_future()] or []
+        past_steps = self.step_set.filter(date__lte=datetime.datetime.now()).order_by('-date')
         if len(past_steps) > 0:
-            last_step = past_steps[-1]
+            last_step = past_steps[0]
             self.last_update_date = last_step.date
             self.last_state = last_step.type
             self.is_done = step_types_by_id[last_step.type].is_terminal()
@@ -608,7 +606,7 @@ class Brew (models.Model):
         return gennie.get_next_steps()
     
     def future_steps(self):
-        return [step for step in self.step_set.all() if step.in_future()]
+        return self.step_set.select_related().filter(date__gt=datetime.datetime.now())
 
     def title(self):
         if not self.recipe:
@@ -619,7 +617,7 @@ class Brew (models.Model):
 class StepManager (models.Manager):
     def future_steps_for_user(self, user):
         now = datetime.datetime.now()
-        return Step.objects.filter(brew__brewer__exact=user, date__gt=now)
+        return Step.objects.select_related().filter(brew__brewer__exact=user, date__gt=now)
 
 GravityReadType = (
     ('sg', 'Specific Gravity'),
@@ -738,7 +736,7 @@ class NextStepGenerator (object):
         if self._brew.last_state:
             last_step_type = step_types_by_id[self._brew.last_state]
             try:
-                last_step = [s for s in self._brew.step_set.all() if s.type == self._brew.last_state][0]
+                last_step = [s for s in self._brew.step_set.select_related().filter(type=self._brew.last_state)][0]
             except Exception,e:
                 print 'brew,last_state,steps',self._brew,self._brew.last_state,self._brew.step_set.all()
                 raise
@@ -748,7 +746,7 @@ class NextStepGenerator (object):
         else:
             # @fixme: get these from StepTypes themselves
             to_try.extend(['starter', 'strike', 'steep', 'boil-start'])
-        future_steps = [step for step in self._brew.step_set.all() if step.in_future()]
+        future_steps = [step for step in self._brew.step_set.select_related().filter(date__gt=datetime.datetime.now())]
         for typeid in to_try:
             steptype = step_types_by_id[typeid]
             appropriate_list = None
@@ -789,14 +787,14 @@ class ShoppingList (object):
         pre_brews = kwargs.get('pre_brews', None)
         if not pre_brews:
             now = datetime.datetime.now()
-            future_buy_steps = Step.objects.filter(brew__brewer__exact=user, date__gt=now, type='buy')
+            future_buy_steps = [] # Step.objects.filter(brew__brewer__exact=user, date__gt=now, type='buy')
             future_buy_brews = [step.brew.id for step in future_buy_steps]
-            pre_brews = Brew.objects.filter(id__in=future_buy_brews)
+            pre_brews = [] # Brew.objects.filter(id__in=future_buy_brews)
         self._aggregate_brews(pre_brews)
 
     def shopping_to_do(self):
-        to_buy_count = len(self._grains) + len(self._hops) + len(self._adjuncts) + len(self._yeasts)
-        return to_buy_count > 0
+        # to_buy_count = len(self._grains) + len(self._hops) + len(self._adjuncts) + len(self._yeasts)
+        return False # to_buy_count > 0
 
     def _get_grains(self):
         return [(grain,brews) for grain,brews in self._grains.iteritems()]
@@ -1135,7 +1133,7 @@ class BrewDerivations (object):
         allowable_types = dict([(type,idx)
                                 for type,idx
                                 in itertools.izip(allowable_step_types_sorted,itertools.count())])
-        steps = self._brew.step_set.all()
+        steps = self._brew.step_set.select_related().all()
         steps = [step for step in steps
                     if allowable_types.has_key(step.type)]
         steps.sort(lambda a,b: allowable_types[a.type] - allowable_types[b.type])
@@ -1153,8 +1151,7 @@ class BrewDerivations (object):
         required = self._get_efficiency_steps()
         if len(required) == 0:
             rtn.append('need one step of of type %s with gravity and volume' % (BrewDerivations.efficiency_needed_steps))
-        recipe_grains = self._brew.recipe.recipegrain_set.all()
-        if len(recipe_grains) == 0:
+        if self._brew.recipe.recipegrain_set.count() == 0:
             rtn.append('need grains on recipe')
         return rtn
 
@@ -1166,7 +1163,7 @@ class BrewDerivations (object):
         ctx = Context(prec=7, rounding=ROUND_HALF_UP)
         potential_points = ctx.create_decimal('0')
         volume_in_gallons = convert_volume(best_step.volume, best_step.volume_units, 'gl')
-        for recipe_grain in self._brew.recipe.recipegrain_set.all():
+        for recipe_grain in self._brew.recipe.recipegrain_set.select_related().all():
             grain = recipe_grain.grain
             if recipe_grain.measured_by_weight():
                 min,max = tuple([ctx.create_decimal(str(x - 1000)) for x in recipe_grain.weight_extract_potential()])
@@ -1355,7 +1352,7 @@ class RecipeDerivations (object):
 
     def _test_grains_by_volume(self, reasons):
         grains_by_volume = False
-        for grain in self._recipe.recipegrain_set.all():
+        for grain in self._recipe.recipegrain_set.select_related().all():
             grains_by_volume |= grain.measured_by_volume()
         if grains_by_volume:
             reasons.append('do not support recipes with fermentables measured by volume')
@@ -1387,7 +1384,7 @@ class RecipeDerivations (object):
         def convert_to_gravity(val, batch_gallons):
             return Decimal('1') + ((val / batch_gallons) / Decimal('1000'))
         per_grain = []
-        for grain in self._recipe.recipegrain_set.all():
+        for grain in self._recipe.recipegrain_set.select_related().all():
             fermentable_efficiency = Decimal('1')
             weight,weight_units = grain.get_by_weight()
             weight_accum += convert_weight(weight, weight_units, 'lb')
@@ -1481,7 +1478,7 @@ class RecipeDerivations (object):
         low_accum = dec('0')
         high_accum = dec('0')
         per_hop = []
-        for hop in self._recipe.recipehop_set.all():
+        for hop in self._recipe.recipehop_set.select_related().all():
             if hop.usage_type == 'dry':
                 low,high = 0,0
             else:
@@ -1533,7 +1530,7 @@ class RecipeDerivations (object):
         lo_accum = dec(0)
         hi_accum = dec(0)
         per_grain = []
-        for grain in self._recipe.recipegrain_set.all():
+        for grain in self._recipe.recipegrain_set.select_related().all():
             try:
                 weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
             except:
@@ -1586,7 +1583,7 @@ class MashSpargeWaterCalculator (object):
         recipe = brew.recipe
         self.batch_volume = convert_volume(recipe.batch_size, recipe.batch_size_units, 'gl')
         grain_weight = Decimal('0')
-        for fermentable in recipe.recipegrain_set.all():
+        for fermentable in recipe.recipegrain_set.select_related().all():
             in_weight = fermentable.amount_units in [unit[0] for unit in Weight_Units]
             is_grain = True # @fixme: fermentable.is_grain()
             if is_grain and in_weight:

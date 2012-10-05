@@ -196,9 +196,9 @@ def root_post(request):
 
 
 def root_common(request, auth_form = None, auth_errors = forms.util.ErrorList()):
-    recent_brews = models.Brew.objects.order_by('-brew_date')[0:10]
-    recent_recipes = models.Recipe.objects.order_by('-insert_date')[0:10]
-    recent_updates = models.Step.objects.order_by('-date')[0:10]
+    recent_brews = models.Brew.objects.select_related().order_by('-brew_date')[0:10]
+    recent_recipes = models.Recipe.objects.select_related().order_by('-insert_date')[0:10]
+    recent_updates = models.Step.objects.select_related().order_by('-date')[0:10]
     return HttpResponse(render('index.html', request=request, std=standard_context(), auth_form=auth_form,
                                auth_errors=auth_errors,
                                recent_brews=recent_brews,
@@ -221,16 +221,16 @@ def logout_view(request):
 
 def user_index(request, user_name):
     try:
-        uri_user = User.objects.get(username__exact = user_name)
+        uri_user = User.objects.select_related().get(username__exact = user_name)
     except User.DoesNotExist,e:
         raise Http404
-    brews = models.Brew.objects.filter(brewer=uri_user, is_done=False).order_by('-brew_date')
-    future_brews = models.Brew.objects.brews_with_future_steps(uri_user)
-    future_steps = models.Step.objects.future_steps_for_user(uri_user).order_by('date')
+    brews = models.Brew.objects.select_related().filter(brewer=uri_user, is_done=False).order_by('-brew_date')
+    future_brews = [] # models.Brew.objects.brews_with_future_steps(uri_user)
+    future_steps = [] # models.Step.objects.future_steps_for_user(uri_user).order_by('date')
     shopping_list = models.ShoppingList(uri_user)
-    done_brews = models.Brew.objects.filter(brewer=uri_user, is_done=True).order_by('-brew_date')
-    starred_recipes = models.StarredRecipe.objects.filter(user=uri_user)
-    authored_recipes = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date')
+    done_brews = models.Brew.objects.select_related().filter(brewer=uri_user, is_done=True).order_by('-brew_date')
+    starred_recipes = models.StarredRecipe.objects.select_related().filter(user=uri_user)
+    authored_recipes = models.Recipe.objects.select_related().filter(author=uri_user).order_by('-insert_date')
     efficiency_tracker = EfficiencyTracker(uri_user)
     return HttpResponse(render('user/index.html', request=request, user=uri_user, std=standard_context(),
                                brews=brews,
@@ -290,7 +290,7 @@ def rototill_dates(uri_user, old_tz, new_tz):
 
 def user_profile(request, user_name):
     try:
-        uri_user = User.objects.get(username__exact = user_name)
+        uri_user = User.objects.select_related().get(username__exact = user_name)
     except User.DoesNotExist:
         raise Http404
     if request.user.is_authenticated() and request.user != uri_user:
@@ -425,7 +425,7 @@ def StepForm(user, *args, **kwargs):
             pass
     class _StepForm (forms.ModelForm):
         notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'expand-on-focus'}), required=False, help_text="Markdown supported")
-        brew = forms.ModelChoiceField(queryset=models.Brew.objects, widget=forms.HiddenInput)
+        brew = forms.ModelChoiceField(queryset=models.Brew.objects.select_related(), widget=forms.HiddenInput)
         date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
         shift_step_times = forms.BooleanField(required=False, initial=True, label='Time Shift',
                                               help_text='Shift subsequent steps by updated step time difference (within reason).''')
@@ -459,7 +459,7 @@ def brew_post(request, uri_user, brew, orig_step):
 def brew_render(request, uri_user, brew, step_form, step_edit, mash_sparge_calc_form, mash_sparge_steps=None):
     if not mash_sparge_steps:
         mash_sparge_steps = []
-    steps = [step for step in brew.step_set.all()]
+    steps = [step for step in brew.step_set.select_related().all()]
     brew_form = BrewForm(uri_user, instance=brew)
     recipe_deriv = None
     if brew.recipe:
@@ -586,13 +586,13 @@ def brew(request, user_name, brew_id, step_id=None):
     e.g., /user/jsled/brew/2/[step/3], /user/jsled/brew/2/?type=pitch
     '''
     try:
-        uri_user = User.objects.get(username__exact = user_name)
+        uri_user = User.objects.select_related().get(username__exact = user_name)
         #if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
-        brew = models.Brew.objects.get(id=brew_id)
+        brew = models.Brew.objects.select_related().get(id=brew_id)
         #if not brew: return HttpResponseNotFound('no such brew with id [%d]' % (brew_id))
         step = None
         if step_id:
-            step = models.Step.objects.get(pk=step_id)
+            step = models.Step.objects.select_related().get(pk=step_id)
             #if not step:
             #    return HttpResponseNotFound('no such user [%s] brew [%s] step id [%s]' % (user_name, brew_id, step_id))
     except ObjectDoesNotExist:
@@ -670,7 +670,7 @@ def get_style_choices():
     if not style_choices:
         style_choices = [('%s (%s)' % (s.name, s.bjcp_code), [(s.id, '%s, uncategorized' % (s.name))]) for s in models.Style.objects.filter(parent__isnull=True)]
         for name,subs in style_choices:
-            for sub_style in models.Style.objects.filter(parent = subs[0][0]):
+            for sub_style in models.Style.objects.select_related().filter(parent = subs[0][0]):
                 subs.append( (sub_style.id, '%s (%s)' % (sub_style.name, sub_style.bjcp_code)) )
     return style_choices
 
@@ -874,7 +874,7 @@ grain_choices = None
 def get_grain_choices():
     global grain_choices
     if not grain_choices:
-        def _get_grains(): return models.Grain.objects.all().order_by('name')
+        def _get_grains(): return models.Grain.objects.select_related().all().order_by('name')
         def _get_grouping_key(grain): return grain.group
         def _get_label(grain): return grain.name
         grain_choices = _group_items(_get_grains, _get_grouping_key, _get_label)
@@ -885,7 +885,7 @@ hop_choices = None
 def get_hop_choices():
     global hop_choices
     if not hop_choices:
-        def _get_hops(): return models.Hop.objects.all().order_by('name')
+        def _get_hops(): return models.Hop.objects.select_related().all().order_by('name')
         def _get_grouping_key(hop): return hop.region
         def _get_label(hop): return hop.name
         hop_choices = _group_items(_get_hops, _get_grouping_key, _get_label)
@@ -896,7 +896,7 @@ yeast_choices = None
 def get_yeast_choices():
     global yeast_choices
     if not yeast_choices:
-        def _get_yeasts() : return models.Yeast.objects.all().order_by('ident')
+        def _get_yeasts() : return models.Yeast.objects.select_related().all().order_by('ident')
         def _get_grouping_key(yeast): return yeast.type
         def _get_label(yeast): return str(yeast)
         yeast_choices = _group_items(_get_yeasts, _get_grouping_key, _get_label)
@@ -907,7 +907,7 @@ adjunct_choices = None
 def get_adjunct_choices():
     global adjunct_choices
     if not adjunct_choices:
-        def _get_adjuncts(): return models.Adjunct.objects.all().order_by('name')
+        def _get_adjuncts(): return models.Adjunct.objects.select_related().all().order_by('name')
         def _get_grouping_key(adj): return adj.group
         def _get_label(adj): return adj.name
         adjunct_choices = _group_items(_get_adjuncts, _get_grouping_key, _get_label)
@@ -925,7 +925,7 @@ def RecipeForm(user, *args, **kwargs):
             pass
 
     class _RecipeForm (forms.ModelForm):
-        style = forms.ModelChoiceField(models.Style.objects.all(),
+        style = forms.ModelChoiceField(models.Style.objects.select_related().all(),
                                        widget=widgets.TwoLevelSelectWidget(choices=get_style_choices()))
         name = forms.CharField(widget=forms.TextInput(attrs={'size': 40}))
         source_url = forms.URLField(required=False, widget=forms.TextInput(attrs={'size': 40}))
@@ -940,28 +940,28 @@ def RecipeForm(user, *args, **kwargs):
 
 
 class RecipeGrainForm (forms.ModelForm):
-    grain = forms.ModelChoiceField(models.Grain.objects.all().order_by('name'),
+    grain = forms.ModelChoiceField(models.Grain.objects.select_related().all().order_by('name'),
                                    widget=widgets.TwoLevelSelectWidget(choices=get_grain_choices()))
     class Meta:
         model = models.RecipeGrain
         exclude = ['recipe']
 
 class RecipeHopForm (forms.ModelForm):
-    hop = forms.ModelChoiceField(models.Hop.objects.all().order_by('name'),
+    hop = forms.ModelChoiceField(models.Hop.objects.select_related().all().order_by('name'),
                                  widget=widgets.TwoLevelSelectWidget(choices=get_hop_choices()))
     class Meta:
         model = models.RecipeHop
         exclude = ['recipe']
 
 class RecipeAdjunctForm (forms.ModelForm):
-    adjunct = forms.ModelChoiceField(models.Adjunct.objects.all().order_by('name'),
+    adjunct = forms.ModelChoiceField(models.Adjunct.objects.select_related().all().order_by('name'),
                                      widget=widgets.TwoLevelSelectWidget(choices=get_adjunct_choices()))
     class Meta:
         model = models.RecipeAdjunct
         exclude = ['recipe']
 
 class RecipeYeastForm (forms.ModelForm):
-    yeast = forms.ModelChoiceField(models.Yeast.objects.all().order_by('ident'),
+    yeast = forms.ModelChoiceField(models.Yeast.objects.select_related().all().order_by('ident'),
                                    widget=widgets.TwoLevelSelectWidget(choices=get_yeast_choices()))
     class Meta:
         model = models.RecipeYeast
@@ -991,14 +991,14 @@ def recipe_component_generic(request, recipe_id, model_type, type_form_name, for
     if not recipe:
         return HttpResponseNotFound('no such recipe')
     if request.POST.has_key('delete_id') and request.POST['delete_id'] != '-1':
-        model_type.objects.get(pk=request.POST['delete_id']).delete()
+        model_type.objects.select_related().get(pk=request.POST['delete_id']).delete()
         return _get_recipe_redirect(recipe)
     # handle updates
     component_instance = None
     if request.POST.has_key('id'):
         id_str = request.POST['id']
         if id_str != 'new':
-            component_instance = model_type.objects.get(pk=id_str)
+            component_instance = model_type.objects.select_related().get(pk=id_str)
     is_new_component = component_instance is None
     if not is_new_component:
         form = form_class(request.POST, instance=component_instance)
@@ -1105,10 +1105,10 @@ def recipe_post(request, recipe_id, recipe=None):
 def _render_recipe(request, recipe, **kwargs):
     form = kwargs.setdefault('form', RecipeForm(request.user, instance=recipe))
     # @fixme: call something like recipe.grain_list_descending() instead?
-    grains = [x for x in models.RecipeGrain.objects.filter(recipe=recipe)]
-    hops = [x for x in models.RecipeHop.objects.filter(recipe=recipe)]
-    adjuncts = [x for x in models.RecipeAdjunct.objects.filter(recipe=recipe)]
-    yeasts = models.RecipeYeast.objects.filter(recipe=recipe)
+    grains = [x for x in models.RecipeGrain.objects.select_related().filter(recipe=recipe)]
+    hops = [x for x in models.RecipeHop.objects.select_related().filter(recipe=recipe)]
+    adjuncts = [x for x in models.RecipeAdjunct.objects.select_related().filter(recipe=recipe)]
+    yeasts = models.RecipeYeast.objects.select_related().filter(recipe=recipe)
     #
     def weight_comparator(a,b):
         a_has_amount = a.amount_value and a.amount_units
@@ -1224,7 +1224,7 @@ class RecipeFilterForm (forms.Form):
         return label
     choices = [(cat, [(id, change_uncategorized_to_any(name)) for id,name in entries]) for cat,entries in get_style_choices()]
     choices.insert(0, ('any', [('', '(any)')]))
-    style = forms.ModelChoiceField(queryset=models.Style.objects.all(),
+    style = forms.ModelChoiceField(queryset=models.Style.objects.select_related().all(),
                                    empty_label='(any)',
                                    required=False,
                                    widget=widgets.TwoLevelSelectWidget(choices=choices)
@@ -1233,7 +1233,7 @@ class RecipeFilterForm (forms.Form):
 
 def recipe_index(request):
     form = RecipeFilterForm(request.GET)
-    recipe_query = models.Recipe.objects.all()
+    recipe_query = models.Recipe.objects.select_related().all()
     if form.is_valid():
         if form.cleaned_data['type']:
             recipe_query = recipe_query.filter(type=form.cleaned_data['type'])

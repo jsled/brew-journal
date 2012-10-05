@@ -162,10 +162,17 @@ https://docs.djangoproject.com/en/dev/releases/1.4/
 - django.contrib.admin static file handling
 
 *** TODO remove recipe "star"ing
+*** TODO first time user experience
 *** DONE Markdown {recipe,brew,step} notes
     CLOSED: [2012-10-04 Thu 20:36]
-*** TODO database indexes
-*** TODO database access optimization
+*** TODO database indexes, access optimization
+
+https://docs.djangoproject.com/en/1.4/topics/db/optimization/
+https://docs.djangoproject.com/en/1.4/ref/models/querysets/#django.db.models.query.QuerySet.select_related
+
+/user/jsled: 490 queries in 270ms
+/recipes: 353 queries in 102ms
+
 *** TODO Bug: gravity by volume not working?
 
 The 'volume_potential_{min,max}' columns are never populated for either dev

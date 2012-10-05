@@ -99,6 +99,8 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    # 2012-10-04, jsled: try it out!
+    'debug_toolbar.middleware.DebugToolbarMiddleware',    
 )
 
 ROOT_URLCONF = 'app.urls'
@@ -120,8 +122,12 @@ INSTALLED_APPS = (
     # 2012-09-30, jsled: add our apps/projects:
     'timezones',
     'south',
-    'app'
+    'app',
+    # 2012-10-04, jsled:
+    'debug_toolbar'
 )
+
+INTERNAL_IPS = ('127.0.0.1',)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
