@@ -787,14 +787,14 @@ class ShoppingList (object):
         pre_brews = kwargs.get('pre_brews', None)
         if not pre_brews:
             now = datetime.datetime.now()
-            future_buy_steps = [] # Step.objects.filter(brew__brewer__exact=user, date__gt=now, type='buy')
+            future_buy_steps = Step.objects.filter(brew__brewer__exact=user, date__gt=now, type='buy')
             future_buy_brews = [step.brew.id for step in future_buy_steps]
-            pre_brews = [] # Brew.objects.filter(id__in=future_buy_brews)
+            pre_brews = Brew.objects.filter(id__in=future_buy_brews)
         self._aggregate_brews(pre_brews)
 
     def shopping_to_do(self):
-        # to_buy_count = len(self._grains) + len(self._hops) + len(self._adjuncts) + len(self._yeasts)
-        return False # to_buy_count > 0
+        to_buy_count = len(self._grains) + len(self._hops) + len(self._adjuncts) + len(self._yeasts)
+        return to_buy_count > 0
 
     def _get_grains(self):
         return [(grain,brews) for grain,brews in self._grains.iteritems()]

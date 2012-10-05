@@ -225,8 +225,8 @@ def user_index(request, user_name):
     except User.DoesNotExist,e:
         raise Http404
     brews = models.Brew.objects.select_related().filter(brewer=uri_user, is_done=False).order_by('-brew_date')
-    future_brews = [] # models.Brew.objects.brews_with_future_steps(uri_user)
-    future_steps = [] # models.Step.objects.future_steps_for_user(uri_user).order_by('date')
+    future_brews = models.Brew.objects.brews_with_future_steps(uri_user)
+    future_steps = models.Step.objects.future_steps_for_user(uri_user).order_by('date')
     shopping_list = models.ShoppingList(uri_user)
     done_brews = models.Brew.objects.select_related().filter(brewer=uri_user, is_done=True).order_by('-brew_date')
     starred_recipes = models.StarredRecipe.objects.select_related().filter(user=uri_user)
