@@ -19,6 +19,8 @@ from timezones.utils import adjust_datetime_to_timezone
 
 from genshi_django import render
 
+from markdown import markdown
+
 class LocalizedDateTimeInput (forms.DateTimeInput):
     def __init__(self, tz, *args, **kwargs):
         self._tz = tz
@@ -79,6 +81,13 @@ def safe_graceful_datetime_fmt(dt, ymd_fmt, ymdhm_fmt, user=None):
 def auth_user_is_user(request, user):
     return (request.user.is_authenticated() and request.user == user)
 
+def _markdownShim(text):
+    return Markup(
+        markdown(text,
+                 safe_mode='escape',
+                 output_format='xhtml5',
+                 extensions=['fenced_code']))
+
 _std_ctx = None
 def standard_context():
     global _std_ctx
@@ -92,7 +101,8 @@ def standard_context():
                     'markup': Markup,
                     'Markup': Markup,
                     'auth_user_is_user': auth_user_is_user,
-                    'STATIC_URL': settings.STATIC_URL
+                    'STATIC_URL': settings.STATIC_URL,
+                    'markdown': _markdownShim
                     }
     return _std_ctx
 
@@ -414,7 +424,7 @@ def StepForm(user, *args, **kwargs):
         except models.UserProfile.DoesNotExist:
             pass
     class _StepForm (forms.ModelForm):
-        notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'expand-on-focus'}), required=False)
+        notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'expand-on-focus'}), required=False, help_text="Markdown supported")
         brew = forms.ModelChoiceField(queryset=models.Brew.objects, widget=forms.HiddenInput)
         date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
         shift_step_times = forms.BooleanField(required=False, initial=True, label='Time Shift',

@@ -179,3 +179,6 @@ TABLE.recipe_derivations TD.space {
   padding: 0.25em;
 }
 
+TD P, TD PRE {
+    margin-bottom: inherit;
+}

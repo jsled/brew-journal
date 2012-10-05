@@ -54,7 +54,7 @@
 
             <div py:if="brew.notes and len(brew.notes) > 0" class="grid_16">
                 <h2>notes</h2>
-                <div class="notes"><pre class="notes">${brew.notes}</pre></div>
+                <div class="notes">${std.markdown(brew.notes)}</div>
             </div>
 
             <div class="grid_16"> <!-- derivations -->
@@ -111,7 +111,7 @@
                 <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.volume">${'%.3g' % step.volume} ${step.volume_units}</py:if></td>
                 <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.temp">${step.temp} ${step.temp_units}</py:if></td>
                 <td style="padding-right: 1em;">${step.gravity}</td>
-                <td>${step.notes}</td>
+                <td>${std.markdown(step.notes)}</td>
             </py:def>
 
             <table width="100%">
@@ -346,7 +346,7 @@ $(function() {
 
                     <label py:if="result.notes" class="stylin grid_6">
                         <div class="label">Notes</div>
-                        <div class="contents">${result.notes}</div>
+                        <div class="contents">${std.markdown(result.notes)}</div>
                     </label>
                 </div>
                 <div class="clear"></div>
@@ -379,7 +379,7 @@ $(function() {
 
                     <label class="stylin grid_6">
                         <div class="label">Notes</div>
-                        <div class="contents">${scoresheet.notes}</div>
+                        <div class="contents">${std.markdown(scoresheet.notes)}</div>
                     </label>
                     <div class="grid_2 prefix_2" style="text-align:right" py:if="std.auth_user_is_user(request, user)">
                         <a href="${scoresheet.get_absolute_url()}">edit</a>
@@ -393,7 +393,7 @@ $(function() {
                         <div class="label">${label}</div>
                         <div class="contents" style="text-align: justify">
                             ${score()}/${max_score}
-                            <py:if test="notes()">&mdash; ${notes()}</py:if>
+                            <py:if test="notes()">&mdash; ${std.markdown(notes())}</py:if>
                         </div>
                     </label>
 

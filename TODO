@@ -162,7 +162,8 @@ https://docs.djangoproject.com/en/dev/releases/1.4/
 - django.contrib.admin static file handling
 
 *** TODO remove recipe "star"ing
-*** TODO Markdown {recipe,brew,step} notes
+*** DONE Markdown {recipe,brew,step} notes
+    CLOSED: [2012-10-04 Thu 20:36]
 *** TODO database indexes
 *** TODO database access optimization
 *** TODO Bug: gravity by volume not working?
@@ -172,7 +173,8 @@ or production DBs, leading to miscomputation (logic bug).  The unit tests
 build correctly from fixtures, and aren't thus affected.
 *** TODO add rss feed auto-discovery, icon to /recipe
 *** TODO step deletion
-*** TODO step note formatting: table over-sizing; line-breaking / markdown
+*** DONE step note formatting: table over-sizing; line-breaking / markdown
+    CLOSED: [2012-10-04 Thu 20:36]
 *** TODO no way to indicate the addition a fermentable (e.g., honey) added at flame-out, or half-way through, or whatever.
 *** TODO dingeema-uncovered None-safety issues
 
@@ -571,7 +573,8 @@ of being.
 *** TODO request cache support
 *** TODO add big user-facing warning about precision with volume-measured fermentables
 *** TODO add time counter for some steps (primary/secondary fermentation)
-*** TODO some sort of markdown/wikiformatting/CRLF-><br/> for: recipe notes, brew notes, brew step notes
+*** DONE some sort of markdown/wikiformatting/CRLF-><br/> for: recipe notes, brew notes, brew step notes
+    CLOSED: [2012-10-04 Thu 20:36]
 *** TODO be able to (re-)associate a recipe with a Brew
 *** TODO calorie calculator
 http://www.beersmith.com/blog/2011/02/04/counting-calories-in-your-homebrewed-beer/

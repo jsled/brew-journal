@@ -95,7 +95,7 @@
             
           <label py:if="recipe.notes" class="stylin grid_16">
             <div class="label">notes</div>
-            <div style="white-space: pre">${recipe.notes}</div>
+            <div>${std.markdown(recipe.notes)}</div>
           </label>
 
           <div py:if="std.auth_user_is_user(request, recipe.author)">

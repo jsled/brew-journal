@@ -380,7 +380,7 @@ class Recipe (models.Model):
     derived_from_recipe = models.ForeignKey('self', null=True, blank=True)
     type = models.CharField(max_length=1, choices=RecipeTypes, default='a')
     source_url = models.URLField(max_length=300, blank=True, null=True, verify_exists=True)
-    notes = models.TextField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True, help_text="Markdown supported")
 
     def __str__(self):
         return self.__unicode__()
@@ -529,7 +529,7 @@ class Brew (models.Model):
     # recipe_name = models.CharField(max_length=500)
     brew_date = models.DateTimeField('brew date', null=True, blank=True, default=datetime.datetime.now)
     brewer = models.ForeignKey(auth.models.User)
-    notes = models.TextField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True, help_text="Markdown supported")
     recipe = models.ForeignKey(Recipe, null=True)
     last_update_date = models.DateTimeField(null=True, editable=False)
     last_state = models.CharField(max_length=30, choices=step_types_ui_choices, null=True, editable=False)
@@ -647,7 +647,7 @@ class Step (models.Model):
     gravity_read_temp = models.IntegerField(null=True, blank=True)
     gravity_read_temp_units = models.CharField(max_length=1, null=True, blank=True, choices = Temp_Units, default='f')
 
-    notes = models.CharField(max_length=500, blank=True)
+    notes = models.CharField(max_length=500, blank=True, help_text="Markdown supported")
 
     def _get_gravity(self):
         if not self.gravity_read or not self.gravity_read_temp:
@@ -844,7 +844,7 @@ class BjcpCompetitionResults (models.Model):
                                                             ('2', '2nd'),
                                                             ('3', '3rd')), blank=True, null=True)
     mini_bos = models.NullBooleanField(blank=True, null=True, verbose_name='Advanced to a Mini-BOS round')
-    notes = models.TextField(blank=True)
+    notes = models.TextField(blank=True, help_text="Markdown supported")
 
     def get_absolute_url_args(self):
         args = self.brew.get_absolute_url_args()
@@ -903,7 +903,7 @@ class BjcpBeerScoresheet (models.Model):
     # @fixme: endorsements: pro brewer, mead judge, cider judge
     bottle_inspection = models.BooleanField()
     bottle_inspection_notes = models.CharField(max_length=100, blank=True)
-    notes = models.TextField(blank=True)
+    notes = models.TextField(blank=True, help_text="Markdown supported")
     total_score = models.IntegerField()
     aroma_score = models.IntegerField()
     aroma_notes = models.TextField(blank=True)
