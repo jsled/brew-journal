@@ -165,6 +165,7 @@ https://docs.djangoproject.com/en/dev/releases/1.4/
 *** TODO first time user experience
 *** DONE Markdown {recipe,brew,step} notes
     CLOSED: [2012-10-04 Thu 20:36]
+*** TODO start to organize/collect grain database revision
 *** TODO database indexes, access optimization
 
 https://docs.djangoproject.com/en/1.4/topics/db/optimization/
