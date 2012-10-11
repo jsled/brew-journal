@@ -85,6 +85,7 @@ def convert(inn, out):
             }
         if type:
             fields['type'] = type
+
         safe_add_numeric(fields, 'alpha_acid_low', lambda: row[5])
         safe_add_numeric(fields, 'alpha_acid_high', lambda: row[6])
         safe_add_numeric(fields, 'beta_acid_low', lambda: row[7])
@@ -103,6 +104,17 @@ def convert(inn, out):
         safe_add_numeric(fields, 'farnesene_pctg_high', lambda: row[20])
         safe_add_numeric(fields, 'storage_low', lambda: row[23])
         safe_add_numeric(fields, 'storage_high', lambda: row[24])
+
+        desc = None
+        try:
+            desc = row[4]
+            desc = desc.strip().strip('"')
+            if len(desc) == 0:
+                desc = None
+        except IndexError:
+            pass
+        if desc:
+            fields['desc'] = desc
 
         notes = None
         try:

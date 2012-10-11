@@ -21,18 +21,20 @@
                     <th colspan="2" align="center">BA%</th>
                     <th colspan="2" align="center">C%</th>
                     <th></th>
+                    <th></th>
                 </tr>
                 <tr>
-                    <th width="10%">hop</th>
-                    <th width="5%">region</th>
-                    <th width="5%">type</th>
-                    <th width="2.5%">low</th>
-                    <th width="2.5%">high</th>
-                    <th width="2.5%">low</th>
-                    <th width="2.5%">high</th>
-                    <th width="2.5%">low</th>
-                    <th width="2.5%">high</th>
-                    <th width="35%">notes</th>
+                    <th width="5%">hop</th>
+                    <th>region</th>
+                    <th>type</th>
+                    <th>low</th>
+                    <th>high</th>
+                    <th>low</th>
+                    <th>high</th>
+                    <th>low</th>
+                    <th>high</th>
+                    <th width="40%">desc</th>
+                    <th width="20%">notes</th>
                 </tr>
 
                 <tr py:for="hop in all_hops">
@@ -42,6 +44,7 @@
                     <td>${hop.alpha_acid_low}</td><td>${hop.alpha_acid_high}</td>
                     <td>${hop.beta_acid_low}</td><td>${hop.beta_acid_high}</td>
                     <td>${hop.cohumulone_pctg_low}</td><td>${hop.cohumulone_pctg_high}</td>
+                    <td>${hop.desc}</td>
                     <td>${hop.notes}</td>
                 </tr>
             </table>

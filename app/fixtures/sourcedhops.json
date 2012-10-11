@@ -75,6 +75,7 @@
             "source_url": "", 
             "storage_low": 50.0, 
             "myrcene_pctg_low": 50.0, 
+            "desc": "floral", 
             "caryophyllene_pctg_high": 12.0, 
             "name": "Ahtanum", 
             "alpha_acid_low": 5.7, 
@@ -90,26 +91,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.8, 
-            "humulene_pctg_low": 16.0, 
-            "myrcene_pctg_low": 50.0, 
-            "cohumulone_pctg_high": 35.0, 
-            "name": "Ahtanum", 
             "caryophyllene_pctg_low": 9.0, 
             "cohumulone_pctg_low": 30.0, 
+            "humulene_pctg_low": 16.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 35.0, 
+            "humulene_pctg_high": 20.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 55.0, 
+            "beta_acid_high": 6.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 50.0, 
+            "desc": "floral", 
+            "caryophyllene_pctg_high": 12.0, 
+            "name": "Ahtanum", 
             "alpha_acid_low": 5.7, 
             "region": "us", 
-            "beta_acid_high": 6.5, 
             "beta_acid_low": 5.0, 
-            "humulene_pctg_high": 20.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 55.0, 
-            "source": "Hopunion", 
             "oils_high": 1.2, 
-            "caryophyllene_pctg_high": 12.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "aroma", 
-            "alpha_acid_high": 6.8, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 6.8
         }
     }, 
     {
@@ -195,6 +197,7 @@
             "beta_acid_high": 7.0, 
             "source_url": "", 
             "myrcene_pctg_low": 68.0, 
+            "desc": "floral, citrusy; signature", 
             "caryophyllene_pctg_high": 4.0, 
             "name": "Amarillo", 
             "alpha_acid_low": 8.0, 
@@ -228,7 +231,8 @@
             "farnesene_pctg_high": 4.0, 
             "farnesene_pctg_low": 2.0, 
             "alpha_acid_high": 11.0, 
-            "myrcene_pctg_low": 68.0
+            "myrcene_pctg_low": 68.0, 
+            "desc": "floral, citrusy"
         }
     }, 
     {
@@ -283,7 +287,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.9, 
-            "alpha_acid_high": 11.0
+            "alpha_acid_high": 11.0, 
+            "desc": "floral and citrusy"
         }
     }, 
     {
@@ -304,6 +309,7 @@
             "beta_acid_high": 7.0, 
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "myrcene_pctg_low": 68.0, 
+            "desc": "signature", 
             "caryophyllene_pctg_high": 4.0, 
             "name": "Amarillo", 
             "alpha_acid_low": 8.0, 
@@ -325,18 +331,20 @@
             "source": "COMBINED", 
             "notes": "Strisselspalt lineage", 
             "type": "aroma", 
-            "alpha_acid_high": 8.0
+            "alpha_acid_high": 8.0, 
+            "desc": "floral, earthy, woody, Earl Grey, lemon, hay, herbal."
         }
     }, 
     {
         "pk": null, 
         "model": "app.SourcedHopDetails", 
         "fields": {
-            "source": "http://blog.stonebrew.com/?p=2493", 
-            "region": "fr", 
-            "type": "aroma", 
             "name": "Aramis", 
-            "source_url": "http://blog.stonebrew.com/?p=2493"
+            "region": "fr", 
+            "source_url": "http://blog.stonebrew.com/?p=2493", 
+            "source": "http://blog.stonebrew.com/?p=2493", 
+            "type": "aroma", 
+            "desc": "floral, earthy, woody, Earl Grey, lemon, hay, herbal."
         }
     }, 
     {
@@ -350,7 +358,8 @@
             "source": "http://omgbeer.blogspot.com/2011/06/new-hop-variety-aramis-hops.html", 
             "notes": "Strisselspalt lineage", 
             "type": "aroma", 
-            "alpha_acid_high": 8.0
+            "alpha_acid_high": 8.0, 
+            "desc": "unique aroma-herbal like a German noble hop, but with hints of lemon as well, but it also has a very low alpha acid content"
         }
     }, 
     {
@@ -373,6 +382,7 @@
             "source_url": "", 
             "storage_low": 80.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "Added late into the boil it provides a strong grapefruit and hoppy note.", 
             "caryophyllene_pctg_high": 20.0, 
             "name": "Apollo", 
             "alpha_acid_low": 15.0, 
@@ -403,6 +413,7 @@
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "storage_low": 80.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "Added late into the boil it provides a strong grapefruit and hoppy note.", 
             "caryophyllene_pctg_high": 20.0, 
             "name": "Apollo", 
             "alpha_acid_low": 15.0, 
@@ -418,26 +429,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.8, 
-            "caryophyllene_pctg_high": 2.0, 
-            "myrcene_pctg_low": 47.0, 
-            "humulene_pctg_low": 3.6, 
-            "name": "B Saaz/Mouteka", 
             "caryophyllene_pctg_low": 2.0, 
             "cohumulone_pctg_low": 29.0, 
+            "humulene_pctg_low": 3.6, 
+            "farnesene_pctg_low": 12.2, 
+            "humulene_pctg_high": 3.6, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 12.2, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 47.0, 
+            "beta_acid_high": 5.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 47.0, 
+            "desc": "It displays a unique floral citrus aroma and shares character with its Saaz parent. Used in many styles, it is very popular in pilsners and pale ales.", 
+            "caryophyllene_pctg_high": 2.0, 
+            "name": "B Saaz/Mouteka", 
             "alpha_acid_low": 6.5, 
             "region": "nz", 
-            "beta_acid_high": 5.5, 
             "beta_acid_low": 5.0, 
-            "humulene_pctg_high": 3.6, 
-            "source_url": "", 
-            "myrcene_pctg_high": 47.0, 
-            "source": "COMBINED", 
-            "notes": "A triploid aroma type developed by New Zealand HortResearch. This hop was bred by crossing a New Zealand breeding selection (2/3) with Saazer parentage (1/3). First selected by a notable Belgian brewery lead to this variety being called Belgian Saaz and later shortened to \"B\"\u009d Saaz so as not confuse country of origin.", 
             "oils_high": 0.8, 
-            "farnesene_pctg_high": 12.2, 
-            "farnesene_pctg_low": 12.2, 
-            "type": "aroma", 
-            "alpha_acid_high": 7.5
+            "alpha_acid_high": 7.5, 
+            "notes": "A triploid aroma type developed by New Zealand HortResearch. This hop was bred by crossing a New Zealand breeding selection (2/3) with Saazer parentage (1/3). First selected by a notable Belgian brewery lead to this variety being called Belgian Saaz and later shortened to \"B\"\u009d Saaz so as not confuse country of origin."
         }
     }, 
     {
@@ -458,6 +470,7 @@
             "beta_acid_high": 5.5, 
             "source_url": "http://www.grainandgrape.com.au/product_info.php?cPath=1_39_45&products_id=8293", 
             "myrcene_pctg_low": 47.0, 
+            "desc": "It displays a unique floral citrus aroma and shares character with its Saaz parent. Used in many styles, it is very popular in pilsners and pale ales.", 
             "caryophyllene_pctg_high": 2.0, 
             "name": "B Saaz/Mouteka", 
             "alpha_acid_low": 6.5, 
@@ -484,7 +497,8 @@
             "source": "COMBINED", 
             "oils_high": 1.5, 
             "type": "aroma", 
-            "alpha_acid_high": 9.0
+            "alpha_acid_high": 9.0, 
+            "desc": "spice somewhat intense"
         }
     }, 
     {
@@ -503,7 +517,8 @@
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.5, 
             "type": "aroma", 
-            "alpha_acid_high": 9.0
+            "alpha_acid_high": 9.0, 
+            "desc": "spice somewhat intense"
         }
     }, 
     {
@@ -583,6 +598,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 35.0, 
+            "desc": "unique fruity, blackcurrant and lemon notes", 
             "caryophyllene_pctg_high": 18.0, 
             "name": "Bramling Cross", 
             "alpha_acid_low": 5.0, 
@@ -612,6 +628,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Bramling_Cross", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 35.0, 
+            "desc": "unique fruity, blackcurrant and lemon notes", 
             "caryophyllene_pctg_high": 18.0, 
             "name": "Bramling Cross", 
             "alpha_acid_low": 5.0, 
@@ -642,6 +659,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 25.0, 
+            "desc": "excellent bittering hop that provides pleasant fruity and floral aroma characteristics", 
             "caryophyllene_pctg_high": 12.0, 
             "name": "Bravo", 
             "alpha_acid_low": 14.0, 
@@ -699,6 +717,7 @@
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 25.0, 
+            "desc": "excellent bittering hop that provides pleasant fruity and floral aroma characteristics", 
             "caryophyllene_pctg_high": 12.0, 
             "name": "Bravo", 
             "alpha_acid_low": 14.0, 
@@ -714,26 +733,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.8, 
-            "humulene_pctg_low": 29.0, 
-            "myrcene_pctg_low": 37.0, 
-            "cohumulone_pctg_high": 48.0, 
-            "name": "Brewer's Gold (US)", 
             "caryophyllene_pctg_low": 7.0, 
             "cohumulone_pctg_low": 40.0, 
+            "humulene_pctg_low": 29.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 48.0, 
+            "humulene_pctg_high": 31.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 40.0, 
+            "beta_acid_high": 4.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 37.0, 
+            "desc": "blackcurrant, fruity, spicy", 
+            "caryophyllene_pctg_high": 8.0, 
+            "name": "Brewer's Gold (US)", 
             "alpha_acid_low": 7.0, 
             "region": "us", 
-            "beta_acid_high": 4.5, 
             "beta_acid_low": 3.0, 
-            "humulene_pctg_high": 31.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 40.0, 
-            "source": "COMBINED", 
             "oils_high": 2.4, 
-            "caryophyllene_pctg_high": 8.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "bitter", 
-            "alpha_acid_high": 10.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 10.0
         }
     }, 
     {
@@ -759,7 +779,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 10.0, 
-            "myrcene_pctg_low": 37.0
+            "myrcene_pctg_low": 37.0, 
+            "desc": "blackcurrant, fruity, spicy"
         }
     }, 
     {
@@ -878,6 +899,7 @@
             "beta_acid_high": 3.5, 
             "source_url": "", 
             "myrcene_pctg_low": 37.0, 
+            "desc": "black currant, fruity, spicy", 
             "caryophyllene_pctg_high": 7.5, 
             "name": "Brewer's Gold (UK)", 
             "alpha_acid_low": 5.5, 
@@ -911,7 +933,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 6.5, 
-            "myrcene_pctg_low": 37.0
+            "myrcene_pctg_low": 37.0, 
+            "desc": "black currant, fruity, spicy"
         }
     }, 
     {
@@ -961,6 +984,7 @@
             "source_url": "", 
             "storage_low": 40.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "intense, black current aroma", 
             "caryophyllene_pctg_high": 11.0, 
             "name": "Bullion", 
             "alpha_acid_low": 6.5, 
@@ -1008,6 +1032,7 @@
             "source_url": "http://www.highgravitybrew.com/BeerHops/bullionhopsprofile.html", 
             "storage_low": 40.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "intense, black current aroma", 
             "caryophyllene_pctg_high": 11.0, 
             "name": "Bullion", 
             "alpha_acid_low": 6.5, 
@@ -1037,6 +1062,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Bullion", 
             "storage_low": 40.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "strong, pungent and sometimes harsh or resiny, with elements of spiciness and a fruit character that has been described as black currant or raspberry.", 
             "caryophyllene_pctg_high": 11.0, 
             "name": "Bullion", 
             "alpha_acid_low": 6.0, 
@@ -1057,7 +1083,8 @@
             "source_url": "", 
             "source": "COMBINED", 
             "type": "dual", 
-            "alpha_acid_high": 12.0
+            "alpha_acid_high": 12.0, 
+            "desc": "Pleasantly complex, fruity aroma, with hints of pear and apple. Notes of earthy tea too."
         }
     }, 
     {
@@ -1070,7 +1097,8 @@
             "source_url": "http://www.hopsdirect.com/store/domestic-pellet-hops.html", 
             "source": "http://www.hopsdirect.com/store/domestic-pellet-hops.html", 
             "type": "dual", 
-            "alpha_acid_high": 12.0
+            "alpha_acid_high": 12.0, 
+            "desc": "Pleasantly complex, fruity aroma, with hints of pear and apple. Notes of earthy tea too."
         }
     }, 
     {
@@ -1078,26 +1106,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.8, 
-            "humulene_pctg_low": 10.0, 
-            "myrcene_pctg_low": 45.0, 
-            "cohumulone_pctg_high": 40.0, 
-            "name": "Cascade", 
             "caryophyllene_pctg_low": 3.0, 
             "cohumulone_pctg_low": 33.0, 
+            "humulene_pctg_low": 10.0, 
+            "farnesene_pctg_low": 4.0, 
+            "cohumulone_pctg_high": 40.0, 
+            "humulene_pctg_high": 16.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 8.0, 
+            "type": "dual", 
+            "myrcene_pctg_high": 60.0, 
+            "beta_acid_high": 7.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 45.0, 
+            "desc": "flowery and citrusy can have a grapefruit note", 
+            "caryophyllene_pctg_high": 6.0, 
+            "name": "Cascade", 
             "alpha_acid_low": 4.5, 
             "region": "us", 
-            "beta_acid_high": 7.0, 
             "beta_acid_low": 4.5, 
-            "humulene_pctg_high": 16.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 60.0, 
-            "source": "COMBINED", 
             "oils_high": 1.5, 
-            "caryophyllene_pctg_high": 6.0, 
-            "farnesene_pctg_low": 4.0, 
-            "type": "dual", 
-            "alpha_acid_high": 7.0, 
-            "farnesene_pctg_high": 8.0
+            "alpha_acid_high": 7.0
         }
     }, 
     {
@@ -1123,7 +1152,8 @@
             "farnesene_pctg_high": 8.0, 
             "farnesene_pctg_low": 4.0, 
             "alpha_acid_high": 7.0, 
-            "myrcene_pctg_low": 45.0
+            "myrcene_pctg_low": 45.0, 
+            "desc": "flowery and citrusy, can have grapefruit"
         }
     }, 
     {
@@ -1191,6 +1221,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Cascade", 
             "storage_low": 50.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "grapefruit, floral aroma", 
             "caryophyllene_pctg_high": 4.5, 
             "name": "Cascade", 
             "alpha_acid_low": 5.5, 
@@ -1226,7 +1257,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.4, 
-            "alpha_acid_high": 6.5
+            "alpha_acid_high": 6.5, 
+            "desc": "flowery and citrusy can have a grapefruit note"
         }
     }, 
     {
@@ -1248,6 +1280,7 @@
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "storage_low": 48.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "unique floral/spicy character with well blaanced bittering potential.", 
             "caryophyllene_pctg_high": 5.5, 
             "name": "Cascade", 
             "alpha_acid_low": 4.5, 
@@ -1277,6 +1310,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "floral and citrus tones medium intensity", 
             "caryophyllene_pctg_high": 8.0, 
             "name": "Centennial", 
             "alpha_acid_low": 6.0, 
@@ -1310,7 +1344,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 11.5, 
-            "myrcene_pctg_low": 45.0
+            "myrcene_pctg_low": 45.0, 
+            "desc": "medium intensity, floral and citrus"
         }
     }, 
     {
@@ -1378,6 +1413,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Centennial", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "floral, citrus aroma and a clean spicy flavor", 
             "caryophyllene_pctg_high": 8.0, 
             "name": "Centennial", 
             "alpha_acid_low": 6.0, 
@@ -1413,7 +1449,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 2.3, 
-            "alpha_acid_high": 11.5
+            "alpha_acid_high": 11.5, 
+            "desc": "floral and citrus tones medium intensity"
         }
     }, 
     {
@@ -1464,6 +1501,7 @@
             "source_url": "", 
             "storage_low": 70.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "mild to moderate, quite spicy", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Challenger", 
             "alpha_acid_low": 6.5, 
@@ -1479,26 +1517,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.0, 
-            "humulene_pctg_low": 25.0, 
-            "myrcene_pctg_low": 30.0, 
-            "cohumulone_pctg_high": 25.0, 
-            "name": "Challenger", 
             "caryophyllene_pctg_low": 8.0, 
             "cohumulone_pctg_low": 20.0, 
+            "humulene_pctg_low": 25.0, 
+            "farnesene_pctg_low": 1.0, 
+            "cohumulone_pctg_high": 25.0, 
+            "humulene_pctg_high": 32.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 3.0, 
+            "type": "dual", 
+            "myrcene_pctg_high": 42.0, 
+            "beta_acid_high": 4.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 30.0, 
+            "desc": "mild to moderate, quite spicy", 
+            "caryophyllene_pctg_high": 10.0, 
+            "name": "Challenger", 
             "alpha_acid_low": 6.5, 
             "region": "uk", 
-            "beta_acid_high": 4.5, 
             "beta_acid_low": 4.0, 
-            "humulene_pctg_high": 32.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 42.0, 
-            "source": "Hopunion", 
             "oils_high": 1.7, 
-            "caryophyllene_pctg_high": 10.0, 
-            "farnesene_pctg_low": 1.0, 
-            "type": "dual", 
-            "alpha_acid_high": 8.5, 
-            "farnesene_pctg_high": 3.0
+            "alpha_acid_high": 8.5
         }
     }, 
     {
@@ -1566,6 +1605,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Challenger", 
             "storage_low": 70.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "fine fruity aroma with spicy overtones.", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Challenger", 
             "alpha_acid_low": 6.5, 
@@ -1601,7 +1641,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.5, 
-            "alpha_acid_high": 8.5
+            "alpha_acid_high": 8.5, 
+            "desc": "mild to moderate flavor quite spicy"
         }
     }, 
     {
@@ -1683,6 +1724,7 @@
             "source_url": "", 
             "storage_low": 68.0, 
             "myrcene_pctg_low": 35.0, 
+            "desc": "med intensity, spicy, piney, distinctive, grapefruit; highly acceptable beer aroma profile with smooth bitterness and full flavor", 
             "caryophyllene_pctg_high": 11.0, 
             "name": "Chinook", 
             "alpha_acid_low": 10.0, 
@@ -1716,7 +1758,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 14.0, 
-            "myrcene_pctg_low": 35.0
+            "myrcene_pctg_low": 35.0, 
+            "desc": "med intensity, spicy, piney, distinctive, grapefruit"
         }
     }, 
     {
@@ -1790,7 +1833,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 2.5, 
-            "alpha_acid_high": 14.0
+            "alpha_acid_high": 14.0, 
+            "desc": "spicy, piney distinctive grapefruit"
         }
     }, 
     {
@@ -1811,6 +1855,7 @@
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "storage_low": 68.0, 
             "myrcene_pctg_low": 35.0, 
+            "desc": "highly acceptable beer aroma profile with smooth bitterness and full flavor", 
             "caryophyllene_pctg_high": 11.0, 
             "name": "Chinook", 
             "alpha_acid_low": 12.0, 
@@ -1832,13 +1877,14 @@
             "cohumulone_pctg_high": 24.0, 
             "humulene_pctg_high": 13.0, 
             "source": "COMBINED", 
+            "notes": "HCB 394", 
             "type": "dual", 
-            "storage_high": 75.0, 
             "myrcene_pctg_high": 65.0, 
             "beta_acid_high": 4.5, 
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 60.0, 
+            "desc": "citrus flavors of lime, grapefruit and other tropical fruits", 
             "caryophyllene_pctg_high": 8.0, 
             "name": "Citra", 
             "alpha_acid_low": 11.0, 
@@ -1846,7 +1892,7 @@
             "beta_acid_low": 3.5, 
             "oils_high": 2.8, 
             "alpha_acid_high": 13.0, 
-            "notes": "HCB 394"
+            "storage_high": 75.0
         }
     }, 
     {
@@ -1860,7 +1906,8 @@
             "source": "http://www.homebrewtalk.com/wiki/index.php/Citra", 
             "notes": "HCB 394", 
             "type": "dual", 
-            "alpha_acid_high": 12.0
+            "alpha_acid_high": 12.0, 
+            "desc": "flavors of pineapple, mango, other tropical fruits, and citrus"
         }
     }, 
     {
@@ -1878,7 +1925,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 2.8, 
-            "alpha_acid_high": 13.0
+            "alpha_acid_high": 13.0, 
+            "desc": "citrus flavors of lime, grapefruit and other tropical fruits"
         }
     }, 
     {
@@ -1886,26 +1934,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 2.2, 
-            "caryophyllene_pctg_high": 8.0, 
-            "humulene_pctg_low": 11.0, 
-            "cohumulone_pctg_high": 24.0, 
-            "name": "Citra", 
             "caryophyllene_pctg_low": 6.0, 
             "cohumulone_pctg_low": 22.0, 
+            "humulene_pctg_low": 11.0, 
+            "cohumulone_pctg_high": 24.0, 
+            "humulene_pctg_high": 13.0, 
+            "source": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
+            "storage_high": 75.0, 
+            "myrcene_pctg_high": 65.0, 
+            "beta_acid_high": 4.5, 
+            "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
+            "storage_low": 60.0, 
+            "myrcene_pctg_low": 60.0, 
+            "desc": "distinctive citrus character", 
+            "caryophyllene_pctg_high": 8.0, 
+            "name": "Citra", 
             "alpha_acid_low": 11.0, 
             "region": "us", 
-            "beta_acid_high": 4.5, 
             "beta_acid_low": 3.5, 
-            "humulene_pctg_high": 13.0, 
-            "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
-            "myrcene_pctg_high": 65.0, 
-            "source": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
-            "notes": "HCB 394", 
             "oils_high": 2.8, 
-            "storage_low": 60.0, 
             "alpha_acid_high": 13.0, 
-            "myrcene_pctg_low": 60.0, 
-            "storage_high": 75.0
+            "notes": "HCB 394"
         }
     }, 
     {
@@ -1927,6 +1976,7 @@
             "source_url": "", 
             "storage_low": 84.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "floral and spicy", 
             "caryophyllene_pctg_high": 7.0, 
             "name": "Cluster", 
             "alpha_acid_low": 5.5, 
@@ -1960,7 +2010,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 8.5, 
-            "myrcene_pctg_low": 45.0
+            "myrcene_pctg_low": 45.0, 
+            "desc": "floral and spicy"
         }
     }, 
     {
@@ -2034,7 +2085,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 0.8, 
-            "alpha_acid_high": 8.0
+            "alpha_acid_high": 8.0, 
+            "desc": "floral and spicy"
         }
     }, 
     {
@@ -2127,26 +2179,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.5, 
-            "humulene_pctg_low": 10.0, 
-            "myrcene_pctg_low": 25.0, 
-            "cohumulone_pctg_high": 40.0, 
-            "name": "Columbus/Tomahawk/Zeus", 
             "caryophyllene_pctg_low": 5.0, 
             "cohumulone_pctg_low": 27.0, 
+            "humulene_pctg_low": 10.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 40.0, 
+            "humulene_pctg_high": 25.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 50.0, 
+            "beta_acid_high": 6.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 25.0, 
+            "desc": "pungent; \"dank", 
+            "caryophyllene_pctg_high": 15.0, 
+            "name": "Columbus/Tomahawk/Zeus", 
             "alpha_acid_low": 12.0, 
             "region": "us", 
-            "beta_acid_high": 6.5, 
             "beta_acid_low": 4.0, 
-            "humulene_pctg_high": 25.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 50.0, 
-            "source": "COMBINED", 
             "oils_high": 3.0, 
-            "caryophyllene_pctg_high": 15.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "bitter", 
-            "alpha_acid_high": 18.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 18.0
         }
     }, 
     {
@@ -2172,7 +2225,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 16.0, 
-            "myrcene_pctg_low": 25.0
+            "myrcene_pctg_low": 25.0, 
+            "desc": "pungent"
         }
     }, 
     {
@@ -2348,6 +2402,7 @@
             "source_url": "", 
             "storage_low": 50.0, 
             "myrcene_pctg_low": 40.0, 
+            "desc": "very mild character, clean and slightly spicy", 
             "caryophyllene_pctg_high": 8.0, 
             "name": "Crystal", 
             "alpha_acid_low": 3.5, 
@@ -2381,7 +2436,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 5.5, 
-            "myrcene_pctg_low": 40.0
+            "myrcene_pctg_low": 40.0, 
+            "desc": "mild, spicy & flowery"
         }
     }, 
     {
@@ -2449,6 +2505,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Crystal_%28Hop%29", 
             "storage_low": 50.0, 
             "myrcene_pctg_low": 40.0, 
+            "desc": "very mild character, clean and slightly spicy", 
             "caryophyllene_pctg_high": 8.0, 
             "name": "Crystal", 
             "alpha_acid_low": 3.5, 
@@ -2536,6 +2593,7 @@
             "source_url": "", 
             "storage_low": 80.0, 
             "myrcene_pctg_low": 25.0, 
+            "desc": "mild and pleasant aroma that is slightly spicy with a hint of citrus.  Fuggle/Cascade cross.", 
             "caryophyllene_pctg_high": 20.0, 
             "name": "Delta", 
             "alpha_acid_low": 5.5, 
@@ -2566,6 +2624,7 @@
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "storage_low": 80.0, 
             "myrcene_pctg_low": 25.0, 
+            "desc": "mild and pleasant aroma that is slightly spicy with a hint of citrus.  Fuggle/Cascade cross.", 
             "caryophyllene_pctg_high": 20.0, 
             "name": "Delta", 
             "alpha_acid_low": 5.5, 
@@ -2596,6 +2655,7 @@
             "source_url": "", 
             "storage_low": 65.0, 
             "myrcene_pctg_low": 20.0, 
+            "desc": "gentle, fragrant, pleasant", 
             "caryophyllene_pctg_high": 16.0, 
             "name": "East Kent Golding", 
             "alpha_acid_low": 4.5, 
@@ -2611,26 +2671,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.6, 
-            "caryophyllene_pctg_high": 16.0, 
-            "humulene_pctg_low": 42.0, 
-            "cohumulone_pctg_high": 25.0, 
-            "name": "East Kent Golding", 
             "caryophyllene_pctg_low": 12.0, 
             "cohumulone_pctg_low": 20.0, 
+            "humulene_pctg_low": 42.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 25.0, 
+            "humulene_pctg_high": 48.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "myrcene_pctg_high": 26.0, 
+            "beta_acid_high": 3.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 20.0, 
+            "desc": "gentle, fragrant, pleasant", 
+            "caryophyllene_pctg_high": 16.0, 
+            "name": "East Kent Golding", 
             "alpha_acid_low": 4.0, 
             "region": "uk", 
-            "beta_acid_high": 3.5, 
             "beta_acid_low": 2.0, 
-            "humulene_pctg_high": 48.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 26.0, 
-            "source": "Hopunion", 
-            "notes": "classic English Ale hop", 
             "oils_high": 1.0, 
-            "farnesene_pctg_high": 1.0, 
-            "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 5.5, 
-            "myrcene_pctg_low": 20.0
+            "notes": "classic English Ale hop"
         }
     }, 
     {
@@ -2696,6 +2757,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/East_Kent_Golding", 
             "storage_low": 65.0, 
             "myrcene_pctg_low": 25.0, 
+            "desc": "delicate, slightly spicy aroma.", 
             "caryophyllene_pctg_high": 16.0, 
             "name": "East Kent Golding", 
             "alpha_acid_low": 4.0, 
@@ -2721,7 +2783,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 0.8, 
-            "alpha_acid_high": 6.5
+            "alpha_acid_high": 6.5, 
+            "desc": "Mild fragrant and pleasant"
         }
     }, 
     {
@@ -2729,26 +2792,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 2.5, 
-            "humulene_pctg_low": 10.0, 
-            "myrcene_pctg_low": 55.0, 
-            "cohumulone_pctg_high": 30.0, 
-            "name": "El Dorado", 
             "caryophyllene_pctg_low": 6.0, 
             "cohumulone_pctg_low": 30.0, 
+            "humulene_pctg_low": 10.0, 
+            "farnesene_pctg_low": 0.1, 
+            "cohumulone_pctg_high": 30.0, 
+            "humulene_pctg_high": 15.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 0.1, 
+            "type": "dual", 
+            "myrcene_pctg_high": 60.0, 
+            "beta_acid_high": 8.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 55.0, 
+            "desc": "Candylike intense aroma. pear, cherry and other stone fruits", 
+            "caryophyllene_pctg_high": 8.0, 
+            "name": "El Dorado", 
             "alpha_acid_low": 14.0, 
             "region": "us", 
-            "beta_acid_high": 8.0, 
             "beta_acid_low": 7.0, 
-            "humulene_pctg_high": 15.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 60.0, 
-            "source": "COMBINED", 
             "oils_high": 2.8, 
-            "caryophyllene_pctg_high": 8.0, 
-            "farnesene_pctg_low": 0.1, 
-            "type": "dual", 
-            "alpha_acid_high": 16.0, 
-            "farnesene_pctg_high": 0.1
+            "alpha_acid_high": 16.0
         }
     }, 
     {
@@ -2767,7 +2831,8 @@
             "source": "http://www.austinhomebrew.com/product_info.php?products_id=12928", 
             "oils_high": 2.8, 
             "type": "dual", 
-            "alpha_acid_high": 16.0
+            "alpha_acid_high": 16.0, 
+            "desc": "tropical fruit, watermelon candy, pear and stone fruit"
         }
     }, 
     {
@@ -2786,7 +2851,8 @@
             "source": "http://www.brewerssupplygroup.com/Hops.html", 
             "oils_high": 2.8, 
             "type": "dual", 
-            "alpha_acid_high": 16.0
+            "alpha_acid_high": 16.0, 
+            "desc": "Candylike intense aroma. pear, cherry and other stone fruits"
         }
     }, 
     {
@@ -2828,7 +2894,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 2.8, 
-            "alpha_acid_high": 16.0
+            "alpha_acid_high": 16.0, 
+            "desc": "Candylike intense aroma pear, cherry and other fruits"
         }
     }, 
     {
@@ -2948,7 +3015,8 @@
             "source": "COMBINED", 
             "notes": "14-hop blend from HopUnion to celebrate Glen Hay Falconer", 
             "type": "dual", 
-            "alpha_acid_high": 10.5
+            "alpha_acid_high": 10.5, 
+            "desc": "tropical, citrus, floral, lemon, and grapefruit tones"
         }
     }, 
     {
@@ -2966,7 +3034,8 @@
             "source": "http://www.austinhomebrew.com/product_info.php?products_id=12814", 
             "notes": "14-hop blend from HopUnion to celebrate Glen Hay Falconer", 
             "type": "dual", 
-            "alpha_acid_high": 10.5
+            "alpha_acid_high": 10.5, 
+            "desc": "tropical, citrus, floral, lemon, and grapefruit tones"
         }
     }, 
     {
@@ -3012,6 +3081,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 24.0, 
+            "desc": "woody, minty flavor and aroma that has been compared to WGV and to Fuggle.", 
             "caryophyllene_pctg_high": 7.0, 
             "name": "First Gold", 
             "alpha_acid_low": 4.0, 
@@ -3045,7 +3115,8 @@
             "farnesene_pctg_high": 3.0, 
             "farnesene_pctg_low": 3.0, 
             "alpha_acid_high": 8.5, 
-            "myrcene_pctg_low": 27.0
+            "myrcene_pctg_low": 27.0, 
+            "desc": "a little like Golding, spicy"
         }
     }, 
     {
@@ -3067,6 +3138,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/First_Gold", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 24.0, 
+            "desc": "woody, minty flavor and aroma that has been compared to WGV and to Fuggle.", 
             "caryophyllene_pctg_high": 7.0, 
             "name": "First Gold", 
             "alpha_acid_low": 4.0, 
@@ -3092,7 +3164,8 @@
             "source_url": "http://www.brewerssupplygroup.com/Hops.html", 
             "source": "http://www.brewerssupplygroup.com/Hops.html", 
             "oils_high": 1.3, 
-            "alpha_acid_high": 8.5
+            "alpha_acid_high": 8.5, 
+            "desc": "Spicy somewhat similar to English Golding"
         }
     }, 
     {
@@ -3114,6 +3187,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 40.0, 
+            "desc": "mild, woody and fruity", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Fuggle (US)", 
             "alpha_acid_low": 4.0, 
@@ -3147,7 +3221,8 @@
             "farnesene_pctg_high": 5.0, 
             "farnesene_pctg_low": 4.0, 
             "alpha_acid_high": 5.5, 
-            "myrcene_pctg_low": 40.0
+            "myrcene_pctg_low": 40.0, 
+            "desc": "mild, woody and fruity"
         }
     }, 
     {
@@ -3270,6 +3345,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 24.0, 
+            "desc": "mild, spicy, woody aroma", 
             "caryophyllene_pctg_high": 13.0, 
             "name": "Fuggle (UK)", 
             "alpha_acid_low": 4.0, 
@@ -3303,7 +3379,8 @@
             "farnesene_pctg_high": 7.0, 
             "farnesene_pctg_low": 5.0, 
             "alpha_acid_high": 5.5, 
-            "myrcene_pctg_low": 24.0
+            "myrcene_pctg_low": 24.0, 
+            "desc": "mild, pleasant and hoppy"
         }
     }, 
     {
@@ -3371,6 +3448,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Fuggle_%28English%29", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 24.0, 
+            "desc": "mild, spicy, woody aroma", 
             "caryophyllene_pctg_high": 14.0, 
             "name": "Fuggle (UK)", 
             "alpha_acid_low": 3.0, 
@@ -3406,7 +3484,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.1, 
-            "alpha_acid_high": 5.5
+            "alpha_acid_high": 5.5, 
+            "desc": "mild woody and fruity"
         }
     }, 
     {
@@ -3423,7 +3502,8 @@
             "source": "COMBINED", 
             "oils_high": 2.7, 
             "type": "dual", 
-            "alpha_acid_high": 13.8
+            "alpha_acid_high": 13.8, 
+            "desc": "unique and striking aroma described as a combination of citrus and passion fruit. This variety also provides significant bittering. Intense and pleasant aroma."
         }
     }, 
     {
@@ -3436,7 +3516,8 @@
             "source_url": "http://www.hopsdirect.com/store/domestic-pellet-hops.html", 
             "source": "http://www.hopsdirect.com/store/domestic-pellet-hops.html", 
             "type": "dual", 
-            "alpha_acid_high": 13.8
+            "alpha_acid_high": 13.8, 
+            "desc": "unique and striking aroma described as a combination of citrus and passion fruit. This variety also provides significant bittering. Intense and pleasant aroma."
         }
     }, 
     {
@@ -3453,7 +3534,8 @@
             "source": "http://www.midwestsupplies.com/galaxy-pellet-hops-1-oz.html", 
             "oils_high": 2.7, 
             "type": "dual", 
-            "alpha_acid_high": 13.3
+            "alpha_acid_high": 13.3, 
+            "desc": "When used as a late addition for flavor or aroma it contributes a distinctive clean citrus and passionfruit character which is more striking and intense the later the addition."
         }
     }, 
     {
@@ -3475,6 +3557,7 @@
             "source_url": "", 
             "storage_low": 75.0, 
             "myrcene_pctg_low": 55.0, 
+            "desc": "citrusy. fruity/black-currant similar to Bullion", 
             "caryophyllene_pctg_high": 5.5, 
             "name": "Galena", 
             "alpha_acid_low": 11.0, 
@@ -3508,7 +3591,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 14.0, 
-            "myrcene_pctg_low": 55.0
+            "myrcene_pctg_low": 55.0, 
+            "desc": "citrusy"
         }
     }, 
     {
@@ -3576,6 +3660,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Galena", 
             "storage_low": 75.0, 
             "myrcene_pctg_low": 55.0, 
+            "desc": "fruity/black-currant similar to Bullion", 
             "caryophyllene_pctg_high": 5.5, 
             "name": "Galena", 
             "alpha_acid_low": 11.0, 
@@ -3611,7 +3696,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.2, 
-            "alpha_acid_high": 13.5
+            "alpha_acid_high": 13.5, 
+            "desc": "Citrusy"
         }
     }, 
     {
@@ -3660,6 +3746,7 @@
             "beta_acid_high": 9.5, 
             "source_url": "", 
             "myrcene_pctg_low": 33.0, 
+            "desc": "excellent, pleasant hoppiness", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Glacier", 
             "alpha_acid_low": 3.3, 
@@ -3675,26 +3762,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.7, 
-            "caryophyllene_pctg_high": 10.0, 
-            "humulene_pctg_low": 24.0, 
-            "cohumulone_pctg_high": 13.0, 
-            "name": "Glacier", 
             "caryophyllene_pctg_low": 6.5, 
             "cohumulone_pctg_low": 11.0, 
+            "humulene_pctg_low": 24.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 13.0, 
+            "humulene_pctg_high": 36.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "myrcene_pctg_high": 62.0, 
+            "beta_acid_high": 8.2, 
+            "source_url": "", 
+            "myrcene_pctg_low": 33.0, 
+            "desc": "excellent, pleasant hoppiness", 
+            "caryophyllene_pctg_high": 10.0, 
+            "name": "Glacier", 
             "alpha_acid_low": 5.5, 
             "region": "us", 
-            "beta_acid_high": 8.2, 
             "beta_acid_low": 8.2, 
-            "humulene_pctg_high": 36.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 62.0, 
-            "source": "Hopunion", 
-            "notes": "released in 2000", 
             "oils_high": 1.6, 
-            "farnesene_pctg_high": 1.0, 
-            "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 5.5, 
-            "myrcene_pctg_low": 33.0
+            "notes": "released in 2000"
         }
     }, 
     {
@@ -3781,6 +3869,7 @@
             "source_url": "", 
             "storage_low": 66.0, 
             "myrcene_pctg_low": 20.0, 
+            "desc": "mild delicate classic English-type", 
             "caryophyllene_pctg_high": 15.0, 
             "name": "Golding (US)", 
             "alpha_acid_low": 4.0, 
@@ -3814,7 +3903,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 5.0, 
-            "myrcene_pctg_low": 20.0
+            "myrcene_pctg_low": 20.0, 
+            "desc": "mild delicate classic English-type"
         }
     }, 
     {
@@ -3836,6 +3926,7 @@
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "storage_low": 66.0, 
             "myrcene_pctg_low": 20.0, 
+            "desc": "typical English aroma", 
             "caryophyllene_pctg_high": 16.0, 
             "name": "Golding (US)", 
             "alpha_acid_low": 4.0, 
@@ -3871,7 +3962,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.0, 
-            "alpha_acid_high": 6.5
+            "alpha_acid_high": 6.5, 
+            "desc": "mild fragrant and pleasant"
         }
     }, 
     {
@@ -3938,7 +4030,8 @@
             "source_url": "", 
             "source": "COMBINED", 
             "type": "dual", 
-            "alpha_acid_high": 7.0
+            "alpha_acid_high": 7.0, 
+            "desc": "a more citrusy version of Willamette"
         }
     }, 
     {
@@ -3951,7 +4044,8 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/British_Columbia_Golding", 
             "source": "http://www.homebrewtalk.com/wiki/index.php/British_Columbia_Golding", 
             "type": "dual", 
-            "alpha_acid_high": 7.0
+            "alpha_acid_high": 7.0, 
+            "desc": "a more citrusy version of Willamette"
         }
     }, 
     {
@@ -3959,26 +4053,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.1, 
-            "humulene_pctg_low": 20.0, 
-            "myrcene_pctg_low": 38.0, 
-            "cohumulone_pctg_high": 43.0, 
-            "name": "Green Bullet", 
             "caryophyllene_pctg_low": 6.0, 
             "cohumulone_pctg_low": 41.0, 
-            "alpha_acid_low": 9.0, 
-            "region": "nz", 
-            "beta_acid_high": 7.5, 
-            "beta_acid_low": 6.5, 
+            "humulene_pctg_low": 20.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 43.0, 
             "humulene_pctg_high": 28.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 52.0, 
             "source": "COMBINED", 
-            "oils_high": 1.1, 
-            "caryophyllene_pctg_high": 9.0, 
-            "farnesene_pctg_low": 0.0, 
+            "farnesene_pctg_high": 0.3, 
             "type": "dual", 
-            "alpha_acid_high": 14.5, 
-            "farnesene_pctg_high": 0.3
+            "myrcene_pctg_high": 52.0, 
+            "beta_acid_high": 7.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 38.0, 
+            "desc": "distinctive raisin-like character.", 
+            "caryophyllene_pctg_high": 9.0, 
+            "name": "Green Bullet", 
+            "alpha_acid_low": 9.0, 
+            "region": "nz", 
+            "beta_acid_low": 6.5, 
+            "oils_high": 1.1, 
+            "alpha_acid_high": 14.5
         }
     }, 
     {
@@ -3986,26 +4081,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.1, 
-            "humulene_pctg_low": 20.0, 
-            "myrcene_pctg_low": 38.0, 
-            "cohumulone_pctg_high": 43.0, 
-            "name": "Green Bullet", 
             "caryophyllene_pctg_low": 6.0, 
             "cohumulone_pctg_low": 41.0, 
+            "humulene_pctg_low": 20.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 43.0, 
+            "humulene_pctg_high": 28.0, 
+            "source": "http://www.homebrewtalk.com/wiki/index.php/Green_Bullet", 
+            "farnesene_pctg_high": 0.3, 
+            "type": "dual", 
+            "myrcene_pctg_high": 52.0, 
+            "beta_acid_high": 7.5, 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Green_Bullet", 
+            "myrcene_pctg_low": 38.0, 
+            "desc": "distinctive raisin-like character.", 
+            "caryophyllene_pctg_high": 9.0, 
+            "name": "Green Bullet", 
             "alpha_acid_low": 9.0, 
             "region": "nz", 
-            "beta_acid_high": 7.5, 
             "beta_acid_low": 6.5, 
-            "humulene_pctg_high": 28.0, 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Green_Bullet", 
-            "myrcene_pctg_high": 52.0, 
-            "source": "http://www.homebrewtalk.com/wiki/index.php/Green_Bullet", 
             "oils_high": 1.1, 
-            "caryophyllene_pctg_high": 9.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "dual", 
-            "alpha_acid_high": 14.5, 
-            "farnesene_pctg_high": 0.3
+            "alpha_acid_high": 14.5
         }
     }, 
     {
@@ -4018,7 +4114,8 @@
             "source_url": "", 
             "source": "COMBINED", 
             "alpha_acid_high": 5.0, 
-            "notes": "Southern Idaho"
+            "notes": "Southern Idaho", 
+            "desc": "fruity flavor with a touch of woody flavors"
         }
     }, 
     {
@@ -4031,7 +4128,8 @@
             "source_url": "http://beer.wikia.com/wiki/Hops", 
             "source": "http://beer.wikia.com/wiki/Hops", 
             "alpha_acid_high": 5.0, 
-            "notes": "Southern Idaho"
+            "notes": "Southern Idaho", 
+            "desc": "fruity flavor with a touch of woody flavors"
         }
     }, 
     {
@@ -4053,6 +4151,7 @@
             "source_url": "", 
             "storage_low": 52.0, 
             "myrcene_pctg_low": 35.0, 
+            "desc": "very mild, slightly flowery and somewhat spicy", 
             "caryophyllene_pctg_high": 12.0, 
             "name": "Hallertau (US)", 
             "alpha_acid_low": 3.0, 
@@ -4068,26 +4167,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.6, 
-            "humulene_pctg_low": 30.0, 
-            "myrcene_pctg_low": 35.0, 
-            "cohumulone_pctg_high": 24.0, 
-            "name": "Hallertau (US)", 
             "caryophyllene_pctg_low": 10.0, 
             "cohumulone_pctg_low": 18.0, 
+            "humulene_pctg_low": 30.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 24.0, 
+            "humulene_pctg_high": 38.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 44.0, 
+            "beta_acid_high": 5.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 35.0, 
+            "desc": "very mild, slightly flowery and somewhat spicy", 
+            "caryophyllene_pctg_high": 12.0, 
+            "name": "Hallertau (US)", 
             "alpha_acid_low": 3.5, 
             "region": "us", 
-            "beta_acid_high": 5.5, 
             "beta_acid_low": 3.5, 
-            "humulene_pctg_high": 38.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 44.0, 
-            "source": "Hopunion", 
             "oils_high": 1.0, 
-            "caryophyllene_pctg_high": 12.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "aroma", 
-            "alpha_acid_high": 5.5, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 5.5
         }
     }, 
     {
@@ -4197,26 +4297,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.6, 
-            "humulene_pctg_low": 15.0, 
-            "myrcene_pctg_low": 15.0, 
-            "cohumulone_pctg_high": 24.0, 
-            "name": "Hallertau Hersbrucker (DE)", 
             "caryophyllene_pctg_low": 7.0, 
             "cohumulone_pctg_low": 18.0, 
+            "humulene_pctg_low": 15.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 24.0, 
+            "humulene_pctg_high": 33.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 25.0, 
+            "beta_acid_high": 5.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 15.0, 
+            "desc": "mild to semi-strong, pleasant and hoppy", 
+            "caryophyllene_pctg_high": 12.0, 
+            "name": "Hallertau Hersbrucker (DE)", 
             "alpha_acid_low": 2.5, 
             "region": "de", 
-            "beta_acid_high": 5.5, 
             "beta_acid_low": 2.5, 
-            "humulene_pctg_high": 33.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 25.0, 
-            "source": "COMBINED", 
             "oils_high": 1.2, 
-            "caryophyllene_pctg_high": 12.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "aroma", 
-            "alpha_acid_high": 5.5, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 5.5
         }
     }, 
     {
@@ -4268,7 +4369,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 5.5, 
-            "myrcene_pctg_low": 15.0
+            "myrcene_pctg_low": 15.0, 
+            "desc": "mild to semi-strong, pleasant and hoppy"
         }
     }, 
     {
@@ -4286,7 +4388,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.1, 
-            "alpha_acid_high": 5.0
+            "alpha_acid_high": 5.0, 
+            "desc": "Pleasant and hoppy mild to semi-strong"
         }
     }, 
     {
@@ -4307,6 +4410,7 @@
             "beta_acid_high": 5.5, 
             "source_url": "", 
             "myrcene_pctg_low": 10.0, 
+            "desc": "slightly flowery and spicy very mild", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Hallertau Mittelfr\u00fch (DE)", 
             "alpha_acid_low": 2.5, 
@@ -4348,26 +4452,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.7, 
-            "caryophyllene_pctg_high": 10.0, 
-            "humulene_pctg_low": 30.0, 
-            "cohumulone_pctg_high": 24.0, 
-            "name": "Hallertau Mittelfr\u00fch (DE)", 
             "caryophyllene_pctg_low": 7.0, 
             "cohumulone_pctg_low": 17.0, 
+            "humulene_pctg_low": 30.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 24.0, 
+            "humulene_pctg_high": 35.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "myrcene_pctg_high": 20.0, 
+            "beta_acid_high": 4.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 10.0, 
+            "desc": "mild and pleasant", 
+            "caryophyllene_pctg_high": 10.0, 
+            "name": "Hallertau Mittelfr\u00fch (DE)", 
             "alpha_acid_low": 3.5, 
             "region": "de", 
-            "beta_acid_high": 4.0, 
             "beta_acid_low": 3.0, 
-            "humulene_pctg_high": 35.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 20.0, 
-            "source": "Hopunion", 
-            "notes": "classic German aroma hop", 
             "oils_high": 1.3, 
-            "farnesene_pctg_high": 1.0, 
-            "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 5.5, 
-            "myrcene_pctg_low": 10.0
+            "notes": "classic German aroma hop"
         }
     }, 
     {
@@ -4412,7 +4517,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.5, 
-            "alpha_acid_high": 5.5
+            "alpha_acid_high": 5.5, 
+            "desc": "slightly flowery and spicy very mild"
         }
     }, 
     {
@@ -4572,7 +4678,8 @@
             "farnesene_pctg_high": 5.0, 
             "farnesene_pctg_low": 5.0, 
             "alpha_acid_high": 9.0, 
-            "myrcene_pctg_low": 45.0
+            "myrcene_pctg_low": 45.0, 
+            "desc": "nice resiny, citrusy characteristic"
         }
     }, 
     {
@@ -4598,7 +4705,8 @@
             "farnesene_pctg_high": 5.0, 
             "farnesene_pctg_low": 5.0, 
             "alpha_acid_high": 9.0, 
-            "myrcene_pctg_low": 45.0
+            "myrcene_pctg_low": 45.0, 
+            "desc": "nice resiny, citrusy characteristic"
         }
     }, 
     {
@@ -4606,26 +4714,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.9, 
-            "humulene_pctg_low": 12.0, 
-            "myrcene_pctg_low": 35.0, 
-            "cohumulone_pctg_high": 37.0, 
-            "name": "Hallertau (NZ)", 
             "caryophyllene_pctg_low": 6.0, 
             "cohumulone_pctg_low": 28.0, 
-            "alpha_acid_low": 6.5, 
-            "region": "nz", 
-            "beta_acid_high": 8.5, 
-            "beta_acid_low": 7.7, 
+            "humulene_pctg_low": 12.0, 
+            "farnesene_pctg_low": 4.5, 
+            "cohumulone_pctg_high": 37.0, 
             "humulene_pctg_high": 17.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 47.0, 
             "source": "COMBINED", 
-            "oils_high": 1.0, 
-            "caryophyllene_pctg_high": 9.0, 
-            "farnesene_pctg_low": 4.5, 
+            "farnesene_pctg_high": 7.0, 
             "type": "dual", 
-            "alpha_acid_high": 9.5, 
-            "farnesene_pctg_high": 7.0
+            "myrcene_pctg_high": 47.0, 
+            "beta_acid_high": 8.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 35.0, 
+            "desc": "clean dual-purpose lager hop with a floral and lime zest character.", 
+            "caryophyllene_pctg_high": 9.0, 
+            "name": "Hallertau (NZ)", 
+            "alpha_acid_low": 6.5, 
+            "region": "nz", 
+            "beta_acid_low": 7.7, 
+            "oils_high": 1.0, 
+            "alpha_acid_high": 9.5
         }
     }, 
     {
@@ -4633,26 +4742,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.9, 
-            "humulene_pctg_low": 12.0, 
-            "myrcene_pctg_low": 35.0, 
-            "cohumulone_pctg_high": 37.0, 
-            "name": "Hallertau (NZ)", 
             "caryophyllene_pctg_low": 6.0, 
             "cohumulone_pctg_low": 28.0, 
+            "humulene_pctg_low": 12.0, 
+            "farnesene_pctg_low": 4.5, 
+            "cohumulone_pctg_high": 37.0, 
+            "humulene_pctg_high": 17.0, 
+            "source": "http://www.homebrewtalk.com/wiki/index.php/New_Zealand_Hallertauer", 
+            "farnesene_pctg_high": 7.0, 
+            "type": "dual", 
+            "myrcene_pctg_high": 47.0, 
+            "beta_acid_high": 8.5, 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/New_Zealand_Hallertauer", 
+            "myrcene_pctg_low": 35.0, 
+            "desc": "clean dual-purpose lager hop with a floral and lime zest character.", 
+            "caryophyllene_pctg_high": 9.0, 
+            "name": "Hallertau (NZ)", 
             "alpha_acid_low": 6.5, 
             "region": "nz", 
-            "beta_acid_high": 8.5, 
             "beta_acid_low": 7.7, 
-            "humulene_pctg_high": 17.0, 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/New_Zealand_Hallertauer", 
-            "myrcene_pctg_high": 47.0, 
-            "source": "http://www.homebrewtalk.com/wiki/index.php/New_Zealand_Hallertauer", 
             "oils_high": 1.0, 
-            "caryophyllene_pctg_high": 9.0, 
-            "farnesene_pctg_low": 4.5, 
-            "type": "dual", 
-            "alpha_acid_high": 9.5, 
-            "farnesene_pctg_high": 7.0
+            "alpha_acid_high": 9.5
         }
     }, 
     {
@@ -4749,6 +4859,7 @@
             "beta_acid_high": 5.5, 
             "source_url": "", 
             "myrcene_pctg_low": 38.0, 
+            "desc": "combines strong bitterness with a citrusy, grapefruit character", 
             "caryophyllene_pctg_high": 9.0, 
             "name": "Herald", 
             "alpha_acid_low": 9.0, 
@@ -4777,6 +4888,7 @@
             "beta_acid_high": 5.5, 
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Herald", 
             "myrcene_pctg_low": 38.0, 
+            "desc": "combines strong bitterness with a citrusy, grapefruit character", 
             "caryophyllene_pctg_high": 9.0, 
             "name": "Herald", 
             "alpha_acid_low": 9.0, 
@@ -4805,6 +4917,7 @@
             "beta_acid_high": 8.5, 
             "source_url": "", 
             "myrcene_pctg_low": 55.0, 
+            "desc": "clean-tasting, floral, spicy; subtle bitterness", 
             "caryophyllene_pctg_high": 9.0, 
             "name": "Horizon", 
             "alpha_acid_low": 10.2, 
@@ -4838,7 +4951,8 @@
             "farnesene_pctg_high": 3.5, 
             "farnesene_pctg_low": 2.5, 
             "alpha_acid_high": 13.0, 
-            "myrcene_pctg_low": 55.0
+            "myrcene_pctg_low": 55.0, 
+            "desc": "floral, spicy"
         }
     }, 
     {
@@ -4859,6 +4973,7 @@
             "beta_acid_high": 8.5, 
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Horizon", 
             "myrcene_pctg_low": 65.0, 
+            "desc": "clean, subtle bitterness", 
             "caryophyllene_pctg_high": 6.0, 
             "name": "Horizon", 
             "alpha_acid_low": 10.2, 
@@ -4894,7 +5009,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 2.6, 
-            "alpha_acid_high": 13.0
+            "alpha_acid_high": 13.0, 
+            "desc": "floral, spicy"
         }
     }, 
     {
@@ -4915,6 +5031,7 @@
             "beta_acid_high": 8.5, 
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "myrcene_pctg_low": 55.0, 
+            "desc": "clean-tasting", 
             "caryophyllene_pctg_high": 9.0, 
             "name": "Horizon", 
             "alpha_acid_low": 11.0, 
@@ -4935,7 +5052,8 @@
             "source_url": "", 
             "source": "COMBINED", 
             "type": "dual", 
-            "alpha_acid_high": 7.8
+            "alpha_acid_high": 7.8, 
+            "desc": "floral, blackcurrant and spicy aroma."
         }
     }, 
     {
@@ -4948,7 +5066,8 @@
             "source_url": "http://www.hopsdirect.com/store/domestic-leaf-hops.html", 
             "source": "http://www.hopsdirect.com/store/domestic-leaf-hops.html", 
             "type": "dual", 
-            "alpha_acid_high": 7.8
+            "alpha_acid_high": 7.8, 
+            "desc": "floral, blackcurrant and spicy aroma."
         }
     }, 
     {
@@ -4970,6 +5089,7 @@
             "source_url": "", 
             "storage_low": 35.0, 
             "myrcene_pctg_low": 20.0, 
+            "desc": "unique slightly spicy character and, unlike its half-sisters, is considered a true noble hop by some", 
             "caryophyllene_pctg_high": 12.0, 
             "name": "Liberty", 
             "alpha_acid_low": 3.5, 
@@ -5003,7 +5123,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 5.0, 
-            "myrcene_pctg_low": 20.0
+            "myrcene_pctg_low": 20.0, 
+            "desc": "mild with a slightly spicy character"
         }
     }, 
     {
@@ -5071,6 +5192,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Liberty", 
             "storage_low": 50.0, 
             "myrcene_pctg_low": 24.0, 
+            "desc": "unique slightly spicy character and, unlike its half-sisters, is considered a true noble hop by some", 
             "caryophyllene_pctg_high": 12.0, 
             "name": "Liberty", 
             "alpha_acid_low": 3.0, 
@@ -5106,7 +5228,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.2, 
-            "alpha_acid_high": 6.0
+            "alpha_acid_high": 6.0, 
+            "desc": "mild, slightly spicy"
         }
     }, 
     {
@@ -5156,6 +5279,7 @@
             "source_url": "", 
             "storage_low": 40.0, 
             "myrcene_pctg_low": 22.0, 
+            "desc": "considered noble by some and has a chemical composition and aroma characteristics very similar to the classic noble hops", 
             "caryophyllene_pctg_high": 11.0, 
             "name": "Lublin", 
             "alpha_acid_low": 3.0, 
@@ -5234,6 +5358,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Lublin_%28Lubelski%29", 
             "storage_low": 40.0, 
             "myrcene_pctg_low": 22.0, 
+            "desc": "considered noble by some and has a chemical composition and aroma characteristics very similar to the classic noble hops", 
             "caryophyllene_pctg_high": 11.0, 
             "name": "Lublin", 
             "alpha_acid_low": 3.0, 
@@ -5249,26 +5374,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.9, 
-            "humulene_pctg_low": 34.0, 
-            "myrcene_pctg_low": 30.0, 
-            "cohumulone_pctg_high": 28.0, 
-            "name": "Magnum (US)", 
             "caryophyllene_pctg_low": 8.0, 
             "cohumulone_pctg_low": 24.0, 
+            "humulene_pctg_low": 34.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 28.0, 
+            "humulene_pctg_high": 48.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 35.0, 
+            "beta_acid_high": 6.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 30.0, 
+            "desc": "no real distinct aroma character, so is viewed favorably as a clean bittering hop", 
+            "caryophyllene_pctg_high": 12.0, 
+            "name": "Magnum (US)", 
             "alpha_acid_low": 12.0, 
             "region": "us", 
-            "beta_acid_high": 6.0, 
             "beta_acid_low": 4.5, 
-            "humulene_pctg_high": 48.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 35.0, 
-            "source": "COMBINED", 
             "oils_high": 2.3, 
-            "caryophyllene_pctg_high": 12.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "bitter", 
-            "alpha_acid_high": 14.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 14.0
         }
     }, 
     {
@@ -5276,26 +5402,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.9, 
-            "humulene_pctg_low": 34.0, 
-            "myrcene_pctg_low": 30.0, 
-            "cohumulone_pctg_high": 28.0, 
-            "name": "Magnum (US)", 
             "caryophyllene_pctg_low": 8.0, 
             "cohumulone_pctg_low": 24.0, 
+            "humulene_pctg_low": 34.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 28.0, 
+            "humulene_pctg_high": 48.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 35.0, 
+            "beta_acid_high": 6.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 30.0, 
+            "desc": "no real distinct aroma character; clean bittering hop", 
+            "caryophyllene_pctg_high": 12.0, 
+            "name": "Magnum (US)", 
             "alpha_acid_low": 12.0, 
             "region": "us", 
-            "beta_acid_high": 6.0, 
             "beta_acid_low": 4.5, 
-            "humulene_pctg_high": 48.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 35.0, 
-            "source": "Hopunion", 
             "oils_high": 2.3, 
-            "caryophyllene_pctg_high": 12.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "bitter", 
-            "alpha_acid_high": 14.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 14.0
         }
     }, 
     {
@@ -5329,26 +5456,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.9, 
-            "humulene_pctg_low": 34.0, 
-            "myrcene_pctg_low": 30.0, 
-            "cohumulone_pctg_high": 25.0, 
-            "name": "Magnum (DE)", 
             "caryophyllene_pctg_low": 8.0, 
             "cohumulone_pctg_low": 24.0, 
+            "humulene_pctg_low": 34.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 25.0, 
+            "humulene_pctg_high": 40.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 35.0, 
+            "beta_acid_high": 5.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 30.0, 
+            "desc": "no real distinct aroma character, so is viewed favorably as a clean bittering hop", 
+            "caryophyllene_pctg_high": 12.0, 
+            "name": "Magnum (DE)", 
             "alpha_acid_low": 12.0, 
             "region": "de", 
-            "beta_acid_high": 5.0, 
             "beta_acid_low": 4.5, 
-            "humulene_pctg_high": 40.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 35.0, 
-            "source": "COMBINED", 
             "oils_high": 2.3, 
-            "caryophyllene_pctg_high": 12.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "bitter", 
-            "alpha_acid_high": 14.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 14.0
         }
     }, 
     {
@@ -5356,26 +5484,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.9, 
-            "humulene_pctg_low": 34.0, 
-            "myrcene_pctg_low": 30.0, 
-            "cohumulone_pctg_high": 25.0, 
-            "name": "Magnum (DE)", 
             "caryophyllene_pctg_low": 8.0, 
             "cohumulone_pctg_low": 24.0, 
+            "humulene_pctg_low": 34.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 25.0, 
+            "humulene_pctg_high": 40.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 35.0, 
+            "beta_acid_high": 5.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 30.0, 
+            "desc": "no real distinct aroma character, so is viewed favorably as a clean bittering hop", 
+            "caryophyllene_pctg_high": 12.0, 
+            "name": "Magnum (DE)", 
             "alpha_acid_low": 12.0, 
             "region": "de", 
-            "beta_acid_high": 5.0, 
             "beta_acid_low": 4.5, 
-            "humulene_pctg_high": 40.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 35.0, 
-            "source": "Hopunion", 
             "oils_high": 2.3, 
-            "caryophyllene_pctg_high": 12.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "bitter", 
-            "alpha_acid_high": 14.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 14.0
         }
     }, 
     {
@@ -5405,7 +5534,8 @@
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 2.1, 
             "type": "bitter", 
-            "alpha_acid_high": 14.0
+            "alpha_acid_high": 14.0, 
+            "desc": "no distinct aroma/flavor; clean bittering hop"
         }
     }, 
     {
@@ -5413,26 +5543,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.8, 
-            "humulene_pctg_low": 30.0, 
-            "myrcene_pctg_low": 23.0, 
-            "cohumulone_pctg_high": 32.0, 
-            "name": "Millenium", 
             "caryophyllene_pctg_low": 9.0, 
             "cohumulone_pctg_low": 28.0, 
+            "humulene_pctg_low": 30.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 32.0, 
+            "humulene_pctg_high": 40.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 27.0, 
+            "beta_acid_high": 5.3, 
+            "source_url": "", 
+            "myrcene_pctg_low": 23.0, 
+            "desc": "Millennium hops are very similar to Nugget hops in aroma and flavor. Some descriptors included floral, resiny, and a bit spicy/herbal.", 
+            "caryophyllene_pctg_high": 12.0, 
+            "name": "Millenium", 
             "alpha_acid_low": 14.5, 
             "region": "us", 
-            "beta_acid_high": 5.3, 
             "beta_acid_low": 4.3, 
-            "humulene_pctg_high": 40.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 27.0, 
-            "source": "COMBINED", 
             "oils_high": 2.2, 
-            "caryophyllene_pctg_high": 12.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "bitter", 
-            "alpha_acid_high": 16.5, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 16.5
         }
     }, 
     {
@@ -5456,7 +5587,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 15.5, 
-            "humulene_pctg_low": 25.0
+            "humulene_pctg_low": 25.0, 
+            "desc": "mild, herbal, similar to Nugget"
         }
     }, 
     {
@@ -5469,7 +5601,8 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Millennium", 
             "source": "http://www.homebrewtalk.com/wiki/index.php/Millennium", 
             "type": "bitter", 
-            "alpha_acid_high": 16.5
+            "alpha_acid_high": 16.5, 
+            "desc": "Millennium hops are very similar to Nugget hops in aroma and flavor. Some descriptors included floral, resiny, and a bit spicy/herbal."
         }
     }, 
     {
@@ -5546,6 +5679,7 @@
             "source_url": "", 
             "storage_low": 50.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "mild and clean aroma and flavour", 
             "caryophyllene_pctg_high": 15.0, 
             "name": "Mount Hood", 
             "alpha_acid_low": 3.0, 
@@ -5579,7 +5713,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 8.0, 
-            "myrcene_pctg_low": 55.0
+            "myrcene_pctg_low": 55.0, 
+            "desc": "mild, somewhat pungent"
         }
     }, 
     {
@@ -5647,6 +5782,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Mount_Hood", 
             "storage_low": 50.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "mild and clean aroma and flavour", 
             "caryophyllene_pctg_high": 15.0, 
             "name": "Mount Hood", 
             "alpha_acid_low": 3.0, 
@@ -5682,7 +5818,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 2.3, 
-            "alpha_acid_high": 6.5
+            "alpha_acid_high": 6.5, 
+            "desc": "mild pleasant herbal and clean"
         }
     }, 
     {
@@ -5725,7 +5862,8 @@
             "source_url": "", 
             "source": "COMBINED", 
             "type": "dual", 
-            "alpha_acid_high": 6.2
+            "alpha_acid_high": 6.2, 
+            "desc": "Hallertauer-like flavor and aroma; licorice and citrus."
         }
     }, 
     {
@@ -5740,7 +5878,8 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Mt._Rainier", 
             "source": "http://www.homebrewtalk.com/wiki/index.php/Mt._Rainier", 
             "type": "dual", 
-            "alpha_acid_high": 6.2
+            "alpha_acid_high": 6.2, 
+            "desc": "Hallertauer-like flavor and aroma; licorice and citrus."
         }
     }, 
     {
@@ -5759,7 +5898,8 @@
             "source": "COMBINED", 
             "oils_high": 1.2, 
             "type": "aroma", 
-            "alpha_acid_high": 13.0
+            "alpha_acid_high": 13.0, 
+            "desc": "unique fruit, white wine grape"
         }
     }, 
     {
@@ -5778,7 +5918,8 @@
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.2, 
             "type": "aroma", 
-            "alpha_acid_high": 13.0
+            "alpha_acid_high": 13.0, 
+            "desc": "unique fruit, white wine grape"
         }
     }, 
     {
@@ -5800,6 +5941,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 47.0, 
+            "desc": "mild", 
             "caryophyllene_pctg_high": 7.0, 
             "name": "Newport", 
             "alpha_acid_low": 13.5, 
@@ -5833,7 +5975,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 17.0, 
-            "myrcene_pctg_low": 47.0
+            "myrcene_pctg_low": 47.0, 
+            "desc": "mild"
         }
     }, 
     {
@@ -5884,6 +6027,7 @@
             "source_url": "", 
             "storage_low": 70.0, 
             "myrcene_pctg_low": 50.0, 
+            "desc": "medium-strong", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Northern Brewer (US)", 
             "alpha_acid_low": 6.5, 
@@ -5917,7 +6061,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 10.0, 
-            "myrcene_pctg_low": 50.0
+            "myrcene_pctg_low": 50.0, 
+            "desc": "medium-strong"
         }
     }, 
     {
@@ -6009,7 +6154,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.8, 
-            "alpha_acid_high": 9.0
+            "alpha_acid_high": 9.0, 
+            "desc": "medium to strong"
         }
     }, 
     {
@@ -6046,26 +6192,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.6, 
-            "humulene_pctg_low": 25.0, 
-            "myrcene_pctg_low": 30.0, 
-            "cohumulone_pctg_high": 33.0, 
-            "name": "Northern Brewer (DE)", 
             "caryophyllene_pctg_low": 8.0, 
             "cohumulone_pctg_low": 28.0, 
+            "humulene_pctg_low": 25.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 33.0, 
+            "humulene_pctg_high": 30.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "dual", 
+            "myrcene_pctg_high": 35.0, 
+            "beta_acid_high": 5.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 30.0, 
+            "desc": "medium-strong with some wild American tones", 
+            "caryophyllene_pctg_high": 10.0, 
+            "name": "Northern Brewer (DE)", 
             "alpha_acid_low": 7.0, 
             "region": "de", 
-            "beta_acid_high": 5.0, 
             "beta_acid_low": 3.5, 
-            "humulene_pctg_high": 30.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 35.0, 
-            "source": "COMBINED", 
             "oils_high": 2.1, 
-            "caryophyllene_pctg_high": 10.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "dual", 
-            "alpha_acid_high": 10.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 10.0
         }
     }, 
     {
@@ -6091,7 +6238,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 10.0, 
-            "myrcene_pctg_low": 30.0
+            "myrcene_pctg_low": 30.0, 
+            "desc": "medium-strong with some wild American tones"
         }
     }, 
     {
@@ -6171,6 +6319,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 23.0, 
+            "desc": "clean and mild bitterness and a distinctive strong, woody, minty flavor.", 
             "caryophyllene_pctg_high": 17.0, 
             "name": "Northdown", 
             "alpha_acid_low": 6.0, 
@@ -6186,26 +6335,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.5, 
-            "caryophyllene_pctg_high": 17.0, 
-            "humulene_pctg_low": 40.0, 
-            "cohumulone_pctg_high": 30.0, 
-            "name": "Northdown", 
             "caryophyllene_pctg_low": 13.0, 
             "cohumulone_pctg_low": 24.0, 
+            "humulene_pctg_low": 40.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 30.0, 
+            "humulene_pctg_high": 45.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "myrcene_pctg_high": 29.0, 
+            "beta_acid_high": 5.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 23.0, 
+            "desc": "mild, pleasant and delicate hop aroma", 
+            "caryophyllene_pctg_high": 17.0, 
+            "name": "Northdown", 
             "alpha_acid_low": 7.5, 
             "region": "uk", 
-            "beta_acid_high": 5.5, 
             "beta_acid_low": 5.0, 
-            "humulene_pctg_high": 45.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 29.0, 
-            "source": "Hopunion", 
-            "notes": "dual-purpose", 
             "oils_high": 2.5, 
-            "farnesene_pctg_high": 1.0, 
-            "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 9.5, 
-            "myrcene_pctg_low": 23.0
+            "notes": "dual-purpose"
         }
     }, 
     {
@@ -6253,6 +6403,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Northdown", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 23.0, 
+            "desc": "clean and mild bitterness and a distinctive strong, woody, minty flavor.", 
             "caryophyllene_pctg_high": 17.0, 
             "name": "Northdown", 
             "alpha_acid_low": 6.0, 
@@ -6292,6 +6443,7 @@
             "source_url": "", 
             "storage_low": 70.0, 
             "myrcene_pctg_low": 51.0, 
+            "desc": "smooth but somewhat heavy, herbal, spicy bitterness", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Nugget", 
             "alpha_acid_low": 12.0, 
@@ -6325,7 +6477,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 14.0, 
-            "myrcene_pctg_low": 51.0
+            "myrcene_pctg_low": 51.0, 
+            "desc": "herbal"
         }
     }, 
     {
@@ -6379,24 +6532,25 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.7, 
-            "caryophyllene_pctg_high": 10.0, 
-            "myrcene_pctg_low": 51.0, 
-            "humulene_pctg_low": 12.0, 
-            "name": "Nugget", 
             "caryophyllene_pctg_low": 7.0, 
             "cohumulone_pctg_low": 24.0, 
-            "alpha_acid_low": 12.0, 
-            "region": "us", 
+            "humulene_pctg_low": 12.0, 
+            "farnesene_pctg_low": 0.0, 
             "cohumulone_pctg_high": 30.0, 
             "humulene_pctg_high": 22.0, 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Nugget", 
-            "myrcene_pctg_high": 59.0, 
             "source": "http://www.homebrewtalk.com/wiki/index.php/Nugget", 
-            "storage_low": 70.0, 
-            "oils_high": 2.3, 
             "farnesene_pctg_high": 1.0, 
-            "farnesene_pctg_low": 0.0, 
             "type": "bitter", 
+            "myrcene_pctg_high": 59.0, 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Nugget", 
+            "storage_low": 70.0, 
+            "myrcene_pctg_low": 51.0, 
+            "desc": "smooth but somewhat heavy, herbal, spicy bitterness", 
+            "caryophyllene_pctg_high": 10.0, 
+            "name": "Nugget", 
+            "alpha_acid_low": 12.0, 
+            "region": "us", 
+            "oils_high": 2.3, 
             "alpha_acid_high": 14.5, 
             "storage_high": 80.0
         }
@@ -6426,7 +6580,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 2.2, 
-            "alpha_acid_high": 13.5
+            "alpha_acid_high": 13.5, 
+            "desc": "herbal"
         }
     }, 
     {
@@ -6447,6 +6602,7 @@
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "storage_low": 76.0, 
             "myrcene_pctg_low": 48.0, 
+            "desc": "mild herbal, low cohumulone", 
             "caryophyllene_pctg_high": 9.0, 
             "name": "Nugget", 
             "alpha_acid_low": 11.5, 
@@ -6462,26 +6618,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.9, 
-            "humulene_pctg_low": 3.0, 
-            "myrcene_pctg_low": 60.0, 
-            "cohumulone_pctg_high": 40.0, 
-            "name": "Olympic", 
             "caryophyllene_pctg_low": 5.0, 
             "cohumulone_pctg_low": 26.0, 
+            "humulene_pctg_low": 3.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 40.0, 
+            "humulene_pctg_high": 10.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 67.0, 
+            "beta_acid_high": 6.1, 
+            "source_url": "", 
+            "myrcene_pctg_low": 60.0, 
+            "desc": "spicy, citrusy aroma", 
+            "caryophyllene_pctg_high": 7.0, 
+            "name": "Olympic", 
             "alpha_acid_low": 10.0, 
             "region": "us", 
-            "beta_acid_high": 6.1, 
             "beta_acid_low": 3.8, 
-            "humulene_pctg_high": 10.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 67.0, 
-            "source": "COMBINED", 
             "oils_high": 2.6, 
-            "caryophyllene_pctg_high": 7.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "bitter", 
-            "alpha_acid_high": 13.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 13.0
         }
     }, 
     {
@@ -6489,26 +6646,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.9, 
-            "humulene_pctg_low": 3.0, 
-            "myrcene_pctg_low": 60.0, 
-            "cohumulone_pctg_high": 40.0, 
-            "name": "Olympic", 
             "caryophyllene_pctg_low": 5.0, 
             "cohumulone_pctg_low": 26.0, 
+            "humulene_pctg_low": 3.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 40.0, 
+            "humulene_pctg_high": 10.0, 
+            "source": "http://www.homebrewtalk.com/wiki/index.php/Olympic", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 67.0, 
+            "beta_acid_high": 6.1, 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Olympic", 
+            "myrcene_pctg_low": 60.0, 
+            "desc": "spicy, citrusy aroma", 
+            "caryophyllene_pctg_high": 7.0, 
+            "name": "Olympic", 
             "alpha_acid_low": 10.0, 
             "region": "us", 
-            "beta_acid_high": 6.1, 
             "beta_acid_low": 3.8, 
-            "humulene_pctg_high": 10.0, 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Olympic", 
-            "myrcene_pctg_high": 67.0, 
-            "source": "http://www.homebrewtalk.com/wiki/index.php/Olympic", 
             "oils_high": 2.6, 
-            "caryophyllene_pctg_high": 7.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "bitter", 
-            "alpha_acid_high": 13.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 13.0
         }
     }, 
     {
@@ -6521,7 +6679,8 @@
             "source_url": "", 
             "source": "COMBINED", 
             "type": "aroma", 
-            "alpha_acid_high": 9.2
+            "alpha_acid_high": 9.2, 
+            "desc": "Moderate bitterness and fruity, floral character - use for Belgian, wheat, and hybrid beers."
         }
     }, 
     {
@@ -6534,7 +6693,8 @@
             "source_url": "http://www.northernbrewer.com/brewing/german-opal-hop-pellets-1-lb.html", 
             "source": "http://www.northernbrewer.com/brewing/german-opal-hop-pellets-1-lb.html", 
             "type": "aroma", 
-            "alpha_acid_high": 8.0
+            "alpha_acid_high": 8.0, 
+            "desc": "Moderate bitterness and fruity, floral character - use for Belgian, wheat, and hybrid beers."
         }
     }, 
     {
@@ -6547,7 +6707,8 @@
             "source_url": "http://www.breworganic.com/germanopalpellethops.aspx", 
             "source": "http://www.breworganic.com/germanopalpellethops.aspx", 
             "type": "aroma", 
-            "alpha_acid_high": 9.2
+            "alpha_acid_high": 9.2, 
+            "desc": "sweet spice, slightly peppery aroma and flavor combined with a light clean citrus fruit aroma"
         }
     }, 
     {
@@ -6573,7 +6734,8 @@
             "oils_high": 1.6, 
             "caryophyllene_pctg_high": 22.0, 
             "type": "aroma", 
-            "alpha_acid_high": 9.5
+            "alpha_acid_high": 9.5, 
+            "desc": "Some describe as grassy and piney with hints of apricot."
         }
     }, 
     {
@@ -6606,11 +6768,12 @@
         "pk": null, 
         "model": "app.SourcedHopDetails", 
         "fields": {
-            "source": "http://morebeer.com/view_product/11808", 
-            "region": "us", 
-            "type": "dual", 
             "name": "Palisade", 
-            "source_url": "http://morebeer.com/view_product/11808"
+            "region": "us", 
+            "source_url": "http://morebeer.com/view_product/11808", 
+            "source": "http://morebeer.com/view_product/11808", 
+            "type": "dual", 
+            "desc": "Some describe as grassy and piney with hints of apricot."
         }
     }, 
     {
@@ -6642,26 +6805,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.2, 
-            "humulene_pctg_low": 18.0, 
-            "myrcene_pctg_low": 33.0, 
-            "cohumulone_pctg_high": 40.0, 
-            "name": "Pacific Gem", 
             "caryophyllene_pctg_low": 7.0, 
             "cohumulone_pctg_low": 37.0, 
+            "humulene_pctg_low": 18.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 40.0, 
+            "humulene_pctg_high": 30.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 0.3, 
+            "type": "dual", 
+            "myrcene_pctg_high": 55.0, 
+            "beta_acid_high": 9.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 33.0, 
+            "desc": "cask-oak or woody character and blackberry notes when used in bittering.", 
+            "caryophyllene_pctg_high": 11.0, 
+            "name": "Pacific Gem", 
             "alpha_acid_low": 13.0, 
             "region": "nz", 
-            "beta_acid_high": 9.0, 
             "beta_acid_low": 7.0, 
-            "humulene_pctg_high": 30.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 55.0, 
-            "source": "COMBINED", 
             "oils_high": 1.4, 
-            "caryophyllene_pctg_high": 11.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "dual", 
-            "alpha_acid_high": 16.0, 
-            "farnesene_pctg_high": 0.3
+            "alpha_acid_high": 16.0
         }
     }, 
     {
@@ -6669,26 +6833,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.4, 
-            "caryophyllene_pctg_high": 7.0, 
-            "humulene_pctg_low": 18.0, 
-            "cohumulone_pctg_high": 39.0, 
-            "name": "Pacific Gem", 
             "caryophyllene_pctg_low": 7.0, 
             "cohumulone_pctg_low": 39.0, 
+            "humulene_pctg_low": 18.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 39.0, 
+            "humulene_pctg_high": 18.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "myrcene_pctg_high": 55.0, 
+            "beta_acid_high": 8.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 55.0, 
+            "desc": "pleasant, blackberry", 
+            "caryophyllene_pctg_high": 7.0, 
+            "name": "Pacific Gem", 
             "alpha_acid_low": 14.0, 
             "region": "nz", 
-            "beta_acid_high": 8.0, 
             "beta_acid_low": 8.0, 
-            "humulene_pctg_high": 18.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 55.0, 
-            "source": "Hopunion", 
-            "notes": "bittering hop. woody flavor", 
             "oils_high": 1.4, 
-            "farnesene_pctg_high": 1.0, 
-            "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 16.0, 
-            "myrcene_pctg_low": 55.0
+            "notes": "bittering hop. woody flavor"
         }
     }, 
     {
@@ -6696,26 +6861,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.2, 
-            "humulene_pctg_low": 18.0, 
-            "myrcene_pctg_low": 33.0, 
-            "cohumulone_pctg_high": 40.0, 
-            "name": "Pacific Gem", 
             "caryophyllene_pctg_low": 7.0, 
             "cohumulone_pctg_low": 37.0, 
+            "humulene_pctg_low": 18.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 40.0, 
+            "humulene_pctg_high": 30.0, 
+            "source": "http://www.homebrewtalk.com/wiki/index.php/Pacific_Gem", 
+            "farnesene_pctg_high": 0.3, 
+            "type": "dual", 
+            "myrcene_pctg_high": 55.0, 
+            "beta_acid_high": 9.0, 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Pacific_Gem", 
+            "myrcene_pctg_low": 33.0, 
+            "desc": "cask-oak or woody character and blackberry notes when used in bittering.", 
+            "caryophyllene_pctg_high": 11.0, 
+            "name": "Pacific Gem", 
             "alpha_acid_low": 13.0, 
             "region": "nz", 
-            "beta_acid_high": 9.0, 
             "beta_acid_low": 7.0, 
-            "humulene_pctg_high": 30.0, 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Pacific_Gem", 
-            "myrcene_pctg_high": 55.0, 
-            "source": "http://www.homebrewtalk.com/wiki/index.php/Pacific_Gem", 
             "oils_high": 1.4, 
-            "caryophyllene_pctg_high": 11.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "dual", 
-            "alpha_acid_high": 16.0, 
-            "farnesene_pctg_high": 0.3
+            "alpha_acid_high": 16.0
         }
     }, 
     {
@@ -6723,26 +6889,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.8, 
-            "humulene_pctg_low": 32.9, 
-            "myrcene_pctg_low": 33.3, 
-            "cohumulone_pctg_high": 24.0, 
-            "name": "Pacific Jade", 
             "caryophyllene_pctg_low": 10.2, 
             "cohumulone_pctg_low": 24.0, 
-            "alpha_acid_low": 12.0, 
-            "region": "nz", 
-            "beta_acid_high": 8.0, 
-            "beta_acid_low": 7.0, 
+            "humulene_pctg_low": 32.9, 
+            "farnesene_pctg_low": 0.3, 
+            "cohumulone_pctg_high": 24.0, 
             "humulene_pctg_high": 32.9, 
-            "source_url": "", 
-            "myrcene_pctg_high": 33.3, 
             "source": "COMBINED", 
-            "oils_high": 0.8, 
-            "caryophyllene_pctg_high": 10.2, 
-            "farnesene_pctg_low": 0.3, 
+            "farnesene_pctg_high": 0.3, 
             "type": "dual", 
-            "alpha_acid_high": 14.0, 
-            "farnesene_pctg_high": 0.3
+            "myrcene_pctg_high": 33.3, 
+            "beta_acid_high": 8.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 33.3, 
+            "desc": "bold\u201d as it delivers a herbal infusion of fresh citrus and crushed black pepper. Brewing trials have illustrated Pacific Jade as an excellent hop that delivers a pleasing soft bitterness matched to desirable aroma characteristics.", 
+            "caryophyllene_pctg_high": 10.2, 
+            "name": "Pacific Jade", 
+            "alpha_acid_low": 12.0, 
+            "region": "nz", 
+            "beta_acid_low": 7.0, 
+            "oils_high": 0.8, 
+            "alpha_acid_high": 14.0
         }
     }, 
     {
@@ -6750,26 +6917,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.8, 
-            "humulene_pctg_low": 32.9, 
-            "myrcene_pctg_low": 33.3, 
-            "cohumulone_pctg_high": 24.0, 
-            "name": "Pacific Jade", 
             "caryophyllene_pctg_low": 10.2, 
             "cohumulone_pctg_low": 24.0, 
+            "humulene_pctg_low": 32.9, 
+            "farnesene_pctg_low": 0.3, 
+            "cohumulone_pctg_high": 24.0, 
+            "humulene_pctg_high": 32.9, 
+            "source": "http://www.rebelbrewer.com/shoppingcart/products/Pacific-Jade-Hops-1oz-Pellets.html", 
+            "farnesene_pctg_high": 0.3, 
+            "type": "dual", 
+            "myrcene_pctg_high": 33.3, 
+            "beta_acid_high": 8.0, 
+            "source_url": "http://www.rebelbrewer.com/shoppingcart/products/Pacific-Jade-Hops-1oz-Pellets.html", 
+            "myrcene_pctg_low": 33.3, 
+            "desc": "bold\u201d as it delivers a herbal infusion of fresh citrus and crushed black pepper. Brewing trials have illustrated Pacific Jade as an excellent hop that delivers a pleasing soft bitterness matched to desirable aroma characteristics.", 
+            "caryophyllene_pctg_high": 10.2, 
+            "name": "Pacific Jade", 
             "alpha_acid_low": 12.0, 
             "region": "nz", 
-            "beta_acid_high": 8.0, 
             "beta_acid_low": 7.0, 
-            "humulene_pctg_high": 32.9, 
-            "source_url": "http://www.rebelbrewer.com/shoppingcart/products/Pacific-Jade-Hops-1oz-Pellets.html", 
-            "myrcene_pctg_high": 33.3, 
-            "source": "http://www.rebelbrewer.com/shoppingcart/products/Pacific-Jade-Hops-1oz-Pellets.html", 
             "oils_high": 0.8, 
-            "caryophyllene_pctg_high": 10.2, 
-            "farnesene_pctg_low": 0.3, 
-            "type": "dual", 
-            "alpha_acid_high": 14.0, 
-            "farnesene_pctg_high": 0.3
+            "alpha_acid_high": 14.0
         }
     }, 
     {
@@ -6791,6 +6959,7 @@
             "source_url": "", 
             "storage_low": 80.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "floral and slightly spicy", 
             "caryophyllene_pctg_high": 12.0, 
             "name": "Perle (US)", 
             "alpha_acid_low": 7.0, 
@@ -6824,7 +6993,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 9.5, 
-            "myrcene_pctg_low": 45.0
+            "myrcene_pctg_low": 45.0, 
+            "desc": "floral and slightly spicy"
         }
     }, 
     {
@@ -6902,25 +7072,26 @@
         "pk": null, 
         "model": "app.SourcedHopDetails", 
         "fields": {
-            "farnesene_pctg_high": 1.0, 
-            "humulene_pctg_low": 28.0, 
-            "myrcene_pctg_low": 45.0, 
-            "cohumulone_pctg_high": 32.0, 
-            "name": "Perle (US)", 
             "caryophyllene_pctg_low": 10.0, 
             "cohumulone_pctg_low": 27.0, 
+            "humulene_pctg_low": 28.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 32.0, 
+            "humulene_pctg_high": 33.0, 
+            "source": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "dual", 
+            "myrcene_pctg_high": 55.0, 
+            "beta_acid_high": 5.0, 
+            "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
+            "storage_low": 80.0, 
+            "myrcene_pctg_low": 45.0, 
+            "desc": "nice", 
+            "caryophyllene_pctg_high": 12.0, 
+            "name": "Perle (US)", 
             "alpha_acid_low": 7.0, 
             "region": "us", 
-            "beta_acid_high": 5.0, 
             "beta_acid_low": 4.0, 
-            "humulene_pctg_high": 33.0, 
-            "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
-            "myrcene_pctg_high": 55.0, 
-            "source": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
-            "storage_low": 80.0, 
-            "caryophyllene_pctg_high": 12.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "dual", 
             "alpha_acid_high": 9.5, 
             "storage_high": 85.0
         }
@@ -6944,6 +7115,7 @@
             "source_url": "", 
             "storage_low": 70.0, 
             "myrcene_pctg_low": 10.0, 
+            "desc": "floral and slightly spicy, moderately intense", 
             "caryophyllene_pctg_high": 20.0, 
             "name": "Perle (DE)", 
             "alpha_acid_low": 4.0, 
@@ -6959,26 +7131,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.8, 
-            "caryophyllene_pctg_high": 10.0, 
-            "humulene_pctg_low": 30.0, 
-            "cohumulone_pctg_high": 32.0, 
-            "name": "Perle (DE)", 
             "caryophyllene_pctg_low": 8.0, 
             "cohumulone_pctg_low": 25.0, 
+            "humulene_pctg_low": 30.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 32.0, 
+            "humulene_pctg_high": 36.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "myrcene_pctg_high": 20.0, 
+            "beta_acid_high": 5.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 10.0, 
+            "desc": "moderately intense, good and hoppy", 
+            "caryophyllene_pctg_high": 10.0, 
+            "name": "Perle (DE)", 
             "alpha_acid_low": 6.0, 
             "region": "de", 
-            "beta_acid_high": 5.5, 
             "beta_acid_low": 3.5, 
-            "humulene_pctg_high": 36.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 20.0, 
-            "source": "Hopunion", 
-            "notes": "dual-purpose, good bittering and aroma", 
             "oils_high": 1.3, 
-            "farnesene_pctg_high": 1.0, 
-            "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 8.0, 
-            "myrcene_pctg_low": 10.0
+            "notes": "dual-purpose, good bittering and aroma"
         }
     }, 
     {
@@ -7000,6 +7173,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Perle", 
             "storage_low": 70.0, 
             "myrcene_pctg_low": 10.0, 
+            "desc": "pleasant, minty", 
             "caryophyllene_pctg_high": 20.0, 
             "name": "Perle (DE)", 
             "alpha_acid_low": 4.0, 
@@ -7035,7 +7209,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.2, 
-            "alpha_acid_high": 8.5
+            "alpha_acid_high": 8.5, 
+            "desc": "floral and slightly spicy, moderately intense"
         }
     }, 
     {
@@ -7056,6 +7231,7 @@
             "beta_acid_high": 5.5, 
             "source_url": "", 
             "myrcene_pctg_low": 24.0, 
+            "desc": "Challenger", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Phoenix", 
             "alpha_acid_low": 7.0, 
@@ -7084,6 +7260,7 @@
             "beta_acid_high": 5.5, 
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Phoenix", 
             "myrcene_pctg_low": 24.0, 
+            "desc": "Challenger", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Phoenix", 
             "alpha_acid_low": 7.0, 
@@ -7112,6 +7289,7 @@
             "beta_acid_high": 5.2, 
             "source_url": "", 
             "myrcene_pctg_low": 25.0, 
+            "desc": "distinctive aroma because of its high selinine levels.", 
             "caryophyllene_pctg_high": 8.0, 
             "name": "Pilgrim", 
             "alpha_acid_low": 9.0, 
@@ -7140,6 +7318,7 @@
             "beta_acid_high": 5.2, 
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Pilgrim", 
             "myrcene_pctg_low": 25.0, 
+            "desc": "distinctive aroma because of its high selinine levels.", 
             "caryophyllene_pctg_high": 8.0, 
             "name": "Pilgrim", 
             "alpha_acid_low": 9.0, 
@@ -7161,7 +7340,8 @@
             "source": "COMBINED", 
             "notes": "Charles Faram & Co Ltd. \"Ros\", \"S24", 
             "type": "bitter", 
-            "alpha_acid_high": 12.0
+            "alpha_acid_high": 12.0, 
+            "desc": "mild herbal, lemon hints, fresh mowed grass"
         }
     }, 
     {
@@ -7186,7 +7366,8 @@
             "source_url": "http://www.brew-dudes.com/pilot-hops/745", 
             "source": "http://www.brew-dudes.com/pilot-hops/745", 
             "type": "bitter", 
-            "alpha_acid_high": 12.0
+            "alpha_acid_high": 12.0, 
+            "desc": "mild herbal, lemon hints, fresh mowed grass"
         }
     }, 
     {
@@ -7194,26 +7375,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.0, 
-            "humulene_pctg_low": 22.0, 
-            "myrcene_pctg_low": 31.0, 
-            "cohumulone_pctg_high": 40.0, 
-            "name": "Pioneer", 
             "caryophyllene_pctg_low": 7.0, 
             "cohumulone_pctg_low": 36.0, 
-            "alpha_acid_low": 8.0, 
-            "region": "uk", 
-            "beta_acid_high": 4.0, 
-            "beta_acid_low": 3.5, 
+            "humulene_pctg_low": 22.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 40.0, 
             "humulene_pctg_high": 24.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 36.0, 
             "source": "COMBINED", 
-            "oils_high": 1.8, 
-            "caryophyllene_pctg_high": 8.0, 
-            "farnesene_pctg_low": 0.0, 
+            "farnesene_pctg_high": 1.0, 
             "type": "dual", 
-            "alpha_acid_high": 10.0, 
-            "farnesene_pctg_high": 1.0
+            "myrcene_pctg_high": 36.0, 
+            "beta_acid_high": 4.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 31.0, 
+            "desc": "pleasant english character", 
+            "caryophyllene_pctg_high": 8.0, 
+            "name": "Pioneer", 
+            "alpha_acid_low": 8.0, 
+            "region": "uk", 
+            "beta_acid_low": 3.5, 
+            "oils_high": 1.8, 
+            "alpha_acid_high": 10.0
         }
     }, 
     {
@@ -7221,26 +7403,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.0, 
-            "humulene_pctg_low": 22.0, 
-            "myrcene_pctg_low": 31.0, 
-            "cohumulone_pctg_high": 40.0, 
-            "name": "Pioneer", 
             "caryophyllene_pctg_low": 7.0, 
             "cohumulone_pctg_low": 36.0, 
+            "humulene_pctg_low": 22.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 40.0, 
+            "humulene_pctg_high": 24.0, 
+            "source": "http://www.homebrewtalk.com/wiki/index.php/Pioneer", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "dual", 
+            "myrcene_pctg_high": 36.0, 
+            "beta_acid_high": 4.0, 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Pioneer", 
+            "myrcene_pctg_low": 31.0, 
+            "desc": "pleasant english character", 
+            "caryophyllene_pctg_high": 8.0, 
+            "name": "Pioneer", 
             "alpha_acid_low": 8.0, 
             "region": "uk", 
-            "beta_acid_high": 4.0, 
             "beta_acid_low": 3.5, 
-            "humulene_pctg_high": 24.0, 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Pioneer", 
-            "myrcene_pctg_high": 36.0, 
-            "source": "http://www.homebrewtalk.com/wiki/index.php/Pioneer", 
             "oils_high": 1.8, 
-            "caryophyllene_pctg_high": 8.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "dual", 
-            "alpha_acid_high": 10.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 10.0
         }
     }, 
     {
@@ -7316,6 +7499,7 @@
             "source_url": "", 
             "storage_low": 45.0, 
             "myrcene_pctg_low": 25.0, 
+            "desc": "distinct citrus aroma that is strong and somewhat coarse but still pleasant", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Pride of Ringwood", 
             "alpha_acid_low": 7.0, 
@@ -7331,26 +7515,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.0, 
-            "caryophyllene_pctg_high": 10.0, 
-            "humulene_pctg_low": 3.0, 
-            "cohumulone_pctg_high": 39.0, 
-            "name": "Pride of Ringwood", 
             "caryophyllene_pctg_low": 5.0, 
             "cohumulone_pctg_low": 33.0, 
+            "humulene_pctg_low": 3.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 39.0, 
+            "humulene_pctg_high": 8.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "myrcene_pctg_high": 50.0, 
+            "beta_acid_high": 6.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 25.0, 
+            "desc": "quite pronounced but not unpleasant", 
+            "caryophyllene_pctg_high": 10.0, 
+            "name": "Pride of Ringwood", 
             "alpha_acid_low": 7.0, 
             "region": "au", 
-            "beta_acid_high": 6.0, 
             "beta_acid_low": 4.0, 
-            "humulene_pctg_high": 8.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 50.0, 
-            "source": "Hopunion", 
-            "notes": "primarily a bittering hop but with interesting aromatic qualities", 
             "oils_high": 2.0, 
-            "farnesene_pctg_high": 1.0, 
-            "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 10.0, 
-            "myrcene_pctg_low": 25.0
+            "notes": "primarily a bittering hop but with interesting aromatic qualities"
         }
     }, 
     {
@@ -7418,6 +7603,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Pride_of_Ringwood", 
             "storage_low": 45.0, 
             "myrcene_pctg_low": 25.0, 
+            "desc": "distinct citrus aroma that is strong and somewhat coarse but still pleasant", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Pride of Ringwood", 
             "alpha_acid_low": 7.0, 
@@ -7447,6 +7633,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "mild spicy or woody character somewhat similar to Fuggle (British), but is slightly sweeter, and usually provides a softer bitterness in beers of all types", 
             "caryophyllene_pctg_high": 15.0, 
             "name": "Progress", 
             "alpha_acid_low": 4.0, 
@@ -7480,7 +7667,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 7.0, 
-            "myrcene_pctg_low": 30.0
+            "myrcene_pctg_low": 30.0, 
+            "desc": "moderately strong, good aroma"
         }
     }, 
     {
@@ -7522,6 +7710,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Progress", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "mild spicy or woody character somewhat similar to Fuggle (British), but is slightly sweeter, and usually provides a softer bitterness in beers of all types", 
             "caryophyllene_pctg_high": 15.0, 
             "name": "Progress", 
             "alpha_acid_low": 4.0, 
@@ -7557,7 +7746,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 0.8, 
-            "alpha_acid_high": 7.5
+            "alpha_acid_high": 7.5, 
+            "desc": "moderately strong good aroma"
         }
     }, 
     {
@@ -7572,7 +7762,8 @@
             "source_url": "", 
             "source": "COMBINED", 
             "type": "dual", 
-            "alpha_acid_high": 11.0
+            "alpha_acid_high": 11.0, 
+            "desc": "late hop character delivering tropical fruit aromas of passionfruit and peach."
         }
     }, 
     {
@@ -7587,7 +7778,8 @@
             "source_url": "http://www.rebelbrewer.com/shoppingcart/products/Rakau-Hops-1oz-Pellets.html", 
             "source": "http://www.rebelbrewer.com/shoppingcart/products/Rakau-Hops-1oz-Pellets.html", 
             "type": "dual", 
-            "alpha_acid_high": 11.0
+            "alpha_acid_high": 11.0, 
+            "desc": "late hop character delivering tropical fruit aromas of passionfruit and peach."
         }
     }, 
     {
@@ -7604,7 +7796,8 @@
             "source_url": "", 
             "source": "COMBINED", 
             "type": "aroma", 
-            "alpha_acid_high": 5.4
+            "alpha_acid_high": 5.4, 
+            "desc": "It has a clean spicy aroma and would be very at home in all kinds of pale ales, IPA's, Black IPA's and even lagers."
         }
     }, 
     {
@@ -7621,7 +7814,8 @@
             "source_url": "http://www.rebelbrewer.com/shoppingcart/products/Revolution-Hops-%252d-1oz.-Pellets.html", 
             "source": "http://www.rebelbrewer.com/shoppingcart/products/Revolution-Hops-%252d-1oz.-Pellets.html", 
             "type": "dual", 
-            "alpha_acid_high": 5.4
+            "alpha_acid_high": 5.4, 
+            "desc": "It has a clean spicy aroma and would be very at home in all kinds of pale ales, IPA's, Black IPA's and even lagers."
         }
     }, 
     {
@@ -7634,7 +7828,8 @@
             "source_url": "http://www.brew-dudes.com/revolution-hops/1908", 
             "source": "http://www.brew-dudes.com/revolution-hops/1908", 
             "type": "aroma", 
-            "alpha_acid_high": 5.4
+            "alpha_acid_high": 5.4, 
+            "desc": "Noble in aroma and flavor.  Many different descriptors from the beers they brew themselves: spicy, piney, some citrus notes."
         }
     }, 
     {
@@ -7682,6 +7877,7 @@
             "source_url": "", 
             "storage_low": 45.0, 
             "myrcene_pctg_low": 25.0, 
+            "desc": "very mild, spicy and earthy", 
             "caryophyllene_pctg_high": 11.0, 
             "name": "Saaz (US)", 
             "alpha_acid_low": 3.0, 
@@ -7715,7 +7911,8 @@
             "farnesene_pctg_high": 13.0, 
             "farnesene_pctg_low": 9.0, 
             "alpha_acid_high": 4.5, 
-            "myrcene_pctg_low": 25.0
+            "myrcene_pctg_low": 25.0, 
+            "desc": "very mild, spicy and earthy"
         }
     }, 
     {
@@ -7837,26 +8034,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.4, 
-            "caryophyllene_pctg_high": 12.0, 
-            "humulene_pctg_low": 40.0, 
-            "cohumulone_pctg_high": 28.0, 
-            "name": "Saaz (CZ)", 
             "caryophyllene_pctg_low": 10.0, 
             "cohumulone_pctg_low": 24.0, 
+            "humulene_pctg_low": 40.0, 
+            "farnesene_pctg_low": 11.0, 
+            "cohumulone_pctg_high": 28.0, 
+            "humulene_pctg_high": 45.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 15.0, 
+            "myrcene_pctg_high": 25.0, 
+            "beta_acid_high": 4.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 20.0, 
+            "desc": "Very mild with pleasant hoppy notes", 
+            "caryophyllene_pctg_high": 12.0, 
+            "name": "Saaz (CZ)", 
             "alpha_acid_low": 3.0, 
             "region": "cz", 
-            "beta_acid_high": 4.5, 
             "beta_acid_low": 3.0, 
-            "humulene_pctg_high": 45.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 25.0, 
-            "source": "Hopunion", 
-            "notes": "class noble aroma hop", 
             "oils_high": 0.7, 
-            "farnesene_pctg_high": 15.0, 
-            "farnesene_pctg_low": 11.0, 
             "alpha_acid_high": 4.5, 
-            "myrcene_pctg_low": 20.0
+            "notes": "class noble aroma hop"
         }
     }, 
     {
@@ -7924,6 +8122,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Saaz_%28Czech%29", 
             "storage_low": 45.0, 
             "myrcene_pctg_low": 20.0, 
+            "desc": "mild, pleasant flavor", 
             "caryophyllene_pctg_high": 12.0, 
             "name": "Saaz (CZ)", 
             "alpha_acid_low": 3.0, 
@@ -7949,7 +8148,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 0.8, 
-            "alpha_acid_high": 4.5
+            "alpha_acid_high": 4.5, 
+            "desc": "spicy and earthy mild, pleasant hoppy notes"
         }
     }, 
     {
@@ -7971,6 +8171,7 @@
             "source_url": "", 
             "storage_low": 40.0, 
             "myrcene_pctg_low": 27.0, 
+            "desc": "floral, slightly spicy", 
             "caryophyllene_pctg_high": 8.0, 
             "name": "Santiam", 
             "alpha_acid_low": 5.0, 
@@ -8004,7 +8205,8 @@
             "farnesene_pctg_high": 16.0, 
             "farnesene_pctg_low": 13.0, 
             "alpha_acid_high": 7.0, 
-            "myrcene_pctg_low": 27.0
+            "myrcene_pctg_low": 27.0, 
+            "desc": "floral, slightly spicy"
         }
     }, 
     {
@@ -8078,7 +8280,8 @@
             "source": "COMBINED", 
             "oils_high": 1.4, 
             "type": "aroma", 
-            "alpha_acid_high": 5.5
+            "alpha_acid_high": 5.5, 
+            "desc": "floral"
         }
     }, 
     {
@@ -8097,7 +8300,8 @@
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.4, 
             "type": "aroma", 
-            "alpha_acid_high": 5.5
+            "alpha_acid_high": 5.5, 
+            "desc": "floral"
         }
     }, 
     {
@@ -8105,26 +8309,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.5, 
-            "humulene_pctg_low": 21.0, 
-            "myrcene_pctg_low": 23.0, 
-            "cohumulone_pctg_high": 35.0, 
-            "name": "Satus", 
             "caryophyllene_pctg_low": 10.0, 
             "cohumulone_pctg_low": 32.0, 
-            "alpha_acid_low": 12.5, 
-            "region": "us", 
-            "beta_acid_high": 9.0, 
-            "beta_acid_low": 8.5, 
+            "humulene_pctg_low": 21.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 35.0, 
             "humulene_pctg_high": 25.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 27.0, 
             "source": "COMBINED", 
-            "oils_high": 1.8, 
-            "caryophyllene_pctg_high": 14.0, 
-            "farnesene_pctg_low": 0.0, 
+            "farnesene_pctg_high": 1.0, 
             "type": "bitter", 
-            "alpha_acid_high": 14.0, 
-            "farnesene_pctg_high": 1.0
+            "myrcene_pctg_high": 27.0, 
+            "beta_acid_high": 9.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 23.0, 
+            "desc": "similar to Galena", 
+            "caryophyllene_pctg_high": 14.0, 
+            "name": "Satus", 
+            "alpha_acid_low": 12.5, 
+            "region": "us", 
+            "beta_acid_low": 8.5, 
+            "oils_high": 1.8, 
+            "alpha_acid_high": 14.0
         }
     }, 
     {
@@ -8132,26 +8337,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.5, 
-            "humulene_pctg_low": 21.0, 
-            "myrcene_pctg_low": 23.0, 
-            "cohumulone_pctg_high": 35.0, 
-            "name": "Satus", 
             "caryophyllene_pctg_low": 10.0, 
             "cohumulone_pctg_low": 32.0, 
+            "humulene_pctg_low": 21.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 35.0, 
+            "humulene_pctg_high": 25.0, 
+            "source": "http://www.homebrewtalk.com/wiki/index.php/Satus", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 27.0, 
+            "beta_acid_high": 9.0, 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Satus", 
+            "myrcene_pctg_low": 23.0, 
+            "desc": "similar to Galena", 
+            "caryophyllene_pctg_high": 14.0, 
+            "name": "Satus", 
             "alpha_acid_low": 12.5, 
             "region": "us", 
-            "beta_acid_high": 9.0, 
             "beta_acid_low": 8.5, 
-            "humulene_pctg_high": 25.0, 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Satus", 
-            "myrcene_pctg_high": 27.0, 
-            "source": "http://www.homebrewtalk.com/wiki/index.php/Satus", 
             "oils_high": 1.8, 
-            "caryophyllene_pctg_high": 14.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "bitter", 
-            "alpha_acid_high": 14.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 14.0
         }
     }, 
     {
@@ -8177,7 +8383,8 @@
             "farnesene_pctg_high": 25.0, 
             "farnesene_pctg_low": 15.0, 
             "alpha_acid_high": 6.0, 
-            "myrcene_pctg_low": 15.0
+            "myrcene_pctg_low": 15.0, 
+            "desc": "very fine Spalter type aroma"
         }
     }, 
     {
@@ -8203,7 +8410,8 @@
             "farnesene_pctg_high": 25.0, 
             "farnesene_pctg_low": 15.0, 
             "alpha_acid_high": 6.0, 
-            "myrcene_pctg_low": 15.0
+            "myrcene_pctg_low": 15.0, 
+            "desc": "very fine Spalter type aroma"
         }
     }, 
     {
@@ -8224,6 +8432,7 @@
             "beta_acid_high": 5.0, 
             "source_url": "", 
             "myrcene_pctg_low": 60.0, 
+            "desc": "very unique, pine-like aroma", 
             "caryophyllene_pctg_high": 8.0, 
             "name": "Simcoe", 
             "alpha_acid_low": 12.0, 
@@ -8239,26 +8448,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 2.0, 
-            "caryophyllene_pctg_high": 8.0, 
-            "humulene_pctg_low": 10.0, 
-            "cohumulone_pctg_high": 20.0, 
-            "name": "Simcoe", 
             "caryophyllene_pctg_low": 5.0, 
             "cohumulone_pctg_low": 15.0, 
+            "humulene_pctg_low": 10.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 20.0, 
+            "humulene_pctg_high": 15.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 1.0, 
+            "myrcene_pctg_high": 65.0, 
+            "beta_acid_high": 5.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 60.0, 
+            "desc": "very unique, pine-like aroma", 
+            "caryophyllene_pctg_high": 8.0, 
+            "name": "Simcoe", 
             "alpha_acid_low": 12.0, 
             "region": "us", 
-            "beta_acid_high": 5.0, 
             "beta_acid_low": 4.0, 
-            "humulene_pctg_high": 15.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 65.0, 
-            "source": "Hopunion", 
-            "notes": "released in 2000", 
             "oils_high": 2.5, 
-            "farnesene_pctg_high": 1.0, 
-            "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 14.0, 
-            "myrcene_pctg_low": 60.0
+            "notes": "released in 2000"
         }
     }, 
     {
@@ -8266,26 +8476,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 2.0, 
-            "humulene_pctg_low": 10.0, 
-            "myrcene_pctg_low": 60.0, 
-            "cohumulone_pctg_high": 20.0, 
-            "name": "Simcoe", 
             "caryophyllene_pctg_low": 5.0, 
             "cohumulone_pctg_low": 15.0, 
+            "humulene_pctg_low": 10.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 20.0, 
+            "humulene_pctg_high": 15.0, 
+            "source": "http://www.homebrewtalk.com/wiki/index.php/Simcoe", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "dual", 
+            "myrcene_pctg_high": 65.0, 
+            "beta_acid_high": 5.0, 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Simcoe", 
+            "myrcene_pctg_low": 60.0, 
+            "desc": "Amarillo", 
+            "caryophyllene_pctg_high": 8.0, 
+            "name": "Simcoe", 
             "alpha_acid_low": 12.0, 
             "region": "us", 
-            "beta_acid_high": 5.0, 
             "beta_acid_low": 4.0, 
-            "humulene_pctg_high": 15.0, 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Simcoe", 
-            "myrcene_pctg_high": 65.0, 
-            "source": "http://www.homebrewtalk.com/wiki/index.php/Simcoe", 
             "oils_high": 2.5, 
-            "caryophyllene_pctg_high": 8.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "dual", 
-            "alpha_acid_high": 14.0, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 14.0
         }
     }, 
     {
@@ -8347,7 +8558,8 @@
             "notes": "YCR 14 CV.", 
             "oils_high": 2.5, 
             "alpha_acid_high": 14.0, 
-            "myrcene_pctg_low": 60.0
+            "myrcene_pctg_low": 60.0, 
+            "desc": "unique, pine-like aroma"
         }
     }, 
     {
@@ -8386,7 +8598,8 @@
             "source": "COMBINED", 
             "oils_high": 1.8, 
             "type": "aroma", 
-            "alpha_acid_high": 12.5
+            "alpha_acid_high": 12.5, 
+            "desc": "noble; strong but pleasant lemon character"
         }
     }, 
     {
@@ -8401,7 +8614,8 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Sorachi_Ace", 
             "source": "http://www.homebrewtalk.com/wiki/index.php/Sorachi_Ace", 
             "type": "aroma", 
-            "alpha_acid_high": 16.0
+            "alpha_acid_high": 16.0, 
+            "desc": "noble; strong but pleasant lemon character"
         }
     }, 
     {
@@ -8419,7 +8633,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.8, 
-            "alpha_acid_high": 12.5
+            "alpha_acid_high": 12.5, 
+            "desc": "lemony"
         }
     }, 
     {
@@ -8427,26 +8642,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.2, 
-            "humulene_pctg_low": 21.0, 
-            "myrcene_pctg_low": 32.0, 
-            "cohumulone_pctg_high": 28.0, 
-            "name": "Southern Cross", 
             "caryophyllene_pctg_low": 6.7, 
             "cohumulone_pctg_low": 25.0, 
-            "alpha_acid_low": 11.0, 
-            "region": "nz", 
-            "beta_acid_high": 6.0, 
-            "beta_acid_low": 5.0, 
+            "humulene_pctg_low": 21.0, 
+            "farnesene_pctg_low": 7.3, 
+            "cohumulone_pctg_high": 28.0, 
             "humulene_pctg_high": 21.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 32.0, 
             "source": "COMBINED", 
-            "oils_high": 1.2, 
-            "caryophyllene_pctg_high": 6.7, 
-            "farnesene_pctg_low": 7.3, 
+            "farnesene_pctg_high": 7.3, 
             "type": "dual", 
-            "alpha_acid_high": 14.0, 
-            "farnesene_pctg_high": 7.3
+            "myrcene_pctg_high": 32.0, 
+            "beta_acid_high": 6.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 32.0, 
+            "desc": "citrusy and spicy aromas", 
+            "caryophyllene_pctg_high": 6.7, 
+            "name": "Southern Cross", 
+            "alpha_acid_low": 11.0, 
+            "region": "nz", 
+            "beta_acid_low": 5.0, 
+            "oils_high": 1.2, 
+            "alpha_acid_high": 14.0
         }
     }, 
     {
@@ -8454,26 +8670,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.2, 
-            "humulene_pctg_low": 21.0, 
-            "myrcene_pctg_low": 32.0, 
-            "cohumulone_pctg_high": 28.0, 
-            "name": "Southern Cross", 
             "caryophyllene_pctg_low": 6.7, 
             "cohumulone_pctg_low": 25.0, 
+            "humulene_pctg_low": 21.0, 
+            "farnesene_pctg_low": 7.3, 
+            "cohumulone_pctg_high": 28.0, 
+            "humulene_pctg_high": 21.0, 
+            "source": "http://www.homebrewtalk.com/wiki/index.php/Southern_Cross", 
+            "farnesene_pctg_high": 7.3, 
+            "type": "dual", 
+            "myrcene_pctg_high": 32.0, 
+            "beta_acid_high": 6.0, 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Southern_Cross", 
+            "myrcene_pctg_low": 32.0, 
+            "desc": "citrusy and spicy aromas", 
+            "caryophyllene_pctg_high": 6.7, 
+            "name": "Southern Cross", 
             "alpha_acid_low": 11.0, 
             "region": "nz", 
-            "beta_acid_high": 6.0, 
             "beta_acid_low": 5.0, 
-            "humulene_pctg_high": 21.0, 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Southern_Cross", 
-            "myrcene_pctg_high": 32.0, 
-            "source": "http://www.homebrewtalk.com/wiki/index.php/Southern_Cross", 
             "oils_high": 1.2, 
-            "caryophyllene_pctg_high": 6.7, 
-            "farnesene_pctg_low": 7.3, 
-            "type": "dual", 
-            "alpha_acid_high": 14.0, 
-            "farnesene_pctg_high": 7.3
+            "alpha_acid_high": 14.0
         }
     }, 
     {
@@ -8492,7 +8709,8 @@
             "source": "COMBINED", 
             "oils_high": 1.0, 
             "type": "aroma", 
-            "alpha_acid_high": 6.0
+            "alpha_acid_high": 6.0, 
+            "desc": "mild flavor similar to Fuggle"
         }
     }, 
     {
@@ -8506,7 +8724,8 @@
             "source": "http://www.homebrewtalk.com/wiki/index.php/Sovereign", 
             "notes": "new", 
             "type": "aroma", 
-            "alpha_acid_high": 7.0
+            "alpha_acid_high": 7.0, 
+            "desc": "maybe noble"
         }
     }, 
     {
@@ -8525,7 +8744,8 @@
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.0, 
             "alpha_acid_high": 6.0, 
-            "notes": "Sterling"
+            "notes": "Sterling", 
+            "desc": "mild flavor similar to Fuggle"
         }
     }, 
     {
@@ -8544,7 +8764,8 @@
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarietySubstitutions.pdf", 
             "oils_high": 1.0, 
             "type": "aroma", 
-            "alpha_acid_high": 6.0
+            "alpha_acid_high": 6.0, 
+            "desc": "mild flavor similar to Fuggle"
         }
     }, 
     {
@@ -8566,6 +8787,7 @@
             "source_url": "", 
             "storage_low": 46.0, 
             "myrcene_pctg_low": 15.0, 
+            "desc": "mild, spicy aroma that is often compared to Czech Saaz or Tettnang Tettnanger", 
             "caryophyllene_pctg_high": 15.0, 
             "name": "Spalt (DE)", 
             "alpha_acid_low": 2.5, 
@@ -8581,26 +8803,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.5, 
-            "caryophyllene_pctg_high": 15.0, 
-            "humulene_pctg_low": 18.0, 
-            "cohumulone_pctg_high": 28.0, 
-            "name": "Spalt (DE)", 
             "caryophyllene_pctg_low": 10.0, 
             "cohumulone_pctg_low": 23.0, 
+            "humulene_pctg_low": 18.0, 
+            "farnesene_pctg_low": 10.0, 
+            "cohumulone_pctg_high": 28.0, 
+            "humulene_pctg_high": 25.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 15.0, 
+            "myrcene_pctg_high": 25.0, 
+            "beta_acid_high": 5.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 15.0, 
+            "desc": "mild and pleasant, slightly spicy", 
+            "caryophyllene_pctg_high": 15.0, 
+            "name": "Spalt (DE)", 
             "alpha_acid_low": 4.0, 
             "region": "de", 
-            "beta_acid_high": 5.0, 
             "beta_acid_low": 4.0, 
-            "humulene_pctg_high": 25.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 25.0, 
-            "source": "Hopunion", 
-            "notes": "traditional, very find or noble hop aroma", 
             "oils_high": 1.1, 
-            "farnesene_pctg_high": 15.0, 
-            "farnesene_pctg_low": 10.0, 
             "alpha_acid_high": 5.0, 
-            "myrcene_pctg_low": 15.0
+            "notes": "traditional, very find or noble hop aroma"
         }
     }, 
     {
@@ -8668,6 +8891,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Spalt_Spalter", 
             "storage_low": 45.0, 
             "myrcene_pctg_low": 20.0, 
+            "desc": "mild, spicy aroma that is often compared to Czech Saaz or Tettnang Tettnanger", 
             "caryophyllene_pctg_high": 13.0, 
             "name": "Spalt (DE)", 
             "alpha_acid_low": 2.5, 
@@ -8755,26 +8979,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.6, 
-            "humulene_pctg_low": 10.0, 
-            "myrcene_pctg_low": 20.0, 
-            "cohumulone_pctg_high": 27.0, 
-            "name": "Spalt Select", 
             "caryophyllene_pctg_low": 4.0, 
             "cohumulone_pctg_low": 20.0, 
+            "humulene_pctg_low": 10.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 27.0, 
+            "humulene_pctg_high": 36.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 22.0, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 50.0, 
+            "beta_acid_high": 6.2, 
+            "source_url": "", 
+            "myrcene_pctg_low": 20.0, 
+            "desc": "floral and spicy fine aroma", 
+            "caryophyllene_pctg_high": 13.0, 
+            "name": "Spalt Select", 
             "alpha_acid_low": 3.0, 
             "region": "de", 
-            "beta_acid_high": 6.2, 
             "beta_acid_low": 2.5, 
-            "humulene_pctg_high": 36.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 50.0, 
-            "source": "COMBINED", 
             "oils_high": 1.2, 
-            "caryophyllene_pctg_high": 13.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "aroma", 
-            "alpha_acid_high": 6.5, 
-            "farnesene_pctg_high": 22.0
+            "alpha_acid_high": 6.5
         }
     }, 
     {
@@ -8829,7 +9054,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 0.9, 
-            "alpha_acid_high": 6.5
+            "alpha_acid_high": 6.5, 
+            "desc": "floral and spicy fine aroma"
         }
     }, 
     {
@@ -8852,6 +9078,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 44.0, 
+            "desc": "very good noble hop style of spicy, floral, slightly citrusy character", 
             "caryophyllene_pctg_high": 22.0, 
             "name": "Sterling", 
             "alpha_acid_low": 4.5, 
@@ -8867,26 +9094,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.3, 
-            "caryophyllene_pctg_high": 7.0, 
-            "humulene_pctg_low": 19.0, 
-            "cohumulone_pctg_high": 28.0, 
-            "name": "Sterling", 
             "caryophyllene_pctg_low": 5.0, 
             "cohumulone_pctg_low": 22.0, 
+            "humulene_pctg_low": 19.0, 
+            "farnesene_pctg_low": 11.0, 
+            "cohumulone_pctg_high": 28.0, 
+            "humulene_pctg_high": 23.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 17.0, 
+            "myrcene_pctg_high": 48.0, 
+            "beta_acid_high": 6.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 44.0, 
+            "desc": "herbal, spicy wit ha hint of floral and citrus", 
+            "caryophyllene_pctg_high": 7.0, 
+            "name": "Sterling", 
             "alpha_acid_low": 6.0, 
             "region": "us", 
-            "beta_acid_high": 6.0, 
             "beta_acid_low": 4.0, 
-            "humulene_pctg_high": 23.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 48.0, 
-            "source": "Hopunion", 
-            "notes": "released in 1998", 
             "oils_high": 1.9, 
-            "farnesene_pctg_high": 17.0, 
-            "farnesene_pctg_low": 11.0, 
             "alpha_acid_high": 9.0, 
-            "myrcene_pctg_low": 44.0
+            "notes": "released in 1998"
         }
     }, 
     {
@@ -8894,26 +9122,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.6, 
-            "humulene_pctg_low": 6.0, 
-            "myrcene_pctg_low": 44.0, 
-            "cohumulone_pctg_high": 24.0, 
-            "name": "Sterling", 
             "caryophyllene_pctg_low": 5.0, 
             "cohumulone_pctg_low": 21.0, 
+            "humulene_pctg_low": 6.0, 
+            "farnesene_pctg_low": 11.0, 
+            "cohumulone_pctg_high": 24.0, 
+            "humulene_pctg_high": 23.0, 
+            "source": "http://www.homebrewtalk.com/wiki/index.php/Sterling", 
+            "farnesene_pctg_high": 15.0, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 48.0, 
+            "beta_acid_high": 6.0, 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Sterling", 
+            "myrcene_pctg_low": 44.0, 
+            "desc": "very good noble hop style of spicy, floral, slightly citrusy character", 
+            "caryophyllene_pctg_high": 22.0, 
+            "name": "Sterling", 
             "alpha_acid_low": 4.5, 
             "region": "us", 
-            "beta_acid_high": 6.0, 
             "beta_acid_low": 4.0, 
-            "humulene_pctg_high": 23.0, 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Sterling", 
-            "myrcene_pctg_high": 48.0, 
-            "source": "http://www.homebrewtalk.com/wiki/index.php/Sterling", 
             "oils_high": 1.9, 
-            "caryophyllene_pctg_high": 22.0, 
-            "farnesene_pctg_low": 11.0, 
-            "type": "aroma", 
-            "alpha_acid_high": 9.0, 
-            "farnesene_pctg_high": 15.0
+            "alpha_acid_high": 9.0
         }
     }, 
     {
@@ -8941,7 +9170,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.0, 
-            "alpha_acid_high": 6.0
+            "alpha_acid_high": 6.0, 
+            "desc": "herbal hint of floral and citrus"
         }
     }, 
     {
@@ -8962,6 +9192,7 @@
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 44.0, 
+            "desc": "herbal and spicy aroma notes with a hint of floral and citrus", 
             "caryophyllene_pctg_high": 7.0, 
             "name": "Sterling", 
             "alpha_acid_low": 6.0, 
@@ -8991,6 +9222,7 @@
             "source_url": "", 
             "storage_low": 75.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "high selinine content and a piney, citrusy aroma", 
             "caryophyllene_pctg_high": 7.0, 
             "name": "Sticklebract", 
             "alpha_acid_low": 10.5, 
@@ -9020,6 +9252,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Sticklebract", 
             "storage_low": 75.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "high selinine content and a piney, citrusy aroma", 
             "caryophyllene_pctg_high": 7.0, 
             "name": "Sticklebract", 
             "alpha_acid_low": 10.5, 
@@ -9049,6 +9282,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 20.0, 
+            "desc": "Medium intensity, pleasant and hoppy", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Strisselspalt", 
             "alpha_acid_low": 3.0, 
@@ -9082,7 +9316,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 5.0, 
-            "myrcene_pctg_low": 20.0
+            "myrcene_pctg_low": 20.0, 
+            "desc": "Medium intensity, pleasant and hoppy"
         }
     }, 
     {
@@ -9118,26 +9353,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.7, 
-            "humulene_pctg_low": 13.0, 
-            "myrcene_pctg_low": 30.0, 
-            "cohumulone_pctg_high": 31.0, 
-            "name": "Styrian Bobek", 
             "caryophyllene_pctg_low": 4.0, 
             "cohumulone_pctg_low": 27.0, 
+            "humulene_pctg_low": 13.0, 
+            "farnesene_pctg_low": 4.0, 
+            "cohumulone_pctg_high": 31.0, 
+            "humulene_pctg_high": 19.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 7.0, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 45.0, 
+            "beta_acid_high": 6.1, 
+            "source_url": "", 
+            "myrcene_pctg_low": 30.0, 
+            "desc": "Distinctive perfume pine/lemon/citrus hoppy character.", 
+            "caryophyllene_pctg_high": 6.0, 
+            "name": "Styrian Bobek", 
             "alpha_acid_low": 3.5, 
             "region": "si", 
-            "beta_acid_high": 6.1, 
             "beta_acid_low": 4.0, 
-            "humulene_pctg_high": 19.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 45.0, 
-            "source": "COMBINED", 
             "oils_high": 4.0, 
-            "caryophyllene_pctg_high": 6.0, 
-            "farnesene_pctg_low": 4.0, 
-            "type": "aroma", 
-            "alpha_acid_high": 7.0, 
-            "farnesene_pctg_high": 7.0
+            "alpha_acid_high": 7.0
         }
     }, 
     {
@@ -9145,26 +9381,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.7, 
-            "humulene_pctg_low": 13.0, 
-            "myrcene_pctg_low": 30.0, 
-            "cohumulone_pctg_high": 31.0, 
-            "name": "Styrian Bobek", 
             "caryophyllene_pctg_low": 4.0, 
             "cohumulone_pctg_low": 27.0, 
+            "humulene_pctg_low": 13.0, 
+            "farnesene_pctg_low": 4.0, 
+            "cohumulone_pctg_high": 31.0, 
+            "humulene_pctg_high": 19.0, 
+            "source": "http://www.slohops.com/index.php?option=com_content&view=article&id=198&Itemid=118", 
+            "farnesene_pctg_high": 7.0, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 45.0, 
+            "beta_acid_high": 6.1, 
+            "source_url": "http://www.slohops.com/index.php?option=com_content&view=article&id=198&Itemid=118", 
+            "myrcene_pctg_low": 30.0, 
+            "desc": "Distinctive perfume pine/lemon/citrus hoppy character.", 
+            "caryophyllene_pctg_high": 6.0, 
+            "name": "Styrian Bobek", 
             "alpha_acid_low": 3.5, 
             "region": "si", 
-            "beta_acid_high": 6.1, 
             "beta_acid_low": 4.0, 
-            "humulene_pctg_high": 19.0, 
-            "source_url": "http://www.slohops.com/index.php?option=com_content&view=article&id=198&Itemid=118", 
-            "myrcene_pctg_high": 45.0, 
-            "source": "http://www.slohops.com/index.php?option=com_content&view=article&id=198&Itemid=118", 
             "oils_high": 4.0, 
-            "caryophyllene_pctg_high": 6.0, 
-            "farnesene_pctg_low": 4.0, 
-            "type": "aroma", 
-            "alpha_acid_high": 7.0, 
-            "farnesene_pctg_high": 7.0
+            "alpha_acid_high": 7.0
         }
     }, 
     {
@@ -9187,6 +9424,7 @@
             "source_url": "", 
             "storage_low": 65.0, 
             "myrcene_pctg_low": 25.0, 
+            "desc": "delicate, slightly spicy", 
             "caryophyllene_pctg_high": 12.0, 
             "name": "Styrian Golding", 
             "alpha_acid_low": 4.5, 
@@ -9202,26 +9440,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.5, 
-            "caryophyllene_pctg_high": 11.0, 
-            "humulene_pctg_low": 34.0, 
-            "cohumulone_pctg_high": 30.0, 
-            "name": "Styrian Golding", 
             "caryophyllene_pctg_low": 9.0, 
             "cohumulone_pctg_low": 25.0, 
+            "humulene_pctg_low": 34.0, 
+            "farnesene_pctg_low": 2.0, 
+            "cohumulone_pctg_high": 30.0, 
+            "humulene_pctg_high": 38.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 5.0, 
+            "myrcene_pctg_high": 33.0, 
+            "beta_acid_high": 3.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 27.0, 
+            "desc": "delicate, slightly spicy", 
+            "caryophyllene_pctg_high": 11.0, 
+            "name": "Styrian Golding", 
             "alpha_acid_low": 4.5, 
             "region": "si", 
-            "beta_acid_high": 3.0, 
             "beta_acid_low": 2.0, 
-            "humulene_pctg_high": 38.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 33.0, 
-            "source": "Hopunion", 
-            "notes": "Slovenia-grown Fuggles \"ecotype\".  world-renouned aroma hop", 
             "oils_high": 1.0, 
-            "farnesene_pctg_high": 5.0, 
-            "farnesene_pctg_low": 2.0, 
             "alpha_acid_high": 6.0, 
-            "myrcene_pctg_low": 27.0
+            "notes": "Slovenia-grown Fuggles \"ecotype\".  world-renouned aroma hop"
         }
     }, 
     {
@@ -9269,6 +9508,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Styrian_Goldings", 
             "storage_low": 65.0, 
             "myrcene_pctg_low": 25.0, 
+            "desc": "maybe noble", 
             "caryophyllene_pctg_high": 12.0, 
             "name": "Styrian Golding", 
             "alpha_acid_low": 3.0, 
@@ -9294,7 +9534,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.0, 
-            "alpha_acid_high": 6.0
+            "alpha_acid_high": 6.0, 
+            "desc": "delicate slightly spicy aroma"
         }
     }, 
     {
@@ -9302,26 +9543,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.9, 
-            "humulene_pctg_low": 42.0, 
-            "myrcene_pctg_low": 5.0, 
-            "cohumulone_pctg_high": 25.0, 
-            "name": "Summer Saaz", 
             "caryophyllene_pctg_low": 14.0, 
             "cohumulone_pctg_low": 22.5, 
+            "humulene_pctg_low": 42.0, 
+            "farnesene_pctg_low": 0.1, 
+            "cohumulone_pctg_high": 25.0, 
+            "humulene_pctg_high": 46.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 0.1, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 13.0, 
+            "beta_acid_high": 6.1, 
+            "source_url": "", 
+            "myrcene_pctg_low": 5.0, 
+            "desc": "balanced, sweet, and fruity hop aromas. Even the untrained nose is quick to detect passionfruit, citrus and melon. It has been noted to be similar in character to the Czech Saaz parent, but without the spicy characteristic.", 
+            "caryophyllene_pctg_high": 15.0, 
+            "name": "Summer Saaz", 
             "alpha_acid_low": 4.5, 
             "region": "au", 
-            "beta_acid_high": 6.1, 
             "beta_acid_low": 4.8, 
-            "humulene_pctg_high": 46.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 13.0, 
-            "source": "COMBINED", 
             "oils_high": 1.3, 
-            "caryophyllene_pctg_high": 15.0, 
-            "farnesene_pctg_low": 0.1, 
-            "type": "aroma", 
-            "alpha_acid_high": 7.0, 
-            "farnesene_pctg_high": 0.1
+            "alpha_acid_high": 7.0
         }
     }, 
     {
@@ -9329,26 +9571,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.9, 
-            "humulene_pctg_low": 42.0, 
-            "myrcene_pctg_low": 5.0, 
-            "cohumulone_pctg_high": 25.0, 
-            "name": "Summer Saaz", 
             "caryophyllene_pctg_low": 14.0, 
             "cohumulone_pctg_low": 22.5, 
+            "humulene_pctg_low": 42.0, 
+            "farnesene_pctg_low": 0.1, 
+            "cohumulone_pctg_high": 25.0, 
+            "humulene_pctg_high": 46.0, 
+            "source": "http://www.grainandgrape.com.au/product_info.php?cPath=1_39_45&products_id=8794", 
+            "farnesene_pctg_high": 0.1, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 13.0, 
+            "beta_acid_high": 6.1, 
+            "source_url": "http://www.grainandgrape.com.au/product_info.php?cPath=1_39_45&products_id=8794", 
+            "myrcene_pctg_low": 5.0, 
+            "desc": "balanced, sweet, and fruity hop aromas. Even the untrained nose is quick to detect passionfruit, citrus and melon. It has been noted to be similar in character to the Czech Saaz parent, but without the spicy characteristic.", 
+            "caryophyllene_pctg_high": 15.0, 
+            "name": "Summer Saaz", 
             "alpha_acid_low": 4.0, 
             "region": "au", 
-            "beta_acid_high": 6.1, 
             "beta_acid_low": 4.8, 
-            "humulene_pctg_high": 46.0, 
-            "source_url": "http://www.grainandgrape.com.au/product_info.php?cPath=1_39_45&products_id=8794", 
-            "myrcene_pctg_high": 13.0, 
-            "source": "http://www.grainandgrape.com.au/product_info.php?cPath=1_39_45&products_id=8794", 
             "oils_high": 1.3, 
-            "caryophyllene_pctg_high": 15.0, 
-            "farnesene_pctg_low": 0.1, 
-            "type": "aroma", 
-            "alpha_acid_high": 7.0, 
-            "farnesene_pctg_high": 0.1
+            "alpha_acid_high": 7.0
         }
     }, 
     {
@@ -9370,6 +9613,7 @@
             "source_url": "", 
             "storage_low": 85.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "strong aroma profile that includes citrus and grapefruit notes", 
             "caryophyllene_pctg_high": 15.0, 
             "name": "Summit", 
             "alpha_acid_low": 16.0, 
@@ -9402,7 +9646,8 @@
             "oils_high": 1.3, 
             "caryophyllene_pctg_high": 14.5, 
             "type": "bitter", 
-            "alpha_acid_high": 19.5
+            "alpha_acid_high": 19.5, 
+            "desc": "orange/tangerine citrus notes"
         }
     }, 
     {
@@ -9430,7 +9675,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 2.6, 
-            "alpha_acid_high": 18.0
+            "alpha_acid_high": 18.0, 
+            "desc": "strong citrus, grapefruit flavor"
         }
     }, 
     {
@@ -9451,6 +9697,7 @@
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "storage_low": 85.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "strong aroma profile that includes citrus and grapefruit notes", 
             "caryophyllene_pctg_high": 15.0, 
             "name": "Summit", 
             "alpha_acid_low": 16.0, 
@@ -9466,26 +9713,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.3, 
-            "humulene_pctg_low": 33.0, 
-            "myrcene_pctg_low": 29.0, 
-            "cohumulone_pctg_high": 39.0, 
-            "name": "Super Alpha", 
             "caryophyllene_pctg_low": 10.0, 
             "cohumulone_pctg_low": 36.0, 
+            "humulene_pctg_low": 33.0, 
+            "farnesene_pctg_low": 0.5, 
+            "cohumulone_pctg_high": 39.0, 
+            "humulene_pctg_high": 33.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 0.5, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 29.0, 
+            "beta_acid_high": 8.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 29.0, 
+            "desc": "fresh, grassy character with notes of pine needle and lemongrass.", 
+            "caryophyllene_pctg_high": 10.0, 
+            "name": "Super Alpha", 
             "alpha_acid_low": 10.0, 
             "region": "nz", 
-            "beta_acid_high": 8.5, 
             "beta_acid_low": 7.0, 
-            "humulene_pctg_high": 33.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 29.0, 
-            "source": "COMBINED", 
             "oils_high": 1.3, 
-            "caryophyllene_pctg_high": 10.0, 
-            "farnesene_pctg_low": 0.5, 
-            "type": "bitter", 
-            "alpha_acid_high": 12.0, 
-            "farnesene_pctg_high": 0.5
+            "alpha_acid_high": 12.0
         }
     }, 
     {
@@ -9493,26 +9741,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 1.3, 
-            "humulene_pctg_low": 33.0, 
-            "myrcene_pctg_low": 29.0, 
-            "cohumulone_pctg_high": 39.0, 
-            "name": "Super Alpha", 
             "caryophyllene_pctg_low": 10.0, 
             "cohumulone_pctg_low": 36.0, 
+            "humulene_pctg_low": 33.0, 
+            "farnesene_pctg_low": 0.5, 
+            "cohumulone_pctg_high": 39.0, 
+            "humulene_pctg_high": 33.0, 
+            "source": "http://www.homebrewtalk.com/wiki/index.php/Super_Alpha", 
+            "farnesene_pctg_high": 0.5, 
+            "type": "bitter", 
+            "myrcene_pctg_high": 29.0, 
+            "beta_acid_high": 8.5, 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Super_Alpha", 
+            "myrcene_pctg_low": 29.0, 
+            "desc": "fresh, grassy character with notes of pine needle and lemongrass.", 
+            "caryophyllene_pctg_high": 10.0, 
+            "name": "Super Alpha", 
             "alpha_acid_low": 10.0, 
             "region": "nz", 
-            "beta_acid_high": 8.5, 
             "beta_acid_low": 7.0, 
-            "humulene_pctg_high": 33.0, 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Super_Alpha", 
-            "myrcene_pctg_high": 29.0, 
-            "source": "http://www.homebrewtalk.com/wiki/index.php/Super_Alpha", 
             "oils_high": 1.3, 
-            "caryophyllene_pctg_high": 10.0, 
-            "farnesene_pctg_low": 0.5, 
-            "type": "bitter", 
-            "alpha_acid_high": 12.0, 
-            "farnesene_pctg_high": 0.5
+            "alpha_acid_high": 12.0
         }
     }, 
     {
@@ -9593,6 +9842,7 @@
             "beta_acid_high": 7.0, 
             "source_url": "", 
             "myrcene_pctg_low": 55.0, 
+            "desc": "intense but pleasant aroma; sister to Zeus, likely derived from NB", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Sun", 
             "alpha_acid_low": 12.0, 
@@ -9621,6 +9871,7 @@
             "beta_acid_high": 7.0, 
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Sun", 
             "myrcene_pctg_low": 55.0, 
+            "desc": "intense but pleasant aroma; sister to Zeus, likely derived from NB", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Sun", 
             "alpha_acid_low": 12.0, 
@@ -9732,6 +9983,7 @@
             "source_url": "", 
             "storage_low": 45.0, 
             "myrcene_pctg_low": 45.0, 
+            "desc": "pleasant english hop aroma, quite intense", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Target", 
             "alpha_acid_low": 8.0, 
@@ -9765,7 +10017,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 12.5, 
-            "myrcene_pctg_low": 45.0
+            "myrcene_pctg_low": 45.0, 
+            "desc": "pleasant english hop aroma, quite intense"
         }
     }, 
     {
@@ -9822,7 +10075,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.4, 
-            "alpha_acid_high": 12.5
+            "alpha_acid_high": 12.5, 
+            "desc": "strong and distinctive floral"
         }
     }, 
     {
@@ -9830,11 +10084,12 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "name": "Taurus", 
-            "notes": "A variety of Hallertau with very high alpha acid content. It has a distinctive hoppy tang with a delicate aroma.", 
+            "region": "de", 
             "source_url": "", 
             "source": "COMBINED", 
             "type": "dual", 
-            "region": "de"
+            "notes": "A variety of Hallertau with very high alpha acid content. It has a distinctive hoppy tang with a delicate aroma.", 
+            "desc": "A variety of Hallertau with very high alpha acid content. It has a distinctive hoppy tang with a delicate aroma"
         }
     }, 
     {
@@ -9842,11 +10097,12 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "name": "Taurus", 
-            "notes": "A variety of Hallertau with very high alpha acid content. It has a distinctive hoppy tang with a delicate aroma.", 
+            "region": "de", 
             "source_url": "http://www.beertools.com/html/ingredients.php?view=hops", 
             "source": "http://www.beertools.com/html/ingredients.php?view=hops", 
             "type": "dual", 
-            "region": "de"
+            "notes": "A variety of Hallertau with very high alpha acid content. It has a distinctive hoppy tang with a delicate aroma.", 
+            "desc": "A variety of Hallertau with very high alpha acid content. It has a distinctive hoppy tang with a delicate aroma"
         }
     }, 
     {
@@ -9867,6 +10123,7 @@
             "source_url": "", 
             "storage_low": 55.0, 
             "myrcene_pctg_low": 36.0, 
+            "desc": "pleasant and slightly spicy", 
             "caryophyllene_pctg_high": 7.0, 
             "name": "Tettnang (US)", 
             "alpha_acid_low": 4.0, 
@@ -9882,26 +10139,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.4, 
-            "caryophyllene_pctg_high": 7.0, 
-            "humulene_pctg_low": 18.0, 
-            "cohumulone_pctg_high": 25.0, 
-            "name": "Tettnang (US)", 
             "caryophyllene_pctg_low": 6.0, 
             "cohumulone_pctg_low": 20.0, 
+            "humulene_pctg_low": 18.0, 
+            "farnesene_pctg_low": 5.0, 
+            "cohumulone_pctg_high": 25.0, 
+            "humulene_pctg_high": 23.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 8.0, 
+            "myrcene_pctg_high": 45.0, 
+            "beta_acid_high": 4.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 36.0, 
+            "desc": "slightly spicy", 
+            "caryophyllene_pctg_high": 7.0, 
+            "name": "Tettnang (US)", 
             "alpha_acid_low": 4.0, 
             "region": "us", 
-            "beta_acid_high": 4.0, 
             "beta_acid_low": 3.0, 
-            "humulene_pctg_high": 23.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 45.0, 
-            "source": "Hopunion", 
-            "notes": "true noble aroma variety", 
             "oils_high": 0.8, 
-            "farnesene_pctg_high": 8.0, 
-            "farnesene_pctg_low": 5.0, 
             "alpha_acid_high": 5.0, 
-            "myrcene_pctg_low": 36.0
+            "notes": "true noble aroma variety"
         }
     }, 
     {
@@ -9922,6 +10180,7 @@
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "storage_low": 55.0, 
             "myrcene_pctg_low": 36.0, 
+            "desc": "pleasant and slightly spicy", 
             "caryophyllene_pctg_high": 7.0, 
             "name": "Tettnang (US)", 
             "alpha_acid_low": 4.0, 
@@ -9936,22 +10195,24 @@
         "pk": null, 
         "model": "app.SourcedHopDetails", 
         "fields": {
-            "source": "COMBINED", 
-            "region": "ch", 
-            "type": "aroma", 
             "name": "Tettnang (CH)", 
-            "source_url": ""
+            "region": "ch", 
+            "source_url": "", 
+            "source": "COMBINED", 
+            "type": "aroma", 
+            "desc": "not-really-noble"
         }
     }, 
     {
         "pk": null, 
         "model": "app.SourcedHopDetails", 
         "fields": {
-            "source": "http://www.homebrewtalk.com/wiki/index.php/Swiss_Tettnanger", 
-            "region": "ch", 
-            "type": "aroma", 
             "name": "Tettnang (CH)", 
-            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Swiss_Tettnanger"
+            "region": "ch", 
+            "source_url": "http://www.homebrewtalk.com/wiki/index.php/Swiss_Tettnanger", 
+            "source": "http://www.homebrewtalk.com/wiki/index.php/Swiss_Tettnanger", 
+            "type": "aroma", 
+            "desc": "not-really-noble"
         }
     }, 
     {
@@ -10063,26 +10324,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.6, 
-            "caryophyllene_pctg_high": 10.0, 
-            "humulene_pctg_low": 20.0, 
-            "cohumulone_pctg_high": 29.0, 
-            "name": "Tettnang (DE)", 
             "caryophyllene_pctg_low": 6.0, 
             "cohumulone_pctg_low": 23.0, 
+            "humulene_pctg_low": 20.0, 
+            "farnesene_pctg_low": 12.0, 
+            "cohumulone_pctg_high": 29.0, 
+            "humulene_pctg_high": 25.0, 
+            "source": "Hopunion", 
+            "farnesene_pctg_high": 16.0, 
+            "myrcene_pctg_high": 25.0, 
+            "beta_acid_high": 5.0, 
+            "source_url": "", 
+            "myrcene_pctg_low": 20.0, 
+            "desc": "mild and pleasant, slightly spicy", 
+            "caryophyllene_pctg_high": 10.0, 
+            "name": "Tettnang (DE)", 
             "alpha_acid_low": 3.5, 
             "region": "de", 
-            "beta_acid_high": 5.0, 
             "beta_acid_low": 3.5, 
-            "humulene_pctg_high": 25.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 25.0, 
-            "source": "Hopunion", 
-            "notes": "Trad very fine or noble aroma hop", 
             "oils_high": 1.0, 
-            "farnesene_pctg_high": 16.0, 
-            "farnesene_pctg_low": 12.0, 
             "alpha_acid_high": 5.5, 
-            "myrcene_pctg_low": 20.0
+            "notes": "Trad very fine or noble aroma hop"
         }
     }, 
     {
@@ -10130,6 +10392,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Tettnang_Tettnanger", 
             "storage_low": 55.0, 
             "myrcene_pctg_low": 20.0, 
+            "desc": "noble", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Tettnang (DE)", 
             "alpha_acid_low": 3.5, 
@@ -10165,7 +10428,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.0, 
-            "alpha_acid_high": 5.0
+            "alpha_acid_high": 5.0, 
+            "desc": "slightly spicy mild and pleasant"
         }
     }, 
     {
@@ -10301,7 +10565,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 7.0, 
-            "myrcene_pctg_low": 20.0
+            "myrcene_pctg_low": 20.0, 
+            "desc": "very fine, similar to German Hallertau"
         }
     }, 
     {
@@ -10327,7 +10592,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 7.0, 
-            "myrcene_pctg_low": 20.0
+            "myrcene_pctg_low": 20.0, 
+            "desc": "very fine, similar to German Hallertau"
         }
     }, 
     {
@@ -10345,26 +10611,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.5, 
-            "humulene_pctg_low": 35.0, 
-            "myrcene_pctg_low": 15.0, 
-            "cohumulone_pctg_high": 38.0, 
-            "name": "Ultra", 
             "caryophyllene_pctg_low": 10.0, 
             "cohumulone_pctg_low": 23.0, 
+            "humulene_pctg_low": 35.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 38.0, 
+            "humulene_pctg_high": 50.0, 
+            "source": "COMBINED", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 25.0, 
+            "beta_acid_high": 4.5, 
+            "source_url": "", 
+            "myrcene_pctg_low": 15.0, 
+            "desc": "mild and pleasant Saaz-like aroma", 
+            "caryophyllene_pctg_high": 15.0, 
+            "name": "Ultra", 
             "alpha_acid_low": 2.0, 
             "region": "", 
-            "beta_acid_high": 4.5, 
             "beta_acid_low": 3.0, 
-            "humulene_pctg_high": 50.0, 
-            "source_url": "", 
-            "myrcene_pctg_high": 25.0, 
-            "source": "COMBINED", 
             "oils_high": 1.0, 
-            "caryophyllene_pctg_high": 15.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "aroma", 
-            "alpha_acid_high": 3.5, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 3.5
         }
     }, 
     {
@@ -10400,26 +10667,27 @@
         "model": "app.SourcedHopDetails", 
         "fields": {
             "oils_low": 0.5, 
-            "humulene_pctg_low": 35.0, 
-            "myrcene_pctg_low": 15.0, 
-            "cohumulone_pctg_high": 38.0, 
-            "name": "Ultra", 
             "caryophyllene_pctg_low": 10.0, 
             "cohumulone_pctg_low": 23.0, 
+            "humulene_pctg_low": 35.0, 
+            "farnesene_pctg_low": 0.0, 
+            "cohumulone_pctg_high": 38.0, 
+            "humulene_pctg_high": 50.0, 
+            "source": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
+            "farnesene_pctg_high": 1.0, 
+            "type": "aroma", 
+            "myrcene_pctg_high": 25.0, 
+            "beta_acid_high": 4.5, 
+            "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
+            "myrcene_pctg_low": 15.0, 
+            "desc": "mild and pleasant Saaz-like aroma", 
+            "caryophyllene_pctg_high": 15.0, 
+            "name": "Ultra", 
             "alpha_acid_low": 2.0, 
             "region": "us", 
-            "beta_acid_high": 4.5, 
             "beta_acid_low": 3.0, 
-            "humulene_pctg_high": 50.0, 
-            "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
-            "myrcene_pctg_high": 25.0, 
-            "source": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "oils_high": 1.0, 
-            "caryophyllene_pctg_high": 15.0, 
-            "farnesene_pctg_low": 0.0, 
-            "type": "aroma", 
-            "alpha_acid_high": 3.5, 
-            "farnesene_pctg_high": 1.0
+            "alpha_acid_high": 3.5
         }
     }, 
     {
@@ -10441,6 +10709,7 @@
             "source_url": "", 
             "storage_low": 75.0, 
             "myrcene_pctg_low": 20.0, 
+            "desc": "Al Korzonas describes it as \"a rather herbal Hallertauer or a slightly buttery Tettnanger.", 
             "caryophyllene_pctg_high": 15.0, 
             "name": "Vanguard", 
             "alpha_acid_low": 5.0, 
@@ -10474,7 +10743,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 6.0, 
-            "myrcene_pctg_low": 20.0
+            "myrcene_pctg_low": 20.0, 
+            "desc": "similar to Hallertau"
         }
     }, 
     {
@@ -10496,6 +10766,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Vanguard", 
             "storage_low": 75.0, 
             "myrcene_pctg_low": 20.0, 
+            "desc": "Al Korzonas describes it as \"a rather herbal Hallertauer or a slightly buttery Tettnanger.", 
             "caryophyllene_pctg_high": 15.0, 
             "name": "Vanguard", 
             "alpha_acid_low": 5.0, 
@@ -10558,7 +10829,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "type": "dual", 
-            "alpha_acid_high": 17.0
+            "alpha_acid_high": 17.0, 
+            "desc": "very mild grapefruit citrus"
         }
     }, 
     {
@@ -10584,7 +10856,8 @@
             "farnesene_pctg_high": 1.0, 
             "farnesene_pctg_low": 0.0, 
             "alpha_acid_high": 17.0, 
-            "myrcene_pctg_low": 40.0
+            "myrcene_pctg_low": 40.0, 
+            "desc": "very mild"
         }
     }, 
     {
@@ -10605,6 +10878,7 @@
             "beta_acid_high": 5.5, 
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Warrior", 
             "myrcene_pctg_low": 40.0, 
+            "desc": "grapefruit citrus", 
             "caryophyllene_pctg_high": 10.0, 
             "name": "Warrior", 
             "alpha_acid_low": 15.0, 
@@ -10640,7 +10914,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 2.0, 
-            "alpha_acid_high": 17.0
+            "alpha_acid_high": 17.0, 
+            "desc": "very mild"
         }
     }, 
     {
@@ -10690,6 +10965,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 21.0, 
+            "desc": "W.G.V. provides a distinctive sweet fruit flavour in beers, similar to, but generally more pronounced and robust than, Goldings. It gives a mild, clean bitterness in traditional ales, and is sometimes used with good effect as a distinctive dry hop with a fruity, mild and clean flavor", 
             "caryophyllene_pctg_high": 14.0, 
             "name": "Whitbread Goldings Variety", 
             "alpha_acid_low": 5.0, 
@@ -10719,6 +10995,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Whitbread_Goldings_Variety", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 21.0, 
+            "desc": "W.G.V. provides a distinctive sweet fruit flavour in beers, similar to, but generally more pronounced and robust than, Goldings. It gives a mild, clean bitterness in traditional ales, and is sometimes used with good effect as a distinctive dry hop with a fruity, mild and clean flavor", 
             "caryophyllene_pctg_high": 14.0, 
             "name": "Whitbread Goldings Variety", 
             "alpha_acid_low": 5.0, 
@@ -10744,7 +11021,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.2, 
-            "alpha_acid_high": 7.5
+            "alpha_acid_high": 7.5, 
+            "desc": "distinctive and fruity"
         }
     }, 
     {
@@ -10767,6 +11045,7 @@
             "source_url": "", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "mild, grassy, floral and slightly spicy aroma similar to Fuggle", 
             "caryophyllene_pctg_high": 8.0, 
             "name": "Willamette", 
             "alpha_acid_low": 4.0, 
@@ -10800,7 +11079,8 @@
             "farnesene_pctg_high": 6.0, 
             "farnesene_pctg_low": 5.0, 
             "alpha_acid_high": 6.0, 
-            "myrcene_pctg_low": 45.0
+            "myrcene_pctg_low": 45.0, 
+            "desc": "Mild and pleasant, slightly spicy"
         }
     }, 
     {
@@ -10868,6 +11148,7 @@
             "source_url": "http://www.homebrewtalk.com/wiki/index.php/Willamette", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "mild, grassy, floral and slightly spicy aroma similar to Fuggle", 
             "caryophyllene_pctg_high": 8.0, 
             "name": "Willamette", 
             "alpha_acid_low": 4.0, 
@@ -10903,7 +11184,8 @@
             "source_url": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "source": "http://www.brewerssupplygroup.com/FileCabinet/HopVarieties.pdf", 
             "oils_high": 1.5, 
-            "alpha_acid_high": 7.0
+            "alpha_acid_high": 7.0, 
+            "desc": "slightly spicy mild and pleasant"
         }
     }, 
     {
@@ -10925,6 +11207,7 @@
             "source_url": "http://www.usahops.org/userfiles/file/HGA%20BCI%20Reports/HGA%20Variety%20Manual%20-%20English%20(updated%20March%202011).pdf", 
             "storage_low": 60.0, 
             "myrcene_pctg_low": 30.0, 
+            "desc": "mild, slightly spicy and pleasant aroma", 
             "caryophyllene_pctg_high": 8.2, 
             "name": "Willamette", 
             "alpha_acid_low": 4.0, 
