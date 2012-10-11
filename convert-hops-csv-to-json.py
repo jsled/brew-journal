@@ -44,7 +44,7 @@ def safe_add_numeric(map, name, accessor):
     def _numeric():
         x = accessor()
         if x:
-            return float(x)
+            return str(float(x))
         else:
             raise Exception()
     safe_add(map, name, _numeric)
