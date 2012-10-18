@@ -161,6 +161,8 @@ https://docs.djangoproject.com/en/dev/releases/1.4/
 - selenium support
 - django.contrib.admin static file handling
 
+*** DONE favicon
+    CLOSED: [2012-10-18 Thu 18:47]
 *** TODO remove recipe "star"ing
 *** TODO first time user experience
 *** DONE Markdown {recipe,brew,step} notes
