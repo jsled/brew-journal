@@ -180,6 +180,8 @@ The 'volume_potential_{min,max}' columns are never populated for either dev
 or production DBs, leading to miscomputation (logic bug).  The unit tests
 build correctly from fixtures, and aren't thus affected.
 *** TODO add rss feed auto-discovery, icon to /recipe
+*** DONE remove focus/blur textarea resize on step editing
+    CLOSED: [2012-10-18 Thu 18:07]
 *** TODO step deletion
 *** DONE step note formatting: table over-sizing; line-breaking / markdown
     CLOSED: [2012-10-04 Thu 20:36]

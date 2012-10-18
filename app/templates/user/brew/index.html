@@ -180,24 +180,6 @@
 
                     <div class="clear"/>
 
-                    <!-- div class="grid_12">
-                         <label class="stylin">
-                         <div class="label">${step_form.gravity_read.label}</div>
-                         <div py:for="field in (step_form.gravity_read_type,
-                         step_form.gravity_read,
-                         step_form.gravity_read_temp,
-                         step_form.gravity_read_temp_units)" py:if="field.errors" class="errors">
-                         ${field.errors}
-                         </div>
-                         <div class="label-contents">
-                         ${std.Markup(step_form.gravity_read_type)}
-                         ${std.Markup(step_form.gravity_read)}
-                         ${std.Markup(step_form.gravity_read_temp)}
-                         ${std.Markup(step_form.gravity_read_temp_units)}
-                         </div>
-                         </label>
-                         </div -->
-
                     <div class="grid_4">
                         ${field(step_form.gravity_read,step_form.gravity_read_type)}
                     </div>
@@ -223,16 +205,6 @@
                         ${std.Markup(hidden)}
                     </py:for>
                 </form>
-
-                <script type="text/javascript">
-$(function() {
-    $('.expand-on-focus').focus(function(elt) {
-        $(this).attr('rows', 10);
-    }).blur(function(elt) {
-        $(this).attr('rows', 3);
-    }).attr('rows', 3).css('width', '100%');
-});
-                </script>
             </div>
         </div>
         <div class="clear"></div>

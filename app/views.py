@@ -424,7 +424,7 @@ def StepForm(user, *args, **kwargs):
         except models.UserProfile.DoesNotExist:
             pass
     class _StepForm (forms.ModelForm):
-        notes = forms.CharField(widget=forms.Textarea(attrs={'class': 'expand-on-focus'}), required=False, help_text="Markdown supported")
+        notes = forms.CharField(widget=forms.Textarea(attrs={'width': '100%', 'rows': '5', 'cols': '80'}), required=False, help_text="Markdown supported")
         brew = forms.ModelChoiceField(queryset=models.Brew.objects.select_related(), widget=forms.HiddenInput)
         date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
         shift_step_times = forms.BooleanField(required=False, initial=True, label='Time Shift',
