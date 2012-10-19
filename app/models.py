@@ -1139,7 +1139,7 @@ class BrewDerivations (object):
         steps.sort(lambda a,b: allowable_types[a.type] - allowable_types[b.type])
         return steps
 
-    efficiency_needed_steps = ['boil-start', 'sparge', 'pitch']
+    efficiency_needed_steps = ['boil-start', 'boil-end', 'pitch']
     def _get_efficiency_steps(self):
         related_steps = self._get_sorted_steps(BrewDerivations.efficiency_needed_steps)
         related_steps = [step for step in related_steps if step.volume and step.gravity]
