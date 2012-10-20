@@ -510,7 +510,7 @@ class TestTimezoneAdjustments (AppTestCase):
         # @fixme: assert recipe model insert_date unchanged
         #
         # plus 30 minutes
-        new_time = date_pacific + datetime.timedelta(seconds = 30 * MINUTE_SECONDS)
+        new_time = date_pacific + datetime.timedelta(minutes = 30)
         new_time_str = new_time.strftime(pattern)
         res3 = self.client.post(recipe_url, {'name':'test', 'batch_size': '5', 'batch_size_units': 'gl', 'boil_length': 60, 'efficiency': 75, 'style': 1, 'type': 'a', 'insert_date': new_time_str})
         self.assertEquals(302, res3.status_code)
@@ -613,7 +613,11 @@ class StepTimeShiftTest (AppTestCase):
         self.user = auth.models.User()
         self.user.save()
 
+        recipe = models.Recipe(author=self.user, name='test', batch_size=5, batch_size_units='gl')
+        recipe.save()
+
         self.brew = models.Brew()
+        self.brew.recipe = recipe
         self.brew.brewer = self.user
         self.brew.save()
 
@@ -630,10 +634,9 @@ class StepTimeShiftTest (AppTestCase):
         self.first_run.save()
 
     def testBasicShift(self):
-        dough2 = models.Step.objects.get(pk=self.dough.id)
-        dough2.date = self.now_plus_10
-        self.brew.shift_steps(#self.dough,
-            dough2)
+        dough_step = models.Step.objects.get(pk=self.dough.id)
+        dough_step.date = self.now_plus_10
+        self.brew.shift_steps(dough_step)
 
         for step in self.brew.step_set.all():
             if step.type == 'strike':
