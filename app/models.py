@@ -112,50 +112,50 @@ no_filter = StepFilter()
 # ./manage.py shell
 # from app import models
 # print 'digraph G {';
-# for step in models.new_step_types:
+# for step in models.step_types:
 #   for next in step.next_steps:
 #     print '%s -> %s;' % (step.id.replace('-', '_'), next.replace('-', '_'))
 # print '}'
 # | dot -Tpng -o step-graph.png -
-new_step_types = [ StepType('buy', 'buy ingredients', no_filter, ['time'], ['starter', 'strike', 'steep']),
-                   StepType('starter', 'make starter', StepFilter([filter_user_pref('pref_make_starter')]), ['time', 'volume'], ['strike', 'steep']),
-                   StepType('strike', 'strike water', StepFilter([filter_recipe_type(['a', 'p'])]), ['volume', 'temp'],  ['dough', 'mash']),
-                   StepType('dough', 'dough-in', no_filter, ['volume', 'temp'], ['mash', 'mashout', 'vorlauf', 'batch1-start', 'sparge']),
-                   StepType('mash', 'mash', no_filter, ['time', 'temp'], ['recirc', 'vorlauf', 'batch1-start', 'sparge']),
-                   StepType('mashout', 'mash out', no_filter, ['time', 'volume', 'temp'], ['recirc', 'vorlauf', 'batch1-start', 'sparge']),
-                   StepType('recirc', 'recirculation', no_filter, [], ['vorlauf', 'sparge']),
-                   StepType('vorlauf', 'vorlauf', no_filter, ['time'], ['sparge']),
-                   StepType('sparge', 'sparge', no_filter, ['volume', 'temp'], ['batch1-start', 'boil-start']),
-                   StepType('fwh', 'first wort hopping', no_filter, ['time'], ['batch1-start', 'boil-start']),
-                   StepType('batch1-start', '1st runnings, start', no_filter, ['gravity'], ['batch1-end']),
-                   StepType('batch1-end', '1st runnings, end', no_filter, ['gravity', 'volume'], ['batch2-start', 'boil-start']),
-                   StepType('batch2-start', '2nd runnings, start', no_filter, ['gravity'], ['batch2-end']),
-                   StepType('batch2-end', '2nd runnings, end', no_filter, ['gravity', 'volume'], ['batch3-start', 'boil-start']),
-                   StepType('batch3-start', '3rd runnings, start', no_filter, ['gravity'], ['batch3-end']),
-                   StepType('batch3-end', '3rd runnings, end', no_filter, ['gravity', 'volume'], ['boil-start']),
-                   StepType('steep', 'steep', StepFilter([filter_recipe_type(['e', 'p'])]), ['time', 'volume', 'temp'], ['boil-start']),
-                   StepType('boil-start', 'boil, start', StepFilter([filter_recipe_type(['e'])]), ['time'], ['boil-add', 'boil-end']),
-                   StepType('boil-add', 'boil, addition', no_filter, ['time'], ['boil-add', 'boil-end']),
-                   StepType('boil', 'boil note', no_filter, ['time', 'volume'], ['boil-add', 'boil-end']),
-                   StepType('boil-end', 'boil, end', no_filter, ['time'], ['pitch']),
-                   StepType('pitch', 'pitch', no_filter, ['time', 'gravity', 'volume', 'temp'], ['ferm1']),
-                   StepType('ferm1', 'primary fermentation', no_filter, ['time', 'gravity', 'temp'], ['sample', 'ferm2', 'ferm-add', 'diacetyl', 'lager', 'keg', 'bottle', 'aging']),
-                   StepType('ferm2', 'secondary fermentation', StepFilter([filter_user_pref('pref_secondary_ferm')]), ['time', 'gravity', 'temp'],
-                            ['sample', 'ferm-add', 'diacetyl', 'lager', 'keg', 'bottle', 'aging']),
-                   StepType('sample', 'gravity sample', no_filter, ['gravity'],
-                            ['ferm-add', 'ferm2', 'sample','diacetyl', 'lager', 'keg', 'bottle', 'aging']),
-                   StepType('ferm-add', 'addition', no_filter, ['time'], ['sample', 'ferm-add', 'diacetyl', 'lager', 'keg', 'bottle', 'aging']),
-                   StepType('diacetyl', 'diacetyl rest', StepFilter([filter_recipe_is_lager()]), ['time', 'temp'], ['lager', 'sample']),
-                   StepType('lager', 'lagering', StepFilter([filter_recipe_is_lager()]), ['time', 'temp'], ['sample', 'condition', 'keg', 'bottle', 'aging']),
-                   StepType('condition', 'conditioning', no_filter, ['time', 'temp'], ['keg', 'bottle', 'aging']),
-                   StepType('keg', 'kegged', StepFilter([filter_user_pref('pref_dispensing_style', 'k')]), ['time', 'temp', 'gravity'], ['consumed']),
-                   StepType('bottle', 'bottled', StepFilter([filter_user_pref('pref_dispensing_style', 'b')]), ['time'], ['consumed']),
-                   StepType('aging', 'aging', StepFilter([filter_recipe_estimated_og_above(Decimal('1.100'))]), [], ['keg', 'bottle']),
-                   StepType('consumed', 'consumed', no_filter, [], []),
+step_types = [ StepType('buy', 'buy ingredients', no_filter, ['time'], ['starter', 'strike', 'steep']),
+               StepType('starter', 'make starter', StepFilter([filter_user_pref('pref_make_starter')]), ['time', 'volume'], ['strike', 'steep']),
+               StepType('strike', 'strike water', StepFilter([filter_recipe_type(['a', 'p'])]), ['volume', 'temp'],  ['dough', 'mash']),
+               StepType('dough', 'dough-in', no_filter, ['volume', 'temp'], ['mash', 'mashout', 'vorlauf', 'batch1-start', 'sparge']),
+               StepType('mash', 'mash', no_filter, ['time', 'temp'], ['recirc', 'vorlauf', 'batch1-start', 'sparge']),
+               StepType('mashout', 'mash out', no_filter, ['time', 'volume', 'temp'], ['recirc', 'vorlauf', 'batch1-start', 'sparge']),
+               StepType('recirc', 'recirculation', no_filter, [], ['vorlauf', 'sparge']),
+               StepType('vorlauf', 'vorlauf', no_filter, ['time'], ['sparge']),
+               StepType('sparge', 'sparge', no_filter, ['volume', 'temp'], ['batch1-start', 'boil-start']),
+               StepType('fwh', 'first wort hopping', no_filter, ['time'], ['batch1-start', 'boil-start']),
+               StepType('batch1-start', '1st runnings, start', no_filter, ['gravity'], ['batch1-end']),
+               StepType('batch1-end', '1st runnings, end', no_filter, ['gravity', 'volume'], ['batch2-start', 'boil-start']),
+               StepType('batch2-start', '2nd runnings, start', no_filter, ['gravity'], ['batch2-end']),
+               StepType('batch2-end', '2nd runnings, end', no_filter, ['gravity', 'volume'], ['batch3-start', 'boil-start']),
+               StepType('batch3-start', '3rd runnings, start', no_filter, ['gravity'], ['batch3-end']),
+               StepType('batch3-end', '3rd runnings, end', no_filter, ['gravity', 'volume'], ['boil-start']),
+               StepType('steep', 'steep', StepFilter([filter_recipe_type(['e', 'p'])]), ['time', 'volume', 'temp'], ['boil-start']),
+               StepType('boil-start', 'boil, start', StepFilter([filter_recipe_type(['e'])]), ['time'], ['boil-add', 'boil-end']),
+               StepType('boil-add', 'boil, addition', no_filter, ['time'], ['boil-add', 'boil-end']),
+               StepType('boil', 'boil note', no_filter, ['time', 'volume'], ['boil-add', 'boil-end']),
+               StepType('boil-end', 'boil, end', no_filter, ['time'], ['pitch']),
+               StepType('pitch', 'pitch', no_filter, ['time', 'gravity', 'volume', 'temp'], ['ferm1']),
+               StepType('ferm1', 'primary fermentation', no_filter, ['time', 'gravity', 'temp'], ['sample', 'ferm2', 'ferm-add', 'diacetyl', 'lager', 'keg', 'bottle', 'aging']),
+               StepType('ferm2', 'secondary fermentation', StepFilter([filter_user_pref('pref_secondary_ferm')]), ['time', 'gravity', 'temp'],
+                        ['sample', 'ferm-add', 'diacetyl', 'lager', 'keg', 'bottle', 'aging']),
+               StepType('sample', 'gravity sample', no_filter, ['gravity'],
+                        ['ferm-add', 'ferm2', 'sample','diacetyl', 'lager', 'keg', 'bottle', 'aging']),
+               StepType('ferm-add', 'addition', no_filter, ['time'], ['sample', 'ferm-add', 'diacetyl', 'lager', 'keg', 'bottle', 'aging']),
+               StepType('diacetyl', 'diacetyl rest', StepFilter([filter_recipe_is_lager()]), ['time', 'temp'], ['lager', 'sample']),
+               StepType('lager', 'lagering', StepFilter([filter_recipe_is_lager()]), ['time', 'temp'], ['sample', 'condition', 'keg', 'bottle', 'aging']),
+               StepType('condition', 'conditioning', no_filter, ['time', 'temp'], ['keg', 'bottle', 'aging']),
+               StepType('keg', 'kegged', StepFilter([filter_user_pref('pref_dispensing_style', 'k')]), ['time', 'temp', 'gravity'], ['consumed']),
+               StepType('bottle', 'bottled', StepFilter([filter_user_pref('pref_dispensing_style', 'b')]), ['time'], ['consumed']),
+               StepType('aging', 'aging', StepFilter([filter_recipe_estimated_og_above(Decimal('1.100'))]), [], ['keg', 'bottle']),
+               StepType('consumed', 'consumed', no_filter, [], []),
                ]
 
-step_types_by_id = dict([(type.id, type) for type in new_step_types])
-step_types_ui_choices = [(type.id, type.label) for type in new_step_types]
+step_types_by_id = dict([(type.id, type) for type in step_types])
+step_types_ui_choices = [(type.id, type.label) for type in step_types]
 
 def flatten(*args):
     rtn = []
