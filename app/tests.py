@@ -306,6 +306,9 @@ class FkSet (object):
     def count(self):
         return len(self._items)
 
+    def select_related(self):
+        return self
+
 
 class ShoppingListTest (TestCase):
 
@@ -600,7 +603,7 @@ class StepTimeShiftTest (AppTestCase):
 
     def setUp(self):
         now = datetime.datetime.now()
-        now = now - datetime.timedelta(microseconds=now.microsecond)
+        now = now - datetime.timedelta(seconds=now.second, microseconds=now.microsecond)
         self.now = now
         self.now_plus_5 = now + datetime.timedelta(minutes=5)
         self.now_plus_10 = now + datetime.timedelta(minutes=10)
