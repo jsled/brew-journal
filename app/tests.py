@@ -188,7 +188,7 @@ class NewUserTest (TestCase):
         self.assertContains(res2, 'Username [novelUsername] is unavailable')
         
 
-class BrewDerivationsTest (TestCase):
+class BrewDerivationsTest (AppTestCase):
     def testNoAbvComputation(self):
         brew = models.Brew()
         derivs = models.BrewDerivations(brew)
@@ -197,9 +197,13 @@ class BrewDerivationsTest (TestCase):
         self.assertEquals(2, len(cannot))
 
     def testMultiStepAbvComputation(self):
-        brew = Mock(step_set=FkSet([Mock(type='boil-start', gravity=decimal.Decimal('1.049')),
-                                    Mock(type='pitch', gravity=decimal.Decimal('1.064')),
-                                    Mock(type='keg', gravity=decimal.Decimal('1.022'))]))
+        brewer = auth.models.User.objects.get(username='jsled')
+        brew = models.Brew(brewer=brewer)
+        brew.save()
+        models.Step(brew=brew, type='boil-start', date=datetime.datetime.now(), gravity=decimal.Decimal('1.049')).save()
+        models.Step(brew=brew, type='pitch', date=datetime.datetime.now(), gravity=decimal.Decimal('1.064')).save()
+        models.Step(brew=brew, type='keg', date=datetime.datetime.now(), gravity=decimal.Decimal('1.022')).save()
+
         derivs = models.BrewDerivations(brew)
         abv = derivs.alcohol_by_volume()
         self.assert_(abv > decimal.Decimal('3.645'), str(abv))
@@ -387,27 +391,44 @@ class RecipeFormTest (AppTestCase):
         inputHtml = str(form['efficiency'])
         self.assertTrue(inputHtml.rfind('value="30"') != -1)
 
-class NextStepsTest (TestCase):
+class NextStepsTest (AppTestCase):
     def testBasic(self):
-        profile = MockProfile()
-        user = MockUser(profile)
-        recipe = Mock(type='e')
-        brew = Mock(brewer=user, recipe=recipe, last_state=None, step_set=FkSet([]))
+        user = auth.models.User.objects.get(username='jsled')
+        profile = user.get_profile()
+        # profile.make_starter = False
+        # profile.save()
+        recipe = models.Recipe(type='e', author=user, batch_size=5, batch_size_units='gl')
+        recipe.save()
+        brew = models.Brew(brewer=user, recipe=recipe, last_state=None)
+        brew.save()
         next_step_gen = models.NextStepGenerator(brew)
         next_steps = next_step_gen.get_next_steps()
-        self.assertTrue(len(next_steps.possible) == 2)
+        self.assertTrue(len(next_steps.possible) == 3, msg='next steps: [%s]' % (str(next_steps.possible)))
         possible_types = [s.type.id for s in next_steps.possible]
+        self.assertTrue('starter' in possible_types, next_steps)
         self.assertTrue('steep' in possible_types, next_steps)
         self.assertTrue('boil-start' in possible_types, next_steps)
         #
-        all_grain_recipe = Mock(type='a')
-        brew = Mock(brewer=user, recipe=all_grain_recipe, last_state=None, step_set=FkSet([]))
+        profile.make_starter = True
+        profile.save()
+        next_step_gen = models.NextStepGenerator(brew)
+        next_steps = next_step_gen.get_next_steps()
+        self.assertTrue(len(next_steps.possible) == 3, msg='next steps: [%s]' % (str(next_steps.possible)))
+        possible_types = [s.type.id for s in next_steps.possible]
+        self.assertTrue('starter' in possible_types, next_steps)
+        self.assertTrue('steep' in possible_types, next_steps)
+        self.assertTrue('boil-start' in possible_types, next_steps)
+        
+        #
+        all_grain_recipe = models.Recipe(type='a', author=user, batch_size=5, batch_size_units='gl')
+        all_grain_recipe.save()
+        brew = models.Brew(brewer=user, recipe=all_grain_recipe, last_state=None)
+        brew.save()
         next_steps = models.NextStepGenerator(brew).get_next_steps()
         self.assertTrue(len(next_steps.possible) == 1, next_steps)
         possible_types = [s.type.id for s in next_steps.possible]
         self.assertTrue('strike' in possible_types)
         #
-        profile = MockProfile(pref_make_starter=True)
         user = MockUser(profile)
         brew = Mock(brewer=user, recipe=recipe, last_state=None, step_set=FkSet([]))
         next_step_gen = models.NextStepGenerator(brew)
