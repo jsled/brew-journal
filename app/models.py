@@ -706,6 +706,8 @@ class NextStep (object):
     def __str__(self):
         return self.__unicode__()
 
+    def __repr__(self):
+        return self.__unicode__()
 
 class NextSteps (object):
     def __init__(self, possible=None, maybe=None):
@@ -717,6 +719,9 @@ class NextSteps (object):
                                              [str(x) for x in self.maybe])
 
     def __str__(self):
+        return self.__unicode__()
+
+    def __repr__(self):
         return self.__unicode__()
 
 
