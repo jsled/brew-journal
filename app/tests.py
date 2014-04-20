@@ -425,12 +425,14 @@ class NextStepsTest (AppTestCase):
         brew = models.Brew(brewer=user, recipe=all_grain_recipe, last_state=None)
         brew.save()
         next_steps = models.NextStepGenerator(brew).get_next_steps()
-        self.assertTrue(len(next_steps.possible) == 1, next_steps)
+        self.assertTrue(len(next_steps.possible) == 2, next_steps)
         possible_types = [s.type.id for s in next_steps.possible]
         self.assertTrue('strike' in possible_types)
+        self.assertTrue('starter' in possible_types)
         #
-        user = MockUser(profile)
-        brew = Mock(brewer=user, recipe=recipe, last_state=None, step_set=FkSet([]))
+        user = auth.models.User.objects.get(username='jsled')
+        brew = models.Brew(brewer=user, recipe=recipe, last_state=None)
+        brew.save()
         next_step_gen = models.NextStepGenerator(brew)
         next_steps = next_step_gen.get_next_steps()
         self.assertTrue(len(next_steps.possible) == 3)
@@ -439,11 +441,19 @@ class NextStepsTest (AppTestCase):
             self.assertTrue(asserted in possible_types, '%s, looking for %s' % (next_steps, asserted))
 
     def testEndStage(self):
-        profile = MockProfile(pref_dispensing_style='k')
-        user = MockUser(profile)
-        recipe = Mock(type='a')
-        steps = [MockStep(id=1, type='ferm1', date=datetime.datetime.fromtimestamp(1), entry_date=datetime.datetime.fromtimestamp(1))]
-        brew = Mock(brewer=user, recipe=recipe, last_state='ferm1', step_set=FkSet(steps))
+        user = auth.models.User.objects.get(username='jsled')
+        profile = user.get_profile()
+        profile.pref_dispensing_style='k'
+        profile.save()
+        user = auth.models.User.objects.get(username='jsled')
+        recipe = models.Recipe(type='a', author=user, batch_size=5, batch_size_units='gl')
+        recipe.save()
+        brew = models.Brew(brewer=user, recipe=recipe, last_state='ferm1')
+        brew.save()
+        brew = models.Brew.objects.get(id=brew.id)
+        now = datetime.datetime.now()
+        step = models.Step(brew=brew, type='ferm1', date=now, entry_date=now)
+        step.save()
         next_steps = models.NextStepGenerator(brew).get_next_steps()
         possible_types = [step.type.id for step in next_steps.possible]
         maybe_types = [step.type.id for step in next_steps.maybe]
@@ -452,28 +462,39 @@ class NextStepsTest (AppTestCase):
         self.assertTrue('bottle' in maybe_types, str(next_steps))
         
     def testFuture(self):
-        profile = MockProfile()
-        user = MockUser(profile)
-        steps = [MockStep(id=1, type='strike', entry_date=datetime.datetime.fromtimestamp(5), date=datetime.datetime.fromtimestamp(105)),
-                 MockStep(id=2, type='dough', entry_date=datetime.datetime.fromtimestamp(6), date=datetime.datetime.fromtimestamp(106)),
-                 MockStep(id=3, type='mash', entry_date=datetime.datetime.fromtimestamp(7), date=datetime.datetime.fromtimestamp(107)),
-                 MockStep(id=4, type='boil-start', entry_date=datetime.datetime.fromtimestamp(10), date=datetime.datetime.fromtimestamp(110)),
-                 MockStep(id=5, type='pitch', entry_date=datetime.datetime.fromtimestamp(20), date=datetime.datetime.fromtimestamp(120))]
-
+        user = auth.models.User.objects.get(username='jsled')
+        profile = user.get_profile()
         saved_datetime = datetime.datetime
         datetime.datetime = fake_datetime(30)
+        steps = [dict(type='strike', entry_date=datetime.datetime.fromtimestamp(5), date=datetime.datetime.fromtimestamp(105)),
+                 dict(type='dough', entry_date=datetime.datetime.fromtimestamp(6), date=datetime.datetime.fromtimestamp(106)),
+                 dict(type='mash', entry_date=datetime.datetime.fromtimestamp(7), date=datetime.datetime.fromtimestamp(107)),
+                 dict(type='boil-start', entry_date=datetime.datetime.fromtimestamp(10), date=datetime.datetime.fromtimestamp(110)),
+                 dict(type='pitch', entry_date=datetime.datetime.fromtimestamp(20), date=datetime.datetime.fromtimestamp(120))]
         # + with
         for recipe_type in ('a', 'e'):
-            recipe = Mock(type=recipe_type)
-            brew = Mock(brewer=user, recipe=recipe, last_state=None, step_set=FkSet(steps))
+            recipe = models.Recipe(type=recipe_type, author=user, batch_size=19, batch_size_units='l')
+            recipe.save()
+            brew = models.Brew(brewer=user, recipe=recipe, last_state=None)
+            brew.save()
+            last_state = None
+            for args in steps:
+                args['brew'] = brew
+                step = models.Step(**args)
+                last_state = step.type
+                step.save()
+            brew.last_state = last_state
+            brew.save()
+            brew = models.Brew.objects.get(id=brew.id)
             next_steps = models.NextStepGenerator(brew).get_next_steps()
             for step in next_steps.possible:
-                next_step_type_in_defined_steps = step.type.id in [s.type for s in steps]
+                next_step_type_in_defined_steps = step.type.id in [s['type'] for s in steps]
                 if next_step_type_in_defined_steps:
                     self.assertTrue(step.existing_step)
             possible_types = [s.type.id for s in next_steps.possible]
-            to_assert = {'a': ['strike'],
-                         'e': ['steep', 'boil-start']}[recipe_type]
+            # old and busted
+            # to_assert = {'a': ['steep'], 'e': ['steep', 'boil-start']}[recipe_type]
+            to_assert = { 'a': ['ferm1'], 'e': ['ferm1'] }[recipe_type]
             self.assertTrue(len(next_steps.possible) == len(to_assert),
                             'expecting %d items in %s for type %s' % (len(to_assert), next_steps, recipe_type))
             for asserted in to_assert:
@@ -484,9 +505,13 @@ class NextStepsTest (AppTestCase):
         # + with
         saved_datetime = datetime.datetime
         datetime.datetime = fake_datetime(125)
-        steps[0].date = datetime.datetime.fromtimestamp(125)
-        recipe = Mock(type='a')
-        brew = Mock(brewer=user, recipe=recipe, last_state='strike', step_set=FkSet(steps))
+        recipe = models.Recipe(type='a', author=user, batch_size=10, batch_size_units='l')
+        recipe.save()
+        brew = models.Brew(brewer=user, recipe=recipe, last_state='strike')
+        brew.save()
+        step = models.Step(brew=brew, type='strike', date=datetime.datetime.fromtimestamp(125))
+        step.save()
+        brew = models.Brew.objects.get(id=brew.id)
         next_steps = models.NextStepGenerator(brew).get_next_steps()
         self.assertTrue(len(next_steps.possible) == 2, next_steps)
         for next_step,expected_type in itertools.izip(next_steps.possible, ['dough', 'mash']):
