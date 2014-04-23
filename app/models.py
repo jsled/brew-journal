@@ -379,7 +379,7 @@ class Recipe (models.Model):
     style = models.ForeignKey(Style, null=True)
     derived_from_recipe = models.ForeignKey('self', null=True, blank=True)
     type = models.CharField(max_length=1, choices=RecipeTypes, default='a')
-    source_url = models.URLField(max_length=300, blank=True, null=True, verify_exists=True)
+    source_url = models.URLField(max_length=300, blank=True, null=True)
     notes = models.TextField(null=True, blank=True, help_text="Markdown supported")
 
     def __str__(self):
@@ -743,7 +743,7 @@ class NextStepGenerator (object):
             try:
                 last_step = [s for s in self._brew.step_set.select_related().filter(type=self._brew.last_state)][0]
             except Exception,e:
-                print 'brew,last_state,steps',self._brew,self._brew.last_state,self._brew.step_set.all()
+                print u'brew=[id=%d,%s],last_state=[%s],steps=[%s]' % (self._brew.id,self._brew,self._brew.last_state,self._brew.step_set.all())
                 raise
             # @fixme: assert(last_step is not None)
             last_date = last_step.date

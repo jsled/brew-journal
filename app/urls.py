@@ -1,7 +1,7 @@
 # Copyright (c) 2008-2010, Joshua Sled <jsled@asynchronous.org>
 # See LICENSE file for "New BSD" license details.
 
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from app.feeds import NewUsers, NewRecipes
 
 urlpatterns = patterns(
