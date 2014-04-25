@@ -4,6 +4,8 @@
 # See LICENSE file for "New BSD" license details.
 
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest, Http404
+#, JsonResponse
+import json
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -585,6 +587,7 @@ def brew(request, user_name, brew_id, step_id=None):
     '''
     e.g., /user/jsled/brew/2/[step/3], /user/jsled/brew/2/?type=pitch
     '''
+
     try:
         uri_user = User.objects.select_related().get(username__exact = user_name)
         #if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
@@ -597,7 +600,18 @@ def brew(request, user_name, brew_id, step_id=None):
             #    return HttpResponseNotFound('no such user [%s] brew [%s] step id [%s]' % (user_name, brew_id, step_id))
     except ObjectDoesNotExist:
         raise Http404
-    if request.method == 'POST':
+    if request.method == 'DELETE':
+        # @fixme: check authority
+        step.delete()
+        new_last_state = None
+        try:
+            new_last_state = brew.step_set.order_by('-date')[0].type
+        except:
+            pass
+        brew.last_state = new_last_state
+        brew.save()
+        return HttpResponse(json.dumps({'brew_url': brew.get_absolute_url()}), content_type='application/json')
+    elif request.method == 'POST':
         if request.POST.has_key('mash_sparge_recalc') \
            and request.POST.has_key('action') \
            and request.POST['action'] == 'create steps':

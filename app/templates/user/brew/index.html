@@ -105,8 +105,16 @@
               now_steps = [step for step in steps if not step.in_future()]
               future_steps = [step for step in steps if step.in_future()]
             ?>
-            <py:def function="step_row(std,user,brew,step)">
-                <td style="padding-right: 1em"><a href="${step.get_absolute_url()}">${std.fmt.date.best(step.date, user)}</a></td>
+            <py:def function="step_row(std,request,user,brew,step)">
+                <td style="padding-right: 1em"
+                    py:attrs="{'data-brew-id': brew.id, 'data-step-id': step.id, 'data-step-url': step.get_absolute_url()}">
+                    <nobr>
+                    <py:if test="std.auth_user_is_user(request, user)">
+                        <a class="delete" href="#"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAEhElEQVQ4T7WVbUxTZxTH/7el7b3SWoG2oAIKLlOmASwbbKAxRjSLXwgJLEMgZi04mHvPvm0f2IclftkWt+neGMI2XPaSLCHxBRDUacKGg4BRHIgvVVSQvgzWci+0vXfnudCmKix+WZOT3Js+z+/53/M/5zwc/qcfF+H+BGiDwGGNXl+uzM19uAf44HHObKV1CvCKBvg5Dqh/AQizfSq4AYh7Avgl2W5//smSEsNgU5M05XJ9Xg28/V/w74HPhKQkx1OFhcJIT4/4j9vdMQqUES+kgo8C31jt9spNFRWG8P374IxG9BHc73J9QcrfWgzOoMssFsfmnTuF0NgYOIsFQ+fPi1OTk0dJUI0K/sFk8m9taIjn3G6E7tyB1mSChhb2NzdLf7tcX1UBb8TCGTTeZnPYd+8WgkNDmCOwNi0NocREDLa3+/bIcuI8GDiQlJf3Zk5lpSF06xZkOkCFW63oa2lhafmalL/O1jKoKSXFkVdSIoSGhxG8fRtISAC3di0GurulWa/3QCXwftQ82nDIkpvr3ExwmcE9HhXOJSfjwjy8kXliSk11PFNaKoSvXkWQpYBBSe2F9nZJ9HiivkTBC2oOWbKzHfaqKl6+eROK1wvt8uUAwXsJztbkl5fz8rVrasoYVFm9Gr3Hj0vSxMQDfjwAjsI3bnTkERxM+QJcm5JChRRGmA5kUJjNkFeuxJ9tbdL0vXuP+PAIOAJPzMpy5ldXGziXS1WuWbECXDAIVgHQ6xGmr/jjxAkpMD4ezX+swYuCIyYlrl9fU7h3r0FhaZmYgHL3LhSeh4aM+o2gotvdWAG8tlg5LgmmSvnUmJZWs7W2lpfJfbm/H1oiKFQpYOBjx0TJ4znyIrD/scHUMJ+Y0tNrn3M6eXlwEPLAAHRr1synYnxcrZQwvf9+8qTo93pbqM7rH4YvZt5Bk9W6L7+sjFeuXIE8OgodKYxjYI0GYaqIIKsIMk5OT0dvZ6cY8Pm+JXjdkjkmpR9TR9XlbtnCK9RR8Pmgz8gAR4Cejg5RQ+Bnd+0SlBs31MbQrFoFhf7r6+qamZmaaqUm2heBRxV/B3xESutzior48OXLADWInpRqCdx76pRIG5togikGs9lZsACfo4rRpqZCoa/pO31alBbgBFUiQ+jdZVbre5sKCvjwpUtqeRkYNDMT/d3dM/7p6Wb6VNUkln/eaKx5urhYUKjOZ69fh5ZUg7pv4MwZcTYQOEzK31HBrRznzdmxI0E3OYm5kRHwpDJu3ToMnD07E4iBRj6T2v+gEB9fa9++XVCoriVqb92GDQiywdXZGaiSZaMKpjQ0mhMSKrMKC3mZXNfabBg8d04U/f4jEaUPu8780AnCy7nbtgmgocXRnuGLF0Xf2NiPtOel2EH/q9lmK87Mzub/oqEtBgJLQiOHMF94nq/LKioSXMPDDNpFg760ITLo2UJ60WeQ8jiOK5UUpdE5fzXpKFhfsCDv1BuHbiLIFOwKCn8JvBpPdUwvbXRN7e8AZtia2Dpmz2wzXV1qMGhsMDhbowIp6IqMRoieI8EOxb+PuPMm8g7ZBQAAAABJRU5ErkJggg" width="16" height="16" alt="delete"/></a>
+                    </py:if>
+                    <a href="${step.get_absolute_url()}">${std.fmt.date.best(step.date, user)}</a>
+                    </nobr>
+                </td>
                 <td style="padding-right: 1em; white-space: nowrap">${step.get_type_display()}</td>
                 <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.volume">${'%.3g' % step.volume} ${step.volume_units}</py:if></td>
                 <td style="padding-right: 1em; white-space: nowrap"><py:if test="step.temp">${step.temp} ${step.temp_units}</py:if></td>
@@ -137,10 +145,12 @@
                     <tr py:if="not steps">
                         <td colspan="1000"><em>no steps recorded, yet.</em></td>
                     </tr>
-                    <tr py:for="step in now_steps">${step_row(std,user,brew,step)}</tr>
+                    <tr py:for="step in now_steps" 
+                        py:attrs="{'class': ['', 'step-editable'][std.auth_user_is_user(request, user)]}">${step_row(std,request,user,brew,step)}</tr>
                 </tbody>
                 <tbody py:if="future_steps" class="future">
-                    <tr py:for="step in future_steps">${step_row(std,user,brew,step)}</tr>
+                    <tr py:for="step in future_steps"
+                        py:attrs="{'class': ['', 'step-editable'][std.auth_user_is_user(request, user)]}">${step_row(std,request,user,brew,step)}</tr>
                 </tbody>
             </table>
         </div>
@@ -397,6 +407,24 @@
             </py:for>
 
         </div> <!-- .container_16 -->
+
+<script>
+(function ($) {
+    $(document).ready(function _setup_delete() {
+        $('A.delete').click(function _deleteStep() {
+            var $$x = $(this).closest('TD');
+            // console.log('delete',$$x, $$x.data('brew-id'), $$x.data('step-id'),$$x.data('step-url'));
+            jQuery.ajax($$x.data('step-url'), {type:'DELETE', dataType:'json'})
+                .done(function _deleteSuccess(data) {
+                    window.location = data.brew_url;
+                })
+                .fail(function _deleteFail(jqXhr, status, errorThrown) {
+                    console.log('error',status,errorThrown);
+                });
+        });
+    });
+})(jQuery);
+</script>
 
 </body>
 </html>
