@@ -8,132 +8,146 @@
     <py:def function="mash_sparge_form(form, actions)">
 
       <h2>core</h2>
+
+      <div class="row">
       
-      <div class="grid_4 stylin">
+        <div class="col-md-4">
           ${field(form.grain_size)}
-      </div>
+        </div>
 
-      <div class="grid_4 stylin">
+        <div class="col-md-4">
           ${field(form.mash_thickness)}
-      </div>
+        </div>
 
-      <div class="grid_4 suffix_4 stylin">
+        <div class="col-md-4">
           ${field(form.boil_time)}
-      </div>
+        </div>
 
-      <div class="grid_4 stylin">
+        <div class="col-md-4">
           ${field(form.batch_volume)}
-      </div>
+        </div>
 
-      <div class="grid_4 stylin">
+        <div class="col-md-4">
           ${field(form.target_mash_temp)}
+        </div>
+
       </div>
 
-      <div class="clear"><br/></div>
       <h2 style="margin-top:0.5em">losses</h2>
 
-      <div class="grid_4 stylin">
+      <div class="row">
+
+        <div class="col-md-4">
           ${field(form.grain_absorption)}
-      </div>
+        </div>
 
-      <div class="grid_4 stylin">
+        <div class="col-md-4">
           ${field(form.mash_tun_loss)}
-      </div>
+        </div>
 
-      <div class="grid_4 suffix_4 stylin">
+        <div class="col-md-4">
           ${field(form.trub_loss)}
-      </div>
+        </div>
 
-      <div class="grid_4 stylin">
+        <div class="col-md-4">
           ${field(form.boil_evaporation_rate)}
-      </div>
+        </div>
 
-      <div class="grid_4 stylin">
+        <div class="col-md-4">
           ${field(form.grain_temp)}
+        </div>
       </div>
-
-      <div class="clear"></div>
 
       <py:if test="'sparge_type' in [f for f in form.fields]">
         <h2 style="margin-top: 0.5em">step creation</h2>
 
-        <div class="grid_4 stylin">
+        <div class="row">
+
+          <div class="col-md-4">
             ${field(form.sparge_type)}
-        </div>
+          </div>
 
-        <div class="grid_4 stylin">
+          <div class="col-md-4">
             ${field(form.num_batches)}
-        </div>
+          </div>
 
-        <div class="grid_6 stylin">
+          <div class="col-md-4">
             ${field(form.add_midpoint_mash_temp_step)}
-        </div>
-        <div class="clear"></div>
+          </div>
 
-        <div class="grid_4 stylin">
-            ${field(form.mash_length)}
         </div>
 
-        <div class="grid_4 stylin">
-            ${field(form.rest_between_batches)}
+        <div class="row">
+
+             <div class="col-md-4">
+               ${field(form.mash_length)}
+             </div>
+
+             <div class="col-md-4">
+               ${field(form.rest_between_batches)}
+             </div>
+
+             <div class="col-md-4">
+               ${field(form.sparge_flow_rate)}
+             </div>
+
         </div>
 
-        <div class="grid_4 stylin">
-            ${field(form.sparge_flow_rate)}
-        </div>
-        <div class="clear"></div>
-
-        <div class="grid_4 stylin">
+        <div class="row">
+          <div class="col-md-4">
             ${field(form.dough_in_time)}
+          </div>
         </div>
-        <div class="clear"></div>
       </py:if>
 
-      <py:choose test="">
+      <div class="row">
+        <py:choose test="">
           <div style="border-top: solid 1px green; margin-top: 2em; padding-top: 0.5em">
-              <py:when test="actions">
-                  ${actions()}
-              </py:when>
-              <py:otherwise>
-                  <div class="grid_2 suffix_14">
-                      <input type="submit" value="re-calculate"/>
-                  </div>
-              </py:otherwise>
+            <py:when test="actions">
+              ${actions()}
+            </py:when>
+            <py:otherwise>
+              <div class="col-md-2">
+                <input type="submit" value="re-calculate"/>
+              </div>
+            </py:otherwise>
           </div>
-      </py:choose>
+        </py:choose>
+      </div>
 
-      <div class="clear"></div>
       <h2 style="margin-top: 0.5em; border-top: solid 1px green">computed</h2>
 
-      <div class="grid_3 stylin">
-        <label>
-          <div class="label">Mash Volume (gl)</div>
-          <div class="label-content">${'%0.2f' % (calc.mash_volume)}</div>
-        </label>
-      </div>
-      <div class="grid_3 stylin">
-        <label>
-          <div class="label">Strike Temp (°F)</div>
-          <div class="label-content">${'%0.1f' % (calc.strike_temp)}</div>
-        </label>
-      </div>
-      <div class="grid_3 stylin">
-        <label>
-          <div class="label">Sparge Volume (gl)</div>
-          <div class="label-content">${'%0.2f' % (calc.sparge_volume)}</div>
-        </label>
-      </div>
-      <div class="grid_3 stylin">
-        <label>
-          <div class="label">Total Volume (gl)</div>
-          <div class="label-content">${'%0.2f' % (calc.total_volume)}</div>
-        </label>
-      </div>
-      <div class="grid_3 stylin">
-        <label>
-          <div class="label">Collected/Pre-Boil (gl)</div>
-          <div class="label-content">${'%0.2f' % (calc.collected_volume)}</div>
-        </label>
+      <div class="row">
+        <div class="col-md-2">
+          <label>
+            <div class="label">Mash Volume (gl)</div>
+            <div class="label-content">${'%0.2f' % (calc.mash_volume)}</div>
+          </label>
+        </div>
+        <div class="col-md-2">
+          <label>
+            <div class="label">Strike Temp (°F)</div>
+            <div class="label-content">${'%0.1f' % (calc.strike_temp)}</div>
+          </label>
+        </div>
+        <div class="col-md-2">
+          <label>
+            <div class="label">Sparge Volume (gl)</div>
+            <div class="label-content">${'%0.2f' % (calc.sparge_volume)}</div>
+          </label>
+        </div>
+        <div class="col-md-2">
+          <label>
+            <div class="label">Total Volume (gl)</div>
+            <div class="label-content">${'%0.2f' % (calc.total_volume)}</div>
+          </label>
+        </div>
+        <div class="col-md-2">
+          <label>
+            <div class="label">Collected/Pre-Boil (gl)</div>
+            <div class="label-content">${'%0.2f' % (calc.collected_volume)}</div>
+          </label>
+        </div>
       </div>
 
       <py:for each="hidden in form.hidden_fields()">

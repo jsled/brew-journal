@@ -498,16 +498,6 @@ class RecipeAdjunct (models.Model):
     notes = models.CharField(max_length=300, null=True, blank=True)
 
 
-class StarredRecipe (models.Model):
-    '''
-    A Recipe a User has specifically called out (to be turned into a Brew, or whatever).
-    '''
-    recipe = models.ForeignKey(Recipe)
-    user = models.ForeignKey(auth.models.User)
-    when = models.DateTimeField(default=datetime.datetime.now)
-    notes = models.CharField(max_length=1000, blank=True, default='')
-
-
 class BrewManager (models.Manager):
     def brews_with_future_steps(self, user):
         brew_ids = [step.brew_id for step in Step.objects.future_steps_for_user(user)]

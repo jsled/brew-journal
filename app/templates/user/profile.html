@@ -7,86 +7,86 @@
   <xi:include href="../_incl/head.html"/>
 </head>
 <body>
-    <div class="container_16">
-        
-        <xi:include href="../_incl/body-top-bar.html"/>
-        
-        <h1 class="grid_16">${user.username} profile</h1>
+    <xi:include href="../_incl/body-top-bar.html"/>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h2 class="panel-title">${user.username} profile</h2></div>
 
-        <div py:if="not std.auth_user_is_user(request, user)">
-            (fixme)
-            <!-- @fixme: public details about user... -->
+        <div class="panel-body">
+
+            <div py:if="not std.auth_user_is_user(request, user)">
+                you are not this user
+                <!-- @fixme: public details about user... -->
+            </div>
+            <form py:if="std.auth_user_is_user(request, user)" method="post">
+                <div class="row">
+                    <div class="col-md-4">
+                        ${field(profile_form.first_name)}
+                    </div>
+                    <div class="col-md-4">
+                        ${field(profile_form.last_name)}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        ${field(profile_form.email)}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        ${field(profile_form.new_pass_1)}
+                    </div>
+                    <div class="col-md-4">
+                        ${field(profile_form.new_pass_2)}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        ${field(profile_form.pref_brew_type)}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        ${field(profile_form.pref_brewhouse_efficiency)}
+                    </div>
+                </div>
+
+                <div class="row">
+                     <div class="col-md-10">
+                         ${boolean_field(profile_form.pref_make_starter)}
+                     </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        ${boolean_field(profile_form.pref_secondary_ferm)}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        ${field(profile_form.pref_dispensing_style)}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        ${field(profile_form.timezone)}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        ${boolean_field(profile_form.rototill_dates)}
+                    </div>
+                </div>
+
+                <input type="submit" value="update"/>
+            </form>
         </div>
-        <form py:if="std.auth_user_is_user(request, user)" method="post">
-            <div class="grid_4">
-                ${field(profile_form.first_name)}
-            </div>
-            <div class="grid_4">
-                ${field(profile_form.last_name)}
-            </div>
-
-            <div class="clear"/>
-
-            <div class="grid_8" style="margin-top: 2em; margin-bottom: 2em;" >
-                ${field(profile_form.email)}
-            </div>
-
-            <div class="clear" />
-
-            <div class="grid_4">
-                ${field(profile_form.new_pass_1)}
-            </div>
-            <div class="grid_4">
-                ${field(profile_form.new_pass_2)}
-            </div>
-            <div class="clear"/>
-
-            <div class="grid_8" style="margin-top: 2em">
-                ${field(profile_form.pref_brew_type)}
-            </div>
-
-            <div class="clear"/>
-
-            <div class="grid_4 " style="margin-top: 2em">
-                ${field(profile_form.pref_brewhouse_efficiency)}
-            </div>
-            
-            <div class="clear"/>
-
-            <div class="grid_8" style="margin-top: 2em">
-                ${boolean_field(profile_form.pref_make_starter)}
-            </div>
-
-            <div class="clear"/>
-
-            <div class="grid_8" style="margin-top: 2em">
-                ${boolean_field(profile_form.pref_secondary_ferm)}
-            </div>
-
-            <div class="clear"/>
-
-            <div class="grid_8" style="margin-top: 2em; margin-bottom: 2em">
-                ${field(profile_form.pref_dispensing_style)}
-            </div>
-
-            <div class="clear"/>
-
-            <div class="grid_8">
-                ${field(profile_form.timezone)}
-            </div>
-
-            <div class="clear"/>
-
-            <div class="grid_8">
-                ${boolean_field(profile_form.rototill_dates)}
-            </div>
-
-            <div class="clear"/>
-            <hr />
-            
-            <input type="submit" value="update"/>
-        </form>
-        
-    </div>
+    </div>    
 </body>
 </html>

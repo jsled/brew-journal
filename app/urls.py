@@ -11,6 +11,7 @@ urlpatterns = patterns(
     (r'^logout/$', 'logout_view'),
 
     (r'^user/(?P<user_name>[^/]+)/?$', 'user_index'),
+    (r'^user/(?P<user_name>[^/]+)/history/?$', 'user_history'),
     (r'^user/(?P<user_name>[^/]+)/profile/?$', 'user_profile'),
     (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/?$', 'brew', {}, 'brew_url'),
     (r'^user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/step/(?P<step_id>\d+)/?$', 'brew', {}, 'brew_step_url'),
@@ -26,10 +27,6 @@ urlpatterns = patterns(
 
     (r'^user/(?P<user_name>[^/]+)/shopping/?$', 'user_shopping_list'),
 
-    # GET /user/jsled/star?recipe_id=42 + POST
-    # GET /user/jsled/star?url=<http://.../recipe> + POST
-    (r'^user/(?P<user_name>[^/]+)/star/$', 'user_star'),
-    
     # /recipe/new/?clone_from_recipe_id=42
     # /recipe/new/?clone_from_url=<...>
     (r'^recipe/new/$', 'recipe_new'),
@@ -44,9 +41,4 @@ urlpatterns = patterns(
     (R'^feeds/new-recipes$', NewRecipes()),
 
     (r'^500$', 'intentional_500'),
-
-    # (r'^m/$', 'm_root'),
-    (r'^m/user/(?P<user_name>[^/]+)/?$', 'm_user'),
-    (r'^m/user/(?P<user_name>[^/]+)/brew/(?P<brew_id>\d+)/?$', 'm_brew'),
-    (r'^m/recipe/(?P<recipe_id>\d+)/?$', 'm_recipe'),
 )

@@ -1,0 +1,85 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<div py:def="recipe_deriv_cols(deriv)" py:strip="True">
+    <label class="col-md-3 deriv-og">
+        <div class="label">original gravity</div>
+        <div class="label-content"
+             py:with="no_og_reasons=deriv.can_not_derive_og()">
+            <py:choose>
+                <py:when test="no_og_reasons">
+
+                    <div id="why_not_og">
+                        <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_og').children().slideToggle(); return false;">(why not?)</a></div>
+                        <div style="display:none">
+                            <ul>
+                                <li py:for="reason in no_og_reasons">${reason}</li>
+                            </ul>
+                            <a href="#" onClick="$('#why_not_og').children().slideToggle(); return false;">(hide)</a>
+                        </div>
+                    </div>
+
+                </py:when>
+                <py:otherwise py:with="og=deriv.compute_og()">
+                    ${'%1.3f' % (og.average)}
+                </py:otherwise>
+            </py:choose>
+        </div>
+    </label>
+
+    <label class="col-md-3 deriv-ibu">
+        <div class="label">ibus (Tinseth)</div>
+        <div class="label-content"
+             py:with="no_ibu_reasons=deriv.can_not_derive_ibu()">
+            <py:choose>
+                <py:when test="no_ibu_reasons">
+                    <div id="why_not_ibus">
+                        <div class="muted">
+                            can't yet compute.
+                            <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(why not?)</a>
+                        </div>
+                        <div style="display:none">
+                            <py:for each="reason in no_ibu_reasons">
+                                ${reason}<br />
+                            </py:for>
+                            <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(hide)</a>
+                        </div>
+                    </div>
+
+                </py:when>
+
+                <py:otherwise>
+                    <py:with vars="ibus=deriv.compute_ibu()">
+                        ${'%2.1f' % (ibus.average)}
+                    </py:with>
+                    
+                </py:otherwise>
+            </py:choose>
+        </div>
+    </label>
+
+    <label class="col-md-3 deriv-srm">
+        <div class="label">srm</div>
+        <div class="label-content"
+             py:with="no_srm_reasons=deriv.can_not_derive_srm()">
+            <py:choose>
+                <py:when test="no_srm_reasons">
+                    <div id="why_not_srm">
+                        <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(why not?)</a></div>
+                        <div style="display:none">
+                            <py:for each="reason in no_srm_reasons">
+                                ${reason}<br />
+                            </py:for>
+                            <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(hide)</a>
+                        </div>
+                    </div>
+                </py:when>
+                <py:otherwise py:with="srm=deriv.compute_srm()">
+                    ${'%2.0f' % (srm.average)}
+                </py:otherwise>
+            </py:choose>
+        </div>
+    </label>
+</div>
+</html>

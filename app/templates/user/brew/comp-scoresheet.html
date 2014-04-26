@@ -8,93 +8,95 @@
   <xi:include href="../../_incl/head.html"/>
 </head>
 <body>
-    <div class="container_16">
+    <xi:include href="../../_incl/body-top-bar.html"/>
 
-        <xi:include href="../../_incl/body-top-bar.html"/>
+    <h1>scoresheet for ${brew.recipe.name} in ${results.competition_name}</h1>
 
-        <h1>scoresheet for ${brew.recipe.name} in ${results.competition_name}</h1>
-
-        <form method="POST">
-            <h3 class="grid_16">judge info</h3>
-            <div class="prefix_1 grid_15 muted">Note that the Judge's name, BJCP ID and email address will <strong>not</strong> be made publically visible.</div>
-            <div class="clear"></div>
-
-            <div class="grid_3">
-                ${field(form.judge_rank)}
-            </div>
-            <div class="grid_3">
-                ${field(form.judge_name)}
-            </div>
-            <div class="grid_3">
-                ${field(form.judge_email)}
-            </div>
-            <div class="grid_3">
-                ${field(form.judge_bjcp_id)}
-            </div>
-
-            <div class="clear"></div>
-
-            <h3>misc</h3>
-            <div class="grid_3">
-                <label class="stylin">
-                    <div class="label">Bottle Inspection</div>
-                    <div class="contents">
-                        ${std.Markup(form.bottle_inspection.errors)}
-                        ${std.Markup(form.bottle_inspection)}
-                        ${std.Markup(form.bottle_inspection_notes.errors)}
-                        ${std.Markup(form.bottle_inspection_notes)}
+    <div class="panel panel-default" style="padding-left: 1em">
+        <div class="panel-body">
+            <form method="POST">
+                <div class="row">
+                    <h3>judge info</h3>
+                    <div class="muted">Note that the Judge's name, BJCP ID and email address will <strong>not</strong> be made publically visible.</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        ${field(form.judge_rank)}
                     </div>
-                </label>
-            </div>
-            <div class="grid_6">
-                ${field(form.notes)}
-            </div>
+                    <div class="col-md-3">
+                        ${field(form.judge_name)}
+                    </div>
+                    <div class="col-md-3">
+                        ${field(form.judge_email)}
+                    </div>
+                    <div class="col-md-3">
+                        ${field(form.judge_bjcp_id)}
+                    </div>
+                </div>
+                <div class="row">
 
-            <div class="clear"></div>
-
-            <h3>scoring</h3>
-
-            <py:def function="category(label, max_score, score_accessor, notes_accessor)">
-                <div class="grid_3">
-                    <label class="stylin">
-                        <div class="label">${label}</div>
+                    <label class="col-md-3">
+                        <div class="label">Bottle Inspection</div>
                         <div class="contents">
-                            ${std.Markup(score_accessor().errors)}
-                            ${std.Markup(score_accessor())} / ${max_score}
+                            ${std.Markup(form.bottle_inspection.errors)}
+                            ${std.Markup(form.bottle_inspection)}
+                            ${std.Markup(form.bottle_inspection_notes.errors)}
+                            ${std.Markup(form.bottle_inspection_notes)}
                         </div>
                     </label>
+
+                    <div class="col-md-6">
+                        ${field(form.notes)}
+                    </div>
+
                 </div>
-                <div class="grid_12">
-                    ${field(notes_accessor())}
+
+                <div class="row">
+                    <h3>scoring</h3>
+
+                    <py:def function="category(label, max_score, score_accessor, notes_accessor)">
+                        <div class="row">
+                            <label class="col-md-3">
+                                <div class="label">${label}</div>
+                                <div class="contents">
+                                    ${std.Markup(score_accessor().errors)}
+                                    ${std.Markup(score_accessor())} / ${max_score}
+                                </div>
+                            </label>
+
+                            <div class="col-md-9">
+                                ${field(notes_accessor())}
+                            </div>
+                        </div>
+                    </py:def>
+
+                    ${category('Aroma', 12, lambda:form.aroma_score, lambda: form.aroma_notes)}
+                    ${category('Appearance', 3, lambda:form.appearance_score, lambda: form.appearance_notes)}
+                    ${category('Flavor', 20, lambda:form.flavor_score, lambda: form.flavor_notes)}
+                    ${category('Mouthfeel', 5, lambda:form.mouthfeel_score, lambda: form.mouthfeel_notes)}
+                    ${category('Overall', 10, lambda:form.overall_score, lambda: form.overall_notes)}
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            ${field(form.stylistic_accuracy)}
+                        </div>
+                        <div class="col-md-4">
+                            ${field(form.technical_merit)}
+                        </div>
+                        <div class="col-md-4">
+                            ${field(form.intangibles)}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="submit"/>
+                            <button type="button" onclick="window.location='${brew.get_absolute_url()}'">Cancel</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="clear"></div>
-            </py:def>
-
-            ${category('Aroma', 12, lambda:form.aroma_score, lambda: form.aroma_notes)}
-            ${category('Appearance', 3, lambda:form.appearance_score, lambda: form.appearance_notes)}
-            ${category('Flavor', 20, lambda:form.flavor_score, lambda: form.flavor_notes)}
-            ${category('Mouthfeel', 5, lambda:form.mouthfeel_score, lambda: form.mouthfeel_notes)}
-            ${category('Overall', 10, lambda:form.overall_score, lambda: form.overall_notes)}
-
-
-            <div class="grid_3">
-                ${field(form.stylistic_accuracy)}
-            </div>
-            <div class="grid_3">
-                ${field(form.technical_merit)}
-            </div>
-            <div class="grid_3">
-                ${field(form.intangibles)}
-            </div>
-
-            <div class="clear"></div>
-
-            <div class="grid_4">
-                <input type="submit"/>
-                <button type="button" onclick="window.location='${brew.get_absolute_url()}'">Cancel</button>
-            </div>
-        </form>
-
-    </div> <!-- .container_16 -->
+            </form>
+        </div>
+    </div>
 </body>
 </html>

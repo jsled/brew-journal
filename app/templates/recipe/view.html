@@ -1,482 +1,347 @@
-<!-- -*- nxml-child-indent: 2 -*- -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
-  <xi:include href="../_incl/taglib.html"/>
-  <head>
-    <title>recipe "${recipe.name}" | brew-journal</title>
-    <xi:include href="../_incl/head.html"/>
-    <style type="text/css">
-.overridden
-{
-    text-decoration: line-through;
-    color: rgb(180, 180, 180);
-}
-    </style>
-  </head>
-  <body py:with="table_width='100%'">
-
-    <div class="container_16">
-
-      <xi:include href="../_incl/body-top-bar.html"/>
-
-      <div class="grid_16">
-        <h1 py:if="recipe">recipe "${recipe.name}"</h1>
+    <xi:include href="../_incl/taglib.html"/>
+    <head>
+        <title>recipe "${recipe.name}" | brew-journal</title>
+        <xi:include href="../_incl/head.html"/>
+        <style type="text/css">
+            .overridden
+            {
+            text-decoration: line-through;
+            color: rgb(180, 180, 180);
+            }
+        </style>
+    </head>
+    <body>
+        <xi:include href="../_incl/body-top-bar.html"/>
         
-        ${ifauth_recipe_actions(request, recipe)}
-      </div>
+        <h2 py:if="recipe">recipe: "${recipe.name}"</h2>
 
-      <div id="overview" class="grid_16">
-        <div py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}">
+        <div py:if="request.user.is_authenticated()" class="btn-group" style="margin: 0.5em 0">
+            <button type="button" class="btn btn-default btn-sm">
+                <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}"><span class="glyphicon glyphicon-glass"/>&nbsp;brew</a>
+            </button>
+            <button type="button" class="btn btn-default btn-sm">
+                <a href="/recipe/new/?clone_from_recipe_id=${recipe.id}"><span class="glyphicon glyphicon-cloud-upload"/>&nbsp;clone</a>
+            </button>
+        </div>
 
-          <label class="stylin grid_4">
-            <div class="label">style</div>
-            <div class="label-content">
-              ${recipe.get_type_display()}
-              <py:choose test="">
-                <py:when test="recipe.style">${recipe.style.name}&nbsp;(${recipe.style.bjcp_code})</py:when>
-                <py:otherwise>(style undefined)</py:otherwise>
-              </py:choose>
+        <div id="overview" class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">details
+                    <py:if test="std.auth_user_is_user(request, recipe.author)">
+                           &nbsp;<button class="btn btn-default btn-sm bj-js-recipe-details-edit" type="button"><span class="glyphicon glyphicon-edit"/></button>
+                    </py:if>
+                </h3>
             </div>
-          </label>
-
-          <label class="stylin grid_4">
-            <div class="label">batch size</div>
-            <div class="label-content">
-              ${'%.3g' % recipe.batch_size} ${recipe.get_batch_size_units_display()}
-              <py:if test="recipe.pre_boil_volume">
-                , ${'%.3g' % recipe.pre_boil_volume} ${recipe.get_pre_boil_volume_units_display()}  pre-boil
-              </py:if>
-              , ${recipe.boil_length} minute boil
-            </div>
-          </label>
-
-          <label class="stylin grid_2">
-            <div class="label">efficiency</div>
-            <div class="label-content">${recipe.efficiency} %</div>
-          </label>
-
-          <label py:if="recipe.author" class="stylin grid_2">
-            <div class="label">input by</div>
-            <div class="label-content">
-              <a href="/user/${recipe.author.username}/">${recipe.author.username}</a>
-            </div>
-          </label>
-
-          <div class="clear"></div>
-
-          <py:if test="recipe.source_url">
-            <label class="stylin grid_10">
-              <div class="label">source url</div>
-              <div class="label-content"><a href="${recipe.source_url}">${recipe.source_url}</a></div>
-            </label>
-
-          </py:if>
-          
-          <label class="stylin grid_6">
-            <div class="label">brews</div>
-            <div class="label-content">
-              <py:choose test="">
-                <py:when test="recipe.brew_set.exists()">
-                  <?python import itertools ?>
-                  <py:for each="i,brew in itertools.izip(itertools.count(),recipe.brew_set.all())" py:strip="True">
-                    <py:if test="i > 0">,</py:if>
-                    <a href="${brew.get_absolute_url()}">${std.fmt.date.ymd(brew.brew_date)} by ${brew.brewer.username}</a>
-                  </py:for>
-                </py:when>
-                <py:otherwise>
-                  <em class="muted">none</em>
-                </py:otherwise>
-              </py:choose>
-            </div>
-          </label>
-
-          <div class="clear"></div>
             
-          <label py:if="recipe.notes" class="stylin grid_16">
-            <div class="label">notes</div>
-            <div>${std.markdown(recipe.notes)}</div>
-          </label>
+            <div class="panel-body bj-js-toggle">
 
-          <div py:if="std.auth_user_is_user(request, recipe.author)">
-            <a href="#" id="edit" onClick="$('#overview').children().slideToggle(); $('#overview-form :input:first').focus(); return false;">edit recipe details</a>
-          </div>
-        </div>
-        <div py:if="std.auth_user_is_user(request, recipe.author)"
-             py:attrs="{'style': ['display:none', 'display:inherit'][recipe_form.is_bound and not recipe_form.is_valid()]}">
-          <form method="post" id="overview-form">
-            <table width="${table_width}" class="form" py:content="std.Markup(recipe_form.as_table())"/>
-            <input type="submit" value="update"/>
-          <input type="reset" value="cancel" onClick="$('#overview').children().slideToggle(); $('#edit').focus(); return true;" /></form>
-        </div>
-        
-      </div>
+                <div class="bj-js-toggle-item"
+                     py:attrs="{'style': ['display:none', 'display:inherit'][not recipe_form.is_bound or recipe_form.is_valid()]}" >
 
-      <script type="text/javascript">
-function toggle_row_editor(row_child) {
-    var $$row = $$(row_child).closest('tr:not([class=fake])');
-    var id = $$row.attr('id');
-    var otherId;
-    var match;
-    if (match = /(.*)-editor$$/.exec(id)) {
-        otherId = match[1];
-    } else {
-        otherId = id + "-editor";
-    }
-    $$('#' + id).toggle();
-    $$('#' + otherId).toggle();
-}
-      </script>
+                    <div class="row">
+                        <label class="col-md-4">
+                            <div class="label">style</div>
+                            <div class="label-content">
+                                ${recipe.get_type_display()}
+                                <py:choose test="">
+                                    <py:when test="recipe.style">${recipe.style.name}&nbsp;(${recipe.style.bjcp_code})</py:when>
+                                    <py:otherwise>(style undefined)</py:otherwise>
+                                </py:choose>
+                            </div>
+                        </label>
 
-      <py:if test="deriv is not None">
-        <div class="grid_16">
+                        <label class="col-md-4">
+                            <div class="label">batch size</div>
+                            <div class="label-content">
+                                ${'%.3g' % recipe.batch_size} ${recipe.get_batch_size_units_display()}
+                                <py:if test="recipe.pre_boil_volume">
+                                    , ${'%.3g' % recipe.pre_boil_volume} ${recipe.get_pre_boil_volume_units_display()}  pre-boil
+                                </py:if>
+                                , ${recipe.boil_length} minute boil
+                            </div>
+                        </label>
 
-          <div class="grid_4 deriv-og">
-            <label class="stylin">
-              <div class="label">Original Gravity</div>
-              <div class="label-content"
-                   py:with="no_og_reasons=deriv.can_not_derive_og()">
-                <py:choose>
-                  <py:when test="no_og_reasons">
+                        <label class="col-md-2">
+                            <div class="label">efficiency</div>
+                            <div class="label-content">${recipe.efficiency} %</div>
+                        </label>
 
-                    <div id="why_not_og">
-                      <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_og').children().slideToggle(); return false;">(why not?)</a></div>
-                      <div style="display:none">
-                        <ul>
-                          <li py:for="reason in no_og_reasons">${reason}</li>
-                        </ul>
-                        <a href="#" onClick="$('#why_not_og').children().slideToggle(); return false;">(hide)</a>
-                      </div>
+                        <label py:if="recipe.author" class="col-md-2">
+                            <div class="label">input by</div>
+                            <div class="label-content">
+                                <a href="/user/${recipe.author.username}/">${recipe.author.username}</a>
+                            </div>
+                        </label>
                     </div>
 
-                  </py:when>
-                  <py:otherwise py:with="og=deriv.compute_og()">
-                    ${'%1.3f' % (og.average)}
-                  </py:otherwise>
-                </py:choose>
-              </div>
-            </label>
-          </div>
+                    <div class="row" py:if="recipe.source_url">
+                        <label class="col-md-10">
+                            <div class="label">source url</div>
+                            <div class="label-content"><a href="${recipe.source_url}">${recipe.source_url}</a></div>
+                        </label>
 
-          <div class="grid_4 deriv-ibu">
-            <label class="stylin">
-              <div class="label">IBUs (Tinseth)</div>
-              <div class="label-content"
-                   py:with="no_ibu_reasons=deriv.can_not_derive_ibu()">
-                <py:choose>
-                  <py:when test="no_ibu_reasons">
-                    <div id="why_not_ibus">
-                      <div class="muted">
-                        can't yet compute.
-                        <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(why not?)</a>
-                      </div>
-                      <div style="display:none">
-                        <py:for each="reason in no_ibu_reasons">
-                          ${reason}<br />
-                        </py:for>
-                        <a href="#" onClick="$('#why_not_ibus').children().slideToggle(); return false;">(hide)</a>
-                      </div>
                     </div>
 
-                  </py:when>
-
-                  <py:otherwise>
-                    <py:with vars="ibus=deriv.compute_ibu()">
-                      ${'%2.1f' % (ibus.average)}
-                    </py:with>
-                    
-                  </py:otherwise>
-                </py:choose>
-              </div>
-            </label>
-          </div>
-
-          <div class="grid_4 deriv-srm">
-            <label class="stylin">
-              <div class="label">SRM</div>
-              <div class="label-content"
-                   py:with="no_srm_reasons=deriv.can_not_derive_srm()">
-                <py:choose>
-                  <py:when test="no_srm_reasons">
-                    <div id="why_not_srm">
-                      <div class="muted">can't yet compute. <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(why not?)</a></div>
-                      <div style="display:none">
-                        <py:for each="reason in no_srm_reasons">
-                          ${reason}<br />
-                        </py:for>
-                        <a href="#" onClick="$('#why_not_srm').children().slideToggle(); return false;">(hide)</a>
-                      </div>
+                    <div class="row">
+                        <label class="col-md-6">
+                            <div class="label">brews</div>
+                            <div class="label-content">
+                                <py:choose test="">
+                                    <py:when test="recipe.brew_set.exists()">
+                                        <?python import itertools ?>
+                                        <py:for each="i,brew in itertools.izip(itertools.count(),recipe.brew_set.all())" py:strip="True">
+                                            <py:if test="i > 0">,</py:if>
+                                            <a href="${brew.get_absolute_url()}">${std.fmt.date.ymd(brew.brew_date)} by ${brew.brewer.username}</a>
+                                        </py:for>
+                                    </py:when>
+                                    <py:otherwise>
+                                        <em class="muted">none</em>
+                                    </py:otherwise>
+                                </py:choose>
+                            </div>
+                        </label>
                     </div>
-                  </py:when>
-                  <py:otherwise py:with="srm=deriv.compute_srm()">
-                    ${'%2.0f' % (srm.average)}
-                  </py:otherwise>
-                </py:choose>
-              </div>
-            </label>
-          </div>
 
+                    <div class="row">
+                        <label py:if="recipe.notes" class="col-md-12">
+                            <div class="label">notes</div>
+                            <div class="well well-sm">${std.markdown(recipe.notes)}</div>
+                        </label>
+                    </div>
+                </div>
+
+                <div py:if="std.auth_user_is_user(request, recipe.author)"
+                     py:attrs="{'style': ['display:none', 'display:inherit'][recipe_form.is_bound and not recipe_form.is_valid()]}"
+                     class="bj-js-toggle-item row">
+                    <div class="col-md-12">
+                        <form method="post" id="overview-form">
+                            <table class="form" py:content="std.Markup(recipe_form.as_table())"/>
+                            <input type="submit" value="update"/>
+                        <input type="reset" value="cancel" onClick="$(this).closest('.bj-js-toggle').children().slideToggle(); $('#edit').focus(); return true;" /></form>
+                    </div>
+                </div>
+            </div>
         </div>
-      </py:if>
 
-      <div class="clear"></div>
+        <xi:include href="./_util.html"/>
+        <div py:if="deriv is not None" class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">derivations</h3></div>
+            <div class="row panel-body">
+                ${recipe_deriv_cols(deriv)}
+            </div>
+        </div>
 
-            <py:def function="editable_list(items, type_string, display_fn, edit_fn)">
-              <py:for each="item,form in items"
-                      py:with="form_invalid = form.is_bound and not form.is_valid();
-                               new_item = item is None;
-                               id = not item and 'new' or str(item.id);
-                               editable = std.auth_user_is_user(request, recipe.author)">
-                <tr py:if="not new_item"
-                    class="${type_string} display"
-                    id="${type_string}-${id}"
+        <py:def function="editable_list(items, type_string, display_fn, edit_fn)">
+            <py:for each="item,form in items"
+                    py:with="form_invalid = form.is_bound and not form.is_valid();
+                             new_item = item is None;
+                             id = not item and 'new' or str(item.id);
+                             editable = std.auth_user_is_user(request, recipe.author)">
+                <div py:if="not new_item"
+                    class="${type_string} bj-item-display row"
+                    data-bj-item-id="${id}"
                     py:attrs="{'style':['','display:none'][form_invalid]}">
                     <!-- display row -->
 
-                    ${display_fn(item)}
+                    <div py:def="controls()" py:choose="" class="btn-group" style="margin-right: 1em">
+                        <py:when test="editable">
+                            <button type="button" class="btn btn-default btn-xs bj-js-recipe-item-edit"><span class="glyphicon glyphicon-edit"/></button>
+                            <button type="button" class="btn btn-default btn-xs bj-js-recipe-item-delete"><span class="glyphicon glyphicon-remove"/></button>
+                        </py:when>
+                        <py:otherwise>&nbsp;</py:otherwise>
+                    </div>
 
-                    <td py:choose="">
-                      <py:when test="editable">
-                        <a href="#" onClick="toggle_row_editor(this);">edit</a>
-                        &nbsp;<a href="#" onClick="var $$form = $('TR#${type_string}-${id}-editor FORM'); $('INPUT[name=delete_id]', $$form).val(${id}); $$form.submit(); return false;">delete</a>
-                      </py:when>
-                      <py:otherwise>&nbsp;
-                      </py:otherwise>
-                    </td>
-                </tr>
-                <tr py:if="new_item and editable"
-                    class="add"
-                    id="${type_string}-new"
+                    ${display_fn(item, controls)}
+
+                </div>
+                <div py:if="new_item and editable"
+                    class="bj-item-add row"
                     py:attrs="{'style':['','display:none'][form_invalid]}">
-                  <!-- add control row -->
-                  <td colspan="100">
-                    <a href="#" onClick="toggle_row_editor(this); return false;">add</a>
-                  </td>
-                </tr>
-                <tr py:if="editable"
-                    id="${type_string}-${id}-editor"
-                    class="${type_string}-editor"
+                    <div class="col-md-12" style="margin:0.5em 0">
+                        <button type="button" class="btn btn-default btn-xs bj-js-recipe-item-add"><span class="glyphicon glyphicon-plus"/>&nbsp;add</button>
+                    </div>
+                </div>
+                <div py:if="editable"
+                    class="bj-item-editor row"
                     py:attrs="{'style':['display:none', ''][form_invalid]}">
-                  <td colspan="100">
-                    <!-- form row -->
-                    <form method="POST">
-                      <input type="hidden" name="item_type" value="${type_string}"/>
-                      <input type="hidden" name="id" value="${id}"/>
-                      <input type="hidden" name="delete_id" value="-1"/>
-                      <table width="100%">
-                        <tr class="fake">
+                    <div class="col-md-16">
+                        <!-- form row -->
+                        <form method="POST">
+                            <input type="hidden" name="item_type" value="${type_string}"/>
+                            <input type="hidden" name="id" value="${id}"/>
+                            <input type="hidden" name="delete_id" value="-1"/>
 
-                          ${edit_fn(form)}
-                          
-                          <td>
-                            <input type="submit" value="update" />
-                            <input type="reset" value="cancel" onClick="toggle_row_editor(this); return true;" />
-                          </td>
-                        </tr>
-                      </table>
-                    </form>
-                  </td>
-                </tr>
-              </py:for>
-            </py:def>
+                            <div py:def="controls()" class="btn-group" style="margin-right: 1em">
+                                <button type="submit" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-ok-sign"/></button>
+                                <button type="reset" class="btn btn-default btn-xs bj-js-recipe-item-edit-cancel"><span class="glyphicon glyphicon-ban-circle"/></button>
+                            </div>
 
-            <!-- grains -->
-            <div id="grains" class="grid_16" style="margin-top: 10px">
-            <table width="${table_width}">
-              <tr>
-                <th width="20%">grain</th>
-                <th width="20%">amount</th>
-                <th width="20%">gravity</th>
-                <th width="20%"></th>
-                <th width="20%">
-                  <py:choose test="">
-                    <py:when test="std.auth_user_is_user(request, recipe.author)">action</py:when>
-                    <py:otherwise>&nbsp;</py:otherwise>
-                  </py:choose>
-                </th>
-              </tr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    ${edit_fn(form, controls)}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </py:for>
+        </py:def>
 
-              <py:def function="grain_display(grain)">
-                <!-- display row -->
-                <td>${grain.grain.name}</td>
-                <td>
-                  ${'%.3g' % grain.amount_value} ${grain.amount_units}
-                  <py:with vars="grain_deriv=deriv.gravity_for_recipe_grain(grain)">
-                    <py:choose test="">
-                      <py:when test="grain_deriv and grain_deriv.weight_percentage">&nbsp;(${'%0.1f' % grain_deriv.weight_percentage}%)</py:when>
-                    </py:choose>
-                  </py:with>
-                </td>
-                <td>
-                  <span py:if="grain.measured_by_weight()" py:attrs="{'class':['','overridden'][grain.by_weight_potential_override is not None]}">
-                    ${grain.grain.extract_min} - ${grain.grain.extract_max}
-                  </span>
-                  <span py:if="grain.measured_by_volume()" py:attrs="{'class':['','overridden'][grain.by_volume_potential_override is not None]}">
-                    ${grain.grain.volume_potential_min} - ${grain.grain.volume_potential_max}
-                  </span>
-                  <py:if test="grain.by_weight_potential_override">
-                    &nbsp;${grain.by_weight_potential_override} for 1 lb / 1 gl
-                  </py:if>
-                  <py:if test="grain.by_volume_potential_override">
-                    ${grain.by_volume_potential_override}
-                  </py:if>
-                </td>
-                <td></td>
-              </py:def>
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">ingredients</h3></div>
+            <div class="panel-body">
+                <!-- grains -->
+                <div id="grains" style="margin-top: 10px">
+                    <div class="row bj-ui-col-headers">
+                        <div class="col-md-3">grain</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">amount</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">gravity</div>
+                    </div>
 
-              <py:def function="grain_edit(grain_form)">
-                <td>${std.Markup(grain_form.grain.errors)} ${std.Markup(grain_form.grain)}</td>
-                <td>${std.Markup(grain_form.amount_value.errors)} ${std.Markup(grain_form.amount_units.errors)} ${std.Markup(grain_form.amount_value)} ${std.Markup(grain_form.amount_units)}</td>
-                <td>
-                  <div>overrides</div>
-                  <div>${std.Markup(grain_form.by_weight_potential_override)} (times 1000) for 1 lb / 1 gl (e.g. "1036")</div>
-                  <div>${std.Markup(grain_form.by_volume_potential_override)} (times 1000) (e.g. "1048")</div>
-                </td>
-                <td></td>
-              </py:def>
+                    <py:def function="grain_display(grain, controls)">
+                        <!-- display row -->
+                        <div class="col-md-3">${controls()}&nbsp;${grain.grain.name}</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">
+                            ${'%.3g' % grain.amount_value} ${grain.amount_units}
+                            <py:with vars="grain_deriv=deriv.gravity_for_recipe_grain(grain)">
+                                <py:choose test="">
+                                    <py:when test="grain_deriv and grain_deriv.weight_percentage">&nbsp;(${'%0.1f' % grain_deriv.weight_percentage}%)</py:when>
+                                </py:choose>
+                            </py:with>
+                        </div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">
+                            <span py:if="grain.measured_by_weight()" py:attrs="{'class':['','overridden'][grain.by_weight_potential_override is not None]}">
+                                ${grain.grain.extract_min} - ${grain.grain.extract_max}
+                            </span>
+                            <span py:if="grain.measured_by_volume()" py:attrs="{'class':['','overridden'][grain.by_volume_potential_override is not None]}">
+                                ${grain.grain.volume_potential_min} - ${grain.grain.volume_potential_max}
+                            </span>
+                            <py:if test="grain.by_weight_potential_override">
+                                &nbsp;${grain.by_weight_potential_override} for 1 lb / 1 gl
+                            </py:if>
+                            <py:if test="grain.by_volume_potential_override">
+                                ${grain.by_volume_potential_override}
+                            </py:if>
+                        </div>
+                    </py:def>
 
-              ${editable_list(recipe_grains, 'grain', grain_display, grain_edit)}
+                    <py:def function="grain_edit(grain_form, controls)">
+                        <div class="col-md-3">${controls()}&nbsp;${std.Markup(grain_form.grain.errors)} ${std.Markup(grain_form.grain)}</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">${std.Markup(grain_form.amount_value.errors)} ${std.Markup(grain_form.amount_units.errors)} ${std.Markup(grain_form.amount_value)} ${std.Markup(grain_form.amount_units)}</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">
+                            <div>overrides</div>
+                            <div>${std.Markup(grain_form.by_weight_potential_override)} (times 1000) for 1 lb / 1 gl (e.g. "1036")</div>
+                            <div>${std.Markup(grain_form.by_volume_potential_override)} (times 1000) (e.g. "1048")</div>
+                        </div>
+                    </py:def>
 
-            </table>
+                    ${editable_list(recipe_grains, 'grain', grain_display, grain_edit)}
+
+                </div>
+
+                <!-- hops -->
+                <div>
+                    <div class="row bj-ui-col-headers">
+                        <div class="col-md-3">hop</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">amount</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">AAU</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">usage</div>
+                    </div>
+
+                    <py:def function="hop_display(hop, controls)">
+                        <div class="col-md-3">${controls()}&nbsp;${hop.hop.name}</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">${'%.3g' % hop.amount_value} ${hop.amount_units}</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">
+                            <span py:attrs="{'class':['','overridden'][hop.aau_override is not None]}">
+                                ${'%.3g' % hop.hop.alpha_acid_low} % - ${'%.3g' % hop.hop.alpha_acid_high} %
+                            </span>
+                            <py:if test="hop.aau_override">
+                                &nbsp;
+                                ${'%.3g' % hop.aau_override} %
+                            </py:if>
+                        </div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">
+                            <py:choose test="">
+                                <py:when test="hop.usage_type == 'boil'">
+                                    ${hop.boil_time} minutes
+                                </py:when>
+                                <py:otherwise>
+                                    ${hop.get_usage_type_display()}
+                                </py:otherwise>
+                            </py:choose>
+                        </div>
+                    </py:def>
+
+                    <py:def function="hop_edit(hop_form, controls)">
+                        <div class="col-md-3">${controls()}&nbsp;${std.Markup(hop_form.hop.errors)} ${std.Markup(hop_form.hop)}</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">
+                            ${std.Markup(hop_form.amount_value.errors)} ${std.Markup(hop_form.amount_units.errors)}
+                            ${std.Markup(hop_form.amount_value)}&nbsp;${std.Markup(hop_form.amount_units)}
+                        </div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">${std.Markup(hop_form.aau_override.errors)} AAU Override: ${std.Markup(hop_form.aau_override)} %</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">
+                            ${std.Markup(hop_form.usage_type.errors)}
+                            ${std.Markup(hop_form.boil_time.errors)}
+                            ${std.Markup(hop_form.usage_type)}
+                            <span class="hop_boil_minutes"
+                                  py:attrs="{'style': ['', 'display:none'][hop_form.instance.usage_type != 'boil']}">
+                                ${std.Markup(hop_form.boil_time)}&nbsp;minutes
+                            </span>
+                        </div>
+                    </py:def>
+
+                    ${editable_list(recipe_hops, 'hop', hop_display, hop_edit)}
+                </div>
+
+                <!-- adjuncts -->
+                <div>
+                    <div class="row bj-ui-col-headers">
+                        <div class="col-md-3">adjunct</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">amount</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">boil time</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">notes</div>
+                    </div>
+
+                    <py:def function="adjunct_display(adjunct, controls)">
+                        <div class="col-md-3">${controls()}&nbsp;${adjunct.adjunct.name}</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">${'%.3g' % adjunct.amount_value} ${adjunct.amount_units}</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">${adjunct.boil_time} minutes</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">${adjunct.notes}</div>
+                    </py:def>
+
+                    <py:def function="adjunct_edit(adj_form, controls)">
+                        <div class="col-md-3">${controls()}&nbsp;${std.Markup(adj_form['adjunct'].errors)} ${std.Markup(adj_form['adjunct'])}</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">${std.Markup(adj_form['amount_value'].errors)} ${std.Markup(adj_form['amount_units'].errors)} ${std.Markup(adj_form['amount_value'])} ${std.Markup(adj_form['amount_units'])}</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">${std.Markup(adj_form['boil_time'].errors)} ${std.Markup(adj_form['boil_time'])} minutes</div>
+                        <div class="col-md-3 col-md-offset-0 col-xs-offset-1">${std.Markup(adj_form['notes'].errors)} ${std.Markup(adj_form['notes'])}</div>
+                    </py:def>
+
+                    ${editable_list(recipe_adjuncts, 'adjunct', adjunct_display, adjunct_edit)}
+
+                </div>
+                
+                <!-- yeast -->
+                <div>
+                    <div class="row bj-ui-col-headers">
+                        <div class="col-md-3">yeast</div>
+                    </div>
+
+                    <py:def function="yeast_display(yeast, controls)">
+                        <div class="col-md-3">${controls()}&nbsp;${yeast.yeast}</div>
+                    </py:def>
+
+                    <py:def function="yeast_edit(yeast_form, controls)">
+                        <div class="col-md-3">${controls()}&nbsp;${std.Markup(yeast_form['yeast'].errors)} ${std.Markup(yeast_form['yeast'])}</div>
+                    </py:def>
+
+                    ${editable_list(recipe_yeasts, 'yeast', yeast_display, yeast_edit)}
+
+                </div>
             </div>
+        </div>
 
-            <!-- hops -->
-            <div class="grid_16">
-            <table width="${table_width}">
-              <tr>
-                <th width="20%">hop</th>
-                <th width="20%">amount</th>
-                <th width="20%">AAU</th>
-                <th width="20%">usage</th>
-                <th width="20%">
-                  <py:choose test="">
-                    <py:when test="std.auth_user_is_user(request, recipe.author)">action</py:when>
-                    <py:otherwise>&nbsp;</py:otherwise>
-                  </py:choose>
-                </th>
-              </tr>
-              <py:def function="hop_display(hop)">
-                <td>${hop.hop.name}</td>
-                <td>${'%.3g' % hop.amount_value} ${hop.amount_units}</td>
-                <td>
-                  <span py:attrs="{'class':['','overridden'][hop.aau_override is not None]}">
-                    ${'%.3g' % hop.hop.alpha_acid_low} % - ${'%.3g' % hop.hop.alpha_acid_high} %
-                  </span>
-                  <py:if test="hop.aau_override">
-                    &nbsp;
-                    ${'%.3g' % hop.aau_override} %
-                  </py:if>
-                </td>
-                <td>
-                  <py:choose test="">
-                    <py:when test="hop.usage_type == 'boil'">
-                      ${hop.boil_time} minutes
-                    </py:when>
-                    <py:otherwise>
-                      ${hop.get_usage_type_display()}
-                    </py:otherwise>
-                  </py:choose>
-                </td>
-              </py:def>
-              <py:def function="hop_edit(hop_form)">
-                <td>${std.Markup(hop_form.hop.errors)} ${std.Markup(hop_form.hop)}</td>
-                <td>
-                  ${std.Markup(hop_form.amount_value.errors)} ${std.Markup(hop_form.amount_units.errors)}
-                  ${std.Markup(hop_form.amount_value)}&nbsp;${std.Markup(hop_form.amount_units)}
-                </td>
-                <td>${std.Markup(hop_form.aau_override.errors)} AAU Override: ${std.Markup(hop_form.aau_override)} %</td>
-                <td>
-                  ${std.Markup(hop_form.usage_type.errors)}
-                  ${std.Markup(hop_form.boil_time.errors)}
-                  ${std.Markup(hop_form.usage_type)}
-                  <span class="hop_boil_minutes"
-                        py:attrs="{'style': ['', 'display:none'][hop_form.instance.usage_type != 'boil']}">
-                    ${std.Markup(hop_form.boil_time)}&nbsp;minutes
-                  </span>
-                </td>
-              </py:def>
-
-              ${editable_list(recipe_hops, 'hop', hop_display, hop_edit)}
-
-            </table>
-            <script type="text/javascript">
-$$('select[name=usage_type]').change(function(evt) {
-    var select = $(this);
-    var selected = $('option:selected', select);
-    var containing_td = select.closest('td');
-    var boil_minutes_span = $('.hop_boil_minutes', containing_td);
-    var minutes_visible = (selected.val() == 'boil');
-    if (minutes_visible) {
-        boil_minutes_span.show();
-    } else {
-        var boil_minutes = $('input[name=boil_time]', containing_td);
-        boil_minutes.val(0);
-        boil_minutes_span.hide();
-    }
-});
-                  </script>
-            </div>
-
-            <!-- adjuncts -->
-            <div class="grid_16">
-            <table width="${table_width}">
-              <tr>
-                <th width="20%">adjunct</th>
-                <th width="20%">amount</th>
-                <th width="20%">boil time</th>
-                <th width="20%">notes</th>
-                <th width="20%">
-                  <py:choose test="">
-                    <py:when test="std.auth_user_is_user(request, recipe.author)">action</py:when>
-                    <py:otherwise>&nbsp;</py:otherwise>
-                  </py:choose>
-                </th>
-              </tr>
-              <py:def function="adjunct_display(adjunct)">
-                <td>${adjunct.adjunct.name}</td>
-                <td>${'%.3g' % adjunct.amount_value} ${adjunct.amount_units}</td>
-                <td>${adjunct.boil_time} minutes</td>
-                <td>${adjunct.notes}</td>
-              </py:def>
-              <py:def function="adjunct_edit(adj_form)">
-                <td>${std.Markup(adj_form['adjunct'].errors)} ${std.Markup(adj_form['adjunct'])}</td>
-                <td>${std.Markup(adj_form['amount_value'].errors)} ${std.Markup(adj_form['amount_units'].errors)} ${std.Markup(adj_form['amount_value'])} ${std.Markup(adj_form['amount_units'])}</td>
-                <td>${std.Markup(adj_form['boil_time'].errors)} ${std.Markup(adj_form['boil_time'])} minutes</td>
-                <td>${std.Markup(adj_form['notes'].errors)} ${std.Markup(adj_form['notes'])}</td>
-              </py:def>
-
-              ${editable_list(recipe_adjuncts, 'adjunct', adjunct_display, adjunct_edit)}
-
-            </table>
-            </div>
-              
-            <!-- yeast -->
-            <div class="grid_16">
-            <table width="${table_width}">
-              <tr>
-                <th width="20%">yeast</th>
-                <th width="60%">is ideal</th>
-                <th width="20%">
-                  <py:choose test="">
-                    <py:when test="std.auth_user_is_user(request, recipe.author)">action</py:when>
-                    <py:otherwise>&nbsp;</py:otherwise>
-                  </py:choose>
-                </th>
-              </tr>
-              <py:def function="yeast_display(yeast)">
-                <td>${yeast.yeast}</td>
-                <td>${['no', 'yes'][yeast.ideal]}</td>
-              </py:def>
-              <py:def function="yeast_edit(yeast_form)">
-                <td>${std.Markup(yeast_form['yeast'].errors)} ${std.Markup(yeast_form['yeast'])}</td>
-                <td>${std.Markup(yeast_form['ideal'].errors)} ${std.Markup(yeast_form['ideal'])}</td>
-              </py:def>
-
-              ${editable_list(recipe_yeasts, 'yeast', yeast_display, yeast_edit)}
-
-            </table>
-            </div>
-
-    </div>
-  </body>
+    </body>
 </html>

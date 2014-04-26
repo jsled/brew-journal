@@ -1,22 +1,28 @@
 <head py:strip="True" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
-    <link rel="stylesheet" href="${std.STATIC_URL}fluid960gs/reset.css"/>
-    <link rel="stylesheet" href="${std.STATIC_URL}fluid960gs/text.css"/>
-    <link rel="stylesheet" href="${std.STATIC_URL}fluid960gs/grid.css"/>
-    <link rel="stylesheet" href="${std.STATIC_URL}style.css"/>
-    <link rel="shortcut icon" href="${std.STATIC_URL}favicon.ico"/>
-    <script type="text/javascript" src="${std.STATIC_URL}site.js"></script>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css"/>
+
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+    <link rel="shortcut icon" href="${std.STATIC_URL}favicon.ico"/>
+
+    <link rel="stylesheet" href="${std.STATIC_URL}style.css"/>
+    <script type="text/javascript" src="${std.STATIC_URL}site.js"></script>
+
     <script type="text/javascript">
         // fallback if google can't serve up jquery
         if (typeof jQuery == 'undefined') {
             document.write(unescape("%3Cscript type='text/javascript' src='${std.STATIC_URL}jquery-1.11.0.min.js'%E3%3C/script%3E"));
         }
     </script>
-    <!-- meta name="viewport" content="width=device-width"/ -->
-    <!-- meta name="viewport" content="initial-scale=1.0; target-densitydpi=device-dpi " / -->
-    <!-- meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; target-densitydpi=device-dpi " / -->
     <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-16872819-1']);

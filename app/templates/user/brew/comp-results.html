@@ -8,73 +8,74 @@
   <xi:include href="../../_incl/head.html"/>
 </head>
 <body>
-    <div class="container_16">
-
-        <xi:include href="../../_incl/body-top-bar.html"/>
-
-        <h1>competition results for ${brew.recipe.name}</h1>
-
-        <div class="grid_16">
+    <xi:include href="../../_incl/body-top-bar.html"/>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h2 class="panel-title">competition results for ${brew.recipe.name}</h2></div>
+        <div class="panel-body" style="padding-left: 1em">
             <form method="POST">
-
-                <div class="grid_6">
-                    ${field(form.competition_name)}
+                <div class="row">
+                    <div class="col-md-6">
+                        ${field(form.competition_name)}
+                    </div>
                 </div>
-                <div class="grid_4">
-                    ${field(form.competition_date)}
-                </div>
-                <div class="grid_6">
-                    ${field(form.competition_url)}
-                </div>
-
-                <div class="clear"></div>
-
-                <div class="grid_4">
-                    ${field(form.entry_id)}
+                <div class="row">
+                    <div class="col-md-6">
+                        ${field(form.competition_url)}
+                    </div>
                 </div>
 
-                <div class="grid_8">
-                    ${field(form.entered_style)}
+                <div class="row">
+                    <div class="col-md-3">
+                        ${field(form.competition_date)}
+                    </div>
                 </div>
 
-                <div class="clear"></div>
+                <div class="row">
+                    <div class="col-md-3">
+                        ${field(form.entry_id)}
+                    </div>
 
-                <div class="grid_4">
-                    ${field(form.flight_position)}
-                </div>
-                <div class="grid_4">
-                    ${field(form.flight_entries)}
-                </div>
-                <div class="grid_4">
-                    ${field(form.mini_bos)}
+                    <div class="col-md-9">
+                        ${field(form.entered_style)}
+                    </div>
                 </div>
 
-                <div class="clear"></div>
-
-                <div class="grid_4">
-                    ${field(form.assigned_score)}
+                <div class="row">
+                    <div class="col-md-3">
+                        ${field(form.flight_position)}
+                    </div>
+                    <div class="col-md-3">
+                        ${field(form.flight_entries)}
+                    </div>
+                    <div class="col-md-3">
+                        ${field(form.mini_bos)}
+                    </div>
                 </div>
 
-                <div class="grid_4">
-                    ${field(form.place_awarded)}
+                <div class="row">
+                    <div class="col-md-3">
+                        ${field(form.assigned_score)}
+                    </div>
+
+                    <div class="col-md-3">
+                        ${field(form.place_awarded)}
+                    </div>
                 </div>
 
-                <div class="clear"></div>
-
-                <div class="grid_8">
-                    ${field(form.notes)}
+                <div class="row">
+                    <div class="col-md-8">
+                        ${field(form.notes)}
+                    </div>
                 </div>
 
-
-                <div class="clear"></div>
-
-                <div class="grid_4">
-                    <input type="submit"/>
-                    <button type="button" onclick="window.location='${brew.get_absolute_url()}'">Cancel</button>
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="submit"/>
+                        <button type="button" onclick="window.location='${brew.get_absolute_url()}'">Cancel</button>
+                    </div>
                 </div>
             </form>
         </div>
-
-    </div> <!-- .container_16 -->
+    </div>
 </body>
 </html>

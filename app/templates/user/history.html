@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="../_incl/taglib.html"/>
+<head>
+  <title>${user.username} historical brews | brew-journal</title>
+  <xi:include href="../_incl/head.html"/>
+</head>
+<body>
+    <xi:include href="../_incl/body-top-bar.html"/>
+    <xi:include href="./_util.html"/>
+
+    <div py:if="not done_brews">
+        <div class="row">
+            <div class="col-md-12"><em>no historical brews</em></div>
+        </div>
+    </div>
+    <div py:for="brew in done_brews" class="row">
+        <div class="col-md-6">${brew_name_and_style(brew)}</div>
+        <div class="col-md-6 col-md-offset-0 col-xs-offset-1">${std.fmt.date.ymd(brew.brew_date, user)}</div>
+    </div>
+
+</body>

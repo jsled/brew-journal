@@ -1,118 +1,93 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
     <xi:include href="_incl/taglib.html"/>
   <head>
     <title>brew-journal</title>
     <xi:include href="_incl/head.html"/>
-    <py:if test="not request.user.is_authenticated()">
-      <script type="application/javascript">
-    $(document).ready(function() {
-        $('#login :input:first').focus();
-    });
-      </script>
-    </py:if>
   </head>
 <body>
-    <div class="container_16">
-        <xi:include href="_incl/body-top-bar.html"/>
-        <div class="clear"></div>
-        <div id="bd">
-            <div class="grid_8 container_16">
+    <xi:include href="_incl/body-top-bar.html"/>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <form py:if="not request.user.is_authenticated()" id="login" method="POST">
 
-                <div>
-                    <form py:if="not request.user.is_authenticated()" id="login" method="POST">
+                <div class="row">
+                    ${auth_errors}
+                    ${auth_form.non_field_errors()}
 
-                        <div class="grid_16">
-                            ${auth_errors}
-                            ${auth_form.non_field_errors()}
+                    <div class="col-md-6">
+                        <h2>login</h2>
+
+                        <div>
+                            ${field(auth_form.username)}
                         </div>
 
-                        <div class="grid_8">
-                            <h2>login</h2>
-
-                            <div>
-                                ${field(auth_form.username)}
-                            </div>
-
-                            <div>
-                                ${field(auth_form.password)}
-                            </div>
-
-                            <div>
-                                <input type="submit" name="sub" value="login"/>
-                            </div>
-
+                        <div>
+                            ${field(auth_form.password)}
                         </div>
 
-                        <div class="grid_8">
-                            <h2>create account</h2>
-
-                            <div>
-                                ${field(auth_form.password_again)}
-                            </div>
-
-                            <div>
-                                ${field(auth_form.email)}
-                            </div>
-
-                            <div>
-                                <input type="submit" name="sub" value="create"/>
-                            </div>
+                        <div>
+                            <input type="submit" name="sub" value="login"/>
                         </div>
-                        
 
-                        <div class="grid_16">
-                            <hr style="margin: 3em 0.5em;"/>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h2>create account</h2>
+
+                        <div>
+                            ${field(auth_form.password_again)}
                         </div>
-                    </form>
+
+                        <div>
+                            ${field(auth_form.email)}
+                        </div>
+
+                        <div>
+                            <input type="submit" name="sub" value="create"/>
+                        </div>
+                    </div>
                 </div>
+            </form>
+        </div>
+    </div>
 
-                <div style="margin-top: 1em">
-                    <h2 style="margin-bottom: 1em"><span class="logotext">brew-journal</span> is a web site for people to track the status and progress of their homebrews.</h2>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-1">
+            <h2 style="margin-bottom: 1em"><span class="logotext">brew-journal</span> helps you keep a digital journal of the status and progress of your homebrew beer</h2>
 
-                    <p>The <a href="http://github.com/jsled/brew-journal/tree/master">source for this site is available on github.com</a> under the <a href="http://en.wikipedia.org/wiki/New_BSD">New BSD</a> license.</p>
-
-                    <blockquote style="text-align: justify">
-                        <p><strong class="big">NOTE!</strong> <span class="logotext">brew-journal</span> is somewhere between alpha and beta.  I (<a href="/user/jsled/">jsled</a>, the author) am adding my own historical journal entries and future journal entries to the site, so I'm highly motivated to keep the data safe from both site failure and schema changes as the code progresses … at the same time, you should note that the code is in (sometimes very slow) development, and I've not yet authored any export functionality.  Caveat user.</p>
-
-                        <p>That being said: please sign up and try it out! I would love bug reports and any and all feedback, positive and negative included. As well, please feel free to contact me at <a href="http://asynchronous.org/jsled/">jsled [at] asynchronous [dot] org</a> before more formal contact/feedback mechanisms are established.</p>
-
-                        <p>As well, <a href="irc://irc.freenode.net/#homebrew">join some friendly homebrewers in ##homebrew on irc.freenode.net</a>.</p>
-                    </blockquote>
-                </div>
+            <p>The <a href="http://github.com/jsled/brew-journal/tree/master">source for this site is available on github.com</a> under the <a href="http://en.wikipedia.org/wiki/New_BSD">New BSD</a> license.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="bj-recent">
+            <div class="col-md-offset-1 col-md-4">
+                <h2>recent brews</h2>
+                <ul class="list-group">
+                    <li py:for="brew in recent_brews" class="list-group-item">
+                        <a href="${brew.get_absolute_url()}">
+                            <py:choose test="">
+                                <py:when test="brew.recipe">"${brew.recipe.name}"</py:when>
+                                <py:otherwise>A brew</py:otherwise>
+                        </py:choose></a>
+                        by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
+                        <py:if test="brew.brew_date">
+                            on ${std.fmt.date.ymd(brew.brew_date, request.user)}
+                        </py:if>
+                    </li>
+                </ul>
             </div>
-            <div class="grid_8 bj-recent">
-                <div>
-                    <h2>recent brews</h2>
-                    <ul>
-                        <li py:for="brew in recent_brews">
-                            <a href="${brew.get_absolute_url()}">
-                                <py:choose test="">
-                                    <py:when test="brew.recipe">"${brew.recipe.name}"</py:when>
-                                    <py:otherwise>A brew</py:otherwise>
-                            </py:choose></a>
-                            by <a href="/user/${brew.brewer.username}/">${brew.brewer.username}</a>
-                            <py:if test="brew.brew_date">
-                                on ${std.fmt.date.ymd(brew.brew_date, request.user)}
-                            </py:if>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h2 class="feed-link"><a href="/feeds/new-recipes">recent recipes</a></h2>
-                    <ul>
-                        <li py:for="recipe in recent_recipes">
-                            "${recipe_a(recipe)}", added ${std.fmt.date.ymd(recipe.insert_date, request.user)} by <a href="/user/${recipe.author.username}/">${recipe.author}</a>.
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h2>recent updates</h2>
-                    <ul>
-                        <li py:for="step in recent_updates"><a href="${step.get_absolute_url()}">Step ${step.type}</a> journaled for <a href="/user/${step.brew.brewer.username}/">${step.brew.brewer.username}</a>'s <py:if test="step.brew.recipe">${recipe_a(step.brew.recipe)}</py:if> on ${std.fmt.date.best(step.date, request.user)}</li>
-                    </ul>
-                </div>
+            <div class="col-md-offset-1 col-md-4">
+                <h2 class="feed-link"><a href="/feeds/new-recipes">recent recipes</a></h2>
+                <ul class="list-group">
+                    <li py:for="recipe in recent_recipes" class="list-group-item">
+                        "${recipe_a(recipe)}", added ${std.fmt.date.ymd(recipe.insert_date, request.user)} by <a href="/user/${recipe.author.username}/">${recipe.author}</a>.
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

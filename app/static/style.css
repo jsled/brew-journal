@@ -3,55 +3,9 @@ BODY
   background-color: white;
   color: black;
   padding-bottom: 5em;
-}
-
-.big {
-  font-size: large;
-}
-
-TABLE
-{
-  empty-cells: show;
-  border-collapse: collapse;
-  border-top: solid thin black;
-  border-bottom: solid thin black;
-}
-
-TABLE.wide {
-  width: 100%;
-}
-
-H1, H2, H3, H4 {
-  font-family: sans-serif;
-  margin: 0;
-}
-
-TD {
-  padding: 0;
-}
-
-THEAD {
-  border-bottom: solid thin black;
-}
-
-TBODY
-{
-  border-top: solid thin black;
-  padding: 0;
-}
-
-TBODY TR {
-   border-top: solid thin lightgray;
-}
-
-TBODY TR:first-child {
-   border-top: inherit;
-}
-
-TH {
-  background-color: #75B368;
-  font-weight: bold;
-  text-align: left;
+  /* for bootstrap fixed header: */
+  padding-top: 70px;
+  padding-left: 1em;
 }
 
 A, A.visited {
@@ -61,59 +15,6 @@ A, A.visited {
 TABLE.form
 {
   border: none;
-}
-
-#hd
-{
-  border-bottom: solid thin green;
-  margin-bottom: 1em;
-}
-
-.logotext
-{
-  font-family: Gentium, serif;
-  color: rgb(34, 140, 34);
-}
-
-#hd .logotext
-{
-  font-size: x-large;
-  text-decoration: none;
-}
-
-PRE.recipe
-{
-  background-color: rgb(240,240,240);
-  padding: 0.5em 0.25em 0.5em 0.25em;
-  width: 50%;
-}
-
-.random-box
-{
-  width: 45%;
-  border: solid thin black;
-}
-
-.random-box > H2
-{
-  border-bottom: solid thin black;
-  margin-top: 0em;
-}
-
-TABLE.form TBODY {
-  border-top: inherit;
-}
-
-TABLE.form TR {
-  border-top: inherit;
-}
-
-TABLE.form {
-  margin-bottom: 0.5em;
-}
-
-TH, TD {
-  padding: 0.25em;
 }
 
 UL.errorlist {
@@ -129,23 +30,7 @@ UL.errorlist + INPUT {
   color: rgb(128, 128, 128);
 }
 
-TABLE.recipe_derivations TD {
-    color: rgb(150, 150, 150);
-}
-
-TABLE.recipe_derivations TD STRONG {
-    color: black;
-}
-
-TABLE.recipe_derivations TD.space {
-    border: solid 1px transparent;
-}
-
 .datetime {
-    white-space: nowrap;
-}
-
-.bj-recent UL LI {
     white-space: nowrap;
 }
 
@@ -159,26 +44,41 @@ TABLE.recipe_derivations TD.space {
     background: transparent url('./feed-icon-14x14.png') no-repeat scroll right center;
 }
 
-.stylin .label {
+.label {
   font-weight: bold;
   color: green;
+  padding-left: 0;
 }
 
-.stylin .help-text {
+.help-text {
   color: rgb(180, 180, 180);
   font-size: small;
 }
 
-.stylin .errors {
+.errors {
   color: red;
   font-size: small;
 }
 
-.stylin INPUT, .stylin SELECT {
-  border: solid 1px rgb(200, 200, 200);
-  padding: 0.25em;
+.brew-name {
+    font-size: large;
 }
 
-TD P, TD PRE {
-    margin-bottom: inherit;
+.brew-style {
+    font-size: small;
+}
+
+.bj-ui-col-headers {
+    color: green;
+    font-size: large;
+    font-weight: bold;
+}
+
+BUTTON, INPUT[type=submit] {
+    color: green !important;
+}
+
+.scoresheet P {
+    font-size: 12px;
+    font-weight: normal;
 }

@@ -7,68 +7,44 @@
   <xi:include href="../_incl/head.html"/>
 </head>
 <body>
-    <div class="container_16">
+    <xi:include href="../_incl/body-top-bar.html"/>
 
-        <xi:include href="../_incl/body-top-bar.html"/>
+    <h1>recipes</h1>
 
-        <div class="grid_16">
-            <h1>recipes</h1>
+    <div class="row">
+    <form>
+        <div class="col-md-2">
+            ${field(form.type)}
         </div>
+        
+        <div class="col-md-6">
+            ${field(form.style)}
+        </div>
+        
+        <div class="col-md-4">
+            <label>
+                <div class="label">&nbsp;</div>
+                <div class="contents">
+                    <input type="submit"/>
+                </div>
+            </label>
+        </div>
+    </form>
+    </div>
 
-        <div class="clear"></div>
+    <div py:for="recipe in recipes" class="row">
+        <div class="col-md-3">${recipe_a(recipe)}</div>
+        <div class="col-md-3 col-md-offset-0 col-xs-offset-1"><py:choose>
+            <py:when test="recipe.style is not None">
+                ${recipe.style.name} (${recipe.style.bjcp_code})
+            </py:when>
+            <py:otherwise>&mdash;</py:otherwise>
+            </py:choose>
+        </div>
+        <div class="col-md-2 col-md-offset-0 col-xs-offset-1">${recipe.get_type_display()}</div>
+        <div class="col-md-2 col-md-offset-0 col-xs-offset-1"><a href="/user/${recipe.author.username}/">${recipe.author.username}</a></div>
+        <div class="col-md-2 col-md-offset-0 col-xs-offset-1">${std.fmt.date.best(recipe.insert_date, recipe.author)}</div>
+    </div>
 
-        <form>
-            <div class="grid_2 stylin">
-                ${field(form.type)}
-            </div>
-
-            <div class="grid_6 stylin">
-                ${field(form.style)}
-            </div>
-            
-            <div class="grid_4">
-                <label class="stylin">
-                    <div class="label">&nbsp;</div>
-                    <div class="contents">
-                        <input type="submit"/>
-                    </div>
-                </label>
-            </div>
-        </form>
-
-        <div class="clear"></div>
-
-        <div class="grid_16" style="margin-top: 10px">
-
-            <table width="100%">
-                <thead>
-                    <tr>
-                        <th>name</th>
-                        <th>style</th>
-                        <th>type</th>
-                        <th>author</th>
-                        <th>insert date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr py:for="recipe in recipes">
-                        <td>${recipe_a(recipe)}</td>
-                        <td>${recipe.get_type_display()}</td>
-                        <td>
-                            <py:choose>
-                                <py:when test="recipe.style is not None">
-                                    ${recipe.style.name} (${recipe.style.bjcp_code})
-                                </py:when>
-                                <py:otherwise>&mdash;</py:otherwise>
-                            </py:choose>
-                        </td>
-                        <td><a href="/user/${recipe.author.username}/">${recipe.author.username}</a></td>
-                        <td>${std.fmt.date.best(recipe.insert_date, recipe.author)}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-         </div>
-     </div>
 </body>
 </html>

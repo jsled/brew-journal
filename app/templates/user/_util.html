@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <span py:def="step(brew, next)" py:strip="True">
+        <py:choose test="">
+            <py:when test="next.existing_step"><a href="${next.existing_step.get_absolute_url()}/">${next.existing_step.get_type_display()}</a></py:when>
+            <py:otherwise><a href="${brew.get_absolute_url()}/?type=${next.type.id}">${next.type.label}</a></py:otherwise>
+        </py:choose>
+    </span>
+
+    <span py:def="brew_name_and_style(brew)" py:strip="True">
+        <a href="${brew.get_absolute_url()}"><span class="brew-name"><py:choose test="">
+            <py:when test="brew.recipe">${brew.recipe.name or "(unknown)"}</py:when>
+            <py:otherwise>(no name)</py:otherwise>
+            </py:choose></span></a><span class="brew-style">(<py:choose test="">
+            <py:when test="brew.recipe.style">${brew.recipe.style.name}</py:when>
+            <py:otherwise>(unknown)</py:otherwise>
+            </py:choose>)</span>
+    </span>
+</html>
+

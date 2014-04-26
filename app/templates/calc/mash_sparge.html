@@ -8,31 +8,22 @@
     <xi:include href="../_incl/head.html"/>
   </head>
   <body>
-    <div class="container_16">
+    <xi:include href="../_incl/body-top-bar.html"/>
+    <p style="text-align: justify">
+      Re-implemented from the great details of the <a
+      href="http://brew365.com/mash_sparge_water_calculator.php">Brew
+      365 Water Calculator</a>.  Note that a Brew in brew-journal has
+      this calculator available, getting grain and volume details
+      from your recipe, and with the ability to create all the
+      journal Steps based on your mash/sparge strategy.
+    </p>
 
-      <xi:include href="../_incl/body-top-bar.html"/>
+    <form method="GET">
+      
+      <xi:include href="_mash_sparge_form.html"/>
+      
+      ${mash_sparge_form(form, None)}
+    </form>
 
-      <div class="grid_10 prefix_2 suffix_4">
-
-        <p style="text-align: justify">
-          Re-implemented from the great details of the <a
-          href="http://brew365.com/mash_sparge_water_calculator.php">Brew
-          365 Water Calculator</a>.  Note that a Brew in brew-journal has
-          this calculator available, getting grain and volume details
-          from your recipe, and with the ability to create all the
-          journal Steps based on your mash/sparge strategy.
-        </p>
-
-      </div>
-      <div class="clear"></div>
-
-      <form method="GET">
-
-        <xi:include href="_mash_sparge_form.html"/>
-
-        ${mash_sparge_form(form, None)}
-      </form>
-
-    </div>
   </body>
 </html>

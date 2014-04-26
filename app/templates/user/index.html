@@ -8,212 +8,125 @@
   <xi:include href="../_incl/head.html"/>
 </head>
 <body>
-    <div class="container_16">
-        <xi:include href="../_incl/body-top-bar.html"/>
+    <xi:include href="../_incl/body-top-bar.html"/>
 
-<py:if test="efficiency_tracker and efficiency_tracker.has_data()">
-<div class="grid_8">
-    <h1>efficiency tracker</h1>
-    <img width="400" height="100" src="${efficiency_tracker.url()}"/>
-</div>
-</py:if>
+    <div py:if="efficiency_tracker and efficiency_tracker.has_data()" class="panel panel-default">
+        <div class="panel-heading"><h2 class="panel-title">efficiency tracker</h2></div>
+        <div class="panel-body">
+            <img width="400" height="100" src="${efficiency_tracker.url()}"/>
+        </div>
+    </div>
 
-<py:if test="shopping_list.shopping_to_do() or future_steps or future_brews">
-    <div class="grid_8">
-    <h1>upcoming steps</h1>
-    <py:if test="future_steps or future_brews">
-        <div id="by_calendar_brew">
-            <div>
-                <a href="#" class="muted" onClick="$('#by_calendar_brew').children().toggle(); return false;">view by brew…</a>
-                <ul>
-                    <li py:for="step in future_steps">
-                        <a href="${step.get_absolute_url()}">${step.get_type_display()}</a>
-                        for brew ${brew_a(step.brew)}
-                    on ${std.fmt.date.best(step.date, user)}</li>
-                </ul>
-            </div>
-            <div style="display:none">
-                <a href="#" class="muted" onClick="$('#by_calendar_brew').children().toggle(); return false;">view by time…</a>
-                <ul>
-                    <li py:for="brew in future_brews">brew ${brew_a(brew)}
+    <!--
+    <div py:if="shopping_list.shopping_to_do() or future_steps or future_brews" class="col-md-6">
+        <h1>upcoming steps</h1>
+        <py:if test="future_steps or future_brews">
+            <div id="by_calendar_brew">
+                <div>
+                    <a href="#" class="muted" onClick="$('#by_calendar_brew').children().toggle(); return false;">view by brew…</a>
                     <ul>
-                        <li py:for="step in brew.future_steps()">
-                            ${step.get_type_display()} on ${std.fmt.date.best(step.date)}
+                        <li py:for="step in future_steps">
+                            <a href="${step.get_absolute_url()}">${step.get_type_display()}</a>
+                            for brew ${brew_a(step.brew)}
+                        on ${std.fmt.date.best(step.date, user)}</li>
+                    </ul>
+                </div>
+                <div style="display:none">
+                    <a href="#" class="muted" onClick="$('#by_calendar_brew').children().toggle(); return false;">view by time…</a>
+                    <ul>
+                        <li py:for="brew in future_brews">brew ${brew_a(brew)}
+                        <ul>
+                            <li py:for="step in brew.future_steps()">
+                                ${step.get_type_display()} on ${std.fmt.date.best(step.date)}
+                            </li>
+                        </ul>
                         </li>
                     </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>            
-    </py:if>
-    <py:if test="shopping_list.shopping_to_do()">
-        <a href="shopping/">shopping list</a><br />
-    </py:if>
+                </div>
+            </div>            
+        </py:if>
+        <py:if test="shopping_list.shopping_to_do()">
+            <a href="shopping/">shopping list</a><br />
+        </py:if>
     </div>
-</py:if>
-<div class="clear"/>
+    -->
 
-<h1 class="grid_16">${user.username} current brews</h1>
-<div py:if="std.auth_user_is_user(request, user)" class="grid_4">
-    <a href="/user/${user.username}/brew/new">${action('create new brew')}</a>
-</div>
-<div class="grid_16">
-<table class="wide">
-  <thead>
-    <tr>
-      <th>brew</th>
-      <th>brew date</th>
-      <th>last update</th>
-      <th>state</th>
-      <th py:if="std.auth_user_is_user(request, user)" width="40%">action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr py:if="not brews">
-      <td colspan="50"><em>no active brews</em></td>
-    </tr>
-    <tr py:for="brew in brews">
-      <td><a href="${brew.get_absolute_url()}"><py:choose test="">
-          <py:when test="brew.recipe">${brew.recipe.name or "(unknown)"}</py:when>
-          <py:otherwise>(no name)</py:otherwise>
-</py:choose></a></td>
-      <td>${std.fmt.date.ymd(brew.brew_date, user)}</td>
-      <td>${std.fmt.date.best(brew.last_update_date, user)}</td>
-      <td>${brew.get_last_state_display()}</td>
-      <span py:def="step(brew, next)" py:strip="True">
-          <py:choose test="">
-              <py:when test="next.existing_step"><a href="${next.existing_step.get_absolute_url()}/">${action(next.existing_step.get_type_display())}</a></py:when>
-              <py:otherwise><a href="${brew.get_absolute_url()}/?type=${next.type.id}">${action(next.type.label)}</a></py:otherwise>
-          </py:choose>
-      </span>
-      <td py:if="std.auth_user_is_user(request, user)">
-          <py:for each="next in brew.next_steps().possible[0:2]">
-              ${step(brew, next)}
-          </py:for>
-          <py:if test="len(brew.next_steps().possible) > 2">
-              <span id="more_steps_brew_${brew.id}">
-                  <span>
-                      <a href="#" onClick="$('#more_steps_brew_${brew.id}').children().toggle(); return false;">(more)</a>
-                  </span>
-                  <span style="display: none">
-                      <py:for each="next in brew.next_steps().possible[2:]">
-                          ${step(brew, next)}
-                      </py:for>
-                      <a href="#" onClick="$('#more_steps_brew_${brew.id}').children().toggle(); return false;">(less)</a>
-                  </span>
-              </span>
-          </py:if>
-      </td>
-    </tr>
-  </tbody>
-</table>
-</div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h2 class="panel-title">${user.username} current brews
+            <div py:if="std.auth_user_is_user(request, user)" class="btn-group">
+                <button type="button" class="btn btn-default btn-sm" ><a href="/user/${user.username}/brew/new"><span class="glyphicon glyphicon-plus"/>&nbsp;new brew</a></button>
+            </div>
+        </h2>
+    </div>
 
-<div class="clear"/>
+        <div class="panel-body">
 
-<div class="grid_16">
-<h1>authored recipes</h1>
-<py:if test="std.auth_user_is_user(request, user)">
-  <a href="/recipe/new/">${action('create new recipe')}</a><br /><br />
-</py:if>
-<table class="wide">
-  <thead>
-    <tr>
-      <th>name</th>
-      <th>style (type)</th>
-      <th>date</th>
-      <th py:if="request.user.is_authenticated()" width="40%">actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr py:if="not authored_recipes">
-      <td colspan="4"><em>no recipes authored</em></td>
-    </tr>
-    <tr py:for="recipe in authored_recipes">
-      <td>${recipe_a(recipe)}</td>
-      <td>
-        <py:choose test="">
-          <py:when test="recipe.style">${recipe.style.name}</py:when>
-          <py:otherwise><em>unknown style</em></py:otherwise>
-        </py:choose> (${recipe.get_type_display()})</td>
-      <td>${std.fmt.date.ymd(recipe.insert_date, user)}</td>
-      <td py:if="request.user.is_authenticated()"><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">${action('clone')}</a>
-        <a href="/user/${request.user.username}/star/?recipe_id=${recipe.id}">${action('star')}</a>
-        <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">${action('brew')}</a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-</div>
-<div class="clear"/>
+            <xi:include href="./_util.html"/>
+            <div py:if="not brews" class="row">
+                <div class="col-md-12"><em>no brews</em></div>
+            </div>
+            <div py:for="brew in brews" class="row">
+                <div class="col-md-6">
+                    <div class="btn-group btn-group-xs" py:if="std.auth_user_is_user(request,user) and len(brew.next_steps().possible) > 0">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li py:for="next in brew.next_steps().possible">${step(brew, next)}</li>
+                        </ul>
+                    </div>
+                    ${brew_name_and_style(brew)}
+                </div>
+                <div class="col-md-3 col-md-offset-0 col-xs-offset-1">${std.fmt.date.best(brew.last_update_date, user)}</div>
+                <div class="col-md-3 col-md-offset-0 col-xs-offset-1">${brew.get_last_state_display()}</div>
+            </div>
+        </div>
+    </div>
 
-<div class="grid_16">
-<h1>starred recipes</h1>
-<table class="wide">
-  <thead>
-    <tr>
-      <th>name</th>
-      <th>author</th>
-      <th>style</th>
-      <th>when</th>
-      <th py:if="request.user.is_authenticated()" width="40%">actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr py:if="not starred_recipes">
-      <td colspan="5"><em>no starred recipes, yet.</em></td>
-    </tr>
-    <tr py:for="starred in starred_recipes">
-      <td>${recipe_a(starred.recipe)}</td>
-      <td>
-          <py:choose test="">
-              <py:when test="starred.recipe.author"><a href="/user/${starred.recipe.author.username}/">${starred.recipe.author}</a></py:when>
-              <py:otherwise>&nbsp;</py:otherwise>
-          </py:choose>
-      </td>
-      <td>
-          <py:choose test="">
-              <py:when test="starred.recipe.style">${starred.recipe.style.name}</py:when>
-              <py:otherwise>(style undefined)</py:otherwise>
-          </py:choose>
-      </td>
-      <td>${std.fmt.date.best(starred.when, user)}</td>
-      <td py:if="request.user.is_authenticated()"><a href="/recipe/new/?clone_from_recipe_id=${starred.recipe.id}">${action('clone')}</a>
-          &nbsp;<a href="/user/${request.user.username}/brew/new/?recipe_id=${starred.recipe.id}">${action('brew')}</a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-</div>
-<div class="clear"/>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h2 class="panel-title">recipes
+            <div py:if="std.auth_user_is_user(request, user)" class="btn-group">
+                <button type="button" class="btn btn-default btn-sm"><a href="/recipe/new/"><span class="glyphicon glyphicon-plus"/>&nbsp;new recipe</a></button>
+            </div></h2>
+        </div>
 
-<div class="grid_16">
-<h1>historical brews</h1>
-<table class="wide">
-  <thead>
-    <tr>
-      <th>brew</th>
-      <th>brew date</th>
-      <th>last update</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr py:if="not done_brews">
-      <td colspan="3"><em>no historical brews</em></td>
-    </tr>
-    <tr py:for="brew in done_brews">
-      <td><a href="${brew.get_absolute_url()}/">
-          <py:choose test="">
-              <py:when test="brew.recipe">${brew.recipe.name or "(unknown)"}</py:when>
-              <py:otherwise>(unnamed recipe)</py:otherwise>
-          </py:choose></a></td>
-      <td>${std.fmt.date.ymd(brew.brew_date, user)}</td>
-      <td>${std.fmt.date.best(brew.last_update_date, user)}</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+        <div class="panel-body">
 
-</div>
+            <div py:if="not authored_recipes" class="row">
+                <div class="col-md-12">
+                    <em>no recipes</em>
+                </div>
+            </div>
+            <div py:for="recipe in authored_recipes" class="row">
+                <div class="col-md-6">
+                    <div py:if="request.user.is_authenticated()" class="btn-group btn-group-xs">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/recipe/new/?clone_from_recipe_id=${recipe.id}">clone</a></li>
+                            <li><a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}">brew</a></li>
+                        </ul>
+                    </div>
+                    <span class="recipe-name">${recipe_a(recipe)}</span>
+                    <span class="recipe-style">(<py:choose test="">
+                    <py:when test="recipe.style">${recipe.style.name}</py:when>
+                    <py:otherwise><em>unknown style</em></py:otherwise>
+                    </py:choose>, ${recipe.get_type_display()})</span>
+                </div>
+                <div class="col-md-4 col-md-offset-0 col-xs-offset-1">${std.fmt.date.ymd(recipe.insert_date, user)}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading"><h2 class="panel-title">historical brews</h2></div>
+        <div class="panel-body">
+            <div class="col-md-12"><a href="./history">show historical brews</a></div>
+        </div>
+    </div>
+
 </body>
 </html>

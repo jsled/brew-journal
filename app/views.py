@@ -230,19 +230,25 @@ def user_index(request, user_name):
     future_brews = models.Brew.objects.brews_with_future_steps(uri_user)
     future_steps = models.Step.objects.future_steps_for_user(uri_user).order_by('date')
     shopping_list = models.ShoppingList(uri_user)
-    done_brews = models.Brew.objects.select_related().filter(brewer=uri_user, is_done=True).order_by('-brew_date')
-    starred_recipes = models.StarredRecipe.objects.select_related().filter(user=uri_user)
     authored_recipes = models.Recipe.objects.select_related().filter(author=uri_user).order_by('-insert_date')
     efficiency_tracker = EfficiencyTracker(uri_user)
     return HttpResponse(render('user/index.html', request=request, user=uri_user, std=standard_context(),
                                brews=brews,
                                future_brews=future_brews,
                                future_steps=future_steps,
-                               done_brews=done_brews,
                                shopping_list=shopping_list,
                                authored_recipes=authored_recipes,
-                               starred_recipes=starred_recipes,
                                efficiency_tracker=efficiency_tracker))
+
+
+def user_history(request, user_name):
+    try:
+        uri_user = User.objects.select_related().get(username__exact = user_name)
+    except User.DoesNotExist,e:
+        raise Http404
+    done_brews = models.Brew.objects.select_related().filter(brewer=uri_user, is_done=True).order_by('-brew_date')
+    return HttpResponse(render('user/history.html', request=request, user=uri_user, std=standard_context(),
+                               done_brews=done_brews))
 
 
 class UserProfileForm (forms.ModelForm):
@@ -843,37 +849,6 @@ def brew_delete_comp_scoresheet(request, user_name, brew_id, results_id, scoresh
     return HttpResponseRedirect(brew.get_absolute_url())
 
 
-class StarForm (forms.ModelForm):
-    class Meta:
-        model = models.StarredRecipe
-        exclude = ['recipe', 'user', 'when']
-
-
-def user_star(request, user_name):
-    try:
-        uri_user = User.objects.get(username__exact = user_name)
-        #if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
-    except ObjectDoesNotExist:
-        raise Http404
-    if request.method == 'GET':
-        if request.GET.has_key('recipe_id'):
-            recipe_id = int(request.GET['recipe_id'])
-            recipe = models.Recipe.objects.get(pk=recipe_id)
-            return HttpResponse(render('user/star.html', request=request, std=standard_context(), user=uri_user,
-                                       form=StarForm(), recipe=recipe))
-    elif request.method == 'POST':
-        if request.POST.has_key('recipe_id'):
-            recipe_id = int(request.GET['recipe_id'])
-            recipe = models.Recipe.objects.get(pk=recipe_id)
-            form = StarForm(request.POST)
-            star = form.save(commit=False)
-            star.recipe = recipe
-            star.user = uri_user
-            star.save()
-            return HttpResponseRedirect('/user/%s/' % (user_name))
-    return HttpResponseBadRequest('bad request')
-
-
 def _group_items(item_gen_fn, item_grouping_key_accessor_fn, item_label_gen_fn):
     by_group = {}
     for item in item_gen_fn():
@@ -1370,42 +1345,3 @@ def hops(request):
                request=request,
                std=standard_context(),
                all_hops=all_hops))
-
-
-def m_user(request, user_name):
-    try:
-        uri_user = User.objects.get(username__exact=user_name)
-        brews = models.Brew.objects.filter(brewer=uri_user, is_done=False).order_by('-brew_date')
-        recipes = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date')
-    except ObjectDoesNotExist:
-        raise Http404('no such item')
-    return HttpResponse(render('mobile/user.html',
-                               request=request,
-                               std=standard_context(),
-                               uri_user=uri_user,
-                               brews=brews,
-                               recipes=recipes))
-
-def m_brew(request, user_name, brew_id):
-    try:
-        uri_user = User.objects.get(username__exact=user_name)
-        brew = models.Brew.objects.get(id=brew_id)
-    except ObjectDoesNotExist:
-        raise Http404('no such brew')
-    return HttpResponse(render('mobile/brew.html',
-                               request=request,
-                               std=standard_context(),
-                               uri_user=uri_user,
-                               brew=brew))
-
-def m_recipe(request, recipe_id):
-    try:
-        # uri_user = User.objects.get(username='jsled')
-        recipe = models.Recipe.objects.get(id=recipe_id)
-    except ObjectDoesNotExist:
-        raise Http404('no such recipe')
-    return HttpResponse(render('mobile/recipe.html',
-                               request=request,
-                               std=standard_context(),
-                               # uri_user=uri_user,
-                               recipe=recipe))
