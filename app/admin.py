@@ -16,7 +16,6 @@ for cls in (models.Style,
             models.RecipeHop,
             models.RecipeYeast,
             models.RecipeAdjunct,
-            models.StarredRecipe,
             models.Brew,
             models.Step,
             models.UserProfile):
