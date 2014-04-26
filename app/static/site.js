@@ -35,6 +35,10 @@ var bj = (function($) {
             $(this).closest('DIV').next('.bj-js-toggle').children().slideToggle();
         });
 
+        $(document).on('click', '.bj-js-toggle-parent', function _bj_toggle_parent() {
+            $(this).closest('DIV.bj-js-toggle').children().slideToggle();
+        });
+
         $(document).on('click', '.bj-js-edit-cancel', function _bj_edit_cancel() {
             // don't prevent default action to allow form reset.
             $(this).closest('.bj-js-toggle').children().slideToggle();

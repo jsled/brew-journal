@@ -247,70 +247,73 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div py:if="mash_sparge_calc_form"
-         id="mash-sparge-calc-panel"
-         class="row"
-         py:with="expand=(mash_sparge_calc_form.is_bound and not mash_sparge_calc_form.is_valid())
-                  or request.GET.has_key('mash_sparge_recalc')
-                  ; calc=mash_sparge_calc_form.calc">
-        <div py:attrs="{'style': 'display:' + ['none','inherit'][not expand]}" class="col-md-12">
-            <a href="#" onClick="$('#mash-sparge-calc-panel').children().slideToggle(); return false;">compute mash/sparge volumes, steps</a>
-        </div>
-        <div py:attrs="{'style': 'display:' + ['none','inherit'][expand]}">
-            <form method="GET" id="mash-sparge-calc">
-                <input type="hidden" name="mash_sparge_recalc" />
-
-                <xi:include href="../../calc/_mash_sparge_form.html"/>
-
-                <py:def function="mash_sparge_form_actions">
-                    <div class="col-md-4">
-                        <input type="submit" name="action" value="recalculate"/>
-                        <input type="reset" value="cancel" onClick="window.location.search = '';"/>
-                    </div>
-                </py:def>
-
-                ${mash_sparge_form(mash_sparge_calc_form, mash_sparge_form_actions)}
-
-                <py:for each="hidden in mash_sparge_calc_form.hidden_fields()">
-                    ${std.Markup(hidden)}
-                </py:for>
-
-                <div py:if="mash_sparge_steps">
-
-                    <h2>step preview</h2>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table width="100%">
-                                <thead>
-                                    <tr>
-                                        <th>date</th>
-                                        <th>step</th>
-                                        <th>volume</th>
-                                        <th>temp</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr py:for="step in mash_sparge_steps">
-                                        <td>${std.fmt.date.best(step.date, user)}</td>
-                                        <td>${step.get_type_display()}</td>
-                                        <td><py:if test="step.volume">${'%.3g' % step.volume} ${step.volume_units}</py:if></td>
-                                        <td><py:if test="step.temp">${'%0.1f' % step.temp} ${step.temp_units}</py:if></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <input type="submit" name="action" value="create steps" onClick="$$('FORM#mash-sparge-calc').attr('method', 'POST'); return true;"/>
-                        </div>
-                    </div>
+            <div py:if="mash_sparge_calc_form"
+                 id="mash-sparge-calc-panel"
+                 class="row bj-js-toggle"
+                 style="padding-left: 1em"
+                 py:with="expand=(mash_sparge_calc_form.is_bound and not mash_sparge_calc_form.is_valid())
+                          or request.GET.has_key('mash_sparge_recalc')
+                          ; calc=mash_sparge_calc_form.calc">
+                <div py:attrs="{'style': 'display:' + ['none','inherit'][not expand]}" class="col-md-12 bj-js-toggle-item">
+                    <button type="button" class="btn btn-default btn-sm bj-js-toggle-parent">
+                        <span class="glyphicon glyphicon-cog"/>&nbsp;compute mash/sparge volumes, steps
+                    </button>
                 </div>
-            </form>
+                <div py:attrs="{'style': 'display:' + ['none','inherit'][expand]}" class="bj-js-toggle-item">
+                    <form method="GET" id="mash-sparge-calc">
+                        <input type="hidden" name="mash_sparge_recalc" />
+
+                        <xi:include href="../../calc/_mash_sparge_form.html"/>
+
+                        <py:def function="mash_sparge_form_actions">
+                            <div class="col-md-4">
+                                <input type="submit" name="action" value="recalculate"/>
+                                <input type="reset" value="cancel" onClick="window.location.search = '';"/>
+                            </div>
+                        </py:def>
+
+                        ${mash_sparge_form(mash_sparge_calc_form, mash_sparge_form_actions)}
+
+                        <py:for each="hidden in mash_sparge_calc_form.hidden_fields()">
+                            ${std.Markup(hidden)}
+                        </py:for>
+
+                        <div py:if="mash_sparge_steps">
+
+                            <h2>step preview</h2>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>date</th>
+                                                <th>step</th>
+                                                <th>volume</th>
+                                                <th>temp</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr py:for="step in mash_sparge_steps">
+                                                <td>${std.fmt.date.best(step.date, user)}</td>
+                                                <td>${step.get_type_display()}</td>
+                                                <td><py:if test="step.volume">${'%.3g' % step.volume} ${step.volume_units}</py:if></td>
+                                                <td><py:if test="step.temp">${'%0.1f' % step.temp} ${step.temp_units}</py:if></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="submit" name="action" value="create steps" onClick="$$('FORM#mash-sparge-calc').attr('method', 'POST'); return true;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
