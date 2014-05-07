@@ -621,7 +621,8 @@ class Step (models.Model):
     '''
     brew = models.ForeignKey(Brew)
     type = models.CharField(max_length=30, choices=step_types_ui_choices)
-    date = models.DateTimeField()
+    # indexed for "future steps" scan against all steps after the current timestamp
+    date = models.DateTimeField(db_index=True)
     entry_date = models.DateTimeField(editable=False, default=datetime.datetime.now)
 
     volume = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
@@ -730,18 +731,24 @@ class NextStepGenerator (object):
         last_date = None
         if self._brew.last_state:
             last_step_type = step_types_by_id[self._brew.last_state]
-            try:
-                last_step = [s for s in self._brew.step_set.select_related().filter(type=self._brew.last_state)][0]
-            except Exception,e:
-                print u'brew=[id=%d,%s],last_state=[%s],steps=[%s]' % (self._brew.id,self._brew,self._brew.last_state,[u'%s' % x for x in self._brew.step_set.all()])
-                raise
-            # @fixme: assert(last_step is not None)
-            last_date = last_step.date
+            # this is really unperformant due to DB lookups
+            # try:
+            #    last_step = [s for s in self._brew.step_set.filter(type=self._brew.last_state).select_related()][0]
+            #except Exception,e:
+            #    print u'brew=[id=%d,%s],last_state=[%s],steps=[%s]' % (self._brew.id,self._brew,self._brew.last_state,[u'%s' % x for x in self._brew.step_set.all()])
+            #    raise
+            ## @fixme: assert(last_step is not None)
+            #last_date = last_step.date
+            last_date = self._brew.last_update_date
             to_try.extend(last_step_type.next_steps)
         else:
             # @fixme: get these from StepTypes themselves
             to_try.extend(['starter', 'strike', 'steep', 'boil-start'])
-        future_steps = [step for step in self._brew.step_set.select_related().filter(date__gt=datetime.datetime.now())]
+        now = datetime.datetime.now()
+        # this is really unperformant due to DB lookups:
+        # future_steps = [step for step in self._brew.step_set.filter(date__gt=datetime.datetime.now()).select_related()]
+        # future_steps = [s for s in self._brew.step_set.all() if s.date > now]
+        future_steps = []
         for typeid in to_try:
             steptype = step_types_by_id[typeid]
             appropriate_list = None

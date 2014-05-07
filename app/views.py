@@ -223,22 +223,24 @@ def logout_view(request):
 
 def user_index(request, user_name):
     try:
-        uri_user = User.objects.select_related().get(username__exact = user_name)
+        uri_user = User.objects.get(username__exact = user_name)
     except User.DoesNotExist,e:
         raise Http404
-    brews = models.Brew.objects.select_related().filter(brewer=uri_user, is_done=False).order_by('-brew_date')
-    future_brews = models.Brew.objects.brews_with_future_steps(uri_user)
-    future_steps = models.Step.objects.future_steps_for_user(uri_user).order_by('date')
+    brews = models.Brew.objects.filter(brewer=uri_user, is_done=False).order_by('-brew_date').select_related('step', 'step_set', 'recipe', 'recipe__style', 'brewer', 'brewer__profile')
+    future_brews = models.Brew.objects.brews_with_future_steps(uri_user).select_related()
+    future_steps = models.Step.objects.future_steps_for_user(uri_user).order_by('date').select_related()
     shopping_list = models.ShoppingList(uri_user)
-    authored_recipes = models.Recipe.objects.select_related().filter(author=uri_user).order_by('-insert_date')
-    efficiency_tracker = EfficiencyTracker(uri_user)
-    return HttpResponse(render('user/index.html', request=request, user=uri_user, std=standard_context(),
+    authored_recipes = models.Recipe.objects.filter(author=uri_user).order_by('-insert_date').select_related('style')
+    # Performance suck-hole; disable for now
+    efficiency_tracker = None # EfficiencyTracker(uri_user)
+    resp = render('user/index.html', request=request, user=uri_user, std=standard_context(),
                                brews=brews,
                                future_brews=future_brews,
                                future_steps=future_steps,
                                shopping_list=shopping_list,
                                authored_recipes=authored_recipes,
-                               efficiency_tracker=efficiency_tracker))
+                               efficiency_tracker=efficiency_tracker)
+    return HttpResponse(resp)
 
 
 def user_history(request, user_name):

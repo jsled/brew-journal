@@ -10,12 +10,14 @@
 <body>
     <xi:include href="../_incl/body-top-bar.html"/>
 
+    <!--!
     <div py:if="efficiency_tracker and efficiency_tracker.has_data()" class="panel panel-default">
         <div class="panel-heading"><h2 class="panel-title">efficiency tracker</h2></div>
         <div class="panel-body">
             <img width="400" height="100" src="${efficiency_tracker.url()}"/>
         </div>
     </div>
+    -->
 
     <!--
     <div py:if="shopping_list.shopping_to_do() or future_steps or future_brews" class="col-md-6">
@@ -62,7 +64,7 @@
         <div class="panel-body">
 
             <xi:include href="./_util.html"/>
-            <div py:if="not brews" class="row">
+            <div py:if="brews.count() == 0" class="row">
                 <div class="col-md-12"><em>no brews</em></div>
             </div>
             <div py:for="brew in brews" class="row">
