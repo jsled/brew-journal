@@ -501,7 +501,7 @@ class RecipeAdjunct (models.Model):
 class BrewManager (models.Manager):
     def brews_with_future_steps(self, user):
         brew_ids = [step.brew_id for step in Step.objects.future_steps_for_user(user)]
-        return Brew.objects.select_related().filter(id__in=brew_ids)
+        return Brew.objects.filter(id__in=brew_ids)
 
     def brews_pre_brew(self, user):
         # @fixme: if the brew date is in the future, too?
@@ -596,7 +596,7 @@ class Brew (models.Model):
         return gennie.get_next_steps()
     
     def future_steps(self):
-        return self.step_set.select_related().filter(date__gt=datetime.datetime.now())
+        return self.step_set.filter(date__gt=datetime.datetime.now())
 
     def title(self):
         if not self.recipe:
@@ -607,7 +607,7 @@ class Brew (models.Model):
 class StepManager (models.Manager):
     def future_steps_for_user(self, user):
         now = datetime.datetime.now()
-        return Step.objects.select_related().filter(brew__brewer__exact=user, date__gt=now)
+        return Step.objects.filter(brew__brewer__exact=user, date__gt=now)
 
 GravityReadType = (
     ('sg', 'Specific Gravity'),
@@ -1135,7 +1135,7 @@ class BrewDerivations (object):
         allowable_types = dict([(type,idx)
                                 for type,idx
                                 in itertools.izip(allowable_step_types_sorted,itertools.count())])
-        steps = self._brew.step_set.select_related().all()
+        steps = self._brew.step_set.all()
         steps = [step for step in steps
                     if allowable_types.has_key(step.type)]
         steps.sort(lambda a,b: allowable_types[a.type] - allowable_types[b.type])
@@ -1165,7 +1165,7 @@ class BrewDerivations (object):
         ctx = Context(prec=7, rounding=ROUND_HALF_UP)
         potential_points = ctx.create_decimal('0')
         volume_in_gallons = convert_volume(best_step.volume, best_step.volume_units, 'gl')
-        for recipe_grain in self._brew.recipe.recipegrain_set.select_related().all():
+        for recipe_grain in self._brew.recipe.recipegrain_set.all():
             grain = recipe_grain.grain
             if recipe_grain.measured_by_weight():
                 min,max = tuple([ctx.create_decimal(str(x - 1000)) for x in recipe_grain.weight_extract_potential()])
@@ -1354,7 +1354,7 @@ class RecipeDerivations (object):
 
     def _test_grains_by_volume(self, reasons):
         grains_by_volume = False
-        for grain in self._recipe.recipegrain_set.select_related().all():
+        for grain in self._recipe.recipegrain_set.all():
             grains_by_volume |= grain.measured_by_volume()
         if grains_by_volume:
             reasons.append('do not support recipes with fermentables measured by volume')
@@ -1386,7 +1386,7 @@ class RecipeDerivations (object):
         def convert_to_gravity(val, batch_gallons):
             return Decimal('1') + ((val / batch_gallons) / Decimal('1000'))
         per_grain = []
-        for grain in self._recipe.recipegrain_set.select_related().all():
+        for grain in self._recipe.recipegrain_set.all():
             fermentable_efficiency = Decimal('1')
             weight,weight_units = grain.get_by_weight()
             weight_accum += convert_weight(weight, weight_units, 'lb')
@@ -1480,7 +1480,7 @@ class RecipeDerivations (object):
         low_accum = dec('0')
         high_accum = dec('0')
         per_hop = []
-        for hop in self._recipe.recipehop_set.select_related().all():
+        for hop in self._recipe.recipehop_set.all():
             if hop.usage_type == 'dry':
                 low,high = 0,0
             else:
@@ -1532,7 +1532,7 @@ class RecipeDerivations (object):
         lo_accum = dec(0)
         hi_accum = dec(0)
         per_grain = []
-        for grain in self._recipe.recipegrain_set.select_related().all():
+        for grain in self._recipe.recipegrain_set.all():
             try:
                 weight = convert_weight(grain.amount_value, grain.amount_units, 'lb')
             except:
@@ -1585,7 +1585,7 @@ class MashSpargeWaterCalculator (object):
         recipe = brew.recipe
         self.batch_volume = convert_volume(recipe.batch_size, recipe.batch_size_units, 'gl')
         grain_weight = Decimal('0')
-        for fermentable in recipe.recipegrain_set.select_related().all():
+        for fermentable in recipe.recipegrain_set.all():
             in_weight = fermentable.amount_units in [unit[0] for unit in Weight_Units]
             is_grain = True # @fixme: fermentable.is_grain()
             if is_grain and in_weight:

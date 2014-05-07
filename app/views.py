@@ -226,7 +226,7 @@ def user_index(request, user_name):
         uri_user = User.objects.get(username__exact = user_name)
     except User.DoesNotExist,e:
         raise Http404
-    brews = models.Brew.objects.filter(brewer=uri_user, is_done=False).order_by('-brew_date').select_related('step', 'step_set', 'recipe', 'recipe__style', 'brewer', 'brewer__profile')
+    brews = models.Brew.objects.filter(brewer=uri_user, is_done=False).order_by('-brew_date').select_related('recipe', 'recipe__style', 'brewer', 'brewer__profile')
     future_brews = models.Brew.objects.brews_with_future_steps(uri_user).select_related()
     future_steps = models.Step.objects.future_steps_for_user(uri_user).order_by('date').select_related()
     shopping_list = models.ShoppingList(uri_user)
@@ -469,7 +469,7 @@ def brew_post(request, uri_user, brew, orig_step):
 def brew_render(request, uri_user, brew, step_form, step_edit, mash_sparge_calc_form, mash_sparge_steps=None):
     if not mash_sparge_steps:
         mash_sparge_steps = []
-    steps = [step for step in brew.step_set.select_related().all()]
+    steps = [step for step in brew.step_set.all()] #.select_related().all()]
     brew_form = BrewForm(uri_user, instance=brew)
     recipe_deriv = None
     if brew.recipe:
@@ -599,7 +599,7 @@ def brew(request, user_name, brew_id, step_id=None):
     try:
         uri_user = User.objects.select_related().get(username__exact = user_name)
         #if not uri_user: return HttpResponseNotFound('no such user [%s]' % (user_name))
-        brew = models.Brew.objects.select_related().get(id=brew_id)
+        brew = models.Brew.objects.filter(id=brew_id).select_related('recipe', 'recipe__style').prefetch_related('recipe__recipegrain_set', 'recipe__recipegrain_set__grain', 'recipe__recipehop_set', 'recipe__recipehop_set__hop', 'step_set')[0]
         #if not brew: return HttpResponseNotFound('no such brew with id [%d]' % (brew_id))
         step = None
         if step_id:
