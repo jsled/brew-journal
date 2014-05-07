@@ -341,7 +341,7 @@ def BrewForm (user, *args, **kwargs):
     except models.UserProfile.DoesNotExist,e:
         pass
     class _BrewForm (forms.ModelForm):
-        brew_date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
+        brew_date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz, format='%Y-%m-%d %H:%M'))
         class Meta:
             model = models.Brew
             exclude = ['brewer', 'recipe']
@@ -434,7 +434,7 @@ def StepForm(user, *args, **kwargs):
     class _StepForm (forms.ModelForm):
         notes = forms.CharField(widget=forms.Textarea(attrs={'width': '100%', 'rows': '5', 'cols': '80'}), required=False, help_text="Markdown supported")
         brew = forms.ModelChoiceField(queryset=models.Brew.objects.select_related(), widget=forms.HiddenInput)
-        date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz))
+        date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz, format='%Y-%m-%d %H:%M'))
         shift_step_times = forms.BooleanField(required=False, initial=True, label='Time Shift',
                                               help_text='Shift subsequent steps by updated step time difference (within reason).''')
         class Meta:
@@ -918,7 +918,7 @@ def RecipeForm(user, *args, **kwargs):
                                        widget=widgets.TwoLevelSelectWidget(choices=get_style_choices()))
         name = forms.CharField(widget=forms.TextInput(attrs={'size': 40}))
         source_url = forms.URLField(required=False, widget=forms.TextInput(attrs={'size': 40}))
-        insert_date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz), initial=datetime.now())
+        insert_date = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz, format='%Y-%m-%d %H:%M'), initial=datetime.now())
         efficiency = forms.IntegerField(initial=init_efficiency, min_value=0, max_value=100)
 
         class Meta:
@@ -1329,7 +1329,7 @@ def BrewMashSpargeCalcForm(user, *args, **kwargs):
     class _BrewMashSpargeCalcForm (MashSpargeCalculatorForm):
         sparge_type = forms.ChoiceField(choices=(('fly', 'Fly'), ('batch', 'Batch')), initial='batch')
         add_midpoint_mash_temp_step = forms.BooleanField(required=False, initial=True, label='Add mid-mash temperature recording step')
-        dough_in_time = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz), initial=datetime.now())
+        dough_in_time = SafeLocalizedDateTimeField(tz, widget=LocalizedDateTimeInput(tz, format='%Y-%m-%d %H:%M'), initial=datetime.now())
         mash_length = forms.IntegerField(min_value=0, initial=60)
         sparge_flow_rate = forms.IntegerField(min_value=0, initial=1, label='Tun Drain Flow Rate (qt/min)')
         num_batches = forms.IntegerField(min_value=1, max_value=2, initial=1, label='Sparge Batches')
