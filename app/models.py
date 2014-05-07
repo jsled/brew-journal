@@ -731,24 +731,23 @@ class NextStepGenerator (object):
         last_date = None
         if self._brew.last_state:
             last_step_type = step_types_by_id[self._brew.last_state]
-            # this is really unperformant due to DB lookups
-            # try:
-            #    last_step = [s for s in self._brew.step_set.filter(type=self._brew.last_state).select_related()][0]
-            #except Exception,e:
-            #    print u'brew=[id=%d,%s],last_state=[%s],steps=[%s]' % (self._brew.id,self._brew,self._brew.last_state,[u'%s' % x for x in self._brew.step_set.all()])
-            #    raise
+            try:
+                # filter in memory due to these records being prefetched
+                # last_step = [s for s in self._brew.step_set.filter(type=self._brew.last_state).select_related()][0]
+                last_step = [s for s in self._brew.step_set.all() if s.type == self._brew.last_state][0]
+            except Exception,e:
+                print u'brew=[id=%d,%s],last_state=[%s],steps=[%s]' % (self._brew.id,self._brew,self._brew.last_state,[u'%s' % x for x in self._brew.step_set.all()])
+                raise
             ## @fixme: assert(last_step is not None)
-            #last_date = last_step.date
-            last_date = self._brew.last_update_date
+            last_date = last_step.date
             to_try.extend(last_step_type.next_steps)
         else:
             # @fixme: get these from StepTypes themselves
             to_try.extend(['starter', 'strike', 'steep', 'boil-start'])
         now = datetime.datetime.now()
-        # this is really unperformant due to DB lookups:
+        # filter in memory due to these records being prefetched
         # future_steps = [step for step in self._brew.step_set.filter(date__gt=datetime.datetime.now()).select_related()]
-        # future_steps = [s for s in self._brew.step_set.all() if s.date > now]
-        future_steps = []
+        future_steps = [s for s in self._brew.step_set.all() if s.date > now]
         for typeid in to_try:
             steptype = step_types_by_id[typeid]
             appropriate_list = None
