@@ -198,7 +198,7 @@ def root_post(request):
 
 
 def root_common(request, auth_form = None, auth_errors = forms.util.ErrorList()):
-    recent_brews = models.Brew.objects.select_related().order_by('-brew_date')[0:10]
+    recent_brews = models.Brew.objects.select_related('recipe', 'brewer').order_by('-brew_date')[0:10]
     recent_recipes = models.Recipe.objects.select_related().order_by('-insert_date')[0:10]
     recent_updates = models.Step.objects.select_related().order_by('-date')[0:10]
     return HttpResponse(render('index.html', request=request, std=standard_context(), auth_form=auth_form,
