@@ -1095,10 +1095,10 @@ def recipe_post(request, recipe_id, recipe=None):
 def _render_recipe(request, recipe, **kwargs):
     form = kwargs.setdefault('form', RecipeForm(request.user, instance=recipe))
     # @fixme: call something like recipe.grain_list_descending() instead?
-    grains = [x for x in models.RecipeGrain.objects.select_related().filter(recipe=recipe)]
-    hops = [x for x in models.RecipeHop.objects.select_related().filter(recipe=recipe)]
-    adjuncts = [x for x in models.RecipeAdjunct.objects.select_related().filter(recipe=recipe)]
-    yeasts = models.RecipeYeast.objects.select_related().filter(recipe=recipe)
+    grains = [x for x in recipe.recipegrain_set.all()]
+    hops = [x for x in recipe.recipehop_set.all()]
+    adjuncts = [x for x in recipe.recipeadjunct_set.all()]
+    yeasts = [x for x in recipe.recipeyeast_set.all()]
     #
     def weight_comparator(a,b):
         a_has_amount = a.amount_value and a.amount_units
@@ -1197,7 +1197,12 @@ def recipe(request, recipe_id, recipe_name):
         else:
             form = thing
     try:
-        recipe = models.Recipe.objects.get(pk=recipe_id)
+        recipe = models.Recipe.objects.prefetch_related('recipegrain_set', 'recipegrain_set__grain',
+                                                        'recipehop_set', 'recipehop_set__hop',
+                                                        'recipeadjunct_set', 'recipeyeast_set',
+                                                        'brew_set') \
+                                                        .select_related('style') \
+                                                        .get(pk=recipe_id)
     except ObjectDoesNotExist:
         raise Http404
     return _render_recipe(request, recipe)
