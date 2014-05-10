@@ -57,10 +57,13 @@ var bj = (function($) {
         });
 
         $(document).on('click', '.bj-js-recipe-item-delete', function _bj_recipe_item_delete(evt) {
+            console.log('running', evt, $(this));
             evt.preventDefault();
             var $row = $(this).closest('.bj-item-display.row');
             var id = $row.data('bj-item-id');
-            var $form = $(this).closest('.bj-item-display.row + .bj-item-editor.row').find('FORM');
+            console.log('item id', id);
+            var $form = $row.next('.bj-item-editor.row').find('FORM');
+            console.log('form',$form.get(0));
             $form.find('INPUT[name=delete_id]').val(id);
             $form.submit();
         });
