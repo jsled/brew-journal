@@ -31,15 +31,17 @@ var bj = (function($) {
     });
 
     $(function _bj_init() {
-        $(document).on('click', '.bj-js-toggle-next', function _bj_toggle_next() {
+        $(document).on('click', '.bj-js-toggle-next', function _bj_toggle_next(evt) {
+            evt.preventDefault();
             $(this).closest('DIV').next('.bj-js-toggle').children().slideToggle();
         });
 
-        $(document).on('click', '.bj-js-toggle-parent', function _bj_toggle_parent() {
+        $(document).on('click', '.bj-js-toggle-parent', function _bj_toggle_parent(evt) {
+            evt.preventDefault();
             $(this).closest('DIV.bj-js-toggle').children().slideToggle();
         });
 
-        $(document).on('click', '.bj-js-edit-cancel', function _bj_edit_cancel() {
+        $(document).on('click', '.bj-js-edit-cancel', function _bj_edit_cancel(evt) {
             // don't prevent default action to allow form reset.
             $(this).closest('.bj-js-toggle').children().slideToggle();
         });
@@ -57,30 +59,29 @@ var bj = (function($) {
         });
 
         $(document).on('click', '.bj-js-recipe-item-delete', function _bj_recipe_item_delete(evt) {
-            console.log('running', evt, $(this));
             evt.preventDefault();
             var $row = $(this).closest('.bj-item-display.row');
             var id = $row.data('bj-item-id');
-            console.log('item id', id);
             var $form = $row.next('.bj-item-editor.row').find('FORM');
-            console.log('form',$form.get(0));
             $form.find('INPUT[name=delete_id]').val(id);
             $form.submit();
         });
 
         $(document).on('click', '.bj-js-recipe-item-add', function _bj_recipe_item_add(evt) {
-            evt.preventDefault();
+            // default = submit action, so don't prevent that.
+            // evt.preventDefault();
             var $row = $(this).closest('.bj-item-add.row');
             $row.toggle();
             $row.next('.bj-item-editor.row').toggle();
         });
 
-        $(document).on('click', 'INPUT[type=reset].bj-js-recipe-item-edit-cancel', function _bj_recipe_item_edit_cancel(evt) {
+        $(document).on('click', '[type=reset].bj-js-recipe-item-edit-cancel', function _bj_recipe_item_edit_cancel(evt) {
+            // default action = form reset, so don't prevent that.
+            // evt.preventDefault();
             var $editor = $(this).closest('.bj-item-editor.row');
             var $display = $editor.prev('.row');
-            $editor.toggle()
+            $editor.toggle();
             $display.toggle();
-            // let default action (form reset) continue
         });
 
         $(document).on('click', '.bj-js-recipe-details-edit', function _bj_recipe_details_edit(evt) {
@@ -99,6 +100,7 @@ var bj = (function($) {
         });
 
         $(document).on('click', '.bj-js-brew-step-delete', function _bj_brew_step_delete(evt) {
+            evt.preventDefault();
             var $row = $(this).closest('[data-step-url]');
             // console.log('delete',$$x, $$x.data('brew-id'), $$x.data('step-id'),$$x.data('step-url'));
             jQuery.ajax($row.data('step-url'), {type:'DELETE', dataType:'json'})
@@ -113,7 +115,7 @@ var bj = (function($) {
     });
 
     return {
-        
+        // nothing!
     };
 
 })(jQuery);

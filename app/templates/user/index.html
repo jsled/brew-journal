@@ -54,7 +54,7 @@
     <div class="panel panel-default">
         <div class="panel-heading"><h2 class="panel-title">${user.username} current brews
             <div py:if="std.auth_user_is_user(request, user)" class="btn-group">
-                <button type="button" class="btn btn-default btn-sm" ><a href="/user/${user.username}/brew/new"><span class="glyphicon glyphicon-plus"/>&nbsp;new brew</a></button>
+                <a class="btn btn-default btn-sm" href="/user/${user.username}/brew/new"><span class="glyphicon glyphicon-plus"/>&nbsp;new brew</a>
             </div>
         </h2>
     </div>
@@ -87,7 +87,7 @@
     <div class="panel panel-default">
         <div class="panel-heading"><h2 class="panel-title">recipes
             <div py:if="std.auth_user_is_user(request, user)" class="btn-group">
-                <button type="button" class="btn btn-default btn-sm"><a href="/recipe/new/"><span class="glyphicon glyphicon-plus"/>&nbsp;new recipe</a></button>
+                <a class="btn btn-default btn-sm" href="/recipe/new/"><span class="glyphicon glyphicon-plus"/>&nbsp;new recipe</a>
             </div></h2>
         </div>
 

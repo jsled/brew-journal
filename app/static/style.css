@@ -74,7 +74,7 @@ UL.errorlist + INPUT {
     font-weight: bold;
 }
 
-BUTTON, INPUT[type=submit], INPUT[type=reset] {
+A.btn, BUTTON, INPUT[type=submit], INPUT[type=reset] {
     color: green !important;
 }
 

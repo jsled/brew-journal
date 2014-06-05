@@ -19,12 +19,9 @@
         <h2 py:if="recipe">recipe: "${recipe.name}"</h2>
 
         <div py:if="request.user.is_authenticated()" class="btn-group" style="margin: 0.5em 0">
-            <button type="button" class="btn btn-default btn-sm">
-                <a href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}"><span class="glyphicon glyphicon-glass"/>&nbsp;brew</a>
-            </button>
-            <button type="button" class="btn btn-default btn-sm">
-                <a href="/recipe/new/?clone_from_recipe_id=${recipe.id}"><span class="glyphicon glyphicon-cloud-upload"/>&nbsp;clone</a>
-            </button>
+            <a class="btn btn-default btn-sm" href="/user/${request.user.username}/brew/new/?recipe_id=${recipe.id}"><span class="glyphicon glyphicon-glass"/>
+            &nbsp;brew</a>
+            <a class="btn btn-default btn-sm" href="/recipe/new/?clone_from_recipe_id=${recipe.id}"><span class="glyphicon glyphicon-cloud-upload"/>&nbsp;clone</a>
         </div>
 
         <div id="overview" class="panel panel-default">
